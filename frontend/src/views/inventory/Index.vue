@@ -99,7 +99,7 @@
           <el-col :span="12"><el-form-item label="价格"><el-input v-model="itemForm.price" type="number" step="0.01"><template #append>¥</template></el-input></el-form-item></el-col>
         </el-row>
         <el-form-item label="存放位置">
-          <el-tree-select ref="spaceTreeRef" v-model="itemForm.spaceId" :data="spaceTreeWithRecent" :props="{ label: 'name', value: 'id', children: 'children' }" placeholder="搜索或选择位置" style="width:100%" check-strictly filterable />
+          <el-tree-select v-if="showForm" v-model="itemForm.spaceId" :data="spaceTreeWithRecent" :props="{ label: 'name', value: 'id', children: 'children' }" placeholder="搜索或选择位置" style="width:100%" check-strictly filterable :default-expanded-keys="defaultExpandedKeys" />
         </el-form-item>
         <el-row :gutter="12">
           <el-col :span="12"><el-form-item label="购买日期"><el-date-picker v-model="itemForm.purchaseDate" type="date" value-format="YYYY-MM-DD" style="width:100%" /></el-form-item></el-col>
@@ -119,7 +119,7 @@
 
 <script setup>
 import { useFamilyGuard } from "@/composables/useFamilyGuard"
-import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { inventoryApi, dashboardApi } from '@/api'
 import { useAuthStore } from '@/store/auth'
 import { ElMessage } from 'element-plus'
@@ -159,23 +159,8 @@ const spaceTreeWithRecent = computed(() => {
   if (!recentChildren.length) return spaceTree.value
   return [{ id: '__recent__', name: '⭐ 最近选择', children: recentChildren }, ...spaceTree.value]
 })
-
-// 对话框打开时展开"最近选择"节点
-const spaceTreeRef = ref(null)
-watch(showForm, (visible) => {
-  if (!visible) return
-  // 轮询等待树组件就绪（el-tree-select 内部树是懒渲染的）
-  let attempts = 0
-  const timer = setInterval(() => {
-    attempts++
-    const tree = spaceTreeRef.value?.treeRef
-    if (tree?.setExpandedKeys) {
-      tree.setExpandedKeys(['__recent__'])
-      clearInterval(timer)
-    } else if (attempts > 20) {
-      clearInterval(timer)
-    }
-  }, 50)
+const defaultExpandedKeys = computed(() => {
+  return spaceTreeWithRecent.value.some(n => n.id === '__recent__') ? ['__recent__'] : []
 })
 
 const search = ref('')

@@ -55,7 +55,8 @@
       "Bash(git add *)",
       "Bash(git commit -m '初始提交：家庭管家全栈项目 *)",
       "Bash(git commit -m '项目完善：安全性、代码质量、开发规范 *)",
-      "Bash(git commit -m '修复：物品添加后表单未重置的问题 *)"
+      "Bash(git commit -m '修复：物品添加后表单未重置的问题 *)",
+      "Bash(git commit *)"
     ]
   }
 }

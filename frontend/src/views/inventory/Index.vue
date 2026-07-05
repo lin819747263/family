@@ -140,7 +140,7 @@ const saving = ref(false)
 const loading = ref(false)
 const stats = reactive({ total: 0, expiring: 0, borrowed: 0 })
 
-const defaultForm = { name: '', quantity: 1, price: '', category: '', spaceId: null, purchaseDate: '', warrantyMonths: 0, expiryDate: '', tags: '', description: '', lastUsedDate: dayjs().format('YYYY-MM-DD') }
+const defaultForm = { name: '', quantity: 1, price: 0, category: '', spaceId: null, purchaseDate: dayjs().format('YYYY-MM-DD'), warrantyMonths: 0, expiryDate: '', tags: '', description: '', lastUsedDate: dayjs().format('YYYY-MM-DD') }
 const itemForm = reactive({ ...defaultForm })
 
 function isExpiring(date) { return date && dayjs(date).diff(dayjs(), 'day') <= 7 && dayjs(date).diff(dayjs(), 'day') >= 0 }

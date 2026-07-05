@@ -99,7 +99,7 @@
           <el-col :span="12"><el-form-item label="价格"><el-input v-model="itemForm.price" type="number" step="0.01"><template #append>¥</template></el-input></el-form-item></el-col>
         </el-row>
         <el-form-item label="存放位置">
-          <el-tree-select v-model="itemForm.spaceId" :data="spaceTreeWithRecent" :props="{ label: 'name', value: 'id', children: 'children' }" placeholder="搜索或选择位置" style="width:100%" check-strictly filterable />
+          <el-tree-select v-model="itemForm.spaceId" :data="spaceTreeWithRecent" :props="{ label: 'name', value: 'id', children: 'children' }" placeholder="搜索或选择位置" style="width:100%" check-strictly filterable :default-expanded-keys="['__recent__']" />
         </el-form-item>
         <el-row :gutter="12">
           <el-col :span="12"><el-form-item label="购买日期"><el-date-picker v-model="itemForm.purchaseDate" type="date" value-format="YYYY-MM-DD" style="width:100%" /></el-form-item></el-col>

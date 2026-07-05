@@ -99,7 +99,7 @@
           <el-col :span="12"><el-form-item label="价格"><el-input v-model="itemForm.price" type="number" step="0.01"><template #append>¥</template></el-input></el-form-item></el-col>
         </el-row>
         <el-form-item label="存放位置">
-          <el-tree-select :key="treeKey" v-model="itemForm.spaceId" :data="spaceTreeWithRecent" :props="{ label: 'name', value: 'id', children: 'children' }" placeholder="搜索或选择位置" style="width:100%" check-strictly filterable :default-expanded-keys="defaultExpandedKeys" />
+          <el-tree-select v-model="itemForm.spaceId" :data="spaceTreeWithRecent" :props="{ label: 'name', value: 'id', children: 'children' }" placeholder="搜索或选择位置" style="width:100%" check-strictly filterable :expanded-keys="expandedKeys" />
         </el-form-item>
         <el-row :gutter="12">
           <el-col :span="12"><el-form-item label="购买日期"><el-date-picker v-model="itemForm.purchaseDate" type="date" value-format="YYYY-MM-DD" style="width:100%" /></el-form-item></el-col>
@@ -119,7 +119,7 @@
 
 <script setup>
 import { useFamilyGuard } from "@/composables/useFamilyGuard"
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
 import { inventoryApi, dashboardApi } from '@/api'
 import { useAuthStore } from '@/store/auth'
 import { ElMessage } from 'element-plus'
@@ -159,9 +159,16 @@ const spaceTreeWithRecent = computed(() => {
   if (!recentChildren.length) return spaceTree.value
   return [{ id: '__recent__', name: '⭐ 最近选择', children: recentChildren }, ...spaceTree.value]
 })
-const hasRecent = computed(() => spaceTreeWithRecent.value.some(n => n.id === '__recent__'))
-const defaultExpandedKeys = computed(() => hasRecent.value ? ['__recent__'] : [])
-const treeKey = computed(() => hasRecent.value ? 'tree-with-recent' : 'tree-no-recent')
+
+// 受控展开：始终包含 __recent__
+const expandedKeys = ref(['__recent__'])
+// 数据变化时确保 __recent__ 展开
+watch(spaceTreeWithRecent, () => {
+  if (!expandedKeys.value.includes('__recent__')) {
+    expandedKeys.value = ['__recent__', ...expandedKeys.value]
+  }
+})
+
 const search = ref('')
 const filterSpaceId = ref(null)
 const filterCategory = ref('')

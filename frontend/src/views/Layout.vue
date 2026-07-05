@@ -229,132 +229,17 @@
     </el-dialog>
 
     <!-- 移动端侧栏菜单 -->
-    <el-drawer
-      v-model="showMobileMenu"
-      direction="ltr"
-      size="260px"
-      :show-close="false"
-      class="mobile-menu-drawer"
-    >
-      <template #header>
-        <div class="mobile-drawer-header">
-          <div class="logo-mark" style="width:32px;height:32px;border-radius:8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-              <polyline points="9 22 9 12 15 12 15 22"/>
-            </svg>
-          </div>
-          <span style="font-size:16px;font-weight:700;color:#1e293b;">家庭管家</span>
-        </div>
-      </template>
-      <el-menu
-        :default-active="activeMenu"
-        router
-        background-color="transparent"
-        text-color="#475569"
-        active-text-color="#667eea"
-        @select="showMobileMenu = false"
-      >
-        <el-menu-item index="/">
-          <el-icon><DataBoard /></el-icon>
-          <span>首页</span>
-        </el-menu-item>
-
-        <el-sub-menu index="accounting">
-          <template #title>
-            <el-icon><Coin /></el-icon>
-            <span>智能记账</span>
-          </template>
-          <el-menu-item index="/accounting">流水账单</el-menu-item>
-          <el-menu-item index="/accounting/books">账本管理</el-menu-item>
-          <el-menu-item index="/accounting/budgets">预算管理</el-menu-item>
-          <el-menu-item index="/accounting/report">报表分析</el-menu-item>
-          <el-menu-item index="/accounting/annual-report">年度报告</el-menu-item>
-          <el-menu-item index="/accounting/recurring">定时记账</el-menu-item>
-          <el-menu-item index="/accounting/categories">分类管理</el-menu-item>
-        </el-sub-menu>
-
-        <el-sub-menu index="album">
-          <template #title>
-            <el-icon><PictureFilled /></el-icon>
-            <span>家庭相册</span>
-          </template>
-          <el-menu-item index="/album">我的相册</el-menu-item>
-          <el-menu-item index="/album/moments">精彩瞬间</el-menu-item>
-          <el-menu-item index="/album/timeline">时光轴</el-menu-item>
-          <el-menu-item index="/album/memories">回忆推送</el-menu-item>
-        </el-sub-menu>
-
-        <el-sub-menu index="inventory">
-          <template #title>
-            <el-icon><Box /></el-icon>
-            <span>物品管理</span>
-          </template>
-          <el-menu-item index="/inventory">物品总览</el-menu-item>
-          <el-menu-item index="/inventory/spaces">空间管理</el-menu-item>
-          <el-menu-item index="/inventory/borrows">借物追踪</el-menu-item>
-          <el-menu-item index="/inventory/unused">断舍离助手</el-menu-item>
-        </el-sub-menu>
-
-        <el-sub-menu index="reminder">
-          <template #title>
-            <el-icon><Bell /></el-icon>
-            <span>家庭提醒</span>
-          </template>
-          <el-menu-item index="/calendar">日历视图</el-menu-item>
-          <el-menu-item index="/anniversary">纪念日</el-menu-item>
-          <el-menu-item index="/todo">待办清单</el-menu-item>
-        </el-sub-menu>
-
-        <el-sub-menu index="other">
-          <template #title>
-            <el-icon><MoreFilled /></el-icon>
-            <span>其他</span>
-          </template>
-          <el-menu-item index="/investment">💰 理财管理</el-menu-item>
-          <el-menu-item index="/recipe">菜谱管理</el-menu-item>
-          <el-menu-item index="/member">成员档案</el-menu-item>
-          <el-menu-item index="/wishlist">家庭心愿</el-menu-item>
-          <el-menu-item index="/diary">家庭日记</el-menu-item>
-        </el-sub-menu>
-      </el-menu>
-    </el-drawer>
+    <MobileMenu :visible="showMobileMenu" :active-menu="activeMenu" @close="showMobileMenu = false" />
 
     <!-- 通知面板 -->
-    <el-drawer
-      v-model="showNotifications"
-      title="消息通知"
-      size="380px"
-      class="notification-drawer"
-    >
-      <template #header>
-        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
-          <span style="font-size:17px;font-weight:600;color:#1e293b;">消息通知</span>
-          <el-button
-            v-if="unreadCount > 0"
-            text
-            type="primary"
-            size="small"
-            @click="handleMarkAllRead"
-          >全部已读</el-button>
-        </div>
-      </template>
-      <div v-if="notifications.length === 0" class="empty-notice">
-        <el-icon :size="48" color="#cbd5e1"><Bell /></el-icon>
-        <p>暂无新通知</p>
-      </div>
-      <div
-        v-for="n in notifications"
-        :key="n.id"
-        class="notice-card"
-        :class="{ 'notice-read': n.isRead }"
-        @click="handleMarkRead(n)"
-      >
-        <div class="notice-title">{{ n.title }}</div>
-        <div class="notice-content">{{ n.content }}</div>
-        <div class="notice-time">{{ dayjs(n.createdAt).format('MM-DD HH:mm') }}</div>
-      </div>
-    </el-drawer>
+    <NotificationPanel
+      :visible="showNotifications"
+      :notifications="notifications"
+      :unread-count="unreadCount"
+      @close="showNotifications = false"
+      @mark-read="handleMarkRead"
+      @mark-all-read="handleMarkAllRead"
+    />
 
     <!-- AI 助手 -->
     <ChatPanel :visible="showAI" @close="showAI = false" />
@@ -375,7 +260,13 @@ import TransactionForm from '@/components/accounting/TransactionForm.vue'
 import BatchTransactionForm from '@/components/accounting/BatchTransactionForm.vue'
 import ChatPanel from '@/views/ai/ChatPanel.vue'
 import GlobalSearch from '@/components/search/GlobalSearch.vue'
-import dayjs from 'dayjs'
+import MobileMenu from '@/components/common/MobileMenu.vue'
+import NotificationPanel from '@/components/common/NotificationPanel.vue'
+import {
+  DataBoard, Coin, PictureFilled, Box, Bell, MoreFilled, Expand,
+  Search, Moon, Sunny, ArrowDown, Download, User, UserFilled,
+  Setting, SwitchButton, Notebook, Check, Plus, EditPen, Document
+} from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -394,7 +285,7 @@ const isAccountingPage = computed(() => {
 })
 
 const showQuickAdd = ref(false)
-const quickAddMode = ref('single') // 'single' | 'batch'
+const quickAddMode = ref('single')
 const showMobileMenu = ref(false)
 const showNotifications = ref(false)
 const showAI = ref(false)
@@ -422,16 +313,13 @@ async function installPWA() {
   if (!deferredPrompt) return
   deferredPrompt.prompt()
   const { outcome } = await deferredPrompt.userChoice
-  if (outcome === 'accepted') {
-    canInstall.value = false
-  }
+  if (outcome === 'accepted') canInstall.value = false
   deferredPrompt = null
 }
 
 const activeMenu = computed(() => {
   const path = route.path
   if (path === '/') return '/'
-  // 匹配一级路径
   const match = path.match(/^\/[^/]+/)
   return match ? match[0] : '/'
 })
@@ -446,18 +334,14 @@ onMounted(async () => {
   }
 })
 
-// 进入首页或记账路由时加载账本列表
 watch(showBookSelector, (val) => {
   if (val && accountingStore.books.length === 0) {
     accountingStore.loadBooks(authStore.currentFamily?.id)
   }
 })
 
-// 家庭切换时重新加载账本
 watch(() => authStore.currentFamily, (family) => {
-  if (family) {
-    accountingStore.loadBooks(family.id)
-  }
+  if (family) accountingStore.loadBooks(family.id)
 })
 
 async function loadNotifications() {
@@ -797,7 +681,6 @@ function handleUserCmd(cmd) {
   color: var(--text-primary);
 }
 
-/* 记账模式切换 */
 .quick-add-header {
   display: flex;
   align-items: center;
@@ -842,63 +725,6 @@ function handleUserCmd(cmd) {
   padding: 20px 24px 24px;
 }
 
-/* ========== 通知面板 ========== */
-.notification-drawer :deep(.el-drawer__header) {
-  padding: 20px 24px 16px;
-  margin: 0;
-  border-bottom: 1px solid var(--border-light);
-}
-.notification-drawer :deep(.el-drawer__title) {
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.empty-notice {
-  text-align: center;
-  padding: 60px 20px;
-}
-.empty-notice p {
-  margin-top: 12px;
-  color: #94a3b8;
-  font-size: 14px;
-}
-
-.notice-card {
-  padding: 14px 16px;
-  margin: 0 8px 8px;
-  background: var(--bg-page);
-  border-radius: 12px;
-  border: 1px solid var(--border-light);
-  transition: all 0.2s;
-  cursor: pointer;
-}
-.notice-card:hover {
-  background: var(--border-light);
-}
-.notice-card.notice-read {
-  opacity: 0.6;
-}
-.notice-card.notice-read:hover {
-  opacity: 0.8;
-}
-.notice-title {
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--text-primary);
-}
-.notice-content {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-top: 4px;
-  line-height: 1.5;
-}
-.notice-time {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 6px;
-}
-
 /* ========== 过渡动画 ========== */
 .page-fade-enter-active,
 .page-fade-leave-active {
@@ -931,45 +757,6 @@ function handleUserCmd(cmd) {
 .mobile-menu-btn:hover {
   background: rgba(102, 126, 234, 0.08);
   color: #667eea;
-}
-
-.mobile-drawer-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* 移动端侧栏菜单样式 */
-.mobile-menu-drawer :deep(.el-drawer__header) {
-  padding: 16px 20px;
-  margin: 0;
-  border-bottom: 1px solid #f1f5f9;
-}
-.mobile-menu-drawer :deep(.el-drawer__body) {
-  padding: 8px 0;
-}
-.mobile-menu-drawer :deep(.el-menu) {
-  border-right: none;
-}
-.mobile-menu-drawer :deep(.el-menu-item),
-.mobile-menu-drawer :deep(.el-sub-menu__title) {
-  height: 46px;
-  line-height: 46px;
-  font-size: 14px;
-  border-radius: 0;
-  margin: 0;
-  padding: 0 20px;
-}
-.mobile-menu-drawer :deep(.el-menu-item.is-active) {
-  background: rgba(102, 126, 234, 0.08) !important;
-  color: #667eea !important;
-  font-weight: 600;
-}
-.mobile-menu-drawer :deep(.el-sub-menu .el-menu-item) {
-  height: 42px;
-  line-height: 42px;
-  padding-left: 48px !important;
-  font-size: 13px;
 }
 
 /* ========== 响应式 ========== */
@@ -1057,7 +844,7 @@ function handleUserCmd(cmd) {
   }
 
   /* 通知面板适配移动端 */
-  .notification-drawer :deep(.el-drawer) {
+  :deep(.notification-drawer .el-drawer) {
     width: 85vw !important;
   }
 }

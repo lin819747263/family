@@ -4,6 +4,7 @@ const ctrl = require('../controllers/anniversaryController');
 const { authenticate } = require('../middleware/auth');
 const { verifyFamilyAccess, verifyResourceAccess } = require('../middleware/familyAccess');
 const { Anniversary } = require('../models');
+const { anniversaryValidators, idParam } = require('../middleware/validators');
 
 router.use(authenticate);
 
@@ -18,12 +19,12 @@ const verifyAnniversaryAccess = verifyResourceAccess({
 router.get('/lunar-info', ctrl.getLunarInfo);
 router.get('/solar-date', ctrl.getSolarDate);
 
-router.post('/', verifyFamilyAccess, ctrl.create);
+router.post('/', verifyFamilyAccess, anniversaryValidators.create, ctrl.create);
 router.get('/', verifyFamilyAccess, ctrl.getList);
 router.get('/upcoming', verifyFamilyAccess, ctrl.getUpcoming);
 router.post('/trigger-reminders', verifyFamilyAccess, ctrl.triggerReminders);
-router.get('/:id', verifyAnniversaryAccess, ctrl.getOne);
-router.put('/:id', verifyAnniversaryAccess, ctrl.update);
-router.delete('/:id', verifyAnniversaryAccess, ctrl.remove);
+router.get('/:id', verifyAnniversaryAccess, idParam, ctrl.getOne);
+router.put('/:id', verifyAnniversaryAccess, idParam, ctrl.update);
+router.delete('/:id', verifyAnniversaryAccess, idParam, ctrl.remove);
 
 module.exports = router;

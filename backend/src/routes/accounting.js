@@ -4,39 +4,40 @@ const ctrl = require('../controllers/accountingController');
 const { authenticate } = require('../middleware/auth');
 const { verifyFamilyAccess } = require('../middleware/familyAccess');
 const { createUploader } = require('../middleware/upload');
+const { accountingValidators, idParam } = require('../middleware/validators');
 
 router.use(authenticate);
 
 // 账本
-router.post('/books', verifyFamilyAccess, ctrl.createBook);
+router.post('/books', verifyFamilyAccess, accountingValidators.createBook, ctrl.createBook);
 router.get('/books', verifyFamilyAccess, ctrl.getBooks);
-router.put('/books/:id', ctrl.updateBook);
-router.delete('/books/:id', ctrl.deleteBook);
+router.put('/books/:id', idParam, ctrl.updateBook);
+router.delete('/books/:id', idParam, ctrl.deleteBook);
 
 // 交易
-router.post('/transactions', ctrl.createTransaction);
+router.post('/transactions', accountingValidators.createTransaction, ctrl.createTransaction);
 router.get('/transactions', ctrl.getTransactions);
-router.put('/transactions/:id', ctrl.updateTransaction);
-router.delete('/transactions/:id', ctrl.deleteTransaction);
+router.put('/transactions/:id', idParam, ctrl.updateTransaction);
+router.delete('/transactions/:id', idParam, ctrl.deleteTransaction);
 
 // 分类
 router.get('/categories', verifyFamilyAccess, ctrl.getCategories);
-router.post('/categories', verifyFamilyAccess, ctrl.createCategory);
-router.put('/categories/:id', ctrl.updateCategory);
-router.delete('/categories/:id', ctrl.deleteCategory);
+router.post('/categories', verifyFamilyAccess, accountingValidators.createCategory, ctrl.createCategory);
+router.put('/categories/:id', idParam, ctrl.updateCategory);
+router.delete('/categories/:id', idParam, ctrl.deleteCategory);
 
 // 预算
-router.post('/budgets', ctrl.setBudget);
+router.post('/budgets', accountingValidators.setBudget, ctrl.setBudget);
 router.get('/budgets', ctrl.getBudgets);
-router.delete('/budgets/:id', ctrl.deleteBudget);
+router.delete('/budgets/:id', idParam, ctrl.deleteBudget);
 
 // 定时记账
-router.post('/recurring', ctrl.createRecurringBill);
+router.post('/recurring', accountingValidators.createRecurringBill, ctrl.createRecurringBill);
 router.get('/recurring', ctrl.getRecurringBills);
-router.put('/recurring/:id', ctrl.updateRecurringBill);
-router.delete('/recurring/:id', ctrl.deleteRecurringBill);
-router.put('/recurring/:id/toggle', ctrl.toggleRecurringBill);
-router.post('/recurring/:id/trigger', ctrl.triggerRecurringBill);
+router.put('/recurring/:id', idParam, ctrl.updateRecurringBill);
+router.delete('/recurring/:id', idParam, ctrl.deleteRecurringBill);
+router.put('/recurring/:id/toggle', idParam, ctrl.toggleRecurringBill);
+router.post('/recurring/:id/trigger', idParam, ctrl.triggerRecurringBill);
 
 // 报表
 router.get('/report/daily', ctrl.getDailyReport);

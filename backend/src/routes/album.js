@@ -5,6 +5,7 @@ const { authenticate } = require('../middleware/auth');
 const { verifyFamilyAccess, verifyResourceAccess } = require('../middleware/familyAccess');
 const { createUploader } = require('../middleware/upload');
 const { Album, Photo } = require('../models');
+const { albumValidators, idParam } = require('../middleware/validators');
 
 router.use(authenticate);
 
@@ -27,11 +28,11 @@ const verifyPhotoAccess = verifyResourceAccess({
 });
 
 // 相册
-router.post('/albums', verifyFamilyAccess, ctrl.createAlbum);
+router.post('/albums', verifyFamilyAccess, albumValidators.createAlbum, ctrl.createAlbum);
 router.get('/albums', verifyFamilyAccess, ctrl.getAlbums);
 router.post('/albums/:id/verify', verifyAlbumAccess, ctrl.verifyAlbumPassword);
-router.put('/albums/:id', verifyAlbumAccess, ctrl.updateAlbum);
-router.delete('/albums/:id', verifyAlbumAccess, ctrl.deleteAlbum);
+router.put('/albums/:id', verifyAlbumAccess, idParam, ctrl.updateAlbum);
+router.delete('/albums/:id', verifyAlbumAccess, idParam, ctrl.deleteAlbum);
 
 // 照片
 router.post('/photos/upload', verifyFamilyAccess, upload.single('file'), ctrl.uploadPhoto);
@@ -43,7 +44,7 @@ router.post('/albums/:id/share', verifyAlbumAccess, ctrl.shareAlbum);
 router.get('/albums/:id/shares', verifyAlbumAccess, ctrl.getAlbumShares);
 
 // 评论
-router.post('/comments', verifyFamilyAccess, ctrl.addComment);
+router.post('/comments', verifyFamilyAccess, albumValidators.addComment, ctrl.addComment);
 router.get('/comments', verifyFamilyAccess, ctrl.getComments);
 
 // 点赞

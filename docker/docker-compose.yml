@@ -6,8 +6,8 @@ services:
     container_name: family_home_db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: family_home_2024
-      MYSQL_DATABASE: family_home
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-family_home}
       MYSQL_CHARACTER_SET_SERVER: utf8mb4
       MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
     ports:
@@ -35,11 +35,11 @@ services:
       NODE_ENV: production
       DB_HOST: mysql
       DB_PORT: 3306
-      DB_NAME: family_home
+      DB_NAME: ${MYSQL_DATABASE:-family_home}
       DB_USER: root
-      DB_PASSWORD: family_home_2024
-      JWT_SECRET: fh_jwt_secret_key_2024_secure
-      ENCRYPT_KEY: aes256_encrypt_key_32chars__2024!!
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      ENCRYPT_KEY: ${ENCRYPT_KEY}
     volumes:
       - uploads_data:/app/uploads
       - backup_data:/app/backups

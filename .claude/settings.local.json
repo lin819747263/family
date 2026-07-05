@@ -52,7 +52,8 @@
       "Bash(\"C:/Program Files/MySQL/MySQL Server 8.0/bin/mysql.exe\" --version)",
       "Bash(\"C:/Program Files/MySQL/MySQL Server 8.4/bin/mysql.exe\" --version)",
       "Bash(git init *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m '初始提交：家庭管家全栈项目 *)"
     ]
   }
 }

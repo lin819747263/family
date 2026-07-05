@@ -4,6 +4,7 @@ const ctrl = require('../controllers/todoController');
 const { authenticate } = require('../middleware/auth');
 const { verifyFamilyAccess, verifyResourceAccess } = require('../middleware/familyAccess');
 const { Todo } = require('../models');
+const { todoValidators, idParam } = require('../middleware/validators');
 
 router.use(authenticate);
 
@@ -20,11 +21,11 @@ router.get('/upcoming', verifyFamilyAccess, ctrl.getUpcoming);
 router.post('/archive-completed', verifyFamilyAccess, ctrl.archiveCompleted);
 
 // CRUD
-router.post('/', verifyFamilyAccess, ctrl.create);
+router.post('/', verifyFamilyAccess, todoValidators.create, ctrl.create);
 router.get('/', verifyFamilyAccess, ctrl.getList);
-router.get('/:id', verifyTodoAccess, ctrl.getOne);
-router.put('/:id', verifyTodoAccess, ctrl.update);
-router.delete('/:id', verifyTodoAccess, ctrl.remove);
+router.get('/:id', verifyTodoAccess, idParam, ctrl.getOne);
+router.put('/:id', verifyTodoAccess, idParam, ctrl.update);
+router.delete('/:id', verifyTodoAccess, idParam, ctrl.remove);
 
 // 状态操作
 router.put('/:id/toggle', verifyTodoAccess, ctrl.toggleComplete);

@@ -5,6 +5,7 @@ const { authenticate } = require('../middleware/auth');
 const { verifyFamilyAccess, verifyResourceAccess } = require('../middleware/familyAccess');
 const { createUploader } = require('../middleware/upload');
 const { Recipe } = require('../models');
+const { recipeValidators, idParam } = require('../middleware/validators');
 
 router.use(authenticate);
 
@@ -23,10 +24,10 @@ router.post('/upload', verifyFamilyAccess, upload.single('file'), ctrl.uploadIma
 router.get('/random', verifyFamilyAccess, ctrl.random);
 
 // CRUD
-router.post('/', verifyFamilyAccess, ctrl.create);
+router.post('/', verifyFamilyAccess, recipeValidators.create, ctrl.create);
 router.get('/', verifyFamilyAccess, ctrl.getList);
-router.get('/:id', verifyRecipeAccess, ctrl.getOne);
-router.put('/:id', verifyRecipeAccess, ctrl.update);
-router.delete('/:id', verifyRecipeAccess, ctrl.remove);
+router.get('/:id', verifyRecipeAccess, idParam, ctrl.getOne);
+router.put('/:id', verifyRecipeAccess, idParam, ctrl.update);
+router.delete('/:id', verifyRecipeAccess, idParam, ctrl.remove);
 
 module.exports = router;

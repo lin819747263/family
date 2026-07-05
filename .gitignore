@@ -8,6 +8,7 @@ backend/node_modules/
 .env.local
 .env.production
 backend/.env
+docker/.env
 
 # Uploads
 backend/uploads/

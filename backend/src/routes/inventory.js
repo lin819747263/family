@@ -4,6 +4,7 @@ const ctrl = require('../controllers/inventoryController');
 const { authenticate } = require('../middleware/auth');
 const { verifyFamilyAccess, verifyResourceAccess } = require('../middleware/familyAccess');
 const { Space, Item, ItemBorrow } = require('../models');
+const { inventoryValidators, idParam } = require('../middleware/validators');
 
 router.use(authenticate);
 
@@ -35,19 +36,19 @@ const verifyBorrowAccess = verifyResourceAccess({
 });
 
 // 空间
-router.post('/spaces', verifyFamilyAccess, ctrl.createSpace);
+router.post('/spaces', verifyFamilyAccess, inventoryValidators.createSpace, ctrl.createSpace);
 router.get('/spaces', verifyFamilyAccess, ctrl.getSpaces);
-router.put('/spaces/:id', verifySpaceAccess, ctrl.updateSpace);
-router.delete('/spaces/:id', verifySpaceAccess, ctrl.deleteSpace);
+router.put('/spaces/:id', verifySpaceAccess, idParam, ctrl.updateSpace);
+router.delete('/spaces/:id', verifySpaceAccess, idParam, ctrl.deleteSpace);
 
 // 物品
-router.post('/items', verifyFamilyAccess, ctrl.createItem);
+router.post('/items', verifyFamilyAccess, inventoryValidators.createItem, ctrl.createItem);
 router.get('/items', verifyFamilyAccess, ctrl.getItems);
-router.put('/items/:id', verifyItemAccess, ctrl.updateItem);
-router.delete('/items/:id', verifyItemAccess, ctrl.deleteItem);
+router.put('/items/:id', verifyItemAccess, idParam, ctrl.updateItem);
+router.delete('/items/:id', verifyItemAccess, idParam, ctrl.deleteItem);
 
 // 借物
-router.post('/borrows', verifyFamilyAccess, ctrl.createBorrow);
+router.post('/borrows', verifyFamilyAccess, inventoryValidators.createBorrow, ctrl.createBorrow);
 router.get('/borrows', verifyFamilyAccess, ctrl.getBorrows);
 router.put('/borrows/:id/return', verifyBorrowAccess, ctrl.returnBorrow);
 router.post('/borrows/:id/remind', verifyBorrowAccess, ctrl.remindBorrow);

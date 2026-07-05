@@ -15,7 +15,7 @@
           @change="loadItems"
         />
         <el-input v-model="filterCategory" placeholder="按分类筛选" style="width:140px;" clearable @clear="loadItems" @keyup.enter="loadItems" />
-        <el-button type="primary" @click="showForm = true"><el-icon><Plus /></el-icon>添加物品</el-button>
+        <el-button type="primary" @click="openAddForm"><el-icon><Plus /></el-icon>添加物品</el-button>
       </div>
     </div>
 
@@ -186,10 +186,20 @@ async function loadReminders() {
   } catch (e) { console.error(e) }
 }
 
+function resetForm() {
+  Object.assign(itemForm, { ...defaultForm })
+}
+
 function editItem(row) {
   Object.assign(itemForm, { ...defaultForm, ...row })
   if (row.Space) itemForm.spaceId = row.Space.id
   editing.value = true
+  showForm.value = true
+}
+
+function openAddForm() {
+  resetForm()
+  editing.value = false
   showForm.value = true
 }
 
@@ -205,6 +215,7 @@ async function handleSave() {
       ElMessage.success('添加成功')
     }
     showForm.value = false
+    resetForm()
     loadItems()
   } catch (e) { console.error(e) }
   finally { saving.value = false }

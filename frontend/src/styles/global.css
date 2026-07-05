@@ -1,0 +1,324 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* 防止弹窗打开/关闭时页面抖动 */
+html { overflow-y: scroll; }
+
+/* 隐藏页面侧边滚动条 */
+html::-webkit-scrollbar { width: 0; height: 0; }
+html { scrollbar-width: none; -ms-overflow-style: none; }
+body.el-popup-parent--hidden {
+  overflow: visible !important;
+  padding-right: 0 !important;
+  margin-right: 0 !important;
+}
+
+:root {
+  --nav-height: 60px;
+  --primary: #667eea;
+  --primary-light: #a5b4fc;
+  --primary-dark: #5a67d8;
+  --accent: #764ba2;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --bg-page: #f5f7fa;
+  --bg-card: rgba(255, 255, 255, 0.75);
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+}
+
+html, body, #app {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-container {
+  min-height: 100vh;
+}
+
+/* ========== 卡片 ========== */
+.card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* ========== 页面标题 ========== */
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  letter-spacing: -0.3px;
+}
+
+/* ========== 统计卡片 ========== */
+.stat-card {
+  text-align: center;
+  padding: 20px;
+}
+.stat-card .stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.stat-card .stat-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* ========== 暗黑模式 ========== */
+.dark {
+  --bg-page: #0f172a;
+  --bg-card: rgba(30, 41, 59, 0.8);
+  --bg-card-solid: #1e293b;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: #334155;
+  --border-light: #1e293b;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.dark .top-nav {
+  background: rgba(15, 23, 42, 0.85);
+  border-bottom-color: rgba(51, 65, 85, 0.6);
+}
+
+.dark .page-main {
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+}
+
+.dark .card {
+  background: rgba(30, 41, 59, 0.7);
+  border-color: rgba(51, 65, 85, 0.5);
+}
+
+/* 暗黑模式 - Element Plus 覆盖 */
+.dark .el-table {
+  --el-table-bg-color: rgba(30, 41, 59, 0.6);
+  --el-table-tr-bg-color: transparent;
+  --el-table-header-bg-color: rgba(15, 23, 42, 0.5);
+  --el-table-row-hover-bg-color: rgba(51, 65, 85, 0.3);
+  --el-table-border-color: #334155;
+  --el-table-text-color: #e2e8f0;
+  --el-table-header-text-color: #94a3b8;
+}
+
+.dark .el-dialog {
+  --el-dialog-bg-color: #1e293b;
+  --el-dialog-title-font-size: 17px;
+}
+
+.dark .el-drawer {
+  --el-drawer-bg-color: #1e293b;
+}
+
+.dark .el-input__wrapper {
+  background-color: rgba(15, 23, 42, 0.5);
+  box-shadow: 0 0 0 1px #334155 inset;
+}
+
+.dark .el-select .el-input__wrapper {
+  background-color: rgba(15, 23, 42, 0.5);
+}
+
+.dark .el-textarea__inner {
+  background-color: rgba(15, 23, 42, 0.5);
+  box-shadow: 0 0 0 1px #334155;
+  color: #e2e8f0;
+}
+
+.dark .el-date-editor .el-input__wrapper {
+  background-color: rgba(15, 23, 42, 0.5);
+}
+
+.dark .el-pagination {
+  --el-pagination-bg-color: transparent;
+  --el-pagination-text-color: #94a3b8;
+  --el-pagination-button-disabled-bg-color: transparent;
+}
+
+/* 暗黑模式 - 全局元素覆盖 */
+.dark body { background: #0f172a; }
+.dark .el-menu { background-color: transparent !important; }
+.dark .el-menu-item:hover,
+.dark .el-sub-menu__title:hover { background-color: rgba(51, 65, 85, 0.3) !important; }
+.dark .el-tag { border-color: #334155; }
+.dark .el-tag--info { background: rgba(51, 65, 85, 0.5); color: #94a3b8; border-color: #334155; }
+.dark .el-tag--info.is-light { background: rgba(51, 65, 85, 0.5); color: #94a3b8; border-color: #334155; }
+.dark .el-popover, .dark .el-popper { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+.dark .el-dropdown-menu { background: #1e293b; border-color: #334155; }
+.dark .el-dropdown-menu__item { color: #e2e8f0; }
+.dark .el-dropdown-menu__item:hover { background: rgba(51, 65, 85, 0.5); color: #667eea; }
+.dark .el-badge__content { border-color: #1e293b; }
+.dark .el-progress-bar__outer { background: #334155; }
+.dark .el-divider { border-color: #334155; }
+.dark .el-empty__description p { color: #64748b; }
+.dark .el-upload-dragger { background: rgba(15, 23, 42, 0.5); border-color: #334155; }
+.dark .el-loading-mask { background: rgba(15, 23, 42, 0.7); }
+.dark .el-message-box { background: #1e293b; border-color: #334155; }
+.dark .el-notification { background: #1e293b; border-color: #334155; }
+
+/* ========== 过渡动画 ========== */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== 空状态 ========== */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+.empty-state p {
+  margin-top: 12px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* ========== 加载状态 ========== */
+.loading-state {
+  text-align: center;
+  padding: 40px;
+}
+
+/* ========== 照片网格 ========== */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.photo-grid .photo-item {
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+.photo-grid .photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+.photo-grid .photo-item:hover img {
+  transform: scale(1.05);
+}
+
+/* ========== 空间树 ========== */
+.space-tree {
+  padding: 10px 0;
+}
+.space-tree .el-tree-node__content {
+  height: 40px;
+  border-radius: var(--radius-sm);
+}
+.space-tree .tree-node-icon {
+  margin-right: 6px;
+}
+
+/* ========== 通用表单卡片 ========== */
+.form-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ========== 按钮增强 ========== */
+.el-button--primary {
+  background: linear-gradient(135deg, #667eea, #764ba2) !important;
+  border: none !important;
+  transition: all 0.3s ease !important;
+}
+.el-button--primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.35) !important;
+}
+
+/* ========== 标签增强 ========== */
+.el-tag--primary {
+  --el-tag-bg-color: rgba(102, 126, 234, 0.08);
+  --el-tag-border-color: rgba(102, 126, 234, 0.2);
+  --el-tag-text-color: #667eea;
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 768px) {
+  .page-content {
+    padding: 12px;
+  }
+
+  /* 全局弹窗适配移动端 */
+  .el-dialog {
+    width: 92vw !important;
+    max-width: 92vw !important;
+    margin: 0 auto !important;
+  }
+  .el-dialog__header {
+    padding: 16px 16px 12px !important;
+  }
+  .el-dialog__body {
+    padding: 12px 16px 16px !important;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  /* 全局表格横向滚动 */
+  .el-table {
+    width: 100% !important;
+  }
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -12px;
+    padding: 0 12px;
+  }
+
+  /* 页面标题栏堆叠 */
+  .page-header {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+  .page-header .header-actions {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    width: 100%;
+  }
+}

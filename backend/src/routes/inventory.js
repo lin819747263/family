@@ -1,0 +1,59 @@
+const express = require('express');
+const router = express.Router();
+const ctrl = require('../controllers/inventoryController');
+const { authenticate } = require('../middleware/auth');
+const { verifyFamilyAccess, verifyResourceAccess } = require('../middleware/familyAccess');
+const { Space, Item, ItemBorrow } = require('../models');
+
+router.use(authenticate);
+
+const verifySpaceAccess = verifyResourceAccess({
+  getFamilyId: async (id) => {
+    const item = await Space.findByPk(id, { attributes: ['familyId'] });
+    return item?.familyId;
+  }
+});
+
+const verifyItemAccess = verifyResourceAccess({
+  getFamilyId: async (id) => {
+    const item = await Item.findByPk(id, { attributes: ['spaceId'] });
+    if (!item) return null;
+    const space = await Space.findByPk(item.spaceId, { attributes: ['familyId'] });
+    return space?.familyId;
+  }
+});
+
+const verifyBorrowAccess = verifyResourceAccess({
+  getFamilyId: async (id) => {
+    const borrow = await ItemBorrow.findByPk(id, { attributes: ['itemId'] });
+    if (!borrow) return null;
+    const item = await Item.findByPk(borrow.itemId, { attributes: ['spaceId'] });
+    if (!item) return null;
+    const space = await Space.findByPk(item.spaceId, { attributes: ['familyId'] });
+    return space?.familyId;
+  }
+});
+
+// 空间
+router.post('/spaces', verifyFamilyAccess, ctrl.createSpace);
+router.get('/spaces', verifyFamilyAccess, ctrl.getSpaces);
+router.put('/spaces/:id', verifySpaceAccess, ctrl.updateSpace);
+router.delete('/spaces/:id', verifySpaceAccess, ctrl.deleteSpace);
+
+// 物品
+router.post('/items', verifyFamilyAccess, ctrl.createItem);
+router.get('/items', verifyFamilyAccess, ctrl.getItems);
+router.put('/items/:id', verifyItemAccess, ctrl.updateItem);
+router.delete('/items/:id', verifyItemAccess, ctrl.deleteItem);
+
+// 借物
+router.post('/borrows', verifyFamilyAccess, ctrl.createBorrow);
+router.get('/borrows', verifyFamilyAccess, ctrl.getBorrows);
+router.put('/borrows/:id/return', verifyBorrowAccess, ctrl.returnBorrow);
+router.post('/borrows/:id/remind', verifyBorrowAccess, ctrl.remindBorrow);
+
+// 分析
+router.get('/unused', verifyFamilyAccess, ctrl.getUnusedItems);
+router.get('/reminders', verifyFamilyAccess, ctrl.getUpcomingReminders);
+
+module.exports = router;

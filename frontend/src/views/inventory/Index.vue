@@ -99,7 +99,7 @@
           <el-col :span="12"><el-form-item label="价格"><el-input v-model="itemForm.price" type="number" step="0.01"><template #append>¥</template></el-input></el-form-item></el-col>
         </el-row>
         <el-form-item label="存放位置">
-          <el-tree-select v-model="itemForm.spaceId" :data="spaceTree" :props="{ label: 'name', value: 'id', children: 'children' }" placeholder="搜索或选择位置" style="width:100%" check-strictly filterable />
+          <el-tree-select v-model="itemForm.spaceId" :data="spaceTreeWithRecent" :props="{ label: 'name', value: 'id', children: 'children' }" placeholder="搜索或选择位置" style="width:100%" check-strictly filterable />
         </el-form-item>
         <el-row :gutter="12">
           <el-col :span="12"><el-form-item label="购买日期"><el-date-picker v-model="itemForm.purchaseDate" type="date" value-format="YYYY-MM-DD" style="width:100%" /></el-form-item></el-col>
@@ -119,7 +119,7 @@
 
 <script setup>
 import { useFamilyGuard } from "@/composables/useFamilyGuard"
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { inventoryApi, dashboardApi } from '@/api'
 import { useAuthStore } from '@/store/auth'
 import { ElMessage } from 'element-plus'
@@ -130,6 +130,35 @@ const authStore = useAuthStore()
 const items = ref([])
 const spaceTree = ref([])
 const reminders = ref([])
+
+// 最近选择的位置
+const RECENT_KEY = 'inventory_recent_spaces'
+function getRecentSpaceIds() {
+  try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]') } catch { return [] }
+}
+function saveRecentSpace(spaceId) {
+  if (!spaceId) return
+  const ids = getRecentSpaceIds().filter(id => id !== spaceId)
+  ids.unshift(spaceId)
+  localStorage.setItem(RECENT_KEY, JSON.stringify(ids.slice(0, 5)))
+}
+// 扁平化查找空间名称
+function findSpaceName(nodes, id) {
+  for (const n of nodes) {
+    if (n.id === id) return n.name
+    if (n.children) { const r = findSpaceName(n.children, id); if (r) return r }
+  }
+  return null
+}
+const spaceTreeWithRecent = computed(() => {
+  const recentIds = getRecentSpaceIds()
+  if (!recentIds.length) return spaceTree.value
+  const recentChildren = recentIds
+    .map(id => ({ id, name: findSpaceName(spaceTree.value, id) }))
+    .filter(n => n.name)
+  if (!recentChildren.length) return spaceTree.value
+  return [{ id: '__recent__', name: '⭐ 最近选择', children: recentChildren }, ...spaceTree.value]
+})
 const search = ref('')
 const filterSpaceId = ref(null)
 const filterCategory = ref('')
@@ -214,6 +243,7 @@ async function handleSave() {
       await inventoryApi.createItem({ ...itemForm, familyId: authStore.currentFamily?.id })
       ElMessage.success('添加成功')
     }
+    saveRecentSpace(itemForm.spaceId)
     showForm.value = false
     resetForm()
     loadItems()

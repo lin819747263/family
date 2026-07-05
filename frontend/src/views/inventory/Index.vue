@@ -88,7 +88,7 @@
       </div>
     </div>
 
-    <el-dialog v-model="showForm" :title="editing ? '编辑物品' : '添加物品'" width="520px" top="8vh" destroy-on-close>
+    <el-dialog v-model="showForm" :title="editing ? '编辑物品' : '添加物品'" width="520px" top="8vh">
       <el-form :model="itemForm" label-width="90px">
         <el-row :gutter="12">
           <el-col :span="12"><el-form-item label="物品名称"><el-input v-model="itemForm.name" /></el-form-item></el-col>
@@ -119,7 +119,7 @@
 
 <script setup>
 import { useFamilyGuard } from "@/composables/useFamilyGuard"
-import { ref, reactive, computed, onMounted, nextTick } from 'vue'
+import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
 import { inventoryApi, dashboardApi } from '@/api'
 import { useAuthStore } from '@/store/auth'
 import { ElMessage } from 'element-plus'
@@ -220,27 +220,27 @@ function resetForm() {
   Object.assign(itemForm, { ...defaultForm })
 }
 
-function expandRecent() {
-  nextTick(() => {
-    const tree = spaceTreeRef.value?.treeRef
-    if (tree) tree.setExpandedKeys(['__recent__'])
-  })
-}
-
 function editItem(row) {
   Object.assign(itemForm, { ...defaultForm, ...row })
   if (row.Space) itemForm.spaceId = row.Space.id
   editing.value = true
   showForm.value = true
-  expandRecent()
 }
 
 function openAddForm() {
   resetForm()
   editing.value = false
   showForm.value = true
-  expandRecent()
 }
+
+// 对话框打开时展开"最近选择"节点
+watch(showForm, (val) => {
+  if (!val) return
+  nextTick(() => {
+    const tree = spaceTreeRef.value?.treeRef
+    if (tree?.setExpandedKeys) tree.setExpandedKeys(['__recent__'])
+  })
+})
 
 async function handleSave() {
   if (!itemForm.name) return ElMessage.warning('请输入物品名称')

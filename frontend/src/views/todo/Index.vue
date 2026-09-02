@@ -209,7 +209,7 @@ const stats = reactive({ total: 0, pending: 0, completed: 0, archived: 0, overdu
 
 const defaultForm = {
   title: '', description: '', priority: 'medium',
-  dueDate: '', dueTime: '', reminderBefore: 0
+  dueDate: dayjs().format('YYYY-MM-DD'), dueTime: '', reminderBefore: 0
 }
 const form = ref({ ...defaultForm })
 
@@ -252,6 +252,7 @@ async function handleQuickAdd() {
   try {
     await todoApi.create({
       title: quickTitle.value.trim(),
+      dueDate: dayjs().format('YYYY-MM-DD'),
       familyId: authStore.currentFamily?.id
     })
     quickTitle.value = ''
@@ -287,6 +288,8 @@ async function handleSave() {
   saving.value = true
   try {
     const data = { ...form.value, familyId: authStore.currentFamily?.id }
+    // 创建时如果没有选日期，默认今天
+    if (!isEdit.value && !data.dueDate) data.dueDate = dayjs().format('YYYY-MM-DD')
     if (isEdit.value) {
       await todoApi.update(editId.value, data)
       ElMessage.success('更新成功')

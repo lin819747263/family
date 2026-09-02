@@ -34,8 +34,8 @@ router.post('/albums/:id/verify', verifyAlbumAccess, ctrl.verifyAlbumPassword);
 router.put('/albums/:id', verifyAlbumAccess, idParam, ctrl.updateAlbum);
 router.delete('/albums/:id', verifyAlbumAccess, idParam, ctrl.deleteAlbum);
 
-// 照片
-router.post('/photos/upload', verifyFamilyAccess, upload.single('file'), ctrl.uploadPhoto);
+// 照片（multer 必须在 verifyFamilyAccess 之前，否则 req.body.albumId 未定义）
+router.post('/photos/upload', upload.single('file'), verifyFamilyAccess, ctrl.uploadPhoto);
 router.get('/photos', verifyFamilyAccess, ctrl.getPhotos);
 router.delete('/photos/:id', verifyPhotoAccess, ctrl.deletePhoto);
 

@@ -72,7 +72,16 @@ exports.deleteSpace = async (req, res, next) => {
 // ===== 物品管理 =====
 exports.createItem = async (req, res, next) => {
   try {
-    const allowed = (({ name, description, quantity, price, category, tags, spaceId, purchaseDate, warrantyMonths, expiryDate, lastUsedDate, photos }) => ({ name, description, quantity, price, category, tags, spaceId, purchaseDate, warrantyMonths, expiryDate, lastUsedDate, photos }))(req.body);
+    const allowed = (({ name, description, quantity, price, category, tags, spaceId, purchaseDate, warrantyMonths, productionDate, shelfLife, expiryDate, lastUsedDate, photos }) => ({ name, description, quantity, price, category, tags, spaceId, purchaseDate, warrantyMonths, productionDate, shelfLife, expiryDate, lastUsedDate, photos }))(req.body);
+    // 将空字符串转换为 null（日期字段）
+    if (allowed.productionDate === '') allowed.productionDate = null;
+    if (allowed.expiryDate === '') allowed.expiryDate = null;
+    if (allowed.purchaseDate === '') allowed.purchaseDate = null;
+    if (allowed.lastUsedDate === '') allowed.lastUsedDate = null;
+    // 将空字符串转换为 null（数字字段）
+    if (allowed.spaceId === '' || allowed.spaceId === undefined) allowed.spaceId = null;
+    if (allowed.warrantyMonths === '' || allowed.warrantyMonths === undefined) allowed.warrantyMonths = null;
+    if (allowed.shelfLife === '' || allowed.shelfLife === undefined) allowed.shelfLife = null;
     const item = await Item.create({ ...allowed, createdBy: req.userId });
     // 检查是否需要提醒
     if (item.expiryDate) await checkExpiryReminder(item, req.userId);
@@ -115,7 +124,16 @@ exports.updateItem = async (req, res, next) => {
     if (!item) return res.status(404).json({ code: 404, message: '物品不存在' });
     // 检查权限：只能修改自己创建的物品
     if (item.createdBy !== req.userId) return res.status(403).json({ code: 403, message: '只能修改自己创建的物品' });
-    const allowed = (({ name, description, quantity, price, category, tags, spaceId, purchaseDate, warrantyMonths, expiryDate, lastUsedDate, status, photos }) => ({ name, description, quantity, price, category, tags, spaceId, purchaseDate, warrantyMonths, expiryDate, lastUsedDate, status, photos }))(req.body);
+    const allowed = (({ name, description, quantity, price, category, tags, spaceId, purchaseDate, warrantyMonths, productionDate, shelfLife, expiryDate, lastUsedDate, status, photos }) => ({ name, description, quantity, price, category, tags, spaceId, purchaseDate, warrantyMonths, productionDate, shelfLife, expiryDate, lastUsedDate, status, photos }))(req.body);
+    // 将空字符串转换为 null（日期字段）
+    if (allowed.productionDate === '') allowed.productionDate = null;
+    if (allowed.expiryDate === '') allowed.expiryDate = null;
+    if (allowed.purchaseDate === '') allowed.purchaseDate = null;
+    if (allowed.lastUsedDate === '') allowed.lastUsedDate = null;
+    // 将空字符串转换为 null（数字字段）
+    if (allowed.spaceId === '' || allowed.spaceId === undefined) allowed.spaceId = null;
+    if (allowed.warrantyMonths === '' || allowed.warrantyMonths === undefined) allowed.warrantyMonths = null;
+    if (allowed.shelfLife === '' || allowed.shelfLife === undefined) allowed.shelfLife = null;
     await item.update(allowed);
     res.json({ code: 0, message: '更新成功' });
   } catch (err) { next(err); }

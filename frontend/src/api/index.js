@@ -212,3 +212,13 @@ export const adminApi = {
 export const aiApi = {
   chat: data => request.post('/ai/chat', data)
 }
+
+// ===== 年度目标 =====
+export const annualGoalApi = {
+  getList: params => request.get('/annual-goals', { params }),
+  getOne: id => request.get(`/annual-goals/${id}`),
+  create: data => request.post('/annual-goals', data),
+  update: (id, data) => request.put(`/annual-goals/${id}`, data),
+  remove: id => request.delete(`/annual-goals/${id}`),
+  getStats: params => request.get('/annual-goals/stats', { params })
+}

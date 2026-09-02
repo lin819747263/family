@@ -17,6 +17,14 @@ const verifyFamilyAccess = async (req, res, next) => {
       if (space) familyId = space.familyId;
     }
 
+    // 如果没有 familyId 但有 albumId，从相册反查
+    if (!familyId && (req.query.albumId || req.body.albumId)) {
+      const { Album } = require('../models');
+      const albumId = req.query.albumId || req.body.albumId;
+      const album = await Album.findByPk(albumId, { attributes: ['familyId'] });
+      if (album) familyId = album.familyId;
+    }
+
     if (!familyId) {
       return res.status(400).json({ code: 400, message: '缺少 familyId 参数' });
     }

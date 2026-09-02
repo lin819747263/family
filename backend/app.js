@@ -55,6 +55,7 @@ app.use('/api/wishlist', require('./src/routes/wishlist'));
 app.use('/api/diary', require('./src/routes/diary'));
 app.use('/api/investment', require('./src/routes/investment'));
 app.use('/api/ai', require('./src/routes/ai'));
+app.use('/api/annual-goals', require('./src/routes/annualGoal'));
 
 // 健康检查
 app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));

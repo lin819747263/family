@@ -17,10 +17,20 @@ const verifySpaceAccess = verifyResourceAccess({
 
 const verifyItemAccess = verifyResourceAccess({
   getFamilyId: async (id) => {
-    const item = await Item.findByPk(id, { attributes: ['spaceId'] });
+    const item = await Item.findByPk(id, { attributes: ['spaceId', 'createdBy'] });
     if (!item) return null;
-    const space = await Space.findByPk(item.spaceId, { attributes: ['familyId'] });
-    return space?.familyId;
+    // 如果有 spaceId，通过空间获取 familyId
+    if (item.spaceId) {
+      const space = await Space.findByPk(item.spaceId, { attributes: ['familyId'] });
+      return space?.familyId;
+    }
+    // 如果没有 spaceId，通过创建者获取 familyId
+    const { FamilyMember } = require('../models');
+    const member = await FamilyMember.findOne({
+      where: { userId: item.createdBy },
+      attributes: ['familyId']
+    });
+    return member?.familyId;
   }
 });
 

@@ -16,6 +16,7 @@
         />
         <el-input v-model="filterCategory" placeholder="按分类筛选" style="width:140px;" clearable @clear="loadItems" @keyup.enter="loadItems" />
         <el-button type="primary" @click="openAddForm"><el-icon><Plus /></el-icon>添加物品</el-button>
+        <el-button @click="showAiDialog = true"><el-icon><MagicStick /></el-icon>AI录入</el-button>
       </div>
     </div>
 
@@ -99,13 +100,24 @@
           <el-col :span="12"><el-form-item label="价格"><el-input v-model="itemForm.price" type="number" step="0.01"><template #append>¥</template></el-input></el-form-item></el-col>
         </el-row>
         <el-form-item label="存放位置">
-          <el-tree-select v-if="showForm" v-model="itemForm.spaceId" :data="spaceTreeWithRecent" :props="{ label: 'name', value: 'id', children: 'children' }" placeholder="搜索或选择位置" style="width:100%" check-strictly filterable :default-expanded-keys="defaultExpandedKeys" />
+          <el-tree-select ref="spaceTreeRef" v-model="itemForm.spaceId" :data="spaceTreeWithRecent" :props="{ label: 'name', value: 'id', children: 'children' }" placeholder="搜索或选择位置" style="width:100%" check-strictly filterable :default-expanded-keys="defaultExpandedKeys" :render-after-expand="false" @visible-change="onDropdownVisibleChange" />
         </el-form-item>
         <el-row :gutter="12">
           <el-col :span="12"><el-form-item label="购买日期"><el-date-picker v-model="itemForm.purchaseDate" type="date" value-format="YYYY-MM-DD" style="width:100%" /></el-form-item></el-col>
           <el-col :span="12"><el-form-item label="保修期(月)"><el-input-number v-model="itemForm.warrantyMonths" :min="0" style="width:100%" /></el-form-item></el-col>
         </el-row>
-        <el-form-item label="过期日期"><el-date-picker v-model="itemForm.expiryDate" type="date" value-format="YYYY-MM-DD" style="width:100%" /></el-form-item>
+        <el-row :gutter="12">
+          <el-col :span="12"><el-form-item label="生产日期"><el-date-picker v-model="itemForm.productionDate" type="date" value-format="YYYY-MM-DD" style="width:100%" clearable /></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="保质期(月)">
+            <el-select v-model="itemForm.shelfLife" placeholder="请选择" style="width:100%" clearable @change="onShelfLifeChange">
+              <el-option v-for="m in shelfLifeOptions" :key="m" :label="m + '个月'" :value="m" />
+            </el-select>
+          </el-form-item></el-col>
+        </el-row>
+        <el-form-item label="过期日期">
+          <el-date-picker v-model="itemForm.expiryDate" type="date" value-format="YYYY-MM-DD" style="width:100%" clearable :disabled="!!(itemForm.productionDate && itemForm.shelfLife)" />
+          <div v-if="itemForm.productionDate && itemForm.shelfLife" style="font-size:12px;color:#909399;margin-top:4px;">根据生产日期和保质期自动推算</div>
+        </el-form-item>
         <el-form-item label="标签"><el-input v-model="itemForm.tags" placeholder="用逗号分隔" /></el-form-item>
         <el-form-item label="描述"><el-input v-model="itemForm.description" type="textarea" :rows="2" /></el-form-item>
       </el-form>
@@ -114,16 +126,46 @@
         <el-button type="primary" :loading="saving" @click="handleSave">{{ editing ? '更新' : '添加' }}</el-button>
       </template>
     </el-dialog>
+
+    <!-- AI 录入弹窗 -->
+    <el-dialog v-model="showAiDialog" title="AI 智能录入" width="480px" top="20vh">
+      <div style="margin-bottom:16px;">
+        <div style="font-size:14px;color:#606266;margin-bottom:12px;">
+          输入物品名称和过期时间，AI自动识别。
+        </div>
+        <div style="font-size:12px;color:#909399;margin-bottom:8px;">示例：</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+          <el-tag v-for="ex in aiExamples" :key="ex" type="info" style="cursor:pointer;" @click="aiInput = ex">{{ ex }}</el-tag>
+        </div>
+        <el-input
+          v-model="aiInput"
+          placeholder="例如：牛奶 保质期6个月"
+          clearable
+        />
+      </div>
+      <div v-if="aiResult" style="background:#f5f7fa;padding:12px;border-radius:8px;margin-bottom:16px;">
+        <div style="font-weight:600;margin-bottom:8px;color:#303133;">识别结果：</div>
+        <div style="display:flex;gap:24px;">
+          <div><span style="color:#909399;">物品名称：</span>{{ aiResult.name }}</div>
+          <div><span style="color:#909399;">过期时间：</span>{{ aiResult.expiryDate || '未设置' }}</div>
+        </div>
+      </div>
+      <template #footer>
+        <el-button @click="showAiDialog = false">取消</el-button>
+        <el-button v-if="aiResult" type="success" @click="applyAiResult">应用并添加</el-button>
+        <el-button type="primary" :loading="aiLoading" @click="aiRecognize">{{ aiResult ? '重新识别' : '开始识别' }}</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { useFamilyGuard } from "@/composables/useFamilyGuard"
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
 import { inventoryApi, dashboardApi } from '@/api'
 import { useAuthStore } from '@/store/auth'
 import { ElMessage } from 'element-plus'
-import { Search } from '@element-plus/icons-vue'
+import { Search, MagicStick } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 
 const authStore = useAuthStore()
@@ -159,10 +201,21 @@ const spaceTreeWithRecent = computed(() => {
   if (!recentChildren.length) return spaceTree.value
   return [{ id: '__recent__', name: '⭐ 最近选择', children: recentChildren }, ...spaceTree.value]
 })
+const spaceTreeRef = ref(null)
 const defaultExpandedKeys = computed(() => {
   return spaceTreeWithRecent.value.some(n => n.id === '__recent__') ? ['__recent__'] : []
 })
-
+// 下拉框展开时，强制设置树的展开节点
+function onDropdownVisibleChange(visible) {
+  if (visible) {
+    nextTick(() => {
+      const treeRef = spaceTreeRef.value?.treeRef
+      if (treeRef && defaultExpandedKeys.value.length) {
+        treeRef.setExpandedKeys(defaultExpandedKeys.value)
+      }
+    })
+  }
+}
 const search = ref('')
 const filterSpaceId = ref(null)
 const filterCategory = ref('')
@@ -173,10 +226,87 @@ const saving = ref(false)
 const loading = ref(false)
 const stats = reactive({ total: 0, expiring: 0, borrowed: 0 })
 
-const defaultForm = { name: '', quantity: 1, price: 0, category: '', spaceId: null, purchaseDate: dayjs().format('YYYY-MM-DD'), warrantyMonths: 0, expiryDate: '', tags: '', description: '', lastUsedDate: dayjs().format('YYYY-MM-DD') }
+const shelfLifeOptions = [1, 2, 3, 6, 8, 12, 18, 24, 36]
+const defaultForm = { name: '', quantity: 1, price: 9.9, category: '', spaceId: null, purchaseDate: dayjs().format('YYYY-MM-DD'), warrantyMonths: 0, productionDate: '', shelfLife: null, expiryDate: '', tags: '', description: '', lastUsedDate: dayjs().format('YYYY-MM-DD') }
 const itemForm = reactive({ ...defaultForm })
 
 function isExpiring(date) { return date && dayjs(date).diff(dayjs(), 'day') <= 7 && dayjs(date).diff(dayjs(), 'day') >= 0 }
+
+// 保质期变化时自动推算过期时间
+function onShelfLifeChange() {
+  if (itemForm.productionDate && itemForm.shelfLife) {
+    itemForm.expiryDate = dayjs(itemForm.productionDate).add(itemForm.shelfLife, 'month').format('YYYY-MM-DD')
+  }
+}
+// 监听生产日期变化
+watch(() => itemForm.productionDate, () => {
+  if (itemForm.productionDate && itemForm.shelfLife) {
+    itemForm.expiryDate = dayjs(itemForm.productionDate).add(itemForm.shelfLife, 'month').format('YYYY-MM-DD')
+  }
+})
+
+// AI 录入相关
+const showAiDialog = ref(false)
+const aiInput = ref('')
+const aiLoading = ref(false)
+const aiResult = ref(null)
+const aiExamples = [
+  '牛奶 保质期6个月',
+  '面包 明天过期',
+  '酸奶 2025-12-31过期',
+  '方便面 保质期12个月'
+]
+
+// AI 识别物品
+async function aiRecognize() {
+  if (!aiInput.value.trim()) return ElMessage.warning('请输入物品信息')
+  aiLoading.value = true
+  aiResult.value = null
+  try {
+    const token = localStorage.getItem('token')
+    const res = await fetch('/api/ai/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : ''
+      },
+      body: JSON.stringify({
+        messages: [{ role: 'user', content: `请帮我创建一个物品记录，物品信息：${aiInput.value}` }],
+        familyId: authStore.currentFamily?.id
+      })
+    })
+    const data = await res.json()
+    if (data.code === 0 && data.data?.toolCall?.result?.item) {
+      aiResult.value = data.data.toolCall.result.item
+    } else {
+      ElMessage.error(data.message || '识别失败，请重试')
+    }
+  } catch (e) {
+    console.error(e)
+    ElMessage.error('AI 服务请求失败')
+  } finally {
+    aiLoading.value = false
+  }
+}
+
+// 应用 AI 结果
+function applyAiResult() {
+  if (!aiResult.value) return
+  // 重置表单
+  resetForm()
+  // 填充 AI 识别的结果
+  Object.assign(itemForm, {
+    name: aiResult.value.name || '',
+    expiryDate: aiResult.value.expiryDate || ''
+  })
+  // 关闭 AI 弹窗，打开表单弹窗
+  showAiDialog.value = false
+  editing.value = false
+  showForm.value = true
+  // 清空 AI 输入
+  aiInput.value = ''
+  aiResult.value = null
+}
 
 onMounted(async () => {
   if (!await useFamilyGuard()) return

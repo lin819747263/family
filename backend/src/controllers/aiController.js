@@ -1,4 +1,4 @@
-const { SystemSetting, Transaction, Category, AccountBook } = require('../models');
+const { SystemSetting, Transaction, Category, AccountBook, Item } = require('../models');
 const { Op } = require('sequelize');
 const dayjs = require('dayjs');
 
@@ -102,6 +102,27 @@ const TOOLS = [
         required: ['title', 'priority']
       }
     }
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'create_inventory_item',
+      description: '创建一条物品记录。当用户提到任何实物物品（如食物、日用品、电子产品等）或提到保质期、过期时间时使用此工具。注意：如果用户只是提到物品名称（如牛奶、面包、手机），就应该使用此工具创建物品记录，而不是创建待办事项。',
+      parameters: {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            description: '物品名称，简短描述物品'
+          },
+          expiryDate: {
+            type: 'string',
+            description: '过期日期，格式 YYYY-MM-DD。根据用户描述推算，如"保质期6个月"则从今天推算。如果用户没说，留空。'
+          }
+        },
+        required: ['name']
+      }
+    }
   }
 ];
 
@@ -190,6 +211,32 @@ async function executeTool(toolName, args, userId, familyId) {
     };
   }
 
+  if (toolName === 'create_inventory_item') {
+    const item = await Item.create({
+      name: args.name,
+      quantity: 1,
+      category: '',
+      spaceId: null,
+      price: 9.9,
+      purchaseDate: dayjs().format('YYYY-MM-DD'),
+      expiryDate: args.expiryDate || null,
+      description: '',
+      tags: '',
+      createdBy: userId,
+      status: 'active'
+    });
+
+    return {
+      success: true,
+      message: '物品添加成功',
+      item: {
+        id: item.id,
+        name: item.name,
+        expiryDate: item.expiryDate
+      }
+    };
+  }
+
   return { success: false, message: '未知工具' };
 }
 
@@ -217,12 +264,19 @@ exports.chat = async (req, res, next) => {
 你有以下工具可以使用：
 - create_transaction: 当用户提到记账、消费、收入、花钱、进账等时，使用此工具创建交易记录。
 - create_todo: 当用户提到待办、提醒、任务、要做的事、记住、别忘了等时，使用此工具创建待办事项。
+- create_inventory_item: 当用户提到任何实物物品名称（如牛奶、面包、手机、充电宝、衣服等）或提到保质期、过期时间时，使用此工具创建物品记录。注意：物品名称+保质期/过期时间的组合（如"牛奶 保质期1个月"）是物品录入，不是待办事项。
+
+重要区分规则：
+- 如果用户提到的是具体物品名称（名词），应该使用 create_inventory_item
+- 只有当用户明确表示要做某件事（动词+任务）时，才使用 create_todo
+- "牛奶 保质期1个月" = 物品录入（create_inventory_item）
+- "买牛奶" = 待办事项（create_todo）
 
 当前用户的分类有：${catNames || '暂无分类'}
 当前用户的账本有：${books.map(b => b.name).join('、') || '暂无账本'}
 今天的日期是：${dayjs().format('YYYY-MM-DD')}
 
-请根据用户的描述，智能匹配最合适的分类。如果用户没有指定日期，使用今天的日期。待办事项请根据紧急程度判断优先级。`;
+请根据用户的描述，智能匹配最合适的分类。如果用户没有指定日期，使用今天的日期。待办事项请根据紧急程度判断优先级。物品录入时只需要物品名称和过期时间，如果用户说了保质期，请根据今天日期推算过期时间。`;
 
     const allMessages = [
       { role: 'system', content: enhancedSystemPrompt },

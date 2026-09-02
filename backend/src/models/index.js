@@ -52,6 +52,7 @@ const Wishlist = require('./Wishlist')(sequelize);
 const Diary = require('./Diary')(sequelize);
 const SystemSetting = require('./SystemSetting')(sequelize);
 const Investment = require('./Investment')(sequelize);
+const AnnualGoal = require('./AnnualGoal')(sequelize);
 
 // 关联关系定义
 // 家庭 - 用户
@@ -129,8 +130,8 @@ ItemBorrow.belongsTo(User, { foreignKey: 'lent_by', as: 'lender' });
 Notification.belongsTo(User, { foreignKey: 'user_id' });
 
 // 纪念日
-Anniversary.belongsTo(Family, { foreignKey: 'family_id' });
-Anniversary.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+Anniversary.belongsTo(Family, { foreignKey: 'family_id', onDelete: 'CASCADE' });
+Anniversary.belongsTo(User, { foreignKey: 'created_by', as: 'creator', onDelete: 'CASCADE' });
 
 // 菜谱
 Recipe.belongsTo(Family, { foreignKey: 'family_id' });
@@ -179,6 +180,10 @@ Diary.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
 Investment.belongsTo(Family, { foreignKey: 'family_id' });
 Investment.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
 
+// 年度目标
+AnnualGoal.belongsTo(Family, { foreignKey: 'family_id' });
+AnnualGoal.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+
 module.exports = {
   sequelize,
   User, Family, FamilyMember,
@@ -191,5 +196,5 @@ module.exports = {
   Todo,
   MemberProfile, WeightRecord, HeightRecord,
   Wishlist, Diary, SystemSetting,
-  Investment
+  Investment, AnnualGoal
 };

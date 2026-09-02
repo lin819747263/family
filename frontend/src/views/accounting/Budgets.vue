@@ -95,8 +95,19 @@ const totalPercent = computed(() => totalBudget.value > 0 ? Math.round((totalSpe
 
 onMounted(async () => {
   const res = await accountingApi.getCategories({ type: 'expense', familyId: authStore.currentFamily?.id })
-  // 只保留一级分类
-  categories.value = (res.data || []).filter(c => !c.parentId)
+  const allCategories = res.data || []
+  // 构建树形结构：一级分类 + 缩进的二级分类
+  const parentCategories = allCategories.filter(c => !c.parentId)
+  const childCategories = allCategories.filter(c => c.parentId)
+  const treeCategories = []
+  for (const parent of parentCategories) {
+    treeCategories.push(parent)
+    const children = childCategories.filter(c => c.parentId === parent.id)
+    for (const child of children) {
+      treeCategories.push({ ...child, name: `  └ ${child.name}` })
+    }
+  }
+  categories.value = treeCategories
   if (accountingStore.currentBookId) loadBudgets()
 })
 

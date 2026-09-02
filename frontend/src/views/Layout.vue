@@ -91,6 +91,7 @@
               <el-menu-item index="/member">成员档案</el-menu-item>
               <el-menu-item index="/wishlist">家庭心愿</el-menu-item>
               <el-menu-item index="/diary">家庭日记</el-menu-item>
+              <el-menu-item index="/annual-goals">🎯 年度目标</el-menu-item>
             </el-sub-menu>
           </el-menu>
         </nav>

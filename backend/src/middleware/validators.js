@@ -82,7 +82,7 @@ const accountingValidators = {
     body('name').trim().notEmpty().withMessage('账单名称不能为空'),
     body('amount').isFloat({ gt: 0 }).withMessage('金额必须大于 0'),
     body('type').isIn(['income', 'expense']).withMessage('类型只能是 income 或 expense'),
-    body('frequency').isIn(['daily', 'weekly', 'monthly', 'yearly']).withMessage('频率不合法'),
+    body('frequency').isIn(['daily', 'weekly', 'monthly', 'quarterly', 'yearly']).withMessage('频率不合法'),
     validate
   ]
 };

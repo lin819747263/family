@@ -297,6 +297,9 @@ exports.createRecurringBill = async (req, res, next) => {
     if (!await verifyBookAccess(data.bookId, req.userId)) {
       return res.status(403).json({ code: 403, message: '无权访问该账本' });
     }
+    // 空字符串转 null，避免 MySQL DATE 类型报错
+    if (!data.startDate) data.startDate = null;
+    if (!data.endDate) data.endDate = null;
     data.nextRunDate = calcNextRunDate(data);
     const bill = await RecurringBill.create(data);
     res.status(201).json({ code: 0, data: bill, message: '定时任务创建成功' });
@@ -332,6 +335,9 @@ exports.updateRecurringBill = async (req, res, next) => {
       return res.status(403).json({ code: 403, message: '无权操作' });
     }
     const data = (({ name, type, amount, categoryId, frequency, dayOfMonth, dayOfWeek, monthOfYear, triggerTime, startDate, endDate, note, active }) => ({ name, type, amount, categoryId, frequency, dayOfMonth, dayOfWeek, monthOfYear, triggerTime, startDate, endDate, note, active }))(req.body);
+    // 空字符串转 null，避免 MySQL DATE 类型报错
+    if (data.startDate === '') data.startDate = null;
+    if (data.endDate === '') data.endDate = null;
     // 如果修改了频率相关字段，重新计算下次执行日期
     if (data.frequency || data.dayOfMonth || data.dayOfWeek || data.monthOfYear) {
       const merged = { ...existing.toJSON(), ...data };

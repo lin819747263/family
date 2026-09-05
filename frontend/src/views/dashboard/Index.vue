@@ -18,7 +18,7 @@
           <button class="hero-btn primary" @click="showQuickAdd = true">
             <el-icon><Plus /></el-icon>记一笔
           </button>
-          <button class="hero-btn" @click="router.push('/todo')">
+          <button class="hero-btn" @click="router.push('/reminder/todo')">
             <el-icon><Finished /></el-icon>待办
           </button>
           <button class="hero-btn" @click="router.push('/album/moments')">
@@ -67,7 +67,7 @@
         </div>
         <span>物品</span>
       </div>
-      <div class="shortcut-item" @click="router.push('/anniversary')">
+      <div class="shortcut-item" @click="router.push('/reminder/anniversary')">
         <div class="sc-icon" style="background:linear-gradient(135deg,#fbbf24,#f59e0b);">
           <el-icon :size="20"><Calendar /></el-icon>
         </div>
@@ -110,7 +110,7 @@
             </span>
           </div>
         </div>
-        <div class="mc-footer" @click="router.push('/todo')">
+        <div class="mc-footer" @click="router.push('/reminder/todo')">
           查看全部 <el-icon><ArrowRight /></el-icon>
         </div>
       </div>

@@ -59,7 +59,8 @@
       "Bash(git commit *)",
       "Bash(findstr :3000)",
       "Bash(tasklist /fi \"imagename eq node.exe\" /fo csv /nh)",
-      "Bash(xargs kill -9)"
+      "Bash(xargs kill -9)",
+      "Bash(pkill -f \"node app.js\")"
     ]
   }
 }

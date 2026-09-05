@@ -32,9 +32,16 @@ const routes = [
       { path: 'inventory/unused', name: 'UnusedItems', component: () => import('@/views/inventory/Unused.vue') },
       { path: 'profile', name: 'Profile', component: () => import('@/views/Profile.vue') },
       { path: 'family', name: 'Family', component: () => import('@/views/family/Index.vue') },
-      { path: 'anniversary', name: 'Anniversary', component: () => import('@/views/anniversary/Index.vue') },
-      { path: 'todo', name: 'Todo', component: () => import('@/views/todo/Index.vue') },
-      { path: 'calendar', name: 'Calendar', component: () => import('@/views/anniversary/Calendar.vue') },
+      {
+        path: 'reminder',
+        component: () => import('@/views/reminder/Index.vue'),
+        children: [
+          { path: '', redirect: '/reminder/todo' },
+          { path: 'todo', name: 'Todo', component: () => import('@/views/todo/Index.vue') },
+          { path: 'calendar', name: 'Calendar', component: () => import('@/views/anniversary/Calendar.vue') },
+          { path: 'anniversary', name: 'Anniversary', component: () => import('@/views/anniversary/Index.vue') }
+        ]
+      },
       { path: 'recipe', name: 'Recipe', component: () => import('@/views/recipe/Index.vue') },
       { path: 'member', name: 'MemberProfile', component: () => import('@/views/member/Index.vue') },
       { path: 'wishlist', name: 'Wishlist', component: () => import('@/views/wishlist/Index.vue') },

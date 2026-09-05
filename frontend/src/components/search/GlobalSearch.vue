@@ -215,7 +215,7 @@ async function doSearch() {
               title: t.title,
               desc: t.description || '',
               meta: t.dueDate ? `截止 ${t.dueDate}` : '',
-              path: '/todo'
+              path: '/reminder/todo'
             })
           })
         }).catch(() => {})
@@ -263,7 +263,7 @@ async function doSearch() {
               title: a.title,
               desc: a.note || '',
               meta: a.date,
-              path: '/anniversary'
+              path: '/reminder/anniversary'
             })
           })
         }).catch(() => {})

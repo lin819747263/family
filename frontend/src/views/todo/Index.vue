@@ -2,10 +2,6 @@
   <div class="todo-page">
     <!-- 页面头部 -->
     <div class="page-header">
-      <div>
-        <div class="page-title">待办清单</div>
-        <p class="page-desc">记录待办事项，高效管理家庭事务</p>
-      </div>
       <div class="header-actions">
         <el-select v-model="filter" placeholder="全部" clearable style="width:110px;" @change="loadList">
           <el-option label="待完成" value="pending" />
@@ -24,23 +20,18 @@
       </div>
     </div>
 
-    <!-- 统计卡片 -->
-    <div class="stats-row">
-      <div class="stat-card" @click="filter = ''; loadList()">
-        <div class="stat-num">{{ stats.total }}</div>
-        <div class="stat-label">进行中</div>
-      </div>
-      <div class="stat-card pending" @click="filter = 'pending'; loadList()">
-        <div class="stat-num">{{ stats.pending }}</div>
-        <div class="stat-label">待完成</div>
-      </div>
-      <div class="stat-card overdue" @click="filter = 'overdue'; loadList()">
-        <div class="stat-num">{{ stats.overdue }}</div>
-        <div class="stat-label">已过期</div>
-      </div>
-      <div class="stat-card archived" @click="filter = 'archived'; loadList()">
-        <div class="stat-num">{{ stats.archived }}</div>
-        <div class="stat-label">已归档</div>
+    <!-- 时间筛选标签 -->
+    <div class="time-filter">
+      <div
+        v-for="tab in timeTabs"
+        :key="tab.value"
+        class="time-tab"
+        :class="{ active: timeFilter === tab.value }"
+        @click="timeFilter = tab.value; loadList()"
+      >
+        <el-icon :size="16"><component :is="tab.icon" /></el-icon>
+        <span>{{ tab.label }}</span>
+        <span v-if="tab.count > 0" class="tab-count">{{ tab.count }}</span>
       </div>
     </div>
 
@@ -93,6 +84,10 @@
               {{ formatDate(item.dueDate) }}
               <span v-if="item.dueTime">{{ item.dueTime }}</span>
               <span v-if="item.overdue && !item.archived" class="overdue-tag">已过期</span>
+            </span>
+            <span v-if="item.repeatType && item.repeatType !== 'none'" class="ti-repeat" :title="repeatLabel(item.repeatType)">
+              <el-icon><Refresh /></el-icon>
+              {{ repeatLabel(item.repeatType) }}
             </span>
             <span v-if="!item.archived" class="ti-priority-label" :class="item.priority">
               {{ priorityLabel(item.priority) }}
@@ -175,6 +170,87 @@
             <el-option label="提前1天" :value="1440" />
           </el-select>
         </el-form-item>
+
+        <el-form-item label="重复">
+          <el-select v-model="form.repeatType" style="width:100%;" @change="onRepeatTypeChange">
+            <el-option label="不重复" value="none" />
+            <el-option label="每天" value="daily" />
+            <el-option label="每周" value="weekly" />
+            <el-option label="每两周" value="biweekly" />
+            <el-option label="每月" value="monthly" />
+            <el-option label="每年" value="yearly" />
+            <el-option label="工作日" value="workdays" />
+            <el-option label="自定义" value="custom" />
+          </el-select>
+        </el-form-item>
+
+        <!-- 自定义重复选项 -->
+        <template v-if="form.repeatType === 'custom'">
+          <el-form-item label="重复间隔">
+            <div class="custom-repeat-row">
+              <span class="repeat-label">每</span>
+              <el-input-number
+                v-model="form.repeatInterval"
+                :min="1"
+                :max="365"
+                controls-position="right"
+                style="width: 100px;"
+              />
+              <el-select v-model="form.repeatUnit" style="width: 100px;">
+                <el-option label="天" value="days" />
+                <el-option label="周" value="weeks" />
+                <el-option label="月" value="months" />
+                <el-option label="年" value="years" />
+              </el-select>
+            </div>
+          </el-form-item>
+
+          <!-- 每周重复时选择星期 -->
+          <el-form-item v-if="form.repeatUnit === 'weeks'" label="重复日">
+            <div class="weekday-picker">
+              <div
+                v-for="(day, idx) in weekdayOptions"
+                :key="idx"
+                class="weekday-btn"
+                :class="{ active: form.repeatWeekdays.includes(idx) }"
+                @click="toggleWeekday(idx)"
+              >
+                {{ day }}
+              </div>
+            </div>
+          </el-form-item>
+
+          <!-- 每月重复时选择日期 -->
+          <el-form-item v-if="form.repeatUnit === 'months'" label="重复日">
+            <el-select v-model="form.repeatDayOfMonth" style="width: 100%;">
+              <el-option v-for="d in 31" :key="d" :label="`每月${d}日`" :value="d" />
+              <el-option label="每月最后一天" :value="-1" />
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="结束重复">
+            <el-radio-group v-model="form.repeatEndType">
+              <el-radio value="never">永不</el-radio>
+              <el-radio value="count">指定次数</el-radio>
+              <el-radio value="date">指定日期</el-radio>
+            </el-radio-group>
+          </el-form-item>
+
+          <el-form-item v-if="form.repeatEndType === 'count'" label="重复次数">
+            <el-input-number v-model="form.repeatCount" :min="1" :max="999" />
+            <span class="repeat-hint">次后停止</span>
+          </el-form-item>
+
+          <el-form-item v-if="form.repeatEndType === 'date'" label="结束日期">
+            <el-date-picker
+              v-model="form.repeatEndDate"
+              type="date"
+              placeholder="选择结束日期"
+              value-format="YYYY-MM-DD"
+              style="width:100%;"
+            />
+          </el-form-item>
+        </template>
       </el-form>
       <template #footer>
         <el-button @click="showDialog = false">取消</el-button>
@@ -186,11 +262,12 @@
 
 <script setup>
 import { useFamilyGuard } from "@/composables/useFamilyGuard"
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { todoApi } from '@/api'
 import { useAuthStore } from '@/store/auth'
 import { ElMessage } from 'element-plus'
 import dayjs from 'dayjs'
+import { Calendar, Timer, List, Refresh } from '@element-plus/icons-vue'
 
 const authStore = useAuthStore()
 
@@ -198,6 +275,7 @@ const list = ref([])
 const loading = ref(false)
 const filter = ref('')
 const filterPriority = ref('')
+const timeFilter = ref('today')
 const quickTitle = ref('')
 const showDialog = ref(false)
 const isEdit = ref(false)
@@ -207,14 +285,62 @@ const saving = ref(false)
 const archiving = ref(false)
 const stats = reactive({ total: 0, pending: 0, completed: 0, archived: 0, overdue: 0, dueToday: 0 })
 
+const timeTabs = computed(() => [
+  { value: 'today', label: '今日', icon: 'Calendar', count: stats.dueToday || 0 },
+  { value: 'week', label: '近7天', icon: 'Timer', count: 0 },
+  { value: 'all', label: '全部', icon: 'List', count: stats.total || 0 }
+])
+
 const defaultForm = {
   title: '', description: '', priority: 'medium',
-  dueDate: dayjs().format('YYYY-MM-DD'), dueTime: '', reminderBefore: 0
+  dueDate: dayjs().format('YYYY-MM-DD'), dueTime: '', reminderBefore: 0,
+  repeatType: 'none', repeatInterval: 1, repeatUnit: 'days',
+  repeatWeekdays: [], repeatDayOfMonth: 1,
+  repeatEndType: 'never', repeatCount: 10, repeatEndDate: ''
 }
 const form = ref({ ...defaultForm })
 
+// 星期选项
+const weekdayOptions = ['日', '一', '二', '三', '四', '五', '六']
+
+// 重复类型变化
+function onRepeatTypeChange(val) {
+  if (val === 'none') {
+    form.value.repeatInterval = 1
+    form.value.repeatUnit = 'days'
+    form.value.repeatWeekdays = []
+    form.value.repeatEndType = 'never'
+  } else if (val === 'custom') {
+    form.value.repeatInterval = 1
+    form.value.repeatUnit = 'days'
+  }
+}
+
+// 切换星期
+function toggleWeekday(idx) {
+  const idx_pos = form.value.repeatWeekdays.indexOf(idx)
+  if (idx_pos > -1) {
+    form.value.repeatWeekdays.splice(idx_pos, 1)
+  } else {
+    form.value.repeatWeekdays.push(idx)
+  }
+}
+
 function priorityLabel(p) {
   return { high: '高', medium: '中', low: '低' }[p] || p
+}
+
+function repeatLabel(type) {
+  const labels = {
+    daily: '每天',
+    weekly: '每周',
+    biweekly: '每两周',
+    monthly: '每月',
+    yearly: '每年',
+    workdays: '工作日',
+    custom: '自定义'
+  }
+  return labels[type] || ''
 }
 
 function formatDate(d) {
@@ -234,6 +360,16 @@ async function loadList() {
     const params = { familyId: authStore.currentFamily?.id }
     if (filter.value) params.filter = filter.value
     if (filterPriority.value) params.priority = filterPriority.value
+
+    // 时间筛选
+    const today = dayjs().format('YYYY-MM-DD')
+    if (timeFilter.value === 'today') {
+      params.dueDate = today
+    } else if (timeFilter.value === 'week') {
+      params.dueDateFrom = today
+      params.dueDateTo = dayjs().add(7, 'day').format('YYYY-MM-DD')
+    }
+
     const res = await todoApi.getList(params)
     list.value = res.data.list
   } catch (e) { console.error(e) }
@@ -278,7 +414,15 @@ function openEdit(item) {
     priority: item.priority || 'medium',
     dueDate: item.dueDate || '',
     dueTime: item.dueTime || '',
-    reminderBefore: item.reminderBefore || 0
+    reminderBefore: item.reminderBefore || 0,
+    repeatType: item.repeatType || 'none',
+    repeatInterval: item.repeatInterval || 1,
+    repeatUnit: item.repeatUnit || 'days',
+    repeatWeekdays: item.repeatWeekdays ? (typeof item.repeatWeekdays === 'string' ? JSON.parse(item.repeatWeekdays) : item.repeatWeekdays) : [],
+    repeatDayOfMonth: item.repeatDayOfMonth || 1,
+    repeatEndType: item.repeatEndType || 'never',
+    repeatCount: item.repeatCount || 10,
+    repeatEndDate: item.repeatEndDate || ''
   }
   showDialog.value = true
 }
@@ -377,6 +521,55 @@ async function handleDelete(id) {
   display: flex;
   gap: 8px;
   flex-shrink: 0;
+}
+
+/* 时间筛选标签 */
+.time-filter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+.time-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  flex: 1;
+  justify-content: center;
+}
+.time-tab:hover {
+  background: rgba(102, 126, 234, 0.06);
+  color: #667eea;
+}
+.time-tab.active {
+  background: #fff;
+  color: #667eea;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+.tab-count {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 8px;
+  min-width: 20px;
+  text-align: center;
+}
+.time-tab.active .tab-count {
+  background: linear-gradient(135deg, #667eea, #764ba2);
 }
 
 /* 统计卡片 */
@@ -577,6 +770,16 @@ async function handleDelete(id) {
   border-radius: 4px;
   font-weight: 600;
 }
+.ti-repeat {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.1);
+  padding: 0 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
 .today-tag {
   background: #fef3c7;
   color: #d97706;
@@ -642,6 +845,56 @@ async function handleDelete(id) {
 }
 .form-dialog :deep(.el-dialog__body) {
   padding: 20px 24px;
+}
+
+/* 自定义重复选项 */
+.custom-repeat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.repeat-label {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.weekday-picker {
+  display: flex;
+  gap: 6px;
+}
+
+.weekday-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #e2e8f0;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.weekday-btn:hover {
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.weekday-btn.active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-color: transparent;
+  color: #fff;
+}
+
+.repeat-hint {
+  margin-left: 8px;
+  font-size: 13px;
+  color: #94a3b8;
 }
 
 @media (max-width: 768px) {

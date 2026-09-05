@@ -172,8 +172,9 @@
           <div style="display:flex;gap:8px;align-items:center;width:100%;">
             <el-date-picker v-model="form.startDate" type="date" placeholder="起始日" value-format="YYYY-MM-DD" style="flex:1;" clearable />
             <span style="color:#94a3b8;">至</span>
-            <el-date-picker v-model="form.endDate" type="date" placeholder="截止日" value-format="YYYY-MM-DD" style="flex:1;" clearable />
+            <el-date-picker v-model="form.endDate" type="date" placeholder="长期有效" value-format="YYYY-MM-DD" style="flex:1;" clearable />
           </div>
+          <div v-if="!form.endDate" style="font-size:12px;color:#8b5cf6;margin-top:4px;">💡 不设截止日期 = 长期有效</div>
         </el-form-item>
 
         <el-form-item label="备注">
@@ -209,7 +210,7 @@ const triggerTimeDate = ref('')
 const defaultForm = {
   name: '', bookId: '', type: 'expense', amount: '', categoryId: '',
   frequency: 'monthly', dayOfMonth: 1, dayOfWeek: 1, monthOfYear: 1,
-  triggerTime: '00:00', startDate: '', endDate: '', note: ''
+  triggerTime: '00:00', startDate: new Date().toISOString().slice(0, 10), endDate: '', note: ''
 }
 const form = ref({ ...defaultForm })
 

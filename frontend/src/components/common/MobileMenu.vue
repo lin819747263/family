@@ -67,15 +67,10 @@
         <el-menu-item index="/inventory/unused">断舍离助手</el-menu-item>
       </el-sub-menu>
 
-      <el-sub-menu index="reminder">
-        <template #title>
-          <el-icon><Bell /></el-icon>
-          <span>家庭提醒</span>
-        </template>
-        <el-menu-item index="/calendar">日历视图</el-menu-item>
-        <el-menu-item index="/anniversary">纪念日</el-menu-item>
-        <el-menu-item index="/todo">待办清单</el-menu-item>
-      </el-sub-menu>
+      <el-menu-item index="/reminder">
+        <el-icon><Bell /></el-icon>
+        <span>家庭提醒</span>
+      </el-menu-item>
 
       <el-sub-menu index="other">
         <template #title>

@@ -1,10 +1,6 @@
 <template>
   <div class="anniversary-page">
     <div class="page-header">
-      <div>
-        <div class="page-title">纪念日</div>
-        <p class="page-desc">记录重要的日子，不再错过每一个值得纪念的时刻</p>
-      </div>
       <div class="header-actions">
         <el-select v-model="filterType" placeholder="全部类型" clearable style="width:130px;" @change="loadList">
           <el-option label="生日" value="birthday" />
@@ -13,7 +9,7 @@
           <el-option label="倒数日" value="countdown" />
           <el-option label="其他" value="other" />
         </el-select>
-        <el-button @click="router.push('/calendar')">
+        <el-button @click="router.push('/reminder/calendar')">
           <el-icon><Calendar /></el-icon>日历
         </el-button>
         <el-button @click="handleTriggerReminders" :loading="triggering">

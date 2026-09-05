@@ -6,7 +6,11 @@ const dayjs = require('dayjs');
 
 exports.create = async (req, res, next) => {
   try {
-    const { title, description, priority, dueDate, dueTime, reminderBefore, familyId } = req.body;
+    const {
+      title, description, priority, dueDate, dueTime, reminderBefore, familyId,
+      repeatType, repeatInterval, repeatUnit, repeatWeekdays,
+      repeatDayOfMonth, repeatEndType, repeatCount, repeatEndDate
+    } = req.body;
     if (!title) return res.status(400).json({ code: 400, message: '请输入待办标题' });
 
     const item = await Todo.create({
@@ -14,6 +18,15 @@ exports.create = async (req, res, next) => {
       priority: priority || 'medium',
       dueDate, dueTime,
       reminderBefore: reminderBefore ?? 0,
+      repeatType: repeatType || 'none',
+      repeatInterval: repeatInterval || 1,
+      repeatUnit: repeatUnit || 'days',
+      repeatWeekdays: repeatWeekdays || null,
+      repeatDayOfMonth: repeatDayOfMonth || 1,
+      repeatEndType: repeatEndType || 'never',
+      repeatCount: repeatCount || 10,
+      repeatEndDate: repeatEndDate || null,
+      repeatCurrentCount: 0,
       familyId: familyId || req.body.familyId,
       createdBy: req.userId
     });
@@ -23,7 +36,7 @@ exports.create = async (req, res, next) => {
 
 exports.getList = async (req, res, next) => {
   try {
-    const { familyId, filter, priority, search, page = 1, pageSize = 50 } = req.query;
+    const { familyId, filter, priority, search, dueDate, dueDateFrom, dueDateTo, page = 1, pageSize = 50 } = req.query;
     const where = { familyId, status: 'active' };
 
     // 默认只显示未归档的
@@ -43,6 +56,17 @@ exports.getList = async (req, res, next) => {
       where.dueDate = { [Op.lt]: dayjs().format('YYYY-MM-DD') };
     }
     if (priority) where.priority = priority;
+
+    // 时间筛选
+    if (dueDate) {
+      where.dueDate = dueDate;
+    } else if (dueDateFrom && dueDateTo) {
+      where.dueDate = { [Op.between]: [dueDateFrom, dueDateTo] };
+    } else if (dueDateFrom) {
+      where.dueDate = { [Op.gte]: dueDateFrom };
+    } else if (dueDateTo) {
+      where.dueDate = { [Op.lte]: dueDateTo };
+    }
 
     // 搜索标题和描述
     if (search) {
@@ -95,8 +119,15 @@ exports.update = async (req, res, next) => {
       const membership = await FamilyMember.findOne({ where: { familyId: item.familyId, userId: req.userId } });
       if (!membership) return res.status(403).json({ code: 403, message: '无权操作' });
     }
-    const allowed = (({ title, description, priority, dueDate, dueTime, reminderBefore }) =>
-      ({ title, description, priority, dueDate, dueTime, reminderBefore }))(req.body);
+    const allowed = (({
+      title, description, priority, dueDate, dueTime, reminderBefore,
+      repeatType, repeatInterval, repeatUnit, repeatWeekdays,
+      repeatDayOfMonth, repeatEndType, repeatCount, repeatEndDate
+    }) => ({
+      title, description, priority, dueDate, dueTime, reminderBefore,
+      repeatType, repeatInterval, repeatUnit, repeatWeekdays,
+      repeatDayOfMonth, repeatEndType, repeatCount, repeatEndDate
+    }))(req.body);
     await item.update(allowed);
     res.json({ code: 0, data: item, message: '更新成功' });
   } catch (err) { next(err); }
@@ -126,11 +157,150 @@ exports.toggleComplete = async (req, res, next) => {
     if (item.completed) {
       item.archived = true;
       item.archivedAt = new Date();
+
+      // 如果是重复待办，创建下一个
+      if (item.repeatType && item.repeatType !== 'none') {
+        await createNextRecurringTodo(item);
+      }
     }
     await item.save();
     res.json({ code: 0, data: item, message: item.completed ? '已完成并归档' : '已恢复' });
   } catch (err) { next(err); }
 };
+
+// 计算下一个重复日期
+function calculateNextDueDate(todo) {
+  const { dueDate, repeatType, repeatInterval, repeatUnit, repeatWeekdays, repeatDayOfMonth } = todo;
+  if (!dueDate) return null;
+
+  let nextDate = dayjs(dueDate);
+
+  switch (repeatType) {
+    case 'daily':
+      nextDate = nextDate.add(repeatInterval || 1, 'day');
+      break;
+
+    case 'weekly':
+      nextDate = nextDate.add(1, 'week');
+      break;
+
+    case 'biweekly':
+      nextDate = nextDate.add(2, 'week');
+      break;
+
+    case 'workdays':
+      // 跳到下一个工作日
+      do {
+        nextDate = nextDate.add(1, 'day');
+      } while (nextDate.day() === 0 || nextDate.day() === 6);
+      break;
+
+    case 'monthly':
+      nextDate = nextDate.add(1, 'month');
+      break;
+
+    case 'yearly':
+      nextDate = nextDate.add(1, 'year');
+      break;
+
+    case 'custom':
+      const interval = repeatInterval || 1;
+      switch (repeatUnit) {
+        case 'days':
+          nextDate = nextDate.add(interval, 'day');
+          break;
+        case 'weeks':
+          if (repeatWeekdays && repeatWeekdays.length > 0) {
+            // 找到下一个匹配的星期几
+            let found = false;
+            for (let i = 1; i <= 7; i++) {
+              const candidate = nextDate.add(i, 'day');
+              if (repeatWeekdays.includes(candidate.day())) {
+                nextDate = candidate;
+                found = true;
+                break;
+              }
+            }
+            if (!found) nextDate = nextDate.add(interval, 'week');
+          } else {
+            nextDate = nextDate.add(interval, 'week');
+          }
+          break;
+        case 'months':
+          nextDate = nextDate.add(interval, 'month');
+          if (repeatDayOfMonth) {
+            if (repeatDayOfMonth === -1) {
+              nextDate = nextDate.endOf('month');
+            } else {
+              nextDate = nextDate.date(Math.min(repeatDayOfMonth, nextDate.daysInMonth()));
+            }
+          }
+          break;
+        case 'years':
+          nextDate = nextDate.add(interval, 'year');
+          break;
+      }
+      break;
+
+    default:
+      return null;
+  }
+
+  return nextDate.format('YYYY-MM-DD');
+}
+
+// 创建下一个重复待办
+async function createNextRecurringTodo(originalTodo) {
+  try {
+    // 检查是否达到重复次数限制
+    if (originalTodo.repeatEndType === 'count') {
+      const newCount = (originalTodo.repeatCurrentCount || 0) + 1;
+      if (newCount >= (originalTodo.repeatCount || 10)) {
+        return; // 达到次数限制，不再创建
+      }
+    }
+
+    // 检查是否超过结束日期
+    if (originalTodo.repeatEndType === 'date' && originalTodo.repeatEndDate) {
+      if (dayjs().isAfter(dayjs(originalTodo.repeatEndDate))) {
+        return; // 超过结束日期
+      }
+    }
+
+    const nextDueDate = calculateNextDueDate(originalTodo);
+    if (!nextDueDate) return;
+
+    // 检查是否超过结束日期
+    if (originalTodo.repeatEndType === 'date' && originalTodo.repeatEndDate) {
+      if (dayjs(nextDueDate).isAfter(dayjs(originalTodo.repeatEndDate))) {
+        return;
+      }
+    }
+
+    await Todo.create({
+      title: originalTodo.title,
+      description: originalTodo.description,
+      priority: originalTodo.priority,
+      dueDate: nextDueDate,
+      dueTime: originalTodo.dueTime,
+      reminderBefore: originalTodo.reminderBefore,
+      repeatType: originalTodo.repeatType,
+      repeatInterval: originalTodo.repeatInterval,
+      repeatUnit: originalTodo.repeatUnit,
+      repeatWeekdays: originalTodo.repeatWeekdays,
+      repeatDayOfMonth: originalTodo.repeatDayOfMonth,
+      repeatEndType: originalTodo.repeatEndType,
+      repeatCount: originalTodo.repeatCount,
+      repeatEndDate: originalTodo.repeatEndDate,
+      repeatCurrentCount: (originalTodo.repeatCurrentCount || 0) + 1,
+      parentTodoId: originalTodo.parentTodoId || originalTodo.id,
+      familyId: originalTodo.familyId,
+      createdBy: originalTodo.createdBy
+    });
+  } catch (err) {
+    console.error('创建重复待办失败:', err);
+  }
+}
 
 // 归档
 exports.archive = async (req, res, next) => {

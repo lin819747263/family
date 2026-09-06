@@ -44,9 +44,9 @@
       <button class="voice-result-close" @click="voiceResult = ''">✕</button>
     </div>
 
-    <!-- 分类选择（下拉框） -->
+    <!-- 分类选择 -->
     <div class="cat-select-row">
-      <span class="detail-label">📂 分类</span>
+      <span class="d-label">📂 分类</span>
       <el-select v-model="form.categoryId" placeholder="选择分类" style="flex:1;" filterable size="large">
         <template v-for="group in categoryTree" :key="group.id">
           <el-option-group v-if="group.children?.length" :label="group.name">
@@ -69,31 +69,27 @@
 
     <!-- 详情区域 -->
     <div class="detail-section">
-      <!-- 账本 -->
-      <div v-if="books.length > 1 && !isEdit" class="detail-row">
-        <span class="detail-label">💰 账本</span>
-        <el-select v-model="form.bookId" placeholder="选择账本" size="small" style="flex:1;">
-          <el-option v-for="b in books" :key="b.id" :label="b.name" :value="b.id" />
-        </el-select>
-      </div>
-
       <!-- 日期 -->
       <div class="detail-row">
-        <span class="detail-label">📅 日期</span>
-        <el-date-picker
-          v-model="form.transactionDate"
-          type="date"
-          size="small"
-          style="flex:1;"
-          value-format="YYYY-MM-DD"
-          :clearable="false"
-        />
+        <span class="d-label">📅 日期</span>
+        <el-popover placement="bottom-start" :width="280" trigger="click">
+          <template #reference>
+            <button class="d-chip">{{ dateDisplayText }} ▾</button>
+          </template>
+          <el-date-picker
+            v-model="form.transactionDate"
+            type="date"
+            value-format="YYYY-MM-DD"
+            :clearable="false"
+            style="width:100%;"
+          />
+        </el-popover>
       </div>
 
       <!-- 备注 -->
       <div class="detail-row">
-        <span class="detail-label">✏️ 备注</span>
-        <el-input v-model="form.note" placeholder="添加备注..." size="small" style="flex:1;" clearable />
+        <span class="d-label">✏️ 备注</span>
+        <input v-model="form.note" class="d-field" placeholder="添加备注..." />
       </div>
     </div>
 
@@ -182,7 +178,6 @@ function parseVoiceInput(text) {
 
   for (const [catName, keywords] of Object.entries(categoryMap)) {
     if (keywords.some(k => text.includes(k))) {
-      // 在分类列表中查找匹配的分类
       const matched = allCategories.value.find(c => c.name.includes(catName) && c.type === form.type)
       if (matched) {
         form.categoryId = matched.id
@@ -203,7 +198,6 @@ const authStore = useAuthStore()
 const accountingStore = useAccountingStore()
 const loading = ref(false)
 const allCategories = ref([])
-const books = ref([])
 const amountInput = ref(null)
 
 const isEdit = computed(() => !!props.editData)
@@ -212,7 +206,7 @@ const form = reactive({
   bookId: null, type: 'expense', amount: '', categoryId: '', transactionDate: dayjs().format('YYYY-MM-DD'), note: '', tags: ''
 })
 
-// 分类树
+// 分类树（保留用于语音匹配）
 const categoryTree = computed(() => {
   const filtered = allCategories.value.filter(c => c.type === form.type)
   const map = {}
@@ -230,6 +224,34 @@ const categoryTree = computed(() => {
   return roots
 })
 
+// 用于 chip 展示的扁平分类列表（一级分类优先，无子分类时直接显示）
+const displayCategories = computed(() => {
+  const filtered = allCategories.value.filter(c => c.type === form.type)
+  const parents = filtered.filter(c => !c.parentId)
+  const result = []
+  parents.sort((a, b) => (a.sort || 0) - (b.sort || 0))
+  for (const p of parents) {
+    const children = filtered.filter(c => c.parentId === p.id)
+    if (children.length === 0) {
+      result.push(p)
+    } else {
+      // 有子分类时，只显示一级分类（chip 简洁）
+      result.push(p)
+    }
+  }
+  return result
+})
+
+// 日期显示文本
+const dateDisplayText = computed(() => {
+  if (!form.transactionDate) return '选择日期'
+  const today = dayjs().format('YYYY-MM-DD')
+  const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
+  if (form.transactionDate === today) return '今天 · ' + dayjs().format('M月D日')
+  if (form.transactionDate === yesterday) return '昨天 · ' + dayjs(form.transactionDate).format('M月D日')
+  return dayjs(form.transactionDate).format('M月D日')
+})
+
 watch(() => props.editData, (val) => {
   if (val) {
     form.bookId = val.bookId
@@ -244,19 +266,10 @@ watch(() => props.editData, (val) => {
 
 onMounted(async () => {
   try {
-    const [catRes, bookRes] = await Promise.all([
-      accountingApi.getCategories({ familyId: authStore.currentFamily?.id }),
-      accountingApi.getBooks({ familyId: authStore.currentFamily?.id })
-    ])
+    const catRes = await accountingApi.getCategories({ familyId: authStore.currentFamily?.id })
     allCategories.value = catRes.data
-    books.value = bookRes.data
-    if (!isEdit.value) {
-      if (accountingStore.currentBookId && bookRes.data.find(b => b.id === accountingStore.currentBookId)) {
-        form.bookId = accountingStore.currentBookId
-      } else if (bookRes.data.length === 1) {
-        form.bookId = bookRes.data[0].id
-      }
-    }
+    // 始终使用全局账本
+    if (!isEdit.value) form.bookId = accountingStore.currentBookId || null
     // 自动聚焦金额
     nextTick(() => amountInput.value?.focus())
   } catch { /* handled by interceptor */ }
@@ -295,11 +308,7 @@ async function handleSubmit() {
       })
       ElMessage.success('修改成功')
     } else {
-      if (!form.bookId) {
-        const booksRes = await accountingApi.getBooks({ familyId: authStore.currentFamily?.id })
-        if (!booksRes.data?.length) { ElMessage.warning('请先创建账本'); return }
-        form.bookId = booksRes.data[0].id
-      }
+      if (!form.bookId) { ElMessage.warning('请先选择账本'); return }
       await accountingApi.createTransaction({ ...form, amount })
       ElMessage.success('记账成功')
     }
@@ -312,232 +321,160 @@ async function handleSubmit() {
 
 <style scoped>
 .txn-form {
+  padding: 16px 18px 18px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
-/* ========== 类型切换 ========== */
+/* ========== 类型切换（滑动指示） ========== */
 .type-bar {
-  display: flex;
-  position: relative;
-  background: #f1f5f9;
-  border-radius: 14px;
-  padding: 4px;
-  gap: 4px;
+  position: relative; display: grid; grid-template-columns: 1fr 1fr;
+  background: var(--cream, #F3EADD); border-radius: 13px; padding: 4px;
 }
 .type-tab {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  background: transparent;
-  font-size: 14px;
-  font-weight: 600;
-  color: #94a3b8;
-  cursor: pointer;
-  position: relative;
-  z-index: 1;
-  transition: color 0.25s;
+  position: relative; z-index: 2; padding: 10px; border-radius: 10px;
+  border: none; background: transparent; color: var(--text-soft, #A08D7A);
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  transition: color 0.3s;
 }
-.type-tab.active { color: #1e293b; }
+.type-tab.active { color: #fff; }
 .type-icon { font-size: 16px; }
+.type-indicator {
+  position: absolute; z-index: 1; top: 4px; bottom: 4px; left: 4px;
+  width: calc(50% - 4px); border-radius: 10px;
+  background: linear-gradient(135deg, var(--rose, #D99A9A), #B06A6A);
+  transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.5, 1), background 0.35s;
+  box-shadow: 0 4px 12px rgba(176, 106, 106, 0.3);
+}
+.type-indicator.income {
+  transform: translateX(100%);
+  background: linear-gradient(135deg, var(--sage, #A8B08A), #7E8862);
+  box-shadow: 0 4px 12px rgba(126, 136, 98, 0.3);
+}
 
 /* ========== 金额输入 ========== */
 .amount-box {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  padding: 20px 24px;
-  border-radius: 16px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s;
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 4px 12px;
+  border-bottom: 2px solid var(--wood-light, #E2CDB2);
+  transition: border-color 0.3s;
 }
-.amount-box.expense {
-  background: linear-gradient(135deg, #fef2f2, #fff5f5);
-  border: 2px solid #fecaca;
-}
-.amount-box.income {
-  background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
-  border: 2px solid #a7f3d0;
-}
-.amount-box:focus-within.expense { border-color: #f87171; box-shadow: 0 0 0 4px rgba(248,113,113,0.1); }
-.amount-box:focus-within.income { border-color: #34d399; box-shadow: 0 0 0 4px rgba(52,211,153,0.1); }
-
+.amount-box:focus-within { border-color: var(--terracotta, #C89F85); }
 .amount-currency {
-  font-size: 28px;
-  font-weight: 800;
-  color: #64748b;
+  font-size: 24px; font-weight: 800; color: var(--terra-deep, #96684A);
 }
 .amount-field {
-  flex: 1;
-  border: none;
-  background: transparent;
-  font-size: 40px;
-  font-weight: 800;
-  color: #1e293b;
-  outline: none;
-  min-width: 0;
-  line-height: 1.2;
+  flex: 1; border: none; background: transparent; outline: none;
+  font-size: 34px; font-weight: 800; color: var(--text-deep, #6B5744);
+  letter-spacing: -0.02em; min-width: 0;
 }
-.amount-box.expense .amount-field { color: #ef4444; }
-.amount-box.income .amount-field { color: #10b981; }
-.amount-field::placeholder { color: #d1d5db; font-weight: 600; }
+.amount-field::placeholder { color: var(--wood-light, #E2CDB2); }
 .amount-field::-webkit-outer-spin-button,
 .amount-field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .amount-field { -moz-appearance: textfield; }
 
 /* 语音按钮 */
 .voice-btn {
-  width: 40px; height: 40px; border-radius: 50%;
-  border: 2px solid #e2e8f0; background: #fff;
+  width: 40px; height: 40px; border-radius: 12px; border: none;
+  background: var(--cream, #F3EADD); color: var(--terra-deep, #96684A);
+  cursor: pointer; font-size: 17px;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; flex-shrink: 0; color: #94a3b8;
-  transition: all 0.25s;
+  transition: all 0.25s; flex-shrink: 0;
 }
-.voice-btn:hover { border-color: #667eea; color: #667eea; }
+.voice-btn:hover { background: var(--apricot, #EDE0CE); }
 .voice-btn.listening {
-  border-color: #ef4444; color: #ef4444;
-  background: #fef2f2; animation: pulse-ring 1.2s infinite;
+  background: var(--rose, #D99A9A); color: #fff;
+  animation: pulse 1.2s ease-in-out infinite;
 }
-@keyframes pulse-ring {
-  0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.3); }
-  70% { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
-  100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
-}
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
 
 .voice-hint {
   display: flex; align-items: center; gap: 8px;
-  padding: 8px 14px; border-radius: 10px;
-  background: #fef2f2; color: #ef4444; font-size: 13px;
+  font-size: 12px; color: var(--rose-d, #B06A6A); margin: 6px 0 2px;
 }
 .voice-pulse {
-  width: 8px; height: 8px; border-radius: 50%; background: #ef4444;
-  animation: pulse-dot 1s infinite;
+  width: 8px; height: 8px; border-radius: 50%; background: var(--rose, #D99A9A);
+  animation: blink 1s ease-in-out infinite;
 }
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 .voice-result {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 14px; border-radius: 10px;
-  background: #f0fdf4; color: #16a34a; font-size: 13px;
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 10px;
+  background: rgba(168, 176, 138, 0.16); color: var(--sage-d, #7E8862);
+  font-size: 12.5px;
 }
 .voice-result-close {
   border: none; background: none; cursor: pointer;
-  color: #94a3b8; font-size: 14px; padding: 2px;
+  color: var(--text-soft, #A08D7A); font-size: 14px; padding: 2px; margin-left: auto;
 }
 
 /* ========== 分类选择 ========== */
 .cat-select-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+.cat-select-row :deep(.el-select) {
+  --el-select-border-color-hover: var(--terracotta, #C89F85);
 }
 
 /* ========== 详情区域 ========== */
-.detail-section {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 14px;
-  background: #f8fafc;
-  border-radius: 14px;
+.detail-section { display: flex; flex-direction: column; gap: 10px; }
+.detail-row { display: flex; align-items: center; gap: 10px; }
+.d-label {
+  font-size: 13px; color: var(--text-soft, #A08D7A);
+  white-space: nowrap; flex-shrink: 0;
 }
-.detail-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.d-chip {
+  flex: 1; text-align: left; padding: 9px 13px;
+  border-radius: 11px; background: var(--cream, #F3EADD);
+  font-size: 13px; font-weight: 600; color: var(--terra-deep, #96684A);
+  cursor: pointer; border: none; transition: all 0.25s;
 }
-.detail-label {
-  font-size: 13px;
-  color: #64748b;
-  white-space: nowrap;
-  min-width: 60px;
+.d-chip:hover { background: var(--apricot, #EDE0CE); }
+.d-field {
+  flex: 1; padding: 9px 12px; border-radius: 11px;
+  border: 1.5px solid var(--wood-light, #E2CDB2); background: #FFFDF9;
+  font-size: 13.5px; color: var(--text-deep, #6B5744); outline: none;
+  transition: all 0.25s; min-width: 0;
+}
+.d-field:focus {
+  border-color: var(--terracotta, #C89F85);
+  box-shadow: 0 0 0 3px rgba(200, 159, 133, 0.14);
 }
 
 /* ========== 提交按钮 ========== */
 .submit-btn {
-  width: 100%;
-  height: 50px;
-  border: none;
-  border-radius: 14px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.25s;
-  position: relative;
-  overflow: hidden;
+  width: 100%; margin-top: 4px; padding: 14px;
+  border-radius: 14px; border: none; cursor: pointer;
+  font-size: 15px; font-weight: 700; letter-spacing: 0.06em; color: #fff;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 .submit-btn.expense {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+  background: linear-gradient(135deg, var(--rose, #D99A9A), #B06A6A);
+  box-shadow: 0 8px 20px rgba(176, 106, 106, 0.35);
 }
 .submit-btn.income {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, var(--sage, #A8B08A), #7E8862);
+  box-shadow: 0 8px 20px rgba(126, 136, 98, 0.35);
 }
-.submit-btn:hover {
-  transform: translateY(-2px);
-}
-.submit-btn:active {
-  transform: translateY(0);
-}
-.submit-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
-}
+.submit-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 28px rgba(160, 120, 90, 0.4); }
+.submit-btn:active { transform: translateY(-1px) scale(0.99); }
+.submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
 .btn-loading {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
+  display: inline-block; width: 18px; height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff; border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ========== 移动端适配 ========== */
 @media (max-width: 768px) {
-  .txn-form {
-    gap: 14px;
-  }
-  .type-tab {
-    padding: 12px;
-    font-size: 15px;
-    min-height: 48px;
-  }
-  .amount-box {
-    padding: 16px 18px;
-  }
-  .amount-currency {
-    font-size: 24px;
-  }
-  .amount-field {
-    font-size: 32px;
-  }
-  .detail-section {
-    padding: 12px;
-    gap: 8px;
-  }
-  .detail-row {
-    min-height: 44px;
-  }
-  .submit-btn {
-    height: 52px;
-    font-size: 17px;
-    border-radius: 14px;
-  }
+  .txn-form { padding: 14px; gap: 12px; }
+  .type-tab { padding: 12px; font-size: 15px; min-height: 48px; }
+  .amount-field { font-size: 30px; }
+  .submit-btn { padding: 16px; font-size: 16px; }
 }
 </style>

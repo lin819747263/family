@@ -182,37 +182,26 @@
       </div>
     </main>
 
-    <!-- 快捷记账浮动按钮（仅记账相关页面显示） -->
-    <button v-if="isAccountingPage" class="fab-btn" @click="showQuickAdd = true" title="快速记账">
-      <el-icon :size="24"><Plus /></el-icon>
-    </button>
-
-    <!-- 快捷记账弹窗 -->
-    <el-dialog
-      v-model="showQuickAdd"
-      :width="quickAddMode === 'batch' ? '520px' : '440px'"
-      top="10vh"
-      :close-on-click-modal="false"
-      :lock-scroll="false"
-      append-to-body
-      class="quick-add-dialog"
-    >
-      <template #header>
-        <div class="quick-add-header">
-          <span class="quick-add-title">快速记账</span>
-          <div class="mode-toggle">
-            <button class="mode-btn" :class="{ active: quickAddMode === 'single' }" @click="quickAddMode = 'single'">
-              <el-icon><EditPen /></el-icon>单笔
-            </button>
-            <button class="mode-btn" :class="{ active: quickAddMode === 'batch' }" @click="quickAddMode = 'batch'">
-              <el-icon><Document /></el-icon>批量
-            </button>
-          </div>
+    <!-- 快速记账卡片 -->
+    <div class="qa-card" :class="{ open: showQuickAdd }">
+      <div class="qa-head">
+        <div class="qa-title">✏️ 快速记账</div>
+        <div class="mode-toggle">
+          <button class="mode-btn" :class="{ active: quickAddMode === 'single' }" @click="quickAddMode = 'single'">单笔</button>
+          <button class="mode-btn" :class="{ active: quickAddMode === 'batch' }" @click="quickAddMode = 'batch'">批量</button>
         </div>
-      </template>
-      <TransactionForm v-if="quickAddMode === 'single'" @success="showQuickAdd = false" />
-      <BatchTransactionForm v-else @success="showQuickAdd = false" />
-    </el-dialog>
+        <button class="qa-close" @click="showQuickAdd = false">✕</button>
+      </div>
+      <div class="qa-body">
+        <TransactionForm v-if="quickAddMode === 'single'" @success="onQuickAddSuccess" />
+        <BatchTransactionForm v-else @success="onQuickAddSuccess" />
+      </div>
+    </div>
+
+    <!-- 快捷记账浮动按钮（仅记账相关页面显示） -->
+    <button v-if="isAccountingPage" class="fab-btn" :class="{ open: showQuickAdd }" @click="showQuickAdd = !showQuickAdd" title="快速记账">
+      <span class="fab-plus">＋</span>
+    </button>
 
     <!-- 移动端侧栏菜单 -->
     <MobileMenu :visible="showMobileMenu" :active-menu="activeMenu" @close="showMobileMenu = false" />
@@ -293,6 +282,10 @@ onMounted(() => {
     canInstall.value = false
     deferredPrompt = null
   })
+  // Escape 关闭快速记账卡片
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') showQuickAdd.value = false
+  })
 })
 
 async function installPWA() {
@@ -350,6 +343,10 @@ async function handleMarkAllRead() {
   await dashboardApi.markAllRead()
   notifications.value.forEach(n => { n.isRead = true })
   unreadCount.value = 0
+}
+
+function onQuickAddSuccess() {
+  showQuickAdd.value = false
 }
 
 function handleUserCmd(cmd) {
@@ -639,91 +636,88 @@ function handleUserCmd(cmd) {
   position: fixed;
   bottom: 32px;
   right: 32px;
-  z-index: 99;
-  width: 58px;
-  height: 58px;
-  border-radius: 18px;
+  z-index: 80;
+  width: 60px;
+  height: 60px;
+  border-radius: 20px;
   border: none;
   background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));
   color: #fff;
-  font-size: 26px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 28px rgba(176, 132, 102, 0.42);
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s;
+  box-shadow: 0 12px 30px rgba(176, 132, 102, 0.45);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
 }
-.fab-btn:hover {
-  transform: translateY(-4px) rotate(90deg);
-  box-shadow: 0 16px 36px rgba(176, 132, 102, 0.5);
+.fab-btn::after {
+  content: ""; position: absolute; inset: 0; border-radius: 20px;
+  box-shadow: 0 0 0 0 rgba(200, 159, 133, 0.5);
+  animation: fab-ring 2.8s ease-out infinite;
 }
-.fab-btn:active {
-  transform: translateY(0) rotate(90deg);
+@keyframes fab-ring {
+  0% { box-shadow: 0 0 0 0 rgba(200, 159, 133, 0.45); }
+  70% { box-shadow: 0 0 0 18px rgba(200, 159, 133, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(200, 159, 133, 0); }
+}
+.fab-plus {
+  font-size: 28px; line-height: 1;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.fab-btn.open .fab-plus { transform: rotate(135deg); }
+.fab-btn:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(176, 132, 102, 0.55); }
+
+/* ========== 快速记账卡片 ========== */
+.qa-card {
+  position: fixed; right: 32px; bottom: 104px; z-index: 79;
+  width: 380px; max-height: min(72vh, 640px);
+  background: #FFFDFA; border: 1px solid rgba(226, 205, 178, 0.7);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(150, 104, 74, 0.28);
+  display: flex; flex-direction: column; overflow: hidden;
+  transform-origin: bottom right;
+  transform: scale(0.6) translateY(30px); opacity: 0; pointer-events: none;
+  transition: transform 0.45s cubic-bezier(0.34, 1.4, 0.5, 1), opacity 0.3s ease;
+}
+.qa-card.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: auto; }
+.qa-card::after {
+  content: ""; position: absolute; right: 26px; bottom: -7px;
+  width: 14px; height: 14px; background: #FFFDFA;
+  border-right: 1px solid rgba(226, 205, 178, 0.7);
+  border-bottom: 1px solid rgba(226, 205, 178, 0.7);
+  transform: rotate(45deg);
 }
 
-/* ========== 弹窗美化 ========== */
-.quick-add-dialog :deep(.el-overlay) { transition: none !important; }
-.quick-add-dialog :deep(.el-dialog) {
-  transition: none !important;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+.qa-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 18px 12px; border-bottom: 1px dashed rgba(226, 205, 178, 0.7);
 }
-.quick-add-dialog :deep(.el-dialog__header) {
-  padding: 20px 24px 16px;
-  margin: 0;
-  border-bottom: 1px solid var(--border-light);
-}
-.quick-add-dialog :deep(.el-dialog__title) {
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.quick-add-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-.quick-add-title {
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
+.qa-title { font-size: 16px; font-weight: 800; color: var(--terra-deep); }
 .mode-toggle {
-  display: flex;
-  gap: 4px;
-  background: #f1f5f9;
-  border-radius: 10px;
-  padding: 3px;
+  margin-left: auto; display: flex;
+  background: var(--cream); border-radius: 10px; padding: 3px;
 }
 .mode-btn {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px 14px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  font-size: 13px;
-  font-weight: 500;
-  color: #94a3b8;
-  cursor: pointer;
-  transition: all 0.2s;
+  padding: 6px 13px; border-radius: 8px; border: none;
+  background: transparent; color: var(--text-secondary);
+  font-size: 12.5px; font-weight: 600; cursor: pointer;
+  transition: all 0.25s;
 }
 .mode-btn.active {
-  background: #fff;
-  color: var(--terra-deep);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  background: #FFFDFA; color: var(--terra-deep);
+  box-shadow: 0 2px 8px rgba(160, 120, 90, 0.16);
 }
-.mode-btn:hover:not(.active) {
-  color: var(--text-secondary);
+.qa-close {
+  width: 30px; height: 30px; border-radius: 9px; border: none;
+  background: transparent; color: var(--text-secondary);
+  cursor: pointer; font-size: 15px; transition: all 0.25s;
 }
-.quick-add-dialog :deep(.el-dialog__body) {
-  padding: 20px 24px 24px;
-}
+.qa-close:hover { background: var(--cream); color: var(--terra-deep); transform: rotate(90deg); }
+
+.qa-body { padding: 0; overflow-y: auto; flex: 1; }
+.qa-body::-webkit-scrollbar { width: 6px; }
+.qa-body::-webkit-scrollbar-thumb { background: var(--wood-light); border-radius: 3px; }
+.qa-body::-webkit-scrollbar-track { background: transparent; }
 
 /* ========== 过渡动画 ========== */
 .page-fade-enter-active,
@@ -804,62 +798,25 @@ function handleUserCmd(cmd) {
   .fab-btn {
     bottom: 20px;
     right: 20px;
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
+    width: 56px;
+    height: 56px;
   }
 
-  /* 快速记账弹窗 - 底部弹出式 */
-  .quick-add-dialog :deep(.el-overlay) {
-    align-items: flex-end;
+  /* 快速记账卡片 - 移动端底部抽屉 */
+  .qa-card {
+    right: 0; left: 0; bottom: 0; width: 100%;
+    max-height: 88vh; border-radius: 24px 24px 0 0;
+    transform: translateY(100%); opacity: 1;
   }
-  .quick-add-dialog :deep(.el-dialog) {
-    width: 100vw !important;
-    max-width: 100vw;
-    margin: 0 !important;
-    border-radius: 20px 20px 0 0;
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
+  .qa-card.open { transform: translateY(0); }
+  .qa-card::after { display: none; }
+  .qa-head {
+    padding-top: 22px; position: relative;
   }
-  .quick-add-dialog :deep(.el-dialog__header) {
-    padding: 12px 16px 10px;
-    margin: 0;
-    flex-shrink: 0;
-  }
-  .quick-add-dialog :deep(.el-dialog__headerbtn) {
-    top: 12px;
-    right: 12px;
-    width: 32px;
-    height: 32px;
-  }
-  .quick-add-dialog :deep(.el-dialog__body) {
-    padding: 0 16px 24px;
-    overflow-y: auto;
-    flex: 1;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-  }
-  .quick-add-header {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .mode-toggle {
-    padding: 2px;
-  }
-  .mode-btn {
-    padding: 5px 10px;
-    font-size: 12px;
-  }
-  /* 拖拽指示条 */
-  .quick-add-dialog :deep(.el-dialog__header)::before {
-    content: '';
-    display: block;
-    width: 36px;
-    height: 4px;
-    background: #d1d5db;
-    border-radius: 2px;
-    margin: 0 auto 10px;
+  .qa-head::before {
+    content: ""; position: absolute; top: 8px; left: 50%;
+    transform: translateX(-50%); width: 40px; height: 4px;
+    border-radius: 2px; background: var(--wood-light);
   }
 
   /* 通知面板适配移动端 */

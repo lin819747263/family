@@ -491,15 +491,79 @@ h1 {
 
 /* 响应式 */
 @media (max-width: 768px) {
-  .warm-login { padding: 12px; }
+  .warm-login {
+    padding: 0;
+    align-items: flex-start;
+    overflow-y: auto;
+  }
   .shell {
     flex-direction: column;
-    max-height: calc(100vh - 24px);
+    width: 100%;
+    max-height: none;
+    min-height: 100vh;
+    border-radius: 0;
+    border: none;
   }
-  .scene { padding: 24px 20px; }
-  .scene svg { max-width: 200px; }
-  .scene-quote { font-size: 13px; margin-top: 16px; }
-  .form-side { padding: 24px 20px; }
-  h1 { font-size: 22px; }
+  .scene {
+    padding: 40px 24px 24px;
+    flex: none;
+  }
+  .scene svg { max-width: 180px; }
+  .scene-quote {
+    font-size: 13px;
+    margin-top: 12px;
+    line-height: 1.7;
+  }
+  .form-side {
+    padding: 24px 20px 40px;
+    flex: 1;
+  }
+  .brand { margin-bottom: 16px; }
+  h1 {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+  .field { margin-bottom: 14px; }
+  .field :deep(.el-input__wrapper) {
+    min-height: 42px;
+  }
+  .row-between {
+    margin: 2px 0 16px;
+    font-size: 12px;
+  }
+  .btn-home {
+    padding: 12px;
+    font-size: 14px;
+  }
+  .divider {
+    margin: 16px 0 12px;
+    font-size: 11px;
+  }
+  .invite-card {
+    padding: 10px 12px;
+  }
+  .invite-text { font-size: 12px; }
+  .invite-emoji { font-size: 20px; }
+  .footer-note {
+    margin-top: 16px;
+    font-size: 10px;
+  }
+}
+
+/* 小屏手机 */
+@media (max-width: 375px) {
+  .scene {
+    padding: 32px 16px 16px;
+  }
+  .scene svg { max-width: 150px; }
+  .scene-quote { font-size: 12px; }
+  .form-side {
+    padding: 20px 16px 32px;
+  }
+  h1 { font-size: 20px; }
 }
 </style>

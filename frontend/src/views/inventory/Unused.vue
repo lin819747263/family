@@ -91,3 +91,25 @@ async function handleAction(row, status) {
   } catch { /* request.js 已处理错误提示 */ }
 }
 </script>
+
+<style scoped>
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 18px;
+  }
+  .card {
+    padding: 12px;
+    border-radius: 10px;
+  }
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  :deep(.el-table) {
+    font-size: 13px;
+  }
+  :deep(.el-table .cell) {
+    padding: 0 6px;
+  }
+}
+</style>

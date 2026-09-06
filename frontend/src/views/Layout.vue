@@ -38,7 +38,7 @@
             <el-sub-menu index="accounting">
               <template #title>
                 <el-icon><Coin /></el-icon>
-                <span>智能记账</span>
+                <span>小家账本</span>
               </template>
               <el-menu-item index="/accounting">流水账单</el-menu-item>
               <el-menu-item index="/accounting/books">账本管理</el-menu-item>
@@ -47,17 +47,19 @@
               <el-menu-item index="/accounting/annual-report">年度报告</el-menu-item>
               <el-menu-item index="/accounting/recurring">定时记账</el-menu-item>
               <el-menu-item index="/accounting/categories">分类管理</el-menu-item>
+              <el-menu-item index="/investment">💰 理财管理</el-menu-item>
             </el-sub-menu>
 
             <el-sub-menu index="album">
               <template #title>
                 <el-icon><PictureFilled /></el-icon>
-                <span>家庭相册</span>
+                <span>点滴日常</span>
               </template>
               <el-menu-item index="/album">我的相册</el-menu-item>
               <el-menu-item index="/album/moments">精彩瞬间</el-menu-item>
               <el-menu-item index="/album/timeline">时光轴</el-menu-item>
               <el-menu-item index="/album/memories">回忆推送</el-menu-item>
+              <el-menu-item index="/diary">家庭日记</el-menu-item>
             </el-sub-menu>
 
             <el-sub-menu index="inventory">
@@ -76,17 +78,29 @@
               <span>家庭提醒</span>
             </el-menu-item>
 
+            <el-sub-menu index="goals">
+              <template #title>
+                <el-icon><Aim /></el-icon>
+                <span>小目标</span>
+              </template>
+              <el-menu-item index="/annual-goals">🎯 年度目标</el-menu-item>
+              <el-menu-item index="/wishlist">家庭心愿</el-menu-item>
+            </el-sub-menu>
+
+            <el-sub-menu index="fun">
+              <template #title>
+                <el-icon><Food /></el-icon>
+                <span>吃喝玩乐</span>
+              </template>
+              <el-menu-item index="/recipe">菜谱管理</el-menu-item>
+            </el-sub-menu>
+
             <el-sub-menu index="other">
               <template #title>
                 <el-icon><MoreFilled /></el-icon>
                 <span>其他</span>
               </template>
-              <el-menu-item index="/investment">💰 理财管理</el-menu-item>
-              <el-menu-item index="/recipe">菜谱管理</el-menu-item>
               <el-menu-item index="/member">成员档案</el-menu-item>
-              <el-menu-item index="/wishlist">家庭心愿</el-menu-item>
-              <el-menu-item index="/diary">家庭日记</el-menu-item>
-              <el-menu-item index="/annual-goals">🎯 年度目标</el-menu-item>
             </el-sub-menu>
           </el-menu>
         </nav>
@@ -259,7 +273,7 @@ import GlobalSearch from '@/components/search/GlobalSearch.vue'
 import MobileMenu from '@/components/common/MobileMenu.vue'
 import NotificationPanel from '@/components/common/NotificationPanel.vue'
 import {
-  DataBoard, Coin, PictureFilled, Box, Bell, MoreFilled, Expand,
+  DataBoard, Coin, PictureFilled, Box, Bell, MoreFilled, Expand, Aim, Food,
   Search, Moon, Sunny, ArrowDown, Download, User, UserFilled,
   Setting, SwitchButton, Notebook, Check, Plus, EditPen, Document
 } from '@element-plus/icons-vue'
@@ -401,9 +415,9 @@ function handleUserCmd(cmd) {
 .nav-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   cursor: pointer;
-  margin-right: 12px;
+  margin-right: 8px;
   flex-shrink: 0;
   transition: opacity 0.2s;
 }
@@ -454,6 +468,7 @@ function handleUserCmd(cmd) {
   color: var(--text-secondary);
   border-bottom: none !important;
   transition: all 0.25s;
+  padding: 0 14px;
 }
 
 .nav-menu :deep(.el-menu-item:hover),
@@ -510,12 +525,20 @@ function handleUserCmd(cmd) {
   margin-right: 4px;
 }
 
+/* 确保菜单不溢出 */
+.nav-menu :deep(.el-menu--horizontal) {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
 /* 右侧操作区 */
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   flex-shrink: 0;
+  margin-left: 8px;
 }
 
 .action-badge :deep(.el-badge__content.is-dot) {
@@ -775,6 +798,24 @@ function handleUserCmd(cmd) {
   .user-arrow {
     display: none;
   }
+
+  /* 移动端隐藏部分操作按钮 */
+  .search-trigger {
+    display: none;
+  }
+  .ai-btn {
+    display: none;
+  }
+
+  /* 移动端操作区紧凑 */
+  .nav-actions {
+    gap: 2px;
+  }
+  .action-btn {
+    width: 32px;
+    height: 32px;
+  }
+
   .page-content {
     padding: 12px;
   }

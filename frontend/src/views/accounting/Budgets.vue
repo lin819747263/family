@@ -201,4 +201,30 @@ async function handleDelete(id) {
 .ba-btn.danger:hover {
   color: #f87171;
 }
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 18px;
+  }
+  .card {
+    padding: 12px;
+    border-radius: 10px;
+  }
+  .budget-card {
+    padding: 12px;
+  }
+  .budget-actions {
+    opacity: 1;
+  }
+  :deep(.el-dialog) {
+    width: 92% !important;
+    margin: 0 auto;
+  }
+  :deep(.el-form-item__label) {
+    font-size: 13px;
+  }
+  :deep(.el-date-picker) {
+    width: 120px;
+  }
+}
 </style>

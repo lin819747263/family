@@ -55,3 +55,18 @@ onMounted(async () => {
   memories.value = res.data
 })
 </script>
+
+<style scoped>
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 18px;
+  }
+  .card {
+    padding: 12px;
+    border-radius: 10px;
+  }
+  .photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>

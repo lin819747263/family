@@ -181,4 +181,24 @@ async function handleDeletePhoto(id) {
   background: rgba(248, 113, 113, 0.8);
   transform: scale(1.1);
 }
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 18px;
+  }
+  .card {
+    padding: 12px;
+    border-radius: 10px;
+  }
+  .photo-delete-btn {
+    opacity: 1;
+  }
+  :deep(.el-dialog) {
+    width: 92% !important;
+    margin: 0 auto;
+  }
+  :deep(.el-upload) {
+    display: block;
+  }
+}
 </style>

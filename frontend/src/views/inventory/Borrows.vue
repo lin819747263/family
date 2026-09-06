@@ -137,3 +137,32 @@ async function handleRemind(id) {
   ElMessage.success('催还通知已发送')
 }
 </script>
+
+<style scoped>
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 18px;
+  }
+  .card {
+    padding: 12px;
+    border-radius: 10px;
+  }
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  :deep(.el-dialog) {
+    width: 92% !important;
+    margin: 0 auto;
+  }
+  :deep(.el-form-item__label) {
+    font-size: 13px;
+  }
+  :deep(.el-table) {
+    font-size: 13px;
+  }
+  :deep(.el-table .cell) {
+    padding: 0 6px;
+  }
+}
+</style>

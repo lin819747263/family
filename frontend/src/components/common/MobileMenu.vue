@@ -34,7 +34,7 @@
       <el-sub-menu index="accounting">
         <template #title>
           <el-icon><Coin /></el-icon>
-          <span>智能记账</span>
+          <span>小家账本</span>
         </template>
         <el-menu-item index="/accounting">流水账单</el-menu-item>
         <el-menu-item index="/accounting/books">账本管理</el-menu-item>
@@ -43,17 +43,19 @@
         <el-menu-item index="/accounting/annual-report">年度报告</el-menu-item>
         <el-menu-item index="/accounting/recurring">定时记账</el-menu-item>
         <el-menu-item index="/accounting/categories">分类管理</el-menu-item>
+        <el-menu-item index="/investment">💰 理财管理</el-menu-item>
       </el-sub-menu>
 
       <el-sub-menu index="album">
         <template #title>
           <el-icon><PictureFilled /></el-icon>
-          <span>家庭相册</span>
+          <span>点滴日常</span>
         </template>
         <el-menu-item index="/album">我的相册</el-menu-item>
         <el-menu-item index="/album/moments">精彩瞬间</el-menu-item>
         <el-menu-item index="/album/timeline">时光轴</el-menu-item>
         <el-menu-item index="/album/memories">回忆推送</el-menu-item>
+        <el-menu-item index="/diary">家庭日记</el-menu-item>
       </el-sub-menu>
 
       <el-sub-menu index="inventory">
@@ -72,17 +74,29 @@
         <span>家庭提醒</span>
       </el-menu-item>
 
+      <el-sub-menu index="goals">
+        <template #title>
+          <el-icon><Aim /></el-icon>
+          <span>小目标</span>
+        </template>
+        <el-menu-item index="/annual-goals">🎯 年度目标</el-menu-item>
+        <el-menu-item index="/wishlist">家庭心愿</el-menu-item>
+      </el-sub-menu>
+
+      <el-sub-menu index="fun">
+        <template #title>
+          <el-icon><Food /></el-icon>
+          <span>吃喝玩乐</span>
+        </template>
+        <el-menu-item index="/recipe">菜谱管理</el-menu-item>
+      </el-sub-menu>
+
       <el-sub-menu index="other">
         <template #title>
           <el-icon><MoreFilled /></el-icon>
           <span>其他</span>
         </template>
-        <el-menu-item index="/investment">💰 理财管理</el-menu-item>
-        <el-menu-item index="/recipe">菜谱管理</el-menu-item>
         <el-menu-item index="/member">成员档案</el-menu-item>
-        <el-menu-item index="/wishlist">家庭心愿</el-menu-item>
-        <el-menu-item index="/diary">家庭日记</el-menu-item>
-        <el-menu-item index="/annual-goals">🎯 年度目标</el-menu-item>
       </el-sub-menu>
     </el-menu>
   </el-drawer>
@@ -90,7 +104,7 @@
 
 <script setup>
 import {
-  DataBoard, Coin, PictureFilled, Box, Bell, MoreFilled
+  DataBoard, Coin, PictureFilled, Box, Bell, MoreFilled, Aim, Food
 } from '@element-plus/icons-vue'
 
 defineProps({
@@ -122,21 +136,28 @@ defineEmits(['close'])
   padding: 16px 20px;
   margin: 0;
   border-bottom: 1px solid #f1f5f9;
+  padding-top: calc(16px + env(safe-area-inset-top, 0px));
 }
 .mobile-menu-drawer :deep(.el-drawer__body) {
   padding: 8px 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .mobile-menu-drawer :deep(.el-menu) {
   border-right: none;
 }
 .mobile-menu-drawer :deep(.el-menu-item),
 .mobile-menu-drawer :deep(.el-sub-menu__title) {
-  height: 46px;
-  line-height: 46px;
-  font-size: 14px;
+  height: 48px;
+  line-height: 48px;
+  font-size: 15px;
   border-radius: 0;
   margin: 0;
   padding: 0 20px;
+}
+.mobile-menu-drawer :deep(.el-menu-item:active),
+.mobile-menu-drawer :deep(.el-sub-menu__title:active) {
+  background: rgba(102, 126, 234, 0.06) !important;
 }
 .mobile-menu-drawer :deep(.el-menu-item.is-active) {
   background: rgba(102, 126, 234, 0.08) !important;
@@ -144,9 +165,12 @@ defineEmits(['close'])
   font-weight: 600;
 }
 .mobile-menu-drawer :deep(.el-sub-menu .el-menu-item) {
-  height: 42px;
-  line-height: 42px;
+  height: 44px;
+  line-height: 44px;
   padding-left: 48px !important;
-  font-size: 13px;
+  font-size: 14px;
+}
+.mobile-menu-drawer :deep(.el-sub-menu .el-menu) {
+  background: rgba(248, 250, 252, 0.5) !important;
 }
 </style>

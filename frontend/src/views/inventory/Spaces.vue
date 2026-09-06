@@ -208,3 +208,27 @@ async function handleDrop(draggingNode, dropNode, dropType) {
   }
 }
 </script>
+
+<style scoped>
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 18px;
+  }
+  .card {
+    padding: 12px;
+    border-radius: 10px;
+  }
+  :deep(.el-dialog) {
+    width: 92% !important;
+    margin: 0 auto;
+  }
+  :deep(.el-form-item__label) {
+    font-size: 13px;
+  }
+  :deep(.el-tree-node__content) {
+    height: auto;
+    min-height: 32px;
+    padding-right: 4px;
+  }
+}
+</style>

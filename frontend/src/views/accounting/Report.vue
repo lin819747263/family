@@ -696,4 +696,53 @@ async function exportReport(format) {
   border-left: 2px solid rgba(102, 126, 234, 0.15);
   background: rgba(102, 126, 234, 0.03);
 }
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 18px;
+  }
+  .card {
+    padding: 12px;
+    border-radius: 10px;
+  }
+  .stat-card {
+    padding: 14px;
+  }
+  .stat-value {
+    font-size: 20px;
+  }
+  .stat-label {
+    font-size: 12px;
+  }
+  .annual-stat-card {
+    padding: 20px 14px;
+  }
+  .asc-value {
+    font-size: 24px;
+  }
+  .rank-item {
+    padding: 8px 10px;
+  }
+  .rank-name {
+    font-size: 13px;
+  }
+  .rank-amount {
+    font-size: 14px;
+  }
+  .matrix-table {
+    font-size: 12px;
+    min-width: 700px;
+  }
+  .matrix-table th,
+  .matrix-table td {
+    padding: 6px 4px;
+  }
+  :deep(.el-tabs__item) {
+    font-size: 14px;
+  }
+  :deep(.el-dialog) {
+    width: 92% !important;
+    margin: 0 auto;
+  }
+}
 </style>

@@ -607,15 +607,58 @@ onMounted(async () => {
   .top-row { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
-  .hero-section { padding: 24px; }
-  .hero-greeting { font-size: 20px; }
+  .hero-section { padding: 20px; }
+  .hero-greeting { font-size: 18px; }
+  .hero-date { font-size: 13px; }
+  .hero-events { gap: 6px; }
+  .event-pill { padding: 5px 10px; font-size: 12px; }
   .hero-actions { width: 100%; }
   .hero-btn { flex: 1; justify-content: center; padding: 10px 12px; font-size: 13px; }
+
+  .shortcuts-row { gap: 8px; margin-bottom: 16px; }
+  .shortcut-item { padding: 10px 14px; min-width: 64px; }
+  .shortcut-item span { font-size: 11px; }
+  .sc-icon { width: 36px; height: 36px; }
+
+  .top-row { gap: 12px; margin-bottom: 16px; }
+  .mc-header { padding: 12px 14px 10px; }
+  .mc-title { font-size: 14px; }
+  .mc-list-item { padding: 8px; }
+  .mc-item-text { font-size: 12px; }
+  .mc-footer { padding: 10px; font-size: 12px; }
+
+  .recipe-body { gap: 10px; padding: 0 14px 14px; }
+  .recipe-thumb { width: 80px; height: 80px; }
+  .recipe-name { font-size: 16px; }
+
+  .section { margin-bottom: 20px; }
+  .section-head { margin-bottom: 10px; }
+  .section-title { font-size: 15px; }
+
+  .txn-card { padding: 14px; }
+  .txn-header { margin-bottom: 10px; }
+  .txn-title { font-size: 14px; }
+  .txn-amount { font-size: 14px; }
+
   .moments-grid { grid-template-columns: 1fr; }
+  .moment-card { padding: 12px; }
+  .mc-text { font-size: 13px; }
+
+  .inv-stats-row { gap: 8px; }
+  .inv-stat { padding: 12px; }
+  .inv-num { font-size: 20px; }
+  .inv-lbl { font-size: 11px; }
 }
 @media (max-width: 480px) {
+  .hero-section { padding: 16px; }
+  .hero-greeting { font-size: 16px; }
+  .hero-actions { flex-wrap: wrap; }
+  .hero-btn { padding: 8px 10px; font-size: 12px; }
+
+  .shortcuts-row { gap: 6px; }
+  .shortcut-item { padding: 8px 10px; min-width: 56px; }
+  .sc-icon { width: 32px; height: 32px; }
+
   .stat-grid { grid-template-columns: 1fr; }
-  .shortcuts-row { gap: 8px; }
-  .shortcut-item { padding: 10px 14px; min-width: 64px; }
 }
 </style>

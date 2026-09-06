@@ -11,7 +11,7 @@
           <div class="chat-avatar">🤖</div>
           <div>
             <div class="chat-title">AI 小助手</div>
-            <div class="chat-subtitle">DeepSeek 驱动 · 支持语音记账</div>
+            <div class="chat-subtitle">AI 驱动 · 支持智能记账</div>
           </div>
         </div>
         <div class="chat-header-right">

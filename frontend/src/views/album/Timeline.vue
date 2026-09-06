@@ -1,6 +1,6 @@
 <template>
   <div class="timeline-page">
-    <div class="page-header">
+    <div v-if="!embedded" class="page-header">
       <div>
         <div class="page-title">时光轴</div>
         <p class="page-desc">按时间回顾家庭照片</p>
@@ -61,6 +61,7 @@ import { ref, onMounted } from 'vue'
 import { albumApi } from '@/api'
 import { useAuthStore } from '@/store/auth'
 
+const props = defineProps({ embedded: Boolean })
 const authStore = useAuthStore()
 const groups = ref([])
 const years = ref([])
@@ -167,57 +168,45 @@ function openPreview(photo) {
   margin-top: 6px;
 }
 
-/* 日期分组 */
+/* 时光轴 */
 .date-group {
-  margin-bottom: 32px;
+  position: relative; margin-bottom: 28px; padding-left: 26px;
+}
+.date-group::before {
+  content: ""; position: absolute; left: 8px; top: 6px; bottom: 6px;
+  width: 2px; background: linear-gradient(180deg, var(--terracotta), var(--amber), var(--sage));
+  border-radius: 2px;
+}
+.date-group::after {
+  content: ""; position: absolute; left: 3px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: #FFFDFA; border: 3px solid var(--terracotta);
+  box-shadow: 0 0 0 4px rgba(200, 159, 133, 0.18);
 }
 .date-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-  padding-left: 6px;
-}
-.date-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  flex-shrink: 0;
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
 }
 .date-label {
-  font-size: 16px;
-  font-weight: 700;
-  color: #1e293b;
+  font-size: 16px; font-weight: 800; color: var(--terra-deep);
 }
 .date-count {
-  font-size: 13px;
-  color: #94a3b8;
-  background: #f1f5f9;
-  padding: 2px 10px;
-  border-radius: 10px;
+  font-size: 11.5px; font-weight: 600; color: var(--text-secondary);
+  background: var(--apricot); padding: 2px 10px; border-radius: 999px;
 }
 
-/* 照片网格 */
+/* 照片网格 - 暖色 */
 .photo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 8px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
 }
 .photo-item {
-  aspect-ratio: 1;
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.2s;
+  height: 120px; border-radius: 12px; overflow: hidden; cursor: pointer;
+  transition: transform 0.35s, box-shadow 0.35s;
 }
 .photo-item:hover {
-  transform: scale(1.05);
+  transform: scale(1.04); box-shadow: 0 12px 26px rgba(160, 120, 90, 0.2); z-index: 2;
 }
 .photo-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100%; height: 100%; object-fit: cover;
 }
 
 /* 分页 */

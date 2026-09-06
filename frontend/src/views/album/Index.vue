@@ -1,128 +1,108 @@
 <template>
-  <div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-      <div class="page-title" style="margin-bottom:0;">我的相册</div>
-      <div style="display:flex;gap:8px;">
-        <el-button @click="router.push('/album/memories')"><el-icon><Star /></el-icon>回忆</el-button>
-        <el-button type="primary" @click="showCreate = true"><el-icon><Plus /></el-icon>创建相册</el-button>
-      </div>
+  <div class="album-page">
+    <!-- 页头 -->
+    <div class="page-head">
+      <div><div class="page-title">📷 点滴日常</div><div class="page-sub">把平凡日子，过成值得回味的故事</div></div>
+      <button class="btn primary" @click="handleAction">✏️ {{ activeTab === 'moments' ? '发布瞬间' : activeTab === 'diary' ? '写日记' : '上传照片' }}</button>
     </div>
 
-    <div v-if="loading" class="card" style="text-align:center;padding:60px 20px;">
-      <el-icon class="is-loading" :size="24"><Loading /></el-icon>
+    <!-- 子页签 -->
+    <div class="subtabs">
+      <button class="subtab" :class="{ active: activeTab === 'albums' }" @click="switchTab('albums')">🗂 我的相册</button>
+      <button class="subtab" :class="{ active: activeTab === 'moments' }" @click="switchTab('moments')">✨ 精彩瞬间</button>
+      <button class="subtab" :class="{ active: activeTab === 'timeline' }" @click="switchTab('timeline')">⏳ 时光轴</button>
+      <button class="subtab" :class="{ active: activeTab === 'memories' }" @click="switchTab('memories')">💫 回忆推送</button>
+      <button class="subtab" :class="{ active: activeTab === 'diary' }" @click="switchTab('diary')">📔 家庭日记</button>
     </div>
 
-    <div v-else-if="albums.length === 0" class="card" style="text-align:center;padding:60px 20px;">
-      <el-icon :size="48" color="#ddd"><PictureFilled /></el-icon>
-      <p style="margin-top:12px;color:#999;">还没有相册，创建一个开始记录家庭瞬间吧</p>
-    </div>
-
-    <el-row :gutter="16">
-      <el-col :xs="12" :sm="8" :md="6" v-for="a in albums" :key="a.id" style="margin-bottom:16px;">
-        <div class="card" style="padding:0;overflow:hidden;cursor:pointer;" @click="handleAlbumClick(a)">
-          <div style="height:160px;background:#f0f2f5;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
-            <div v-if="a.Photos?.length" style="display:grid;grid-template-columns:1fr 1fr;width:100%;height:100%;">
-              <img v-for="p in a.Photos.slice(0,4)" :key="p.id" :src="p.thumbnailUrl || p.url" style="width:100%;height:50%;object-fit:cover;" />
-            </div>
-            <el-icon v-else :size="40" color="#ccc"><PictureFilled /></el-icon>
-            <div v-if="a.type === 'encrypted'" style="position:absolute;top:8px;right:8px;"><el-tag size="small" type="warning">加密</el-tag></div>
-          </div>
-          <div style="padding:12px;">
-            <div style="font-weight:600;font-size:14px;">{{ a.name }}</div>
-            <div style="font-size:12px;color:#999;margin-top:4px;">{{ a.photoCount || 0 }} 张照片</div>
-          </div>
-        </div>
-      </el-col>
-    </el-row>
-
-    <el-dialog v-model="showCreate" title="创建相册" width="420px">
-      <el-form :model="form" label-width="80px">
-        <el-form-item label="相册名称"><el-input v-model="form.name" placeholder="如：2024春节" /></el-form-item>
-        <el-form-item label="相册类型">
-          <el-radio-group v-model="form.type">
-            <el-radio value="normal">普通相册</el-radio>
-            <el-radio value="encrypted">加密相册</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item v-if="form.type === 'encrypted'" label="访问密码"><el-input v-model="form.password" type="password" show-password /></el-form-item>
-        <el-form-item label="描述"><el-input v-model="form.description" type="textarea" :rows="2" /></el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="showCreate = false">取消</el-button>
-        <el-button type="primary" :loading="saving" @click="handleCreate">创建</el-button>
-      </template>
-    </el-dialog>
+    <!-- 内容区 -->
+    <div v-show="activeTab === 'albums'"><AlbumsPage ref="albumsRef" embedded /></div>
+    <div v-show="activeTab === 'moments'"><MomentsPage ref="momentsRef" embedded /></div>
+    <div v-show="activeTab === 'timeline'"><TimelinePage embedded /></div>
+    <div v-show="activeTab === 'memories'"><MemoriesPage embedded /></div>
+    <div v-show="activeTab === 'diary'"><DiaryPage ref="diaryRef" embedded /></div>
   </div>
 </template>
 
 <script setup>
-import { useFamilyGuard } from "@/composables/useFamilyGuard"
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { albumApi } from '@/api'
-import { useAuthStore } from '@/store/auth'
-import { ElMessage } from 'element-plus'
+import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import AlbumsPage from '@/views/album/Albums.vue'
+import MomentsPage from '@/views/album/Moments.vue'
+import TimelinePage from '@/views/album/Timeline.vue'
+import MemoriesPage from '@/views/album/Memories.vue'
+import DiaryPage from '@/views/diary/Index.vue'
 
+const route = useRoute()
 const router = useRouter()
-const authStore = useAuthStore()
-const albums = ref([])
-const loading = ref(false)
-const showCreate = ref(false)
-const saving = ref(false)
-const form = ref({ name: '', type: 'normal', password: '', description: '' })
+const activeTab = ref('albums')
+const albumsRef = ref(null)
+const momentsRef = ref(null)
+const diaryRef = ref(null)
 
-onMounted(async () => {
-  if (!await useFamilyGuard()) return
-  loadAlbums()
-})
-
-async function loadAlbums() {
-  if (!authStore.currentFamily) return
-  loading.value = true
-  try {
-    const res = await albumApi.getAlbums({ familyId: authStore.currentFamily.id })
-    albums.value = res.data
-  } catch (e) { console.error(e) }
-  finally { loading.value = false }
+function switchTab(tab) {
+  activeTab.value = tab
+  router.replace(`/album${tab === 'albums' ? '' : '/' + tab}`)
 }
 
-async function handleCreate() {
-  if (!form.value.name) return ElMessage.warning('请输入相册名称')
-  saving.value = true
-  try {
-    await albumApi.createAlbum({ ...form.value, familyId: authStore.currentFamily.id })
-    ElMessage.success('创建成功')
-    showCreate.value = false
-    form.value = { name: '', type: 'normal', password: '', description: '' }
-    loadAlbums()
-  } catch (e) { console.error(e) }
-  finally { saving.value = false }
+function handleAction() {
+  if (activeTab.value === 'moments') momentsRef.value?.openPublish?.()
+  else if (activeTab.value === 'diary') diaryRef.value?.openCreate?.()
+  else albumsRef.value?.openCreate?.()
 }
 
-async function handleAlbumClick(a) {
-  if (a.type === 'encrypted') {
-    router.push({ path: `/album/${a.id}`, query: { encrypted: '1' } })
-  } else {
-    router.push(`/album/${a.id}`)
-  }
-}
+// 根据路由初始化 tab
+const path = route.path
+if (path.includes('/moments')) activeTab.value = 'moments'
+else if (path.includes('/timeline')) activeTab.value = 'timeline'
+else if (path.includes('/memories')) activeTab.value = 'memories'
+else if (path.includes('/diary')) activeTab.value = 'diary'
+else activeTab.value = 'albums'
 </script>
 
 <style scoped>
-@media (max-width: 768px) {
-  .page-title {
-    font-size: 18px;
-  }
-  .card {
-    padding: 12px;
-    border-radius: 10px;
-  }
-  :deep(.el-dialog) {
-    width: 92% !important;
-    margin: 0 auto;
-  }
-  :deep(.el-form-item__label) {
-    font-size: 13px;
-  }
+.album-page { animation: fadeIn 0.4s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* 页头 */
+.page-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; margin-bottom: 20px;
+}
+.page-title { font-size: 26px; font-weight: 800; color: var(--terra-deep); }
+.page-sub { margin-top: 6px; font-size: 13.5px; color: var(--text-secondary); }
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 11px 18px; border-radius: 13px; border: none;
+  cursor: pointer; font-size: 14px; font-weight: 600;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.btn.primary {
+  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
+  color: #FFF9F2; box-shadow: 0 8px 20px rgba(200, 159, 133, 0.4);
+}
+.btn:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(200, 159, 133, 0.3); }
+
+/* 子页签 */
+.subtabs {
+  display: flex; gap: 6px;
+  background: rgba(243, 234, 221, 0.6); border: 1px solid rgba(226, 205, 178, 0.7);
+  padding: 5px; border-radius: 16px; margin-bottom: 22px; overflow-x: auto;
+}
+.subtab {
+  padding: 10px 18px; border-radius: 12px; border: none;
+  background: transparent; color: var(--text-secondary);
+  font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap;
+  transition: all 0.3s; display: flex; align-items: center; gap: 7px;
+}
+.subtab:hover { color: var(--terra-deep); }
+.subtab.active {
+  background: #FFFDFA; color: var(--terra-deep);
+  box-shadow: 0 4px 14px rgba(160, 120, 90, 0.14);
+}
+
+@media (max-width: 600px) {
+  .page-title { font-size: 22px; }
+  .page-head { flex-direction: column; align-items: flex-start; }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="anniversary-page">
-    <div class="page-header">
+    <div v-if="!embedded" class="page-header">
       <div class="header-actions">
         <el-select v-model="filterType" placeholder="全部类型" clearable style="width:130px;" @change="loadList">
           <el-option label="生日" value="birthday" />
@@ -264,6 +264,8 @@ import { useAuthStore } from '@/store/auth'
 import { ElMessage } from 'element-plus'
 import dayjs from 'dayjs'
 
+const props = defineProps({ embedded: Boolean })
+const emit = defineEmits(['count-update'])
 const router = useRouter()
 const authStore = useAuthStore()
 
@@ -305,21 +307,21 @@ const lunarDays = computed(() => Array.from({ length: 30 }, (_, i) => i + 1))
 // ===== 表单 =====
 const defaultForm = {
   title: '', date: '', type: 'other', icon: 'Calendar',
-  color: '#667eea', calendarType: 'solar', lunarDate: '',
+  color: 'var(--terracotta)', calendarType: 'solar', lunarDate: '',
   repeatYearly: true, reminderDays: 3, note: ''
 }
 const form = ref({ ...defaultForm })
 
 const typeOptions = [
   { value: 'birthday', label: '生日', icon: 'User', color: '#f472b6' },
-  { value: 'anniversary', label: '纪念日', icon: 'Star', color: '#667eea' },
+  { value: 'anniversary', label: '纪念日', icon: 'Star', color: 'var(--terracotta)' },
   { value: 'holiday', label: '节日', icon: 'Flag', color: '#34d399' },
   { value: 'countdown', label: '倒数日', icon: 'Timer', color: '#f97316' },
   { value: 'other', label: '其他', icon: 'MoreFilled', color: '#fbbf24' }
 ]
 
 const colorOptions = [
-  '#667eea', '#764ba2', '#f472b6', '#ef4444',
+  'var(--terracotta)', '#764ba2', '#f472b6', '#ef4444',
   '#f97316', '#fbbf24', '#34d399', '#06b6d4',
   '#3b82f6', '#8b5cf6', '#ec4899', '#64748b'
 ]
@@ -430,6 +432,7 @@ async function loadList() {
     if (filterType.value) params.type = filterType.value
     const res = await anniversaryApi.getList(params)
     list.value = res.data
+    emit('count-update', res.data?.length || 0)
   } catch (e) { console.error(e) }
   finally { loading.value = false }
 }
@@ -460,7 +463,7 @@ async function openEdit(item) {
     date: item.date,
     type: item.type,
     icon: item.icon || 'Calendar',
-    color: item.color || '#667eea',
+    color: item.color || 'var(--terracotta)',
     calendarType: item.calendarType || 'solar',
     lunarDate: item.lunarDate || '',
     repeatYearly: item.repeatYearly !== false,
@@ -571,82 +574,35 @@ async function handleDelete(id) {
   flex-shrink: 0;
 }
 
-/* 即将到来 */
-.section {
-  margin-bottom: 28px;
-}
+/* 即将到来 - 暖色渐变卡片 */
+.section { margin-bottom: 28px; }
 .section-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 16px; font-weight: 600; color: var(--terra-deep); margin-bottom: 14px;
 }
 
 .upcoming-row {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  padding-bottom: 4px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;
 }
 .upcoming-card {
-  flex-shrink: 0;
-  width: 140px;
-  padding: 18px 16px;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  border-radius: 16px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.25s;
-}
-.upcoming-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--accent);
+  position: relative; overflow: hidden; padding: 22px;
+  text-align: center; color: #fff; border-radius: var(--radius-lg);
+  transition: transform 0.35s, box-shadow 0.35s;
 }
 .upcoming-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  transform: translateY(-6px); box-shadow: 0 18px 38px rgba(160, 120, 90, 0.22);
 }
-.uc-days {
-  margin-bottom: 8px;
+.upcoming-card::after {
+  content: ""; position: absolute; right: -40px; bottom: -40px;
+  width: 130px; height: 130px; border-radius: 50%; background: rgba(255, 255, 255, 0.14);
 }
 .uc-num {
-  font-size: 32px;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, #000));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1.2;
+  font-size: 44px; font-weight: 800; line-height: 1; letter-spacing: -0.03em;
 }
-.uc-unit {
-  font-size: 13px;
-  color: #94a3b8;
-  margin-left: 2px;
-}
-.uc-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.uc-date {
-  font-size: 12px;
-  color: #94a3b8;
-}
+.uc-unit { font-size: 13px; opacity: 0.9; margin-left: 4px; font-weight: 600; }
+.uc-title { margin-top: 10px; font-size: 16px; font-weight: 700; }
+.uc-date { margin-top: 5px; font-size: 12.5px; opacity: 0.9; }
+.uc-lunar { margin-top: 3px; font-size: 11.5px; opacity: 0.8; }
 
 /* 空状态 */
 .empty-card {
@@ -669,22 +625,15 @@ async function handleDelete(id) {
   line-height: 1.6;
 }
 
-/* 卡片网格 */
+/* 卡片网格 - 暖色 */
 .card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
 }
-
 .anniv-card {
-  padding: 0;
-  overflow: hidden;
-  transition: all 0.25s;
-  position: relative;
+  padding: 0; overflow: hidden; transition: transform 0.35s, box-shadow 0.35s; position: relative;
 }
 .anniv-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  transform: translateY(-5px); box-shadow: 0 16px 36px rgba(160, 120, 90, 0.16);
 }
 
 .ac-stripe {
@@ -706,60 +655,30 @@ async function handleDelete(id) {
 }
 
 .ac-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 44px; height: 44px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-
-.ac-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 8px;
-}
-
+.anniv-card:hover .ac-icon { transform: scale(1.12) rotate(-8deg); }
+.ac-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
 .ac-date {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #64748b;
-  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;
 }
 .ac-repeat {
-  display: inline-block;
-  padding: 0 6px;
-  background: rgba(102, 126, 234, 0.08);
-  color: #667eea;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 500;
+  display: inline-block; padding: 0 6px;
+  background: rgba(200, 159, 133, 0.12); color: var(--terra-deep);
+  border-radius: 4px; font-size: 11px; font-weight: 500;
 }
 .ac-reminder {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  padding: 0 6px;
-  background: rgba(251, 191, 36, 0.1);
-  color: #d97706;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 500;
-  margin-left: 4px;
+  display: inline-flex; align-items: center; gap: 2px; padding: 0 6px;
+  background: rgba(232, 179, 106, 0.15); color: #C08A3E;
+  border-radius: 4px; font-size: 11px; font-weight: 500; margin-left: 4px;
 }
 .ac-lunar {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 0 6px;
-  background: rgba(139, 92, 246, 0.1);
-  color: #8b5cf6;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 500;
+  display: inline-flex; align-items: center; gap: 3px; padding: 0 6px;
+  background: rgba(159, 184, 201, 0.15); color: #6E8CA0;
+  border-radius: 4px; font-size: 11px; font-weight: 500;
 }
 
 /* 即将到来卡片的农历显示 */
@@ -806,29 +725,13 @@ async function handleDelete(id) {
 }
 
 .ac-countdown {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  padding: 10px 16px;
-  margin: 0 20px 12px;
-  background: #f8fafc;
-  border-radius: 10px;
-  font-size: 14px;
-  color: #64748b;
+  display: flex; align-items: baseline; gap: 4px;
+  padding: 10px 16px; margin: 0 20px 12px;
+  background: var(--apricot); border-radius: 10px; font-size: 14px; color: var(--terra-deep);
 }
-.ac-countdown.today {
-  background: rgba(52, 211, 153, 0.1);
-  color: #10b981;
-  font-weight: 600;
-}
-.ac-countdown.soon {
-  background: rgba(251, 191, 36, 0.1);
-  color: #d97706;
-}
-.ac-countdown.expired {
-  background: rgba(148, 163, 184, 0.1);
-  color: #94a3b8;
-}
+.ac-countdown.today { background: rgba(168, 176, 138, 0.2); color: #7E8862; font-weight: 600; }
+.ac-countdown.soon { background: rgba(232, 179, 106, 0.2); color: #C08A3E; }
+.ac-countdown.expired { background: rgba(217, 154, 154, 0.15); color: #B06A6A; }
 .cd-num {
   font-size: 24px;
   font-weight: 800;
@@ -860,35 +763,17 @@ async function handleDelete(id) {
 }
 
 .ac-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 4px;
-  padding: 10px 16px;
-  border-top: 1px solid #f1f5f9;
-  margin-top: 4px;
+  display: flex; justify-content: flex-end; gap: 6px;
+  padding: 10px 16px; border-top: 1px dashed var(--border); margin-top: 4px;
 }
-
 .act-btn {
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: transparent;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
+  width: 30px; height: 30px; border-radius: 9px; border: none;
+  background: rgba(200, 159, 133, 0.12); color: var(--terra-deep);
+  cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center;
   transition: all 0.2s;
 }
-.act-btn:hover {
-  background: #f1f5f9;
-  color: #64748b;
-}
-.act-btn.danger:hover {
-  background: #fef2f2;
-  color: #f87171;
-}
+.act-btn:hover { background: rgba(200, 159, 133, 0.28); }
+.act-btn.danger:hover { background: rgba(217, 154, 154, 0.3); color: #B06A6A; }
 
 /* 类型选择器 */
 .type-picker {
@@ -910,15 +795,10 @@ async function handleDelete(id) {
   font-size: 12px;
   color: #64748b;
 }
-.tp-item:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
+.tp-item:hover { border-color: var(--accent); color: var(--accent); }
 .tp-item.active {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
-  color: var(--accent);
-  font-weight: 600;
+  border-color: var(--accent); background: rgba(200, 159, 133, 0.1);
+  color: var(--accent); font-weight: 600;
 }
 
 /* 颜色选择器 */
@@ -944,22 +824,13 @@ async function handleDelete(id) {
   transform: scale(1.15);
 }
 
-/* 弹窗 */
-.form-dialog :deep(.el-dialog) {
-  border-radius: 20px;
-}
+/* 弹窗 - 暖色 */
+.form-dialog :deep(.el-dialog) { border-radius: 20px; overflow: hidden; }
 .form-dialog :deep(.el-dialog__header) {
-  padding: 20px 24px 16px;
-  margin: 0;
-  border-bottom: 1px solid #f1f5f9;
+  padding: 20px 24px 16px; margin: 0; border-bottom: 1px solid var(--border);
 }
-.form-dialog :deep(.el-dialog__title) {
-  font-size: 17px;
-  font-weight: 600;
-}
-.form-dialog :deep(.el-dialog__body) {
-  padding: 20px 24px;
-}
+.form-dialog :deep(.el-dialog__title) { font-size: 17px; font-weight: 600; color: var(--terra-deep); }
+.form-dialog :deep(.el-dialog__body) { padding: 20px 24px; }
 
 @media (max-width: 768px) {
   .page-header {

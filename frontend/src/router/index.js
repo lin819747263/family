@@ -24,10 +24,11 @@ const routes = [
       { path: 'accounting/annual-report', name: 'AnnualReport', component: () => import('@/views/accounting/AnnualReport.vue') },
       { path: 'accounting/categories', name: 'Categories', component: () => import('@/views/accounting/Categories.vue') },
       { path: 'album', name: 'Album', component: () => import('@/views/album/Index.vue') },
+      { path: 'album/moments', name: 'AlbumMoments', component: () => import('@/views/album/Index.vue') },
+      { path: 'album/timeline', name: 'AlbumTimeline', component: () => import('@/views/album/Index.vue') },
+      { path: 'album/memories', name: 'AlbumMemories', component: () => import('@/views/album/Index.vue') },
+      { path: 'album/diary', name: 'AlbumDiary', component: () => import('@/views/album/Index.vue') },
       { path: 'album/:id', name: 'AlbumDetail', component: () => import('@/views/album/Detail.vue') },
-      { path: 'album/memories', name: 'Memories', component: () => import('@/views/album/Memories.vue') },
-      { path: 'album/timeline', name: 'Timeline', component: () => import('@/views/album/Timeline.vue') },
-      { path: 'album/moments', name: 'Moments', component: () => import('@/views/album/Moments.vue') },
       { path: 'inventory', name: 'Inventory', component: () => import('@/views/inventory/Index.vue') },
       { path: 'inventory/spaces', name: 'Spaces', component: () => import('@/views/inventory/Spaces.vue') },
       { path: 'inventory/borrows', name: 'Borrows', component: () => import('@/views/inventory/Borrows.vue') },
@@ -38,7 +39,7 @@ const routes = [
         path: 'reminder',
         component: () => import('@/views/reminder/Index.vue'),
         children: [
-          { path: '', redirect: '/reminder/todo' },
+          { path: '', name: 'Reminder', component: () => import('@/views/todo/Index.vue') },
           { path: 'todo', name: 'Todo', component: () => import('@/views/todo/Index.vue') },
           { path: 'calendar', name: 'Calendar', component: () => import('@/views/anniversary/Calendar.vue') },
           { path: 'anniversary', name: 'Anniversary', component: () => import('@/views/anniversary/Index.vue') }

@@ -36,16 +36,23 @@
         <span>小家账本</span>
       </el-menu-item>
 
-      <el-sub-menu index="album">
+      <el-menu-item index="/reminder">
+        <el-icon><Bell /></el-icon>
+        <span>家庭提醒</span>
+      </el-menu-item>
+
+      <el-menu-item index="/album">
+        <el-icon><PictureFilled /></el-icon>
+        <span>点滴日常</span>
+      </el-menu-item>
+
+      <el-sub-menu index="goals">
         <template #title>
-          <el-icon><PictureFilled /></el-icon>
-          <span>点滴日常</span>
+          <el-icon><Aim /></el-icon>
+          <span>小目标</span>
         </template>
-        <el-menu-item index="/album">我的相册</el-menu-item>
-        <el-menu-item index="/album/moments">精彩瞬间</el-menu-item>
-        <el-menu-item index="/album/timeline">时光轴</el-menu-item>
-        <el-menu-item index="/album/memories">回忆推送</el-menu-item>
-        <el-menu-item index="/diary">家庭日记</el-menu-item>
+        <el-menu-item index="/annual-goals">🎯 年度目标</el-menu-item>
+        <el-menu-item index="/wishlist">家庭心愿</el-menu-item>
       </el-sub-menu>
 
       <el-sub-menu index="inventory">
@@ -57,20 +64,6 @@
         <el-menu-item index="/inventory/spaces">空间管理</el-menu-item>
         <el-menu-item index="/inventory/borrows">借物追踪</el-menu-item>
         <el-menu-item index="/inventory/unused">断舍离助手</el-menu-item>
-      </el-sub-menu>
-
-      <el-menu-item index="/reminder">
-        <el-icon><Bell /></el-icon>
-        <span>家庭提醒</span>
-      </el-menu-item>
-
-      <el-sub-menu index="goals">
-        <template #title>
-          <el-icon><Aim /></el-icon>
-          <span>小目标</span>
-        </template>
-        <el-menu-item index="/annual-goals">🎯 年度目标</el-menu-item>
-        <el-menu-item index="/wishlist">家庭心愿</el-menu-item>
       </el-sub-menu>
 
       <el-sub-menu index="fun">

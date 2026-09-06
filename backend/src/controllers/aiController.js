@@ -10,10 +10,53 @@ async function getAIConfig() {
   settings.forEach(s => { config[s.key] = s.value; });
   return {
     apiKey: config.ai_api_key || '',
-    baseUrl: config.ai_base_url || 'https://api.deepseek.com',
+    baseUrl: normalizeBaseUrl(config.ai_base_url || 'https://api.deepseek.com'),
     model: config.ai_model || 'deepseek-chat',
     systemPrompt: config.ai_system_prompt || '你是一个家庭管家AI助手，帮助用户管理家庭事务、记账、物品管理、菜谱推荐等。请用简洁友好的中文回答。'
   };
+}
+
+// 标准化 Base URL，兼容 OpenAI / DeepSeek / 其他兼容 API
+// 支持格式：
+//   https://api.openai.com        → https://api.openai.com/v1
+//   https://api.openai.com/v1     → https://api.openai.com/v1
+//   https://api.openai.com/v1/    → https://api.openai.com/v1
+//   https://api.deepseek.com      → https://api.deepseek.com
+function normalizeBaseUrl(url) {
+  if (!url) return 'https://api.deepseek.com';
+  url = url.replace(/\/+$/, ''); // 去掉末尾斜杠
+  // 如果已经以 /v1 结尾，直接返回
+  if (url.endsWith('/v1')) return url;
+  // 如果是 OpenAI 官方 API，自动加 /v1
+  if (url.includes('api.openai.com') && !url.endsWith('/v1')) return url + '/v1';
+  // 其他兼容 API（DeepSeek、Moonshot 等）不加 /v1，它们的 baseUrl 已包含完整路径
+  return url;
+}
+
+// 构建完整的 chat completions URL
+function buildChatUrl(baseUrl) {
+  // 如果 baseUrl 已经包含 /chat/completions，直接使用
+  if (baseUrl.includes('/chat/completions')) return baseUrl;
+  // 如果 baseUrl 以 /v1 结尾，拼接 /chat/completions
+  if (baseUrl.endsWith('/v1')) return baseUrl + '/chat/completions';
+  // 其他情况拼接 /v1/chat/completions
+  return baseUrl + '/v1/chat/completions';
+}
+
+// 带重试的 fetch（处理 OpenAI 限流 429）
+async function fetchWithRetry(url, options, maxRetries = 2) {
+  for (let i = 0; i <= maxRetries; i++) {
+    const response = await fetch(url, options);
+    if (response.status === 429 && i < maxRetries) {
+      // 读取 Retry-After 头，或使用指数退避
+      const retryAfter = response.headers.get('Retry-After');
+      const delay = retryAfter ? parseInt(retryAfter) * 1000 : (i + 1) * 2000;
+      console.warn(`[AI] Rate limited, retrying in ${delay}ms (attempt ${i + 1}/${maxRetries + 1})`);
+      await new Promise(r => setTimeout(r, delay));
+      continue;
+    }
+    return response;
+  }
 }
 
 // 获取用户的分类列表（用于 AI 匹配）
@@ -283,7 +326,8 @@ exports.chat = async (req, res, next) => {
       ...messages
     ];
 
-    const response = await fetch(`${config.baseUrl}/v1/chat/completions`, {
+    const chatUrl = buildChatUrl(config.baseUrl);
+    const response = await fetchWithRetry(chatUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -302,8 +346,11 @@ exports.chat = async (req, res, next) => {
 
     if (!response.ok) {
       const err = await response.text();
-      console.error('[AI] DeepSeek API error:', response.status, err);
-      return res.status(500).json({ code: 500, message: 'AI 服务请求失败，请检查配置' });
+      console.error('[AI] API error:', response.status, err);
+      if (response.status === 401) return res.status(500).json({ code: 500, message: 'AI API Key 无效，请检查配置' });
+      if (response.status === 429) return res.status(500).json({ code: 500, message: 'AI 请求过于频繁，请稍后再试' });
+      if (response.status === 404) return res.status(500).json({ code: 500, message: 'AI 模型不存在，请检查模型名称配置' });
+      return res.status(500).json({ code: 500, message: `AI 服务请求失败 (${response.status})` });
     }
 
     const data = await response.json();
@@ -335,7 +382,7 @@ exports.chat = async (req, res, next) => {
         }
       ];
 
-      const followUpResponse = await fetch(`${config.baseUrl}/v1/chat/completions`, {
+      const followUpResponse = await fetchWithRetry(chatUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -409,7 +456,8 @@ exports.chatStream = async (req, res, next) => {
     abortController = new AbortController();
     const timeout = setTimeout(() => abortController.abort(), 30000);
 
-    const response = await fetch(`${config.baseUrl}/v1/chat/completions`, {
+    const chatUrl = buildChatUrl(config.baseUrl);
+    const response = await fetchWithRetry(chatUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -429,8 +477,11 @@ exports.chatStream = async (req, res, next) => {
 
     if (!response.ok) {
       const err = await response.text();
-      console.error('[AI] DeepSeek API error:', response.status, err);
-      return res.status(500).json({ code: 500, message: 'AI 服务请求失败' });
+      console.error('[AI] API error:', response.status, err);
+      if (response.status === 401) return res.status(500).json({ code: 500, message: 'AI API Key 无效' });
+      if (response.status === 429) return res.status(500).json({ code: 500, message: 'AI 请求过于频繁，请稍后再试' });
+      if (response.status === 404) return res.status(500).json({ code: 500, message: 'AI 模型不存在，请检查配置' });
+      return res.status(500).json({ code: 500, message: `AI 服务请求失败 (${response.status})` });
     }
 
     if (clientDisconnected) return;

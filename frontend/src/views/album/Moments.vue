@@ -1,7 +1,7 @@
 <template>
   <div class="moments-page">
     <!-- 顶部 -->
-    <div class="moments-header">
+    <div v-if="!embedded" class="moments-header">
       <div class="page-title" style="margin-bottom:0;">精彩瞬间</div>
       <el-button type="primary" @click="showPublish = true">
         <el-icon><EditPen /></el-icon>发布瞬间
@@ -163,6 +163,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { EditPen, Close, Plus, MoreFilled, Delete, Star, StarFilled, ChatDotRound, Sunrise } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 
+const props = defineProps({ embedded: Boolean })
 const authStore = useAuthStore()
 const list = ref([])
 const loading = ref(false)
@@ -298,6 +299,8 @@ async function submitComment(m) {
   m.commentCount++
   m._newComment = ''
 }
+
+defineExpose({ openPublish: () => { showPublish.value = true } })
 </script>
 
 <style scoped>
@@ -354,21 +357,12 @@ async function submitComment(m) {
   font-size: 12px;
 }
 .add-photo {
-  width: 80px;
-  height: 80px;
-  border: 1px dashed #d1d5db;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #94a3b8;
-  transition: all 0.2s;
+  width: 80px; height: 80px;
+  border: 1.5px dashed var(--wood-light); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-secondary); transition: all 0.25s;
 }
-.add-photo:hover {
-  border-color: #667eea;
-  color: #667eea;
-}
+.add-photo:hover { border-color: var(--terracotta); color: var(--terra-deep); border-style: solid; }
 .publish-extras {
   display: flex;
   gap: 8px;
@@ -392,23 +386,25 @@ async function submitComment(m) {
   margin-top: 6px;
 }
 
-/* 时间轴 */
-.day-group {
-  margin-bottom: 8px;
-}
+/* 日期分隔线 */
 .day-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #64748b;
-  padding: 12px 0 8px;
-  border-bottom: 1px solid var(--border-light);
-  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 10px;
+  margin: 22px 0 12px; font-size: 13px; font-weight: 700; color: var(--text-secondary);
+}
+.day-label::after {
+  content: ""; flex: 1; height: 1px;
+  background: linear-gradient(to right, rgba(226, 205, 178, 0.7), transparent);
 }
 
-/* 瞬间卡片 */
+/* 瞬间卡片 - 暖色 */
 .moment-card {
-  padding: 16px;
-  margin-bottom: 12px;
+  background: #FFFDFA; border: 1px solid rgba(226, 205, 178, 0.7);
+  border-radius: 24px; padding: 18px; margin-bottom: 16px;
+  box-shadow: 0 8px 28px rgba(160, 120, 90, 0.08);
+  transition: transform 0.35s, box-shadow 0.35s;
+}
+.moment-card:hover {
+  transform: translateY(-4px); box-shadow: 0 16px 36px rgba(160, 120, 90, 0.15);
 }
 .moment-head {
   display: flex;
@@ -417,10 +413,10 @@ async function submitComment(m) {
   margin-bottom: 10px;
 }
 .moment-avatar {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff;
-  font-weight: 600;
-  flex-shrink: 0;
+  width: 42px; height: 42px; border-radius: 13px;
+  background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));
+  color: #fff; font-weight: 700; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
 }
 .moment-user {
   flex: 1;
@@ -455,25 +451,16 @@ async function submitComment(m) {
   word-break: break-word;
 }
 
-/* 图片网格 */
+/* 图片网格 - 暖色圆角 */
 .moment-images {
-  display: grid;
-  gap: 4px;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 10px;
+  display: grid; gap: 6px; border-radius: 16px; overflow: hidden; margin-bottom: 12px;
 }
-.moment-images.grid-1 {
-  grid-template-columns: 1fr;
-  max-width: 300px;
-}
-.moment-images.grid-2 {
-  grid-template-columns: 1fr 1fr;
-  max-width: 400px;
-}
-.moment-images.grid-3 {
-  grid-template-columns: 1fr 1fr 1fr;
-}
+.moment-images.grid-1 { grid-template-columns: 1fr; }
+.moment-images.grid-1 .img-item { height: 240px; }
+.moment-images.grid-2 { grid-template-columns: 1fr 1fr; }
+.moment-images.grid-2 .img-item { height: 170px; }
+.moment-images.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.moment-images.grid-3 .img-item { height: 130px; }
 .img-item {
   aspect-ratio: 1;
   overflow: hidden;
@@ -499,35 +486,18 @@ async function submitComment(m) {
   color: var(--text-muted);
 }
 
-/* 操作栏 */
+/* 操作栏 - 暖色 */
 .moment-actions {
-  display: flex;
-  gap: 0;
-  border-top: 1px solid var(--border-light);
-  padding-top: 8px;
+  display: flex; gap: 16px; font-size: 13px; color: var(--text-secondary);
 }
 .action-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 6px 0;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font-size: 13px;
-  color: var(--text-muted);
-  transition: all 0.2s;
-  border-radius: 6px;
+  display: flex; align-items: center; gap: 6px;
+  border: none; background: transparent; cursor: pointer;
+  font-size: 13px; color: var(--text-secondary);
+  transition: transform 0.2s, color 0.2s; padding: 0;
 }
-.action-btn:hover {
-  background: var(--border-light);
-  color: var(--text-secondary);
-}
-.action-btn.liked {
-  color: #f59e0b;
-}
+.action-btn:hover { transform: scale(1.12); color: var(--terra-deep); }
+.action-btn.liked { color: var(--rose-d); }
 
 /* 评论区 */
 .comment-section {
@@ -542,7 +512,7 @@ async function submitComment(m) {
 }
 .comment-author {
   font-weight: 600;
-  color: #667eea;
+  color: var(--terracotta);
   margin-right: 6px;
 }
 .comment-content {

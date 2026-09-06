@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="page-header">
+    <div v-if="!embedded" class="page-header">
       <div>
         <div class="page-title">家庭日记</div>
         <p class="page-desc">用文字记录家庭生活的美好瞬间</p>
@@ -170,6 +170,7 @@ import { ElMessage } from 'element-plus'
 import { renderMarkdownSafe } from '@/utils/format'
 import dayjs from 'dayjs'
 
+const props = defineProps({ embedded: Boolean })
 const authStore = useAuthStore()
 const list = ref([])
 const loading = ref(false)
@@ -344,6 +345,8 @@ async function handleDelete(id) {
     loadList()
   } catch (e) { console.error(e) }
 }
+
+defineExpose({ openCreate })
 </script>
 
 <style scoped>
@@ -356,21 +359,39 @@ async function handleDelete(id) {
 .empty-title { font-size: 16px; font-weight: 600; color: #475569; margin-top: 16px; }
 .empty-desc { font-size: 14px; color: #94a3b8; margin-top: 8px; }
 
-/* 日记列表 */
-.diary-list { display: flex; flex-direction: column; gap: 16px; }
-.diary-card { cursor: pointer; transition: all 0.2s; padding: 20px; }
-.diary-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
-.diary-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+/* 日记列表 - 暖色 */
+.diary-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.diary-card {
+  cursor: pointer; position: relative; overflow: hidden; padding: 20px;
+  transition: transform 0.35s, box-shadow 0.35s;
+}
+.diary-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+  background: linear-gradient(180deg, var(--amber), var(--terracotta));
+}
+.diary-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(160, 120, 90, 0.16); }
+.diary-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
 .diary-meta { display: flex; align-items: center; gap: 8px; }
-.diary-avatar { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; font-size: 12px; font-weight: 600; }
-.diary-author { font-size: 14px; font-weight: 500; color: #475569; }
-.diary-date { font-size: 12px; color: #94a3b8; }
-.diary-tags { display: flex; gap: 6px; }
-.diary-tag { font-size: 12px; color: #64748b; background: #f1f5f9; padding: 2px 8px; border-radius: 6px; }
-.diary-title { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 8px; line-height: 1.4; }
-.diary-preview { font-size: 14px; color: #64748b; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.diary-footer { margin-top: 12px; display: flex; justify-content: flex-end; }
-.diary-word-count { font-size: 12px; color: #94a3b8; }
+.diary-avatar {
+  width: 32px; height: 32px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));
+  color: #fff; font-size: 14px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.diary-author { font-size: 13.5px; font-weight: 700; color: var(--text-deep); }
+.diary-date { font-size: 12px; color: var(--text-secondary); }
+.diary-tags { margin-left: auto; display: flex; gap: 6px; }
+.diary-tag { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: var(--apricot); color: var(--terra-deep); }
+.diary-title { font-size: 17px; font-weight: 800; color: var(--terra-deep); margin-bottom: 8px; line-height: 1.4; }
+.diary-preview {
+  font-size: 13.5px; color: var(--text-secondary); line-height: 1.7;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.diary-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 14px; padding-top: 12px; border-top: 1px dashed rgba(226, 205, 178, 0.7);
+  font-size: 12px; color: var(--text-secondary);
+}
 .pagination-wrap { display: flex; justify-content: center; padding: 16px 0 0; }
 
 /* 查看弹窗 */
@@ -476,14 +497,14 @@ async function handleDelete(id) {
 .markdown-body :deep(p) { margin: 10px 0; }
 .markdown-body :deep(ul), .markdown-body :deep(ol) { padding-left: 24px; margin: 10px 0; }
 .markdown-body :deep(li) { margin: 4px 0; }
-.markdown-body :deep(blockquote) { border-left: 4px solid #667eea; padding: 8px 16px; margin: 12px 0; background: rgba(102,126,234,0.04); color: #475569; border-radius: 0 8px 8px 0; }
+.markdown-body :deep(blockquote) { border-left: 4px solid var(--terracotta); padding: 8px 16px; margin: 12px 0; background: rgba(102,126,234,0.04); color: #475569; border-radius: 0 8px 8px 0; }
 .markdown-body :deep(code) { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 13px; color: #e11d48; }
 .markdown-body :deep(pre) { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 10px; overflow-x: auto; margin: 12px 0; }
 .markdown-body :deep(pre code) { background: none; color: inherit; padding: 0; }
 .markdown-body :deep(strong) { font-weight: 700; color: #1e293b; }
 .markdown-body :deep(em) { font-style: italic; }
 .markdown-body :deep(hr) { border: none; border-top: 2px solid #f1f5f9; margin: 20px 0; }
-.markdown-body :deep(a) { color: #667eea; text-decoration: none; }
+.markdown-body :deep(a) { color: var(--terracotta); text-decoration: none; }
 .markdown-body :deep(a:hover) { text-decoration: underline; }
 .markdown-body :deep(img) { max-width: 100%; border-radius: 8px; margin: 8px 0; }
 
@@ -495,6 +516,7 @@ async function handleDelete(id) {
 @media (max-width: 768px) {
   .page-header { flex-direction: column; gap: 12px; }
   .header-actions { width: 100%; flex-wrap: wrap; }
+  .diary-list { grid-template-columns: 1fr; }
   .diary-card { padding: 16px; }
   .diary-title { font-size: 16px; }
 

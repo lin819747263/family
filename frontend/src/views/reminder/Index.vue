@@ -1,60 +1,70 @@
 <template>
-  <div class="reminder-layout">
-    <!-- 左侧导航栏 -->
-    <aside class="reminder-sidebar">
-      <div class="sidebar-header">
-        <div class="sidebar-title">家庭提醒</div>
-      </div>
-
-      <nav class="sidebar-nav">
-        <div
-          v-for="item in navItems"
-          :key="item.key"
-          class="nav-item"
-          :class="{ active: activeView === item.key }"
-          @click="switchView(item.key)"
-        >
-          <div class="nav-icon" :style="{ color: item.color }">
-            <el-icon :size="20"><component :is="item.icon" /></el-icon>
+  <div class="reminder-page">
+    <div class="layout">
+      <!-- 侧栏 -->
+      <aside class="sidebar">
+        <div class="sb-head"><div class="sb-title">🔔 家庭提醒</div></div>
+        <nav class="sb-nav">
+          <div class="sb-item" :class="{ active: activeView === 'todo' }" @click="switchView('todo')">
+            <div class="sb-ico g-terra">📝</div>
+            <div class="sb-info"><div class="sb-label">清单</div><div class="sb-desc">待办事项管理</div></div>
+            <span v-if="todoStats.pending > 0" class="sb-badge">{{ todoStats.pending }}</span>
           </div>
-          <div class="nav-info">
-            <div class="nav-label">{{ item.label }}</div>
-            <div class="nav-desc">{{ item.desc }}</div>
+          <div class="sb-item" :class="{ active: activeView === 'calendar' }" @click="switchView('calendar')">
+            <div class="sb-ico g-sage">📅</div>
+            <div class="sb-info"><div class="sb-label">日历视图</div><div class="sb-desc">日程一览</div></div>
           </div>
-          <div v-if="item.badge" class="nav-badge">{{ item.badge }}</div>
+          <div class="sb-item" :class="{ active: activeView === 'anniversary' }" @click="switchView('anniversary')">
+            <div class="sb-ico g-amber">⭐</div>
+            <div class="sb-info"><div class="sb-label">纪念日</div><div class="sb-desc">重要日期提醒</div></div>
+            <span v-if="annivCount > 0" class="sb-badge">{{ annivCount }}</span>
+          </div>
+        </nav>
+        <div class="sb-foot">
+          <div class="foot-stat"><span class="fs-dot" style="background:var(--sage);"></span>{{ todoStats.pending }} 待办</div>
+          <div class="foot-stat"><span class="fs-dot" style="background:var(--rose);"></span>{{ todoStats.overdue }} 过期</div>
         </div>
-      </nav>
+      </aside>
 
-      <!-- 底部统计 -->
-      <div class="sidebar-footer">
-        <div class="footer-stat">
-          <span class="stat-dot" style="background:#10b981;"></span>
-          <span>{{ todoStats.pending }} 待办</span>
-        </div>
-        <div class="footer-stat">
-          <span class="stat-dot" style="background:#f59e0b;"></span>
-          <span>{{ todoStats.overdue }} 过期</span>
-        </div>
-      </div>
-    </aside>
+      <!-- 内容区 -->
+      <main class="content">
+        <!-- ===== 清单 ===== -->
+        <section v-show="activeView === 'todo'" class="panel">
+          <div class="panel-head">
+            <div><div class="panel-title">📝 待办清单</div><div class="panel-sub">把家里的大小事，一件件安心放下</div></div>
+            <button class="btn primary" @click="$refs.todoPage?.openCreate?.()">＋ 新建待办</button>
+          </div>
+          <TodoPage ref="todoPage" embedded @stats-update="onTodoStatsUpdate" />
+        </section>
 
-    <!-- 右侧内容区 -->
-    <main class="reminder-content">
-      <router-view v-slot="{ Component }">
-        <transition name="content-fade" mode="out-in">
-          <component :is="Component" />
-        </transition>
-      </router-view>
-    </main>
+        <!-- ===== 日历 ===== -->
+        <section v-show="activeView === 'calendar'" class="panel">
+          <div class="panel-head">
+            <div><div class="panel-title">📅 日历视图</div><div class="panel-sub">一家人的日程，摊开在同一张纸上</div></div>
+          </div>
+          <CalendarPage />
+        </section>
+
+        <!-- ===== 纪念日 ===== -->
+        <section v-show="activeView === 'anniversary'" class="panel">
+          <div class="panel-head">
+            <div><div class="panel-title">⭐ 纪念日</div><div class="panel-sub">重要的日子，一个都不错过</div></div>
+          </div>
+          <AnniversaryPage embedded @count-update="c => annivCount = c" />
+        </section>
+      </main>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { todoApi, anniversaryApi } from '@/api'
+import { todoApi } from '@/api'
 import { useAuthStore } from '@/store/auth'
-import { List, Calendar, Star } from '@element-plus/icons-vue'
+import TodoPage from '@/views/todo/Index.vue'
+import CalendarPage from '@/views/anniversary/Calendar.vue'
+import AnniversaryPage from '@/views/anniversary/Index.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -63,310 +73,114 @@ const authStore = useAuthStore()
 const activeView = ref('todo')
 const todoStats = ref({ pending: 0, overdue: 0 })
 const annivCount = ref(0)
-
-const navItems = computed(() => [
-  {
-    key: 'todo',
-    label: '清单',
-    desc: '待办事项管理',
-    icon: 'List',
-    color: '#667eea',
-    badge: todoStats.value.pending > 0 ? todoStats.value.pending : null
-  },
-  {
-    key: 'calendar',
-    label: '日历视图',
-    desc: '日程一览',
-    icon: 'Calendar',
-    color: '#10b981',
-    badge: null
-  },
-  {
-    key: 'anniversary',
-    label: '纪念日',
-    desc: '重要日期提醒',
-    icon: 'Star',
-    color: '#f59e0b',
-    badge: annivCount.value > 0 ? annivCount.value : null
-  }
-])
-
-// 根据当前路由路径判断活跃视图
-function updateActiveView() {
-  const path = route.path
-  if (path.includes('/reminder/todo')) activeView.value = 'todo'
-  else if (path.includes('/reminder/calendar')) activeView.value = 'calendar'
-  else if (path.includes('/reminder/anniversary')) activeView.value = 'anniversary'
-}
+const todoPage = ref(null)
 
 function switchView(key) {
   activeView.value = key
-  router.push(`/reminder/${key}`)
+  router.replace(`/reminder/${key}`)
 }
+
+function updateActiveView() {
+  const path = route.path
+  if (path.includes('/calendar')) activeView.value = 'calendar'
+  else if (path.includes('/anniversary')) activeView.value = 'anniversary'
+  else activeView.value = 'todo'
+}
+
+function onTodoStatsUpdate(stats) {
+  todoStats.value = { pending: stats.pending || 0, overdue: stats.overdue || 0 }
+}
+
+watch(() => route.path, updateActiveView)
 
 onMounted(async () => {
   updateActiveView()
-  loadStats()
-})
-
-watch(() => route.path, () => {
-  updateActiveView()
-})
-
-async function loadStats() {
+  // 加载待办统计
   try {
     const familyId = authStore.currentFamily?.id
-    if (!familyId) return
-    const [todoRes, annivRes] = await Promise.all([
-      todoApi.getStats({ familyId }),
-      anniversaryApi.getList({ familyId })
-    ])
-    todoStats.value = {
-      pending: todoRes.data?.pending || 0,
-      overdue: todoRes.data?.overdue || 0
+    if (familyId) {
+      const res = await todoApi.getStats({ familyId })
+      todoStats.value = { pending: res.data?.pending || 0, overdue: res.data?.overdue || 0 }
     }
-    annivCount.value = annivRes.data?.length || 0
-  } catch (e) {
-    console.error(e)
-  }
-}
+  } catch (e) { console.error(e) }
+})
 </script>
 
 <style scoped>
-.reminder-layout {
-  display: flex;
-  gap: 0;
-  min-height: calc(100vh - 100px);
-  animation: pageIn 0.4s ease-out;
+.reminder-page { animation: fadeIn 0.4s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.layout { display: flex; gap: 18px; align-items: flex-start; }
+
+/* ===== 侧栏 ===== */
+.sidebar {
+  width: 236px; flex-shrink: 0; background: rgba(255, 253, 250, 0.85);
+  backdrop-filter: blur(14px); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-md);
+  display: flex; flex-direction: column; overflow: hidden;
+  position: sticky; top: 80px;
 }
-
-@keyframes pageIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.sb-head { padding: 20px 20px 14px; border-bottom: 1px dashed var(--border); }
+.sb-title { font-size: 17px; font-weight: 800; color: var(--terra-deep); display: flex; align-items: center; gap: 8px; }
+.sb-nav { padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+.sb-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  border-radius: 14px; cursor: pointer; transition: all 0.25s; position: relative;
 }
-
-/* ========== 左侧导航栏 ========== */
-.reminder-sidebar {
-  width: 240px;
-  flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  border-radius: 20px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+.sb-item:hover { background: rgba(200, 159, 133, 0.08); }
+.sb-item.active { background: rgba(200, 159, 133, 0.14); }
+.sb-item.active::before {
+  content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 22px; border-radius: 0 3px 3px 0;
+  background: linear-gradient(180deg, var(--terracotta), var(--amber));
 }
-
-.sidebar-header {
-  padding: 20px 20px 12px;
-  border-bottom: 1px solid #f1f5f9;
+.sb-ico {
+  width: 36px; height: 36px; border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; color: #fff; flex-shrink: 0;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-
-.sidebar-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: #1e293b;
-  letter-spacing: 0.5px;
+.sb-item:hover .sb-ico { transform: scale(1.1) rotate(-6deg); }
+.g-terra { background: linear-gradient(135deg, var(--terracotta), var(--terra-deep)); }
+.g-sage { background: linear-gradient(135deg, var(--sage), #7E8862); }
+.g-amber { background: linear-gradient(135deg, var(--amber), #C08A3E); }
+.sb-info { flex: 1; min-width: 0; }
+.sb-label { font-size: 14px; font-weight: 600; }
+.sb-desc { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+.sb-badge {
+  background: var(--terracotta); color: #fff; font-size: 11px; font-weight: 700;
+  padding: 2px 8px; border-radius: 10px; min-width: 22px; text-align: center;
 }
-
-/* 导航项 */
-.sidebar-nav {
-  flex: 1;
-  padding: 8px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.sb-foot {
+  margin-top: auto; padding: 14px 20px; border-top: 1px dashed var(--border);
+  display: flex; flex-direction: column; gap: 8px;
 }
+.foot-stat { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); }
+.fs-dot { width: 7px; height: 7px; border-radius: 50%; }
 
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  position: relative;
+/* ===== 内容区 ===== */
+.content { flex: 1; min-width: 0; }
+.panel-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; flex-wrap: wrap; margin-bottom: 18px;
 }
+.panel-title { font-size: 22px; font-weight: 800; color: var(--terra-deep); }
+.panel-sub { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+.btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 17px; border-radius: 13px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; transition: transform 0.3s, box-shadow 0.3s; }
+.btn.primary { background: linear-gradient(135deg, var(--terracotta), #D3A98B); color: #FFF9F2; box-shadow: 0 8px 20px rgba(200, 159, 133, 0.4); }
+.btn.ghost { background: rgba(255, 253, 250, 0.85); color: var(--terra-deep); border: 1.5px solid var(--border); }
+.btn:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(200, 159, 133, 0.3); }
 
-.nav-item:hover {
-  background: rgba(102, 126, 234, 0.06);
+/* ===== 响应式 ===== */
+@media (max-width: 960px) {
+  .layout { flex-direction: column; }
+  .sidebar { width: 100%; position: static; }
+  .sb-nav { flex-direction: row; overflow-x: auto; }
+  .sb-item { flex-direction: column; text-align: center; min-width: 90px; gap: 6px; }
+  .sb-item.active::before { left: 50%; top: 0; transform: translateX(-50%); width: 22px; height: 3px; border-radius: 0 0 3px 3px; }
+  .sb-desc, .sb-foot, .sb-head { display: none; }
 }
-
-.nav-item.active {
-  background: rgba(102, 126, 234, 0.1);
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.12);
-}
-
-.nav-item.active::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 20px;
-  background: linear-gradient(180deg, #667eea, #764ba2);
-  border-radius: 0 3px 3px 0;
-}
-
-.nav-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.03);
-  flex-shrink: 0;
-  transition: all 0.25s;
-}
-
-.nav-item.active .nav-icon {
-  background: rgba(102, 126, 234, 0.12);
-}
-
-.nav-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.nav-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #1e293b;
-  line-height: 1.3;
-}
-
-.nav-desc {
-  font-size: 11px;
-  color: #94a3b8;
-  margin-top: 2px;
-  line-height: 1.3;
-}
-
-.nav-badge {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 10px;
-  min-width: 22px;
-  text-align: center;
-  line-height: 1.4;
-}
-
-/* 底部统计 */
-.sidebar-footer {
-  padding: 14px 20px;
-  border-top: 1px solid #f1f5f9;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.footer-stat {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: #64748b;
-}
-
-.stat-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-/* ========== 右侧内容区 ========== */
-.reminder-content {
-  flex: 1;
-  min-width: 0;
-  margin-left: 16px;
-  background: transparent;
-}
-
-/* 内容切换动画 */
-.content-fade-enter-active,
-.content-fade-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.content-fade-enter-from {
-  opacity: 0;
-  transform: translateX(8px);
-}
-
-.content-fade-leave-to {
-  opacity: 0;
-  transform: translateX(-8px);
-}
-
-/* ========== 响应式 ========== */
-@media (max-width: 768px) {
-  .reminder-layout {
-    flex-direction: column;
-    min-height: auto;
-  }
-
-  .reminder-sidebar {
-    width: 100%;
-    border-radius: 16px;
-    margin-bottom: 12px;
-  }
-
-  .sidebar-header {
-    display: none;
-  }
-
-  .sidebar-nav {
-    flex-direction: row;
-    padding: 8px;
-    gap: 6px;
-    overflow-x: auto;
-  }
-
-  .nav-item {
-    flex-direction: column;
-    gap: 4px;
-    padding: 10px 16px;
-    min-width: 80px;
-    text-align: center;
-  }
-
-  .nav-item.active::before {
-    left: 50%;
-    top: 0;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 3px;
-    border-radius: 0 0 3px 3px;
-  }
-
-  .nav-icon {
-    width: 32px;
-    height: 32px;
-  }
-
-  .nav-desc {
-    display: none;
-  }
-
-  .nav-label {
-    font-size: 12px;
-  }
-
-  .sidebar-footer {
-    display: none;
-  }
-
-  .reminder-content {
-    margin-left: 0;
-  }
+@media (max-width: 600px) {
+  .panel-title { font-size: 18px; }
 }
 </style>

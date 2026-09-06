@@ -1,7 +1,7 @@
 <template>
   <div class="todo-page">
     <!-- 页面头部 -->
-    <div class="page-header">
+    <div v-if="!embedded" class="page-header">
       <div class="header-actions">
         <el-select v-model="filter" placeholder="全部" clearable style="width:110px;" @change="loadList">
           <el-option label="待完成" value="pending" />
@@ -269,6 +269,8 @@ import { ElMessage } from 'element-plus'
 import dayjs from 'dayjs'
 import { Calendar, Timer, List, Refresh } from '@element-plus/icons-vue'
 
+const props = defineProps({ embedded: Boolean })
+const emit = defineEmits(['stats-update'])
 const authStore = useAuthStore()
 
 const list = ref([])
@@ -380,8 +382,11 @@ async function loadStats() {
   try {
     const res = await todoApi.getStats({ familyId: authStore.currentFamily?.id })
     Object.assign(stats, res.data)
+    emit('stats-update', res.data)
   } catch (e) { console.error(e) }
 }
+
+defineExpose({ openCreate })
 
 async function handleQuickAdd() {
   if (!quickTitle.value.trim()) return
@@ -431,9 +436,27 @@ async function handleSave() {
   if (!form.value.title) return ElMessage.warning('请输入标题')
   saving.value = true
   try {
-    const data = { ...form.value, familyId: authStore.currentFamily?.id }
+    const raw = { ...form.value }
     // 创建时如果没有选日期，默认今天
-    if (!isEdit.value && !data.dueDate) data.dueDate = dayjs().format('YYYY-MM-DD')
+    if (!isEdit.value && !raw.dueDate) raw.dueDate = dayjs().format('YYYY-MM-DD')
+    // 清理空字符串为 null，避免后端校验失败
+    const data = {
+      title: raw.title,
+      description: raw.description || null,
+      priority: raw.priority || 'medium',
+      dueDate: raw.dueDate || null,
+      dueTime: raw.dueTime || null,
+      reminderBefore: raw.reminderBefore || 0,
+      repeatType: raw.repeatType || 'none',
+      repeatInterval: raw.repeatInterval || 1,
+      repeatUnit: raw.repeatUnit || 'days',
+      repeatWeekdays: raw.repeatWeekdays?.length ? raw.repeatWeekdays : null,
+      repeatDayOfMonth: raw.repeatDayOfMonth || 1,
+      repeatEndType: raw.repeatEndType || 'never',
+      repeatCount: raw.repeatCount || 10,
+      repeatEndDate: raw.repeatEndDate || null,
+      familyId: authStore.currentFamily?.id
+    }
     if (isEdit.value) {
       await todoApi.update(editId.value, data)
       ElMessage.success('更新成功')
@@ -523,54 +546,38 @@ async function handleDelete(id) {
   flex-shrink: 0;
 }
 
-/* 时间筛选标签 */
+/* 时间筛选标签 - 暖色药丸样式 */
 .time-filter {
   display: flex;
   gap: 8px;
   margin-bottom: 16px;
-  padding: 4px;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(12px);
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  flex-wrap: wrap;
 }
 .time-tab {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 16px;
-  border-radius: 10px;
+  gap: 7px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: rgba(255, 253, 250, 0.8);
   cursor: pointer;
-  transition: all 0.25s ease;
-  font-size: 14px;
-  font-weight: 500;
-  color: #64748b;
-  flex: 1;
-  justify-content: center;
-}
-.time-tab:hover {
-  background: rgba(102, 126, 234, 0.06);
-  color: #667eea;
-}
-.time-tab.active {
-  background: #fff;
-  color: #667eea;
+  transition: all 0.25s;
+  font-size: 13.5px;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+  color: var(--text-secondary);
+}
+.time-tab:hover { border-color: var(--terracotta); color: var(--terra-deep); }
+.time-tab.active {
+  background: var(--terracotta); border-color: var(--terracotta);
+  color: #fff; box-shadow: 0 6px 16px rgba(200, 159, 133, 0.35);
 }
 .tab-count {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 1px 7px;
-  border-radius: 8px;
-  min-width: 20px;
-  text-align: center;
+  background: var(--apricot); color: var(--terra-deep);
+  font-size: 11px; font-weight: 700; padding: 1px 8px;
+  border-radius: 999px; min-width: 20px; text-align: center;
 }
-.time-tab.active .tab-count {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-}
+.time-tab.active .tab-count { background: rgba(255, 255, 255, 0.3); color: #fff; }
 
 /* 统计卡片 */
 .stats-row {
@@ -596,7 +603,7 @@ async function handleDelete(id) {
 .stat-num {
   font-size: 28px;
   font-weight: 800;
-  color: #667eea;
+  color: var(--terracotta);
   line-height: 1.2;
 }
 .stat-card.pending .stat-num { color: #f59e0b; }
@@ -612,16 +619,26 @@ async function handleDelete(id) {
 /* 快速添加 */
 .quick-add {
   margin-bottom: 16px;
-  padding: 12px 16px;
+  padding: 6px 6px 6px 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.quick-add :deep(.el-input__wrapper) {
+  border: none; background: transparent; box-shadow: none;
+  font-size: 15px;
+}
+.quick-add :deep(.el-input__inner) {
+  color: var(--text-deep);
+}
+.quick-add :deep(.el-input__inner::placeholder) {
+  color: var(--text-soft);
 }
 
 /* 卡片 */
 .card {
-  background: rgba(255,255,255,0.75);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.8);
-  border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  background: #FFFDFA;
+  border: 1px solid rgba(226, 205, 178, 0.7);
+  border-radius: 24px;
+  box-shadow: 0 8px 28px rgba(160, 120, 90, 0.08);
 }
 
 /* 空状态 */
@@ -645,19 +662,20 @@ async function handleDelete(id) {
 .todo-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 .todo-item {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 14px 16px;
-  transition: all 0.25s;
+  gap: 14px;
+  padding: 16px 18px 16px 24px;
+  transition: transform 0.3s, box-shadow 0.3s;
   position: relative;
   overflow: hidden;
 }
 .todo-item:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(160, 120, 90, 0.14);
 }
 .todo-item.completed {
   opacity: 0.65;
@@ -686,42 +704,24 @@ async function handleDelete(id) {
   border-radius: 4px;
 }
 
-/* 优先级色条 */
+/* 优先级色条 - 暖色 */
 .ti-priority {
-  width: 4px;
-  min-height: 32px;
-  border-radius: 2px;
-  flex-shrink: 0;
-  align-self: stretch;
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 5px; border-radius: 0;
 }
-.ti-priority.high { background: #ef4444; }
-.ti-priority.medium { background: #f59e0b; }
-.ti-priority.low { background: #10b981; }
+.ti-priority.high { background: linear-gradient(180deg, var(--rose), #B06A6A); }
+.ti-priority.medium { background: linear-gradient(180deg, var(--amber), #C08A3E); }
+.ti-priority.low { background: linear-gradient(180deg, var(--sage), #7E8862); }
 
-/* 完成勾选 */
+/* 完成勾选 - 暖色圆角方块 */
 .ti-check {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 2px solid #cbd5e1;
-  background: transparent;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 2px;
-  transition: all 0.2s;
-  color: transparent;
+  width: 24px; height: 24px; border-radius: 9px;
+  border: 2px solid var(--wood-light); background: #FFFDF9;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px; transition: all 0.25s; color: transparent;
 }
-.ti-check:hover {
-  border-color: #667eea;
-}
-.ti-check.checked {
-  background: #10b981;
-  border-color: #10b981;
-  color: #fff;
-}
+.ti-check:hover { border-color: var(--terracotta); transform: scale(1.1); }
+.ti-check.checked { background: var(--sage); border-color: var(--sage); color: #fff; }
 
 /* 内容 */
 .ti-body {
@@ -754,94 +754,58 @@ async function handleDelete(id) {
   margin-top: 6px;
   font-size: 12px;
 }
+/* 标签 - 暖色药丸 */
 .ti-due {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  color: #94a3b8;
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; padding: 3px 10px; border-radius: 999px;
+  background: var(--apricot); color: var(--terra-deep); font-weight: 600;
 }
 .ti-due.is-overdue {
-  color: #ef4444;
+  background: rgba(217, 154, 154, 0.2); color: #B06A6A;
+  animation: pulse-soft 2s ease-in-out infinite;
 }
+@keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 .overdue-tag {
-  background: #fef2f2;
-  color: #ef4444;
-  padding: 0 6px;
-  border-radius: 4px;
-  font-weight: 600;
+  background: rgba(217, 154, 154, 0.2); color: #B06A6A;
+  padding: 0 6px; border-radius: 999px; font-weight: 600;
 }
 .ti-repeat {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  color: #8b5cf6;
-  background: rgba(139, 92, 246, 0.1);
-  padding: 0 6px;
-  border-radius: 4px;
-  font-weight: 500;
-}
-.today-tag {
-  background: #fef3c7;
-  color: #d97706;
-  padding: 0 6px;
-  border-radius: 4px;
-  font-weight: 600;
-}
-.soon-tag {
-  background: #f0f9ff;
-  color: #0284c7;
-  padding: 0 6px;
-  border-radius: 4px;
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; padding: 3px 10px; border-radius: 999px;
+  background: rgba(159, 184, 201, 0.2); color: #6E8CA0; font-weight: 600;
 }
 .ti-priority-label {
-  padding: 0 6px;
-  border-radius: 4px;
-  font-weight: 500;
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; padding: 3px 10px; border-radius: 999px; font-weight: 600;
 }
-.ti-priority-label.high { background: #fef2f2; color: #ef4444; }
-.ti-priority-label.medium { background: #fffbeb; color: #d97706; }
-.ti-priority-label.low { background: #ecfdf5; color: #10b981; }
+.ti-priority-label.high { background: rgba(217, 154, 154, 0.2); color: #B06A6A; }
+.ti-priority-label.medium { background: rgba(232, 179, 106, 0.2); color: #C08A3E; }
+.ti-priority-label.low { background: rgba(168, 176, 138, 0.2); color: #7E8862; }
 
 /* 操作 */
 .ti-actions {
-  display: flex;
-  gap: 4px;
-  flex-shrink: 0;
+  display: flex; gap: 6px; opacity: 0; transition: opacity 0.25s; flex-shrink: 0;
 }
+.todo-item:hover .ti-actions { opacity: 1; }
 .act-btn {
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: transparent;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
+  width: 30px; height: 30px; border-radius: 9px; border: none;
+  background: rgba(200, 159, 133, 0.12); color: var(--terra-deep);
+  cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center;
   transition: all 0.2s;
 }
-.act-btn:hover {
-  background: #f1f5f9;
-  color: #64748b;
-}
-.act-btn.danger:hover {
-  background: #fef2f2;
-  color: #f87171;
-}
+.act-btn:hover { background: rgba(200, 159, 133, 0.28); }
+.act-btn.danger:hover { background: rgba(217, 154, 154, 0.3); color: #B06A6A; }
 
-/* 弹窗 */
+/* 弹窗 - 暖色 */
 .form-dialog :deep(.el-dialog) {
-  border-radius: 20px;
+  border-radius: 20px; overflow: hidden;
 }
 .form-dialog :deep(.el-dialog__header) {
-  padding: 20px 24px 16px;
-  margin: 0;
-  border-bottom: 1px solid #f1f5f9;
+  padding: 20px 24px 16px; margin: 0;
+  border-bottom: 1px solid var(--border);
 }
 .form-dialog :deep(.el-dialog__title) {
-  font-size: 17px;
-  font-weight: 600;
+  font-size: 17px; font-weight: 600; color: var(--terra-deep);
 }
 .form-dialog :deep(.el-dialog__body) {
   padding: 20px 24px;
@@ -880,15 +844,10 @@ async function handleDelete(id) {
   transition: all 0.2s;
 }
 
-.weekday-btn:hover {
-  border-color: #667eea;
-  color: #667eea;
-}
-
+.weekday-btn:hover { border-color: var(--terracotta); color: var(--terra-deep); }
 .weekday-btn.active {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  border-color: transparent;
-  color: #fff;
+  background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));
+  border-color: transparent; color: #fff;
 }
 
 .repeat-hint {

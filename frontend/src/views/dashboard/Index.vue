@@ -1,32 +1,55 @@
 <template>
   <div class="dashboard">
-    <!-- ========== 欢迎栏 ========== -->
-    <div class="hero-section">
-      <div class="hero-bg"></div>
-      <div class="hero-content">
-        <div class="hero-left">
-          <div class="hero-greeting">{{ greeting }}，{{ authStore.nickname }} 👋</div>
-          <div class="hero-date">{{ todayStr }}</div>
-          <div v-if="upcomingEvents.length" class="hero-events">
-            <span v-for="e in upcomingEvents" :key="e.name + e.date" class="event-pill">
-              {{ e.emoji }} {{ e.name }}
-              <span class="event-days">{{ e.daysLeft === 0 ? '今天' : e.daysLeft === 1 ? '明天' : e.daysLeft + '天后' }}</span>
-            </span>
-          </div>
-        </div>
-        <div class="hero-actions">
-          <button class="hero-btn primary" @click="showQuickAdd = true">
-            <el-icon><Plus /></el-icon>记一笔
-          </button>
-          <button class="hero-btn" @click="router.push('/reminder/todo')">
-            <el-icon><Finished /></el-icon>待办
-          </button>
-          <button class="hero-btn" @click="router.push('/album/moments')">
-            <el-icon><ChatDotRound /></el-icon>瞬间
-          </button>
+    <!-- 背景漂浮柔光 -->
+    <div class="ambient">
+      <span class="a1"></span>
+      <span class="a2"></span>
+      <span class="a3"></span>
+    </div>
+
+    <!-- ========== Hero 欢迎卡 ========== -->
+    <section class="hero reveal">
+      <div class="hero-glow"></div>
+      <div class="hero-left">
+        <div class="hero-greet">{{ greeting }}，{{ authStore.nickname }} {{ greetingEmoji }}</div>
+        <div class="hero-date">{{ todayStr }} · 家的第 {{ familyDays }} 天</div>
+        <div v-if="upcomingEvents.length" class="hero-events">
+          <span v-for="e in upcomingEvents" :key="e.name + e.date" class="pill">
+            {{ e.emoji }} <b>{{ e.name }}</b>
+            · {{ e.daysLeft === 0 ? '今天' : e.daysLeft === 1 ? '明天' : e.daysLeft + '天后' }}
+          </span>
         </div>
       </div>
-    </div>
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 400 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle class="lamp" cx="115" cy="185" r="72" fill="#F5D3A0" opacity="0.5"/>
+          <circle class="lamp" cx="115" cy="185" r="46" fill="#F8DFB4" opacity="0.6"/>
+          <rect x="230" y="52" width="120" height="150" rx="16" fill="#FBF3E4" stroke="#D9BE9C" stroke-width="4"/>
+          <line x1="290" y1="56" x2="290" y2="198" stroke="#D9BE9C" stroke-width="4"/>
+          <line x1="234" y1="127" x2="346" y2="127" stroke="#D9BE9C" stroke-width="4"/>
+          <circle cx="263" cy="95" r="15" fill="#F3CE8F"/>
+          <g class="leaf"><path d="M258 200 q-3 -26 -16 -34 q14 2 19 20 q2 -22 -6 -34 q12 8 12 34 q6 -16 16 -19 q-6 14 -11 33 Z" fill="#A8B08A" opacity="0.9"/></g>
+          <path d="M247 198 h26 l-4 24 h-18 Z" fill="#C89F85"/>
+          <rect x="60" y="228" width="200" height="10" rx="5" fill="#D9BE9C"/>
+          <rect x="78" y="238" width="8" height="52" rx="4" fill="#CBA97F"/>
+          <rect x="234" y="238" width="8" height="52" rx="4" fill="#CBA97F"/>
+          <rect x="112" y="180" width="7" height="48" rx="3.5" fill="#A08D7A"/>
+          <path d="M92 182 q23 -26 47 0 Z" fill="#C89F85"/>
+          <ellipse cx="115.5" cy="228" rx="20" ry="5" fill="#A08D7A"/>
+          <path d="M178 214 h30 v10 q0 8 -15 8 q-15 0 -15 -8 Z" fill="#E8D5C4" stroke="#C9A983" stroke-width="2.5"/>
+          <path class="smoke" d="M186 206 q3 -6 0 -11 M196 206 q3 -6 0 -11" stroke="#D9BE9C" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <ellipse cx="160" cy="298" rx="130" ry="16" fill="#EBD9C0"/>
+          <path d="M30 292 v-40 l26 -20 26 20 v40 Z" fill="#DFC7A8"/>
+          <rect x="48" y="268" width="14" height="24" rx="3" fill="#B08466"/>
+          <circle cx="39" cy="266" r="4.5" fill="#F3CE8F"/>
+        </svg>
+      </div>
+      <div class="hero-actions">
+        <button class="hbtn primary" @click="showQuickAdd = true">✏️ 记一笔</button>
+        <button class="hbtn ghost" @click="router.push('/reminder/todo')">✅ 待办</button>
+        <button class="hbtn ghost" @click="router.push('/album/moments')">💬 瞬间</button>
+      </div>
+    </section>
 
     <!-- 快捷记账弹窗 -->
     <el-dialog v-model="showQuickAdd" :width="quickAddMode === 'batch' ? '520px' : '440px'" top="10vh" destroy-on-close :lock-scroll="false" append-to-body class="quick-add-dialog">
@@ -48,225 +71,180 @@
     </el-dialog>
 
     <!-- ========== 快捷入口 ========== -->
-    <div class="shortcuts-row">
-      <div class="shortcut-item" @click="router.push('/accounting')">
-        <div class="sc-icon" style="background:linear-gradient(135deg,#667eea,#764ba2);">
-          <el-icon :size="20"><Coin /></el-icon>
-        </div>
+    <section class="shortcuts">
+      <div class="sc reveal" @click="router.push('/accounting')">
+        <div class="sc-ico g-terra"><span>🪙</span></div>
         <span>记账</span>
       </div>
-      <div class="shortcut-item" @click="router.push('/album')">
-        <div class="sc-icon" style="background:linear-gradient(135deg,#f472b6,#ec4899);">
-          <el-icon :size="20"><PictureFilled /></el-icon>
-        </div>
+      <div class="sc reveal" @click="router.push('/album')">
+        <div class="sc-ico g-rose"><span>📷</span></div>
         <span>相册</span>
       </div>
-      <div class="shortcut-item" @click="router.push('/inventory')">
-        <div class="sc-icon" style="background:linear-gradient(135deg,#34d399,#10b981);">
-          <el-icon :size="20"><Box /></el-icon>
-        </div>
+      <div class="sc reveal" @click="router.push('/inventory')">
+        <div class="sc-ico g-sage"><span>📦</span></div>
         <span>物品</span>
       </div>
-      <div class="shortcut-item" @click="router.push('/reminder/anniversary')">
-        <div class="sc-icon" style="background:linear-gradient(135deg,#fbbf24,#f59e0b);">
-          <el-icon :size="20"><Calendar /></el-icon>
-        </div>
+      <div class="sc reveal" @click="router.push('/reminder/anniversary')">
+        <div class="sc-ico g-amber"><span>📅</span></div>
         <span>纪念日</span>
       </div>
-      <div class="shortcut-item" @click="router.push('/recipe')">
-        <div class="sc-icon" style="background:linear-gradient(135deg,#fb923c,#f97316);">
-          <el-icon :size="20"><Dish /></el-icon>
-        </div>
+      <div class="sc reveal" @click="router.push('/recipe')">
+        <div class="sc-ico g-sky"><span>🍲</span></div>
         <span>菜谱</span>
       </div>
-      <div class="shortcut-item" @click="router.push('/member')">
-        <div class="sc-icon" style="background:linear-gradient(135deg,#a78bfa,#8b5cf6);">
-          <el-icon :size="20"><User /></el-icon>
-        </div>
-        <span>档案</span>
+      <div class="sc reveal" @click="router.push('/member')">
+        <div class="sc-ico g-plum"><span>👨‍👩‍👧</span></div>
+        <span>成员档案</span>
       </div>
-    </div>
+    </section>
 
     <!-- ========== 待办 + 今日吃什么 ========== -->
-    <div class="top-row">
+    <section class="grid-2">
       <!-- 待办 -->
-      <div class="card module-card">
-        <div class="mc-header">
-          <div class="mc-title"><span class="mc-dot" style="background:#667eea;"></span>今日待办</div>
-          <el-badge v-if="pendingTodos.length" :value="pendingTodos.length" type="primary" />
+      <div class="card reveal">
+        <div class="card-head">
+          <div class="card-title"><span class="cdot" style="background:var(--terracotta);"></span>今日待办</div>
+          <div class="card-link" @click="router.push('/reminder/todo')">查看全部 →</div>
         </div>
-        <div v-if="pendingTodos.length === 0" class="mc-empty">
-          <span class="mc-empty-icon">✅</span>
+        <div v-if="pendingTodos.length === 0" class="card-empty">
+          <span>✅</span>
           <span>今日无待办，享受轻松一天</span>
         </div>
-        <div v-else class="mc-list">
-          <div v-for="t in pendingTodos.slice(0, 5)" :key="t.id" class="mc-list-item" :class="{ overdue: t.overdue }">
-            <button class="todo-check" :class="t.priority" @click="handleToggleTodo(t)">
-              <el-icon :size="10"><Check /></el-icon>
-            </button>
-            <span class="mc-item-text">{{ t.title }}</span>
-            <span class="mc-item-tag" :class="{ 'is-overdue': t.overdue }">
+        <div v-else class="todo-list">
+          <div v-for="t in pendingTodos.slice(0, 5)" :key="t.id" class="todo" :class="{ done: t.completed }">
+            <button class="check" :class="{ 'prio-high': t.priority === 'high' }" @click="handleToggleTodo(t)">✓</button>
+            <span class="todo-txt">{{ t.title }}</span>
+            <span class="todo-tag" :class="{ over: t.overdue }">
               {{ t.overdue ? '已过期' : t.daysLeft === 0 ? '今天' : t.daysLeft + '天后' }}
             </span>
           </div>
         </div>
-        <div class="mc-footer" @click="router.push('/reminder/todo')">
-          查看全部 <el-icon><ArrowRight /></el-icon>
-        </div>
       </div>
 
       <!-- 今日吃什么 -->
-      <div class="card module-card recipe-module">
-        <div class="mc-header">
-          <div class="mc-title"><span class="mc-dot" style="background:#f59e0b;"></span>今日吃什么</div>
-          <button class="shuffle-btn" @click="shuffleRecipe" :disabled="recipeLoading">
-            <el-icon :class="{ 'is-loading': recipeLoading }"><RefreshRight /></el-icon>换一换
+      <div class="card reveal">
+        <div class="card-head">
+          <div class="card-title"><span class="cdot" style="background:var(--amber);"></span>今日吃什么</div>
+          <button class="shuffle" @click="shuffleRecipe" :disabled="recipeLoading">
+            <span class="ic" :class="{ spin: recipeLoading }">🔄</span>换一换
           </button>
         </div>
-        <div v-if="!todayRecipe" class="mc-empty">
-          <span class="mc-empty-icon">🍽️</span>
+        <div v-if="!todayRecipe" class="card-empty">
+          <span>🍽️</span>
           <span>还没有菜谱，<el-button link type="primary" size="small" @click="router.push('/recipe')">去添加</el-button></span>
         </div>
-        <div v-else class="recipe-body" @click="router.push('/recipe')">
-          <div class="recipe-thumb" :class="{ 'no-img': !todayRecipe.image }">
+        <div v-else class="recipe" @click="router.push('/recipe')">
+          <div class="recipe-thumb" :class="{ 'has-img': todayRecipe.image }">
             <img v-if="todayRecipe.image" :src="todayRecipe.image" :alt="todayRecipe.name" />
-            <el-icon v-else :size="32" color="#cbd5e1"><Dish /></el-icon>
+            <span v-else>{{ recipeEmoji }}</span>
           </div>
-          <div class="recipe-info">
+          <div style="flex:1;min-width:0;">
             <div class="recipe-name">{{ todayRecipe.name }}</div>
             <div class="recipe-desc">{{ todayRecipe.description || '暂无描述' }}</div>
-            <div class="recipe-tags">
-              <el-tag v-if="todayRecipe.difficulty" :type="difficultyType(todayRecipe.difficulty)" size="small" effect="light" round>{{ difficultyLabel(todayRecipe.difficulty) }}</el-tag>
-              <span v-if="todayRecipe.cookingTime" class="recipe-meta">⏱ {{ todayRecipe.cookingTime }}分钟</span>
-              <span v-if="todayRecipe.servings" class="recipe-meta">👥 {{ todayRecipe.servings }}人份</span>
-            </div>
-            <div v-if="todayRecipe.ingredients?.length" class="recipe-ing">
-              🥘 {{ todayRecipe.ingredients.slice(0, 4).map(i => i.name || i).join('、') }}
-              <span v-if="todayRecipe.ingredients.length > 4">等</span>
+            <div class="recipe-meta">
+              <span v-if="todayRecipe.difficulty" class="chip">{{ difficultyLabel(todayRecipe.difficulty) }}</span>
+              <span v-if="todayRecipe.cookingTime" class="chip">⏱ {{ todayRecipe.cookingTime }}分钟</span>
+              <span v-if="todayRecipe.servings" class="chip">👥 {{ todayRecipe.servings }}人份</span>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- ========== 物品概览 ========== -->
-    <div class="section" v-if="inventoryStats.totalItems > 0">
-      <div class="section-head">
-        <div class="section-title">
-          <span class="st-dot" style="background:#34d399;"></span>物品概览
-        </div>
-        <el-button text type="primary" size="small" @click="router.push('/inventory')">
-          管理物品 <el-icon><ArrowRight /></el-icon>
-        </el-button>
+    <template v-if="inventoryStats.totalItems > 0">
+      <div class="section-head reveal">
+        <div class="section-title"><span class="st-dot" style="background:var(--sage);"></span>物品概览</div>
+        <div class="card-link" @click="router.push('/inventory')">管理物品 →</div>
       </div>
-      <div class="inv-stats-row">
-        <div class="inv-stat" @click="router.push('/inventory')">
-          <span class="inv-num">{{ inventoryStats.totalItems }}</span>
-          <span class="inv-lbl">物品总数</span>
+      <section class="stats">
+        <div class="stat reveal" @click="router.push('/inventory')">
+          <span class="stat-num" :data-count="inventoryStats.totalItems">{{ inventoryStats.totalItems }}</span>
+          <span class="stat-lbl">物品总数</span>
+          <div class="stat-bar"><i :data-w="Math.min(100, inventoryStats.totalItems / 4) + '%'"></i></div>
         </div>
-        <div class="inv-stat" @click="router.push('/inventory')">
-          <span class="inv-num warn">{{ inventoryStats.expiringItems || 0 }}</span>
-          <span class="inv-lbl">即将过期</span>
+        <div class="stat reveal" @click="router.push('/inventory')">
+          <span class="stat-num warn" :data-count="inventoryStats.expiringItems || 0">{{ inventoryStats.expiringItems || 0 }}</span>
+          <span class="stat-lbl">即将过期</span>
+          <div class="stat-bar"><i data-w="24%" style="background:linear-gradient(90deg,#E0A6A6,#C8836A);"></i></div>
         </div>
-        <div class="inv-stat" @click="router.push('/inventory/borrows')">
-          <span class="inv-num">{{ inventoryStats.borrowedItems || 0 }}</span>
-          <span class="inv-lbl">借出中</span>
+        <div class="stat reveal" @click="router.push('/inventory/borrows')">
+          <span class="stat-num" :data-count="inventoryStats.borrowedItems || 0">{{ inventoryStats.borrowedItems || 0 }}</span>
+          <span class="stat-lbl">借出中</span>
+          <div class="stat-bar"><i data-w="14%" style="background:linear-gradient(90deg,#B3C8D6,#9FB8C9);"></i></div>
         </div>
-      </div>
-    </div>
+      </section>
+    </template>
 
     <!-- ========== 记账概览 ========== -->
-    <div class="section">
-      <div class="section-head">
-        <div class="section-title">
-          <span class="st-dot" style="background:#667eea;"></span>记账概览
-        </div>
-        <el-button text type="primary" size="small" @click="router.push('/accounting')">
-          查看账单 <el-icon><ArrowRight /></el-icon>
-        </el-button>
-      </div>
-
-      <!-- 今日记账 -->
-      <div class="card txn-card">
-        <div class="txn-header">
-          <div class="txn-header-left">
-            <span class="txn-title">今日记账</span>
-            <el-tag size="small" effect="plain" round>{{ todayShort }}</el-tag>
-          </div>
-          <div v-if="todayTxns.length > 0" class="txn-header-right">
-            <span v-if="todayIncome > 0" class="txn-total income">收 +{{ formatMoney(todayIncome) }}</span>
-            <span v-if="todayExpense > 0" class="txn-total expense expense-badge">支 -{{ formatMoney(todayExpense) }}</span>
-          </div>
-        </div>
-        <div v-if="todayTxns.length === 0" class="txn-empty">
-          <span>📝</span>
-          <p>今日暂无记账记录</p>
-        </div>
-        <div v-else class="txn-list">
-          <div v-for="t in todayTxns" :key="t.id" class="txn-item">
-            <div class="txn-dot" :class="t.type"></div>
-            <div class="txn-body">
-              <div class="txn-row">
-                <div class="txn-left">
-                  <el-tag :type="t.type === 'income' ? 'success' : 'danger'" size="small" effect="light" round>{{ t.type === 'income' ? '收' : '支' }}</el-tag>
-                  <span v-if="t.Category" class="txn-cat">{{ t.Category.name }}</span>
-                  <span v-if="t.note" class="txn-note">{{ t.note }}</span>
-                </div>
-                <div class="txn-amount" :class="t.type">{{ t.type === 'income' ? '+' : '-' }}¥{{ parseFloat(t.amount).toFixed(2) }}</div>
-              </div>
-              <div class="txn-time">{{ formatTime(t.created_at) }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="section-head reveal">
+      <div class="section-title"><span class="st-dot" style="background:var(--terracotta);"></span>记账概览 · 今日</div>
+      <div class="card-link" @click="router.push('/accounting')">查看账单 →</div>
     </div>
+    <section class="card txn-card reveal">
+      <div class="summary">
+        <div class="sum-item">今日收入<b class="in">+{{ formatMoney(todayIncome) }}</b></div>
+        <div class="sum-item">今日支出<b class="out">-{{ formatMoney(todayExpense) }}</b></div>
+        <div class="sum-item">本月结余<b style="color:var(--terra-deep);">{{ formatMoney(monthBalance) }}</b></div>
+      </div>
+      <div v-if="todayTxns.length === 0" class="txn-empty">
+        <span>📝</span>
+        <p>今日暂无记账记录</p>
+      </div>
+      <div v-else class="txn">
+        <div v-for="t in todayTxns" :key="t.id" class="txn-item">
+          <div class="txn-ico" :class="t.type === 'income' ? 'g-sage' : 'g-amber'">
+            {{ t.type === 'income' ? '💼' : getCategoryIcon(t.Category?.name) }}
+          </div>
+          <div class="txn-body">
+            <div class="txn-cat">{{ t.Category?.name || '未分类' }}</div>
+            <div class="txn-note">{{ t.note || (t.type === 'income' ? '收入' : '支出') }}</div>
+          </div>
+          <div class="txn-amt" :class="t.type">{{ t.type === 'income' ? '+' : '-' }}¥{{ parseFloat(t.amount).toFixed(2) }}</div>
+        </div>
+      </div>
+    </section>
 
     <!-- ========== 精彩瞬间 ========== -->
-    <div class="section">
-      <div class="section-head">
-        <div class="section-title">
-          <span class="st-dot" style="background:#ec4899;"></span>精彩瞬间
+    <div class="section-head reveal">
+      <div class="section-title"><span class="st-dot" style="background:var(--rose);"></span>精彩瞬间</div>
+      <div class="card-link" @click="router.push('/album/moments')">全部瞬间 →</div>
+    </div>
+    <div v-if="recentMoments.length === 0" class="card moment-empty reveal">
+      <span>📸</span>
+      <p>还没有精彩瞬间，去记录吧</p>
+    </div>
+    <section v-else class="moments">
+      <div v-for="m in recentMoments" :key="m.id" class="moment reveal" @click="router.push('/album/moments')">
+        <div class="moment-img" :class="momentBg(m)">
+          {{ momentEmoji(m) }}
         </div>
-        <div class="section-actions">
-          <el-button text type="primary" size="small" @click="router.push('/album')">相册</el-button>
-          <el-button text type="primary" size="small" @click="router.push('/album/moments')">全部 <el-icon><ArrowRight /></el-icon></el-button>
+        <div class="moment-body">
+          <div class="moment-top">
+            <div class="m-av" :class="momentAvClass(m)">{{ m.author?.nickname?.[0] || '?' }}</div>
+            <span class="m-name">{{ m.author?.nickname || '匿名' }}</span>
+            <span class="m-time">{{ formatMomentTime(m.created_at) }}</span>
+          </div>
+          <div class="moment-text">{{ m.content }}</div>
+          <div class="moment-foot">
+            <span v-if="m.location">📍 {{ m.location }}</span>
+            <span v-if="m.likeCount">❤️ {{ m.likeCount }}</span>
+            <span v-if="m.commentCount">💬 {{ m.commentCount }}</span>
+          </div>
         </div>
       </div>
+    </section>
 
-      <div v-if="recentMoments.length === 0" class="card moment-empty">
-        <span class="me-icon">📸</span>
-        <p>还没有精彩瞬间，去记录吧</p>
-      </div>
-      <div v-else class="moments-grid">
-        <div v-for="m in recentMoments" :key="m.id" class="card moment-card" @click="router.push('/album/moments')">
-          <div class="mc-top">
-            <el-avatar :size="28" :src="m.author?.avatar" class="mc-av">{{ m.author?.nickname?.[0] || '?' }}</el-avatar>
-            <span class="mc-name">{{ m.author?.nickname || '匿名' }}</span>
-            <span class="mc-time">{{ formatMomentTime(m.created_at) }}</span>
-          </div>
-          <div v-if="m.content" class="mc-text">{{ m.content }}</div>
-          <div v-if="m.images?.length" class="mc-imgs">
-            <div v-for="(img, i) in m.images.slice(0, 3)" :key="i" class="mc-img-item">
-              <img :src="img" alt="" />
-            </div>
-            <div v-if="m.images.length > 3" class="mc-img-more">+{{ m.images.length - 3 }}</div>
-          </div>
-          <div class="mc-bottom">
-            <span v-if="m.location" class="mc-loc">📍 {{ m.location }}</span>
-            <span class="mc-stats">
-              <span v-if="m.likeCount">❤️ {{ m.likeCount }}</span>
-              <span v-if="m.commentCount">💬 {{ m.commentCount }}</span>
-            </span>
-          </div>
-        </div>
-      </div>
+    <!-- 页脚 -->
+    <div class="footer">
+      🔒 这个空间只属于你们 · 所有回忆都被温柔守护
     </div>
   </div>
 </template>
 
 <script setup>
 import { useFamilyGuard } from "@/composables/useFamilyGuard"
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/store/auth'
 import { useAccountingStore } from '@/store/accounting'
@@ -287,14 +265,111 @@ const quickAddMode = ref('single')
 const pendingTodos = ref([])
 const todayRecipe = ref(null)
 const recipeLoading = ref(false)
-
-// 日期显示（避免模板中直接调用 dayjs()）
-const todayStr = computed(() => dayjs().format('YYYY年M月D日 dddd'))
-const todayShort = computed(() => dayjs().format('MM月DD日'))
 const recentMoments = ref([])
+
+const todayStr = computed(() => dayjs().format('YYYY年M月D日 · dddd'))
+const todayShort = computed(() => dayjs().format('MM月DD日'))
+
+// 家的天数（从注册日算起）
+const familyDays = computed(() => {
+  const created = authStore.currentFamily?.created_at
+  if (!created) return dayjs().diff(dayjs('2023-01-01'), 'day')
+  return dayjs().diff(dayjs(created), 'day')
+})
+
+// 问候语
+const greeting = computed(() => {
+  const h = dayjs().hour()
+  if (h < 6) return '夜深了'
+  if (h < 12) return '早上好'
+  if (h < 14) return '中午好'
+  if (h < 18) return '下午好'
+  return '晚上好'
+})
+
+const greetingEmoji = computed(() => {
+  const h = dayjs().hour()
+  if (h < 6) return '🌙'
+  if (h < 12) return '☀️'
+  if (h < 14) return '🌤️'
+  if (h < 18) return '🌅'
+  return '🌙'
+})
+
+const upcomingEvents = computed(() => getUpcomingEvents(60).slice(0, 3))
+const inventoryStats = computed(() => data.value.inventory || {})
+
+// 记账数据
+const todayTxns = computed(() => data.value.accounting?.todayTransactions || [])
+const todayIncome = computed(() => todayTxns.value.filter(t => t.type === 'income').reduce((s, t) => s + parseFloat(t.amount || 0), 0))
+const todayExpense = computed(() => todayTxns.value.filter(t => t.type === 'expense').reduce((s, t) => s + parseFloat(t.amount || 0), 0))
+const monthBalance = computed(() => data.value.accounting?.monthBalance || (todayIncome.value - todayExpense.value))
+
+// 菜谱 emoji 映射
+const recipeEmoji = computed(() => {
+  const name = todayRecipe.value?.name || ''
+  if (name.includes('面') || name.includes('粉')) return '🍜'
+  if (name.includes('肉') || name.includes('红烧')) return '🥘'
+  if (name.includes('沙拉') || name.includes('蔬')) return '🥗'
+  if (name.includes('汤') || name.includes('煲') || name.includes('豆腐')) return '🍲'
+  if (name.includes('鱼') || name.includes('虾') || name.includes('海鲜')) return '🐟'
+  if (name.includes('鸡') || name.includes('鸭')) return '🍗'
+  if (name.includes('蛋')) return '🥚'
+  if (name.includes('饭') || name.includes('炒')) return '🍛'
+  if (name.includes('饼') || name.includes('面包')) return '🥞'
+  if (name.includes('甜') || name.includes('蛋糕')) return '🍰'
+  return '🍽️'
+})
+
+function getCategoryIcon(name) {
+  if (!name) return '💰'
+  if (name.includes('超市') || name.includes('购物') || name.includes('买')) return '🛒'
+  if (name.includes('餐') || name.includes('吃') || name.includes('外卖')) return '🍜'
+  if (name.includes('交通') || name.includes('加油') || name.includes('打车')) return '⛽'
+  if (name.includes('咖啡') || name.includes('茶') || name.includes('饮')) return '☕'
+  if (name.includes('工资') || name.includes('薪')) return '💼'
+  if (name.includes('娱乐') || name.includes('电影')) return '🎬'
+  if (name.includes('医疗') || name.includes('医')) return '🏥'
+  if (name.includes('教育') || name.includes('书')) return '📚'
+  return '💰'
+}
+
+function momentBg(m) {
+  const idx = (m.id || 0) % 3
+  return ['m1', 'm2', 'm3'][idx]
+}
+
+function momentEmoji(m) {
+  const text = (m.content || '').toLowerCase()
+  if (text.includes('海') || text.includes('日落') || text.includes('风景')) return '🌅'
+  if (text.includes('花') || text.includes('绿') || text.includes('植')) return '🪴'
+  if (text.includes('生日') || text.includes('蛋糕') || text.includes('庆祝')) return '🎂'
+  if (text.includes('吃') || text.includes('餐') || text.includes('美食')) return '🍜'
+  if (text.includes('宝') || text.includes('娃') || text.includes('孩子')) return '👶'
+  if (text.includes('宠物') || text.includes('猫') || text.includes('狗')) return '🐱'
+  const emojis = ['🌅', '🪴', '🎂', '🍜', '📸', '🎉', '🏖️', '🎄']
+  return emojis[(m.id || 0) % emojis.length]
+}
+
+function momentAvClass(m) {
+  const idx = (m.id || 0) % 3
+  return ['g-terra', 'g-sage', 'g-rose'][idx]
+}
+
+function difficultyLabel(d) { return { easy: '简单', medium: '中等', hard: '困难' }[d] || d }
+
+function formatMomentTime(d) {
+  if (!d) return ''
+  const diff = dayjs().diff(dayjs(d), 'day')
+  if (diff === 0) return '今天'
+  if (diff === 1) return '昨天'
+  if (diff < 7) return diff + '天前'
+  return dayjs(d).format('M月D日')
+}
 
 function onTxnSuccess() { showQuickAdd.value = false; loadDashboard() }
 
+// === 数据加载 ===
 watch(() => accountingStore.currentBookId, (id) => { if (id) loadDashboard() })
 watch(() => authStore.currentFamily, (family) => {
   if (family) { loadDashboard(); loadTodos(); loadRecipe(); loadMoments() }
@@ -305,8 +380,11 @@ function loadDashboard() {
   const params = { familyId: authStore.currentFamily.id }
   if (accountingStore.currentBookId) params.bookId = accountingStore.currentBookId
   dashboardApi.getData(params)
-    .then(res => { data.value = res.data })
-    .catch(() => { /* 仪表盘加载失败，静默处理 */ })
+    .then(res => {
+      data.value = res.data
+      nextTick(() => observeRevealElements())
+    })
+    .catch(() => { /* 静默处理 */ })
 }
 
 async function loadTodos() {
@@ -344,13 +422,6 @@ async function shuffleRecipe() {
   recipeLoading.value = false
 }
 
-function difficultyLabel(d) { return { easy: '简单', medium: '中等', hard: '困难' }[d] || d }
-function difficultyType(d) { return { easy: 'success', medium: 'warning', hard: 'danger' }[d] || 'info' }
-
-const todayTxns = computed(() => data.value.accounting?.todayTransactions || [])
-const todayIncome = computed(() => todayTxns.value.filter(t => t.type === 'income').reduce((s, t) => s + parseFloat(t.amount || 0), 0))
-const todayExpense = computed(() => todayTxns.value.filter(t => t.type === 'expense').reduce((s, t) => s + parseFloat(t.amount || 0), 0))
-
 async function loadMoments() {
   if (!authStore.currentFamily) return
   try {
@@ -360,305 +431,346 @@ async function loadMoments() {
       if (!Array.isArray(m.images)) m.images = []
       return m
     })
+    // 数据加载后重新观察新渲染的 .reveal 元素
+    nextTick(() => observeRevealElements())
   } catch (e) { console.error(e) }
 }
 
-function formatMomentTime(d) {
-  if (!d) return ''
-  const diff = dayjs().diff(dayjs(d), 'day')
-  if (diff === 0) return '今天'
-  if (diff === 1) return '昨天'
-  if (diff < 7) return diff + '天前'
-  return dayjs(d).format('M月D日')
+// === 滚动渐入动画 ===
+let revealObserver = null
+let countObserver = null
+let barObserver = null
+
+function observeRevealElements() {
+  document.querySelectorAll('.reveal:not(.in)').forEach((el, idx) => {
+    if (!el.dataset.d) el.dataset.d = (idx % 6) * 70
+    revealObserver.observe(el)
+  })
+  document.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el))
+  document.querySelectorAll('.stat-bar i').forEach(el => barObserver.observe(el))
 }
 
-const greeting = computed(() => {
-  const h = dayjs().hour()
-  if (h < 6) return '夜深了'
-  if (h < 12) return '早上好'
-  if (h < 14) return '中午好'
-  if (h < 18) return '下午好'
-  return '晚上好'
-})
+function initAnimations() {
+  // 滚动渐入
+  revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.style.transitionDelay = (e.target.dataset.d || 0) + 'ms'
+        e.target.classList.add('in')
+        revealObserver.unobserve(e.target)
+      }
+    })
+  }, { threshold: 0.12 })
 
-const upcomingEvents = computed(() => getUpcomingEvents(60).slice(0, 3))
-const inventoryStats = computed(() => data.value.inventory || {})
+  // 数字滚动
+  countObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return
+      const el = e.target
+      const target = +el.dataset.count
+      if (!target) return
+      let cur = 0
+      const step = Math.max(1, Math.ceil(target / 40))
+      const t = setInterval(() => {
+        cur += step
+        if (cur >= target) { cur = target; clearInterval(t) }
+        el.textContent = cur
+      }, 22)
+      countObserver.unobserve(el)
+    })
+  }, { threshold: 0.5 })
 
-function formatTime(dateStr) { return dateStr ? dayjs(dateStr).format('HH:mm') : '' }
+  // 进度条
+  barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.width = e.target.dataset.w
+        barObserver.unobserve(e.target)
+      }
+    })
+  }, { threshold: 0.5 })
+
+  nextTick(() => observeRevealElements())
+}
 
 onMounted(async () => {
   try {
     if (!await useFamilyGuard()) return
     loadDashboard(); loadTodos(); loadRecipe(); loadMoments()
+    initAnimations()
   } catch (e) { console.error(e) }
+})
+
+onUnmounted(() => {
+  revealObserver?.disconnect()
+  countObserver?.disconnect()
+  barObserver?.disconnect()
 })
 </script>
 
 <style scoped>
-.dashboard { animation: fadeUp 0.5s ease-out; }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.dashboard {
+  position: relative;
+  padding-bottom: 40px;
+}
 
-/* ========== 欢迎栏 ========== */
-.hero-section {
-  position: relative; border-radius: 20px; overflow: hidden;
-  margin-bottom: 24px; padding: 32px;
+/* ========== 背景柔光 ========== */
+.ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.ambient span { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.5; animation: drift 16s ease-in-out infinite alternate; }
+.a1 { width: 300px; height: 300px; background: #F2D9B8; top: -80px; left: -60px; }
+.a2 { width: 240px; height: 240px; background: #E8C9AE; bottom: -60px; right: -40px; animation-delay: -6s; }
+.a3 { width: 200px; height: 200px; background: #DCE6D2; top: 40%; right: 20%; animation-delay: -10s; }
+@keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(34px,26px) scale(1.1); } }
+
+/* ========== Hero 欢迎卡 ========== */
+.hero {
+  position: relative; overflow: hidden; border-radius: var(--radius-lg);
+  background: linear-gradient(120deg, #F6E7D3 0%, #EEDCC4 60%, #F0E3D2 100%);
+  border: 1px solid var(--border); box-shadow: var(--shadow-lg);
+  padding: 30px 34px; display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  margin-bottom: 24px;
 }
-.hero-bg {
-  position: absolute; inset: 0; z-index: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f472b6 100%);
-  opacity: 0.9;
+.hero-glow {
+  position: absolute; width: 280px; height: 280px; border-radius: 50%;
+  background: var(--glow); filter: blur(60px); top: -120px; right: -40px;
+  animation: breathe 5s ease-in-out infinite;
 }
-.hero-bg::after {
-  content: ''; position: absolute; inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+@keyframes breathe { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.85; transform: scale(1.12); } }
+.hero-left { position: relative; z-index: 2; }
+.hero-greet { font-size: 27px; font-weight: 700; letter-spacing: 0.02em; color: var(--terra-deep); }
+.hero-date { margin-top: 6px; font-size: 14px; color: var(--text-secondary); letter-spacing: 0.04em; }
+.hero-events { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; border-radius: 999px;
+  background: rgba(255, 253, 250, 0.75); border: 1px solid var(--border); font-size: 13px; color: var(--text-primary);
+  backdrop-filter: blur(6px); transition: transform 0.3s, box-shadow 0.3s; cursor: default;
 }
-.hero-content { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
-.hero-greeting { font-size: 26px; font-weight: 800; color: #fff; }
-.hero-date { font-size: 14px; color: rgba(255,255,255,0.8); margin-top: 6px; }
-.hero-events { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
-.event-pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 6px 14px; border-radius: 20px;
-  background: rgba(255,255,255,0.2); backdrop-filter: blur(8px);
-  color: #fff; font-size: 13px; font-weight: 500;
-  border: 1px solid rgba(255,255,255,0.3);
+.pill:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(176, 132, 102, 0.16); }
+.pill b { color: var(--terra-deep); font-weight: 600; }
+.hero-actions { position: relative; z-index: 2; display: flex; gap: 10px; flex-shrink: 0; }
+.hbtn {
+  display: flex; align-items: center; gap: 7px; padding: 12px 20px; border-radius: 14px;
+  border: none; cursor: pointer; font-size: 14px; font-weight: 600;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
-.event-days { opacity: 0.8; font-size: 12px; }
-.hero-actions { display: flex; gap: 10px; }
-.hero-btn {
-  display: flex; align-items: center; gap: 6px;
-  padding: 10px 20px; border-radius: 12px; border: none;
-  font-size: 14px; font-weight: 600; cursor: pointer;
-  transition: all 0.25s;
-  background: rgba(255,255,255,0.2); color: #fff;
-  backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.3);
+.hbtn.primary {
+  background: linear-gradient(135deg, var(--terracotta), #D3A98B); color: #FFF9F2;
+  box-shadow: 0 8px 20px rgba(200, 159, 133, 0.4);
 }
-.hero-btn:hover { background: rgba(255,255,255,0.35); transform: translateY(-2px); }
-.hero-btn.primary {
-  background: #fff; color: #667eea; border-color: transparent;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-}
-.hero-btn.primary:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.2); }
+.hbtn.ghost { background: rgba(255, 253, 250, 0.8); color: var(--terra-deep); border: 1.5px solid var(--border); }
+.hbtn:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(200, 159, 133, 0.34); }
+.hbtn:active { transform: translateY(-1px) scale(0.98); }
+
+/* hero SVG 插画 */
+.hero-art { position: relative; z-index: 2; flex-shrink: 0; }
+.hero-art svg { width: 150px; height: auto; display: block; }
+.lamp { animation: breathe 3.6s ease-in-out infinite; transform-origin: center; }
+.leaf { animation: sway 5s ease-in-out infinite; transform-origin: bottom center; }
+@keyframes sway { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+.smoke { animation: rise-smoke 4s ease-in-out infinite; }
+@keyframes rise-smoke { 0% { opacity: 0; transform: translateY(6px) scale(0.9); } 40% { opacity: 0.7; } 100% { opacity: 0; transform: translateY(-14px) scale(1.15); } }
 
 /* ========== 快捷入口 ========== */
-.shortcuts-row {
-  display: flex; gap: 12px; margin-bottom: 24px;
-  overflow-x: auto; padding-bottom: 4px;
+.shortcuts { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 24px; }
+.sc {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: 18px 8px; text-align: center; cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s, border-color 0.35s;
+  box-shadow: var(--shadow-sm);
 }
-.shortcut-item {
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  padding: 14px 18px; border-radius: 16px; cursor: pointer;
-  background: #fff; border: 1px solid #f1f5f9;
-  transition: all 0.25s; flex-shrink: 0; min-width: 72px;
+.sc:hover { transform: translateY(-6px); box-shadow: 0 16px 34px rgba(160, 120, 90, 0.16); border-color: var(--terracotta); }
+.sc-ico {
+  width: 48px; height: 48px; margin: 0 auto 10px; border-radius: 15px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 23px; color: #fff; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.shortcut-item:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
-.sc-icon {
-  width: 40px; height: 40px; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center; color: #fff;
-}
-.shortcut-item span { font-size: 12px; font-weight: 500; color: #64748b; }
+.sc:hover .sc-ico { transform: scale(1.12) rotate(-6deg); }
+.sc span { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.g-terra { background: linear-gradient(135deg, var(--terracotta), var(--terra-deep)); }
+.g-rose { background: linear-gradient(135deg, #E0A6A6, var(--rose)); }
+.g-sage { background: linear-gradient(135deg, #B7C097, var(--sage)); }
+.g-amber { background: linear-gradient(135deg, #F0C684, var(--amber)); }
+.g-sky { background: linear-gradient(135deg, #B3C8D6, var(--sky)); }
+.g-plum { background: linear-gradient(135deg, #C3A6C9, #A98BB0); }
 
-/* ========== 顶部双栏 ========== */
-.top-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-.module-card { padding: 0; display: flex; flex-direction: column; }
-.mc-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px 12px; }
-.mc-title { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: #1e293b; }
-.mc-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.mc-empty { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 32px 16px; color: #94a3b8; font-size: 13px; flex: 1; }
-.mc-empty-icon { font-size: 24px; }
-.mc-list { padding: 0 10px; flex: 1; }
-.mc-list-item { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 10px; transition: background 0.2s; }
-.mc-list-item:hover { background: #f8fafc; }
-.mc-list-item.overdue .mc-item-text { color: #ef4444; }
-.todo-check {
-  width: 18px; height: 18px; border-radius: 50%; border: 2px solid #d1d5db;
-  background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; color: transparent; transition: all 0.2s;
-}
-.todo-check.high { border-color: #fca5a5; }
-.todo-check.medium { border-color: #fcd34d; }
-.todo-check.low { border-color: #6ee7b7; }
-.todo-check:hover { border-color: #10b981; background: #ecfdf5; color: #10b981; }
-.mc-item-text { flex: 1; font-size: 13px; color: #334155; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.mc-item-tag { font-size: 11px; color: #94a3b8; flex-shrink: 0; padding: 1px 6px; border-radius: 4px; background: #f1f5f9; }
-.mc-item-tag.is-overdue { color: #ef4444; background: #fef2f2; font-weight: 600; }
-.mc-footer {
-  display: flex; align-items: center; justify-content: center; gap: 4px;
-  padding: 12px; font-size: 13px; color: #94a3b8; cursor: pointer;
-  border-top: 1px solid #f1f5f9; transition: color 0.2s;
-}
-.mc-footer:hover { color: #667eea; }
+/* ========== 卡片通用 ========== */
+.card-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px 12px; margin: -20px -20px 0; }
+.card-title { display: flex; align-items: center; gap: 9px; font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.cdot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.card-link { font-size: 13px; color: var(--terracotta-d); cursor: pointer; display: flex; align-items: center; gap: 3px; transition: gap 0.25s, color 0.25s; }
+.card-link:hover { gap: 7px; color: var(--terra-deep); }
+.card-empty { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 32px 16px; color: var(--text-secondary); font-size: 13px; }
 
-/* 今日吃什么 */
-.shuffle-btn {
-  display: flex; align-items: center; gap: 4px;
-  padding: 4px 10px; border: none; border-radius: 8px;
-  background: #fffbeb; color: #d97706; font-size: 12px; font-weight: 500;
-  cursor: pointer; transition: all 0.2s;
+.grid-2 { display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px; margin-bottom: 24px; }
+
+/* ========== 待办 ========== */
+.todo-list { padding: 4px 0 10px; }
+.todo {
+  display: flex; align-items: center; gap: 12px; padding: 12px 0;
+  border-bottom: 1px dashed rgba(226, 205, 178, 0.6); transition: opacity 0.3s, transform 0.3s;
 }
-.shuffle-btn:hover { background: #fef3c7; }
-.recipe-body { display: flex; gap: 14px; padding: 0 18px 18px; cursor: pointer; flex: 1; }
-.recipe-body:hover .recipe-name { color: #667eea; }
-.recipe-thumb { width: 100px; height: 100px; border-radius: 14px; overflow: hidden; flex-shrink: 0; }
+.todo:last-child { border-bottom: none; }
+.check {
+  width: 22px; height: 22px; border-radius: 8px; border: 2px solid var(--wood-light);
+  background: #FFFDF9; cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: transparent; transition: all 0.25s;
+}
+.check:hover { border-color: var(--terracotta); transform: scale(1.08); }
+.todo.done .check { background: var(--sage); border-color: var(--sage); color: #fff; }
+.todo-txt { flex: 1; font-size: 14.5px; color: var(--text-primary); transition: all 0.3s; }
+.todo.done .todo-txt { text-decoration: line-through; color: var(--text-secondary); opacity: 0.6; }
+.todo-tag { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: rgba(232, 179, 106, 0.16); color: var(--terra-deep); font-weight: 600; flex-shrink: 0; }
+.todo-tag.over { background: rgba(217, 154, 154, 0.18); color: #B06A6A; }
+.prio-high { border-color: var(--rose); }
+
+/* ========== 今日吃什么 ========== */
+.recipe { display: flex; gap: 16px; align-items: center; cursor: pointer; padding: 4px 0 6px; }
+.recipe:hover .recipe-name { color: var(--terra-deep); }
+.recipe-thumb {
+  width: 96px; height: 96px; border-radius: var(--radius-md); flex-shrink: 0;
+  background: linear-gradient(135deg, #F0DCC0, #E4CBA8);
+  display: flex; align-items: center; justify-content: center; font-size: 40px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+}
+.recipe-thumb.has-img { background: none; }
 .recipe-thumb img { width: 100%; height: 100%; object-fit: cover; }
-.recipe-thumb.no-img { background: #f8fafc; display: flex; align-items: center; justify-content: center; }
-.recipe-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
-.recipe-name { font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 4px; transition: color 0.2s; }
-.recipe-desc { font-size: 12px; color: #94a3b8; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.recipe-tags { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-.recipe-meta { font-size: 11px; color: #94a3b8; }
-.recipe-ing { font-size: 11px; color: #94a3b8; }
-
-/* ========== 模块通用 ========== */
-.section { margin-bottom: 28px; }
-.section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-.section-title { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 700; color: #1e293b; }
-.st-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.section-actions { display: flex; gap: 4px; }
-
-/* ========== 记账时间轴 ========== */
-.card { background: #fff; border: 1px solid #f1f5f9; border-radius: 16px; }
-.txn-card { padding: 18px; }
-.txn-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.txn-header-left { display: flex; align-items: center; gap: 8px; }
-.txn-header-right { display: flex; align-items: center; gap: 12px; }
-.txn-title { font-size: 15px; font-weight: 600; color: #1e293b; }
-.txn-total { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
-.txn-total.income { color: #10b981; }
-.txn-total.expense { color: #ef4444; }
-.txn-total.expense-badge {
-  background: linear-gradient(135deg, #ef4444, #f97316);
-  color: #fff;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+.recipe:hover .recipe-thumb { transform: rotate(-4deg) scale(1.05); }
+.recipe-name { font-size: 18px; font-weight: 700; color: var(--text-primary); transition: color 0.2s; }
+.recipe-desc { font-size: 13px; color: var(--text-secondary); margin: 5px 0 9px; line-height: 1.5; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.recipe-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 12px; color: var(--terra-deep); }
+.chip { padding: 3px 10px; border-radius: 999px; background: rgba(168, 176, 138, 0.16); }
+.shuffle {
+  margin-left: auto; background: rgba(200, 159, 133, 0.12); border: none; color: var(--terra-deep);
+  padding: 7px 13px; border-radius: 10px; font-size: 12.5px; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; gap: 5px; transition: all 0.3s; flex-shrink: 0;
 }
+.shuffle:hover { background: rgba(200, 159, 133, 0.24); }
+.shuffle .ic { display: inline-block; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.shuffle .spin { transform: rotate(360deg); }
+
+/* ========== 概览区 ========== */
+.section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.section-title { display: flex; align-items: center; gap: 9px; font-size: 17px; font-weight: 700; color: var(--text-primary); }
+.st-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+.stat {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px;
+  display: flex; flex-direction: column; gap: 6px; cursor: pointer;
+  transition: transform 0.35s, box-shadow 0.35s; box-shadow: var(--shadow-sm);
+}
+.stat:hover { transform: translateY(-5px); box-shadow: 0 16px 34px rgba(160, 120, 90, 0.15); }
+.stat-num { font-size: 30px; font-weight: 800; color: var(--terra-deep); letter-spacing: -0.02em; }
+.stat-num.warn { color: #C88A6A; }
+.stat-lbl { font-size: 13px; color: var(--text-secondary); }
+.stat-bar { height: 6px; border-radius: 3px; background: var(--apricot); margin-top: 8px; overflow: hidden; }
+.stat-bar i {
+  display: block; height: 100%; border-radius: 3px;
+  background: linear-gradient(90deg, var(--terracotta), var(--amber));
+  width: 0; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ========== 记账概览 ========== */
+.txn-card { padding: 0; overflow: hidden; }
+.summary {
+  display: flex; gap: 20px; padding: 14px 22px;
+  background: rgba(243, 234, 221, 0.5); border-bottom: 1px solid var(--border);
+}
+.sum-item { font-size: 13px; color: var(--text-secondary); }
+.sum-item b { display: block; font-size: 19px; margin-top: 3px; }
+.sum-item b.in { color: var(--sage); }
+.sum-item b.out { color: #C8836A; }
 .txn-empty { text-align: center; padding: 28px; }
 .txn-empty span { font-size: 28px; }
-.txn-empty p { margin-top: 6px; color: #94a3b8; font-size: 13px; }
-.txn-list { display: flex; flex-direction: column; }
-.txn-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f8fafc; }
+.txn-empty p { margin-top: 6px; color: var(--text-secondary); font-size: 13px; }
+.txn { padding: 6px 22px 16px; }
+.txn-item { display: flex; align-items: center; gap: 13px; padding: 13px 0; border-bottom: 1px dashed rgba(226, 205, 178, 0.6); transition: background 0.3s; }
 .txn-item:last-child { border-bottom: none; }
-.txn-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
-.txn-dot.expense { background: #f87171; box-shadow: 0 0 0 3px rgba(248,113,113,0.12); }
-.txn-dot.income { background: #34d399; box-shadow: 0 0 0 3px rgba(52,211,153,0.12); }
+.txn-ico { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; }
 .txn-body { flex: 1; min-width: 0; }
-.txn-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.txn-left { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }
-.txn-cat { font-size: 13px; color: #64748b; }
-.txn-note { font-size: 12px; color: #94a3b8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.txn-amount { font-size: 15px; font-weight: 700; flex-shrink: 0; }
-.txn-amount.expense { color: #ef4444; }
-.txn-amount.income { color: #10b981; }
-.txn-time { font-size: 11px; color: #cbd5e1; margin-top: 3px; }
+.txn-cat { font-size: 14.5px; font-weight: 600; color: var(--text-primary); }
+.txn-note { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.txn-amt { font-size: 16px; font-weight: 700; }
+.txn-amt.out { color: #C8836A; }
+.txn-amt.in { color: var(--sage); }
 
 /* ========== 精彩瞬间 ========== */
 .moment-empty { text-align: center; padding: 40px; }
-.me-icon { font-size: 32px; }
-.moment-empty p { margin-top: 8px; color: #94a3b8; font-size: 13px; }
-.moments-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
-.moment-card { padding: 16px; cursor: pointer; transition: all 0.25s; }
-.moment-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
-.mc-top { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-.mc-av { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; font-weight: 600; font-size: 12px; flex-shrink: 0; }
-.mc-name { font-size: 13px; font-weight: 600; color: #334155; flex: 1; }
-.mc-time { font-size: 11px; color: #94a3b8; }
-.mc-text { font-size: 14px; color: #1e293b; line-height: 1.6; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.mc-imgs { display: flex; gap: 6px; margin-bottom: 10px; }
-.mc-img-item { width: 80px; height: 80px; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
-.mc-img-item img { width: 100%; height: 100%; object-fit: cover; }
-.mc-img-more { width: 80px; height: 80px; border-radius: 10px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #94a3b8; }
-.mc-bottom { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #94a3b8; }
-.mc-loc { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60%; }
-.mc-stats { display: flex; gap: 10px; }
+.moment-empty span { font-size: 32px; display: block; }
+.moment-empty p { margin-top: 8px; color: var(--text-secondary); font-size: 13px; }
+.moments { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+.moment {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+  overflow: hidden; cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s;
+  box-shadow: var(--shadow-sm);
+}
+.moment:hover { transform: translateY(-6px) rotate(-0.6deg); box-shadow: 0 20px 40px rgba(160, 120, 90, 0.18); }
+.moment-img { height: 130px; display: flex; align-items: center; justify-content: center; font-size: 44px; }
+.m1 { background: linear-gradient(135deg, #F2DCC0, #E7C9A6); }
+.m2 { background: linear-gradient(135deg, #DDE6D2, #C6D2B6); }
+.m3 { background: linear-gradient(135deg, #F3DCDC, #E7C3C3); }
+.moment-body { padding: 14px 16px; }
+.moment-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.m-av { width: 26px; height: 26px; border-radius: 9px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 600; }
+.m-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.m-time { margin-left: auto; font-size: 11px; color: var(--text-secondary); }
+.moment-text { font-size: 13.5px; line-height: 1.6; color: var(--text-primary); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.moment-foot { display: flex; gap: 14px; margin-top: 11px; font-size: 12px; color: var(--text-secondary); }
+.moment-foot span { transition: transform 0.25s; cursor: pointer; }
+.moment-foot span:hover { transform: scale(1.18); }
 
-/* ========== 物品概览 ========== */
-.inv-stats-row {
-  display: flex; gap: 12px;
+/* ========== 页脚 ========== */
+.footer {
+  text-align: center; margin-top: 48px; font-size: 12px; color: #BCAB97;
+  letter-spacing: 0.08em; line-height: 1.9;
 }
-.inv-stat {
-  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
-  padding: 16px; border-radius: 14px; background: #f8fafc; cursor: pointer;
-  transition: all 0.25s;
-}
-.inv-stat:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-.inv-num { font-size: 24px; font-weight: 800; color: #1e293b; }
-.inv-num.warn { color: #f97316; }
-.inv-lbl { font-size: 12px; color: #94a3b8; }
 
 /* ========== 弹窗 ========== */
-/* 禁用弹窗动画，防止抖动 */
 .quick-add-dialog :deep(.el-overlay) { transition: none !important; }
 .quick-add-dialog :deep(.el-dialog) { transition: none !important; border-radius: 20px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.12); }
-.quick-add-dialog :deep(.el-dialog__header) { padding: 20px 24px 16px; margin: 0; border-bottom: 1px solid #f1f5f9; }
+.quick-add-dialog :deep(.el-dialog__header) { padding: 20px 24px 16px; margin: 0; border-bottom: 1px solid var(--border); }
 .quick-add-header { display: flex; align-items: center; justify-content: space-between; width: 100%; }
-.quick-add-title { font-size: 17px; font-weight: 600; color: #1e293b; }
-.mode-toggle { display: flex; gap: 4px; background: #f1f5f9; border-radius: 10px; padding: 3px; }
-.mode-btn { display: flex; align-items: center; gap: 4px; padding: 6px 14px; border: none; border-radius: 8px; background: transparent; font-size: 13px; font-weight: 500; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
-.mode-btn.active { background: #fff; color: #667eea; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-.mode-btn:hover:not(.active) { color: #64748b; }
+.quick-add-title { font-size: 17px; font-weight: 600; color: var(--text-primary); }
+.mode-toggle { display: flex; gap: 4px; background: var(--apricot); border-radius: 10px; padding: 3px; }
+.mode-btn { display: flex; align-items: center; gap: 4px; padding: 6px 14px; border: none; border-radius: 8px; background: transparent; font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; }
+.mode-btn.active { background: #fff; color: var(--terra-deep); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.mode-btn:hover:not(.active) { color: var(--text-primary); }
 .quick-add-dialog :deep(.el-dialog__body) { padding: 20px 24px 24px; }
 
 /* ========== 响应式 ========== */
-@media (max-width: 900px) {
-  .stat-grid { grid-template-columns: repeat(2, 1fr); }
-  .top-row { grid-template-columns: 1fr; }
+@media (max-width: 960px) {
+  .shortcuts { grid-template-columns: repeat(3, 1fr); }
+  .grid-2 { grid-template-columns: 1fr; }
+  .moments { grid-template-columns: repeat(2, 1fr); }
+  .hero-art { display: none; }
+  .ambient { display: none; }
 }
 @media (max-width: 768px) {
-  .hero-section { padding: 20px; }
-  .hero-greeting { font-size: 18px; }
-  .hero-date { font-size: 13px; }
-  .hero-events { gap: 6px; }
-  .event-pill { padding: 5px 10px; font-size: 12px; }
-  .hero-actions { width: 100%; }
-  .hero-btn { flex: 1; justify-content: center; padding: 10px 12px; font-size: 13px; }
-
-  .shortcuts-row { gap: 8px; margin-bottom: 16px; }
-  .shortcut-item { padding: 10px 14px; min-width: 64px; }
-  .shortcut-item span { font-size: 11px; }
-  .sc-icon { width: 36px; height: 36px; }
-
-  .top-row { gap: 12px; margin-bottom: 16px; }
-  .mc-header { padding: 12px 14px 10px; }
-  .mc-title { font-size: 14px; }
-  .mc-list-item { padding: 8px; }
-  .mc-item-text { font-size: 12px; }
-  .mc-footer { padding: 10px; font-size: 12px; }
-
-  .recipe-body { gap: 10px; padding: 0 14px 14px; }
-  .recipe-thumb { width: 80px; height: 80px; }
-  .recipe-name { font-size: 16px; }
-
-  .section { margin-bottom: 20px; }
-  .section-head { margin-bottom: 10px; }
-  .section-title { font-size: 15px; }
-
-  .txn-card { padding: 14px; }
-  .txn-header { margin-bottom: 10px; }
-  .txn-title { font-size: 14px; }
-  .txn-amount { font-size: 14px; }
-
-  .moments-grid { grid-template-columns: 1fr; }
-  .moment-card { padding: 12px; }
-  .mc-text { font-size: 13px; }
-
-  .inv-stats-row { gap: 8px; }
-  .inv-stat { padding: 12px; }
-  .inv-num { font-size: 20px; }
-  .inv-lbl { font-size: 11px; }
+  .hero { padding: 22px; flex-direction: column; align-items: flex-start; }
+  .hero-greet { font-size: 22px; }
+  .hero-actions { width: 100%; flex-wrap: wrap; }
+  .hbtn { flex: 1; justify-content: center; }
+  .shortcuts { gap: 10px; }
+  .stats { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .stat { padding: 14px; }
+  .stat-num { font-size: 24px; }
+  .recipe { flex-direction: column; text-align: center; }
+  .shuffle { margin: 0 auto; }
+  .card-head { padding: 14px 16px 10px; margin: -16px -16px 0; }
+  .summary { gap: 12px; padding: 12px 16px; }
+  .sum-item { font-size: 12px; }
+  .sum-item b { font-size: 16px; }
+  .txn { padding: 4px 16px 12px; }
 }
 @media (max-width: 480px) {
-  .hero-section { padding: 16px; }
-  .hero-greeting { font-size: 16px; }
-  .hero-actions { flex-wrap: wrap; }
-  .hero-btn { padding: 8px 10px; font-size: 12px; }
-
-  .shortcuts-row { gap: 6px; }
-  .shortcut-item { padding: 8px 10px; min-width: 56px; }
-  .sc-icon { width: 32px; height: 32px; }
-
-  .stat-grid { grid-template-columns: 1fr; }
+  .shortcuts { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .sc { padding: 14px 6px; }
+  .sc-ico { width: 40px; height: 40px; font-size: 20px; }
+  .stats, .moments { grid-template-columns: 1fr; }
+  .grid-2 { gap: 14px; }
 }
 </style>

@@ -15,15 +15,15 @@
             <polyline points="9 22 9 12 15 12 15 22"/>
           </svg>
         </div>
-        <span style="font-size:16px;font-weight:700;color:#1e293b;">家庭管家</span>
+        <span style="font-size:16px;font-weight:700;color:var(--terra-deep,#96684A);">家庭管家</span>
       </div>
     </template>
     <el-menu
       :default-active="activeMenu"
       router
       background-color="transparent"
-      text-color="#475569"
-      active-text-color="#667eea"
+      text-color="#A08D7A"
+      active-text-color="#96684A"
       @select="$emit('close')"
     >
       <el-menu-item index="/">
@@ -31,20 +31,10 @@
         <span>首页</span>
       </el-menu-item>
 
-      <el-sub-menu index="accounting">
-        <template #title>
-          <el-icon><Coin /></el-icon>
-          <span>小家账本</span>
-        </template>
-        <el-menu-item index="/accounting">流水账单</el-menu-item>
-        <el-menu-item index="/accounting/books">账本管理</el-menu-item>
-        <el-menu-item index="/accounting/budgets">预算管理</el-menu-item>
-        <el-menu-item index="/accounting/report">报表分析</el-menu-item>
-        <el-menu-item index="/accounting/annual-report">年度报告</el-menu-item>
-        <el-menu-item index="/accounting/recurring">定时记账</el-menu-item>
-        <el-menu-item index="/accounting/categories">分类管理</el-menu-item>
-        <el-menu-item index="/investment">💰 理财管理</el-menu-item>
-      </el-sub-menu>
+      <el-menu-item index="/accounting">
+        <el-icon><Coin /></el-icon>
+        <span>小家账本</span>
+      </el-menu-item>
 
       <el-sub-menu index="album">
         <template #title>
@@ -86,17 +76,11 @@
       <el-sub-menu index="fun">
         <template #title>
           <el-icon><Food /></el-icon>
-          <span>吃喝玩乐</span>
+          <span>更多</span>
         </template>
-        <el-menu-item index="/recipe">菜谱管理</el-menu-item>
-      </el-sub-menu>
-
-      <el-sub-menu index="other">
-        <template #title>
-          <el-icon><MoreFilled /></el-icon>
-          <span>其他</span>
-        </template>
-        <el-menu-item index="/member">成员档案</el-menu-item>
+        <el-menu-item index="/recipe">🍲 菜谱管理</el-menu-item>
+        <el-menu-item index="/investment">💰 理财管理</el-menu-item>
+        <el-menu-item index="/member">👤 成员档案</el-menu-item>
       </el-sub-menu>
     </el-menu>
   </el-drawer>
@@ -104,7 +88,7 @@
 
 <script setup>
 import {
-  DataBoard, Coin, PictureFilled, Box, Bell, MoreFilled, Aim, Food
+  DataBoard, Coin, PictureFilled, Box, Bell, Aim, Food
 } from '@element-plus/icons-vue'
 
 defineProps({
@@ -126,7 +110,7 @@ defineEmits(['close'])
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #C89F85, #D9B697);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -157,11 +141,11 @@ defineEmits(['close'])
 }
 .mobile-menu-drawer :deep(.el-menu-item:active),
 .mobile-menu-drawer :deep(.el-sub-menu__title:active) {
-  background: rgba(102, 126, 234, 0.06) !important;
+  background: rgba(200, 159, 133, 0.08) !important;
 }
 .mobile-menu-drawer :deep(.el-menu-item.is-active) {
-  background: rgba(102, 126, 234, 0.08) !important;
-  color: #667eea !important;
+  background: rgba(200, 159, 133, 0.12) !important;
+  color: #96684A !important;
   font-weight: 600;
 }
 .mobile-menu-drawer :deep(.el-sub-menu .el-menu-item) {
@@ -171,6 +155,6 @@ defineEmits(['close'])
   font-size: 14px;
 }
 .mobile-menu-drawer :deep(.el-sub-menu .el-menu) {
-  background: rgba(248, 250, 252, 0.5) !important;
+  background: rgba(243, 234, 221, 0.3) !important;
 }
 </style>

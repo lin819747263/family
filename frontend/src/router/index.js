@@ -65,7 +65,7 @@ let loadingTimer = null
 function startLoading() {
   if (!loadingBar) {
     loadingBar = document.createElement('div')
-    loadingBar.style.cssText = 'position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#667eea,#764ba2);z-index:99999;transition:width 0.3s ease;pointer-events:none;'
+    loadingBar.style.cssText = 'position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#C89F85,#E8B36A);z-index:99999;transition:width 0.3s ease;pointer-events:none;'
     document.body.appendChild(loadingBar)
   }
   loadingBar.style.width = '0%'

@@ -25,30 +25,19 @@
             :default-active="activeMenu"
             mode="horizontal"
             router
-            :ellipsis="false"
             background-color="transparent"
-            text-color="#475569"
-            active-text-color="#667eea"
+            text-color="#A08D7A"
+            active-text-color="#96684A"
           >
             <el-menu-item index="/">
               <el-icon><DataBoard /></el-icon>
               <span>首页</span>
             </el-menu-item>
 
-            <el-sub-menu index="accounting">
-              <template #title>
-                <el-icon><Coin /></el-icon>
-                <span>小家账本</span>
-              </template>
-              <el-menu-item index="/accounting">流水账单</el-menu-item>
-              <el-menu-item index="/accounting/books">账本管理</el-menu-item>
-              <el-menu-item index="/accounting/budgets">预算管理</el-menu-item>
-              <el-menu-item index="/accounting/report">报表分析</el-menu-item>
-              <el-menu-item index="/accounting/annual-report">年度报告</el-menu-item>
-              <el-menu-item index="/accounting/recurring">定时记账</el-menu-item>
-              <el-menu-item index="/accounting/categories">分类管理</el-menu-item>
-              <el-menu-item index="/investment">💰 理财管理</el-menu-item>
-            </el-sub-menu>
+            <el-menu-item index="/accounting">
+              <el-icon><Coin /></el-icon>
+              <span>小家账本</span>
+            </el-menu-item>
 
             <el-sub-menu index="album">
               <template #title>
@@ -90,17 +79,11 @@
             <el-sub-menu index="fun">
               <template #title>
                 <el-icon><Food /></el-icon>
-                <span>吃喝玩乐</span>
+                <span>更多</span>
               </template>
-              <el-menu-item index="/recipe">菜谱管理</el-menu-item>
-            </el-sub-menu>
-
-            <el-sub-menu index="other">
-              <template #title>
-                <el-icon><MoreFilled /></el-icon>
-                <span>其他</span>
-              </template>
-              <el-menu-item index="/member">成员档案</el-menu-item>
+              <el-menu-item index="/recipe">🍲 菜谱管理</el-menu-item>
+              <el-menu-item index="/investment">💰 理财管理</el-menu-item>
+              <el-menu-item index="/member">👤 成员档案</el-menu-item>
             </el-sub-menu>
           </el-menu>
         </nav>
@@ -273,7 +256,7 @@ import GlobalSearch from '@/components/search/GlobalSearch.vue'
 import MobileMenu from '@/components/common/MobileMenu.vue'
 import NotificationPanel from '@/components/common/NotificationPanel.vue'
 import {
-  DataBoard, Coin, PictureFilled, Box, Bell, MoreFilled, Expand, Aim, Food,
+  DataBoard, Coin, PictureFilled, Box, Bell, Expand, Aim, Food,
   Search, Moon, Sunny, ArrowDown, Download, User, UserFilled,
   Setting, SwitchButton, Notebook, Check, Plus, EditPen, Document
 } from '@element-plus/icons-vue'
@@ -393,22 +376,22 @@ function handleUserCmd(cmd) {
   left: 0;
   right: 0;
   z-index: 100;
-  height: 60px;
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(20px) saturate(1.5);
-  -webkit-backdrop-filter: blur(20px) saturate(1.5);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
+  height: 64px;
+  background: rgba(255, 252, 247, 0.82);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 20px rgba(160, 120, 90, 0.06);
 }
 
 .nav-inner {
-  max-width: 1440px;
+  max-width: 1240px;
   margin: 0 auto;
   height: 100%;
   display: flex;
   align-items: center;
-  padding: 0 20px;
-  gap: 8px;
+  padding: 0 22px;
+  gap: 14px;
 }
 
 /* Logo */
@@ -424,24 +407,25 @@ function handleUserCmd(cmd) {
 .nav-logo:hover { opacity: 0.8; }
 
 .logo-mark {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--terracotta), #D9B697);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 5px 14px rgba(200, 159, 133, 0.4);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nav-logo:hover .logo-mark {
+  transform: rotate(-8deg) scale(1.06);
 }
 
 .logo-text {
   font-size: 17px;
   font-weight: 700;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: 0.5px;
+  color: var(--terra-deep);
+  letter-spacing: 0.06em;
 }
 
 /* 导航菜单 */
@@ -452,13 +436,13 @@ function handleUserCmd(cmd) {
 
 .nav-menu :deep(.el-menu) {
   border-bottom: none;
-  height: 60px;
+  height: 64px;
 }
 
 .nav-menu :deep(.el-menu--horizontal > .el-menu-item),
 .nav-menu :deep(.el-menu--horizontal > .el-sub-menu) {
-  height: 60px;
-  line-height: 60px;
+  height: 64px;
+  line-height: 64px;
 }
 
 .nav-menu :deep(.el-menu-item),
@@ -473,14 +457,14 @@ function handleUserCmd(cmd) {
 
 .nav-menu :deep(.el-menu-item:hover),
 .nav-menu :deep(.el-sub-menu__title:hover) {
-  background: rgba(102, 126, 234, 0.06) !important;
-  color: #667eea !important;
+  background: rgba(200, 159, 133, 0.1) !important;
+  color: var(--terra-deep) !important;
 }
 
 .nav-menu :deep(.el-menu-item.is-active) {
-  color: #667eea !important;
+  color: var(--terra-deep) !important;
   font-weight: 600;
-  background: rgba(102, 126, 234, 0.08) !important;
+  background: rgba(200, 159, 133, 0.12) !important;
   position: relative;
 }
 .nav-menu :deep(.el-menu-item.is-active)::after {
@@ -490,9 +474,11 @@ function handleUserCmd(cmd) {
   left: 16px;
   right: 16px;
   height: 2.5px;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, var(--terracotta), var(--amber));
   border-radius: 2px 2px 0 0;
+  animation: navGrow 0.35s ease;
 }
+@keyframes navGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 .nav-menu :deep(.el-sub-menu .el-menu-item) {
   height: 40px;
@@ -505,13 +491,13 @@ function handleUserCmd(cmd) {
 }
 
 .nav-menu :deep(.el-sub-menu .el-menu-item:hover) {
-  background: rgba(102, 126, 234, 0.06) !important;
-  color: #667eea !important;
+  background: rgba(200, 159, 133, 0.08) !important;
+  color: var(--terra-deep) !important;
 }
 
 .nav-menu :deep(.el-sub-menu .el-menu-item.is-active) {
-  background: rgba(102, 126, 234, 0.1) !important;
-  color: #667eea !important;
+  background: rgba(200, 159, 133, 0.12) !important;
+  color: var(--terra-deep) !important;
 }
 
 .nav-menu :deep(.el-sub-menu .el-menu) {
@@ -562,8 +548,8 @@ function handleUserCmd(cmd) {
   transition: all 0.25s;
 }
 .action-btn:hover {
-  background: rgba(102, 126, 234, 0.08);
-  color: #667eea;
+  background: rgba(200, 159, 133, 0.12);
+  color: var(--terra-deep);
 }
 
 /* 账本切换弹出框 */
@@ -587,14 +573,14 @@ function handleUserCmd(cmd) {
   color: #475569;
 }
 .book-popover-item:hover {
-  background: rgba(102, 126, 234, 0.06);
+  background: rgba(200, 159, 133, 0.08);
 }
 .book-popover-item.active {
-  color: #667eea;
+  color: var(--terra-deep);
   font-weight: 600;
 }
 .book-item-check {
-  color: #667eea;
+  color: var(--terracotta);
   font-size: 14px;
   flex-shrink: 0;
 }
@@ -616,14 +602,15 @@ function handleUserCmd(cmd) {
   transition: background 0.25s;
 }
 .user-avatar-wrap:hover {
-  background: rgba(102, 126, 234, 0.06);
+  background: rgba(200, 159, 133, 0.1);
 }
 
 .user-avatar {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));
   color: #fff;
   font-weight: 600;
   font-size: 14px;
+  box-shadow: 0 4px 12px rgba(176, 132, 102, 0.3);
 }
 
 .user-name {
@@ -643,39 +630,40 @@ function handleUserCmd(cmd) {
 
 /* ========== 主内容 ========== */
 .page-main {
-  padding-top: 60px;
+  padding-top: 64px;
   min-height: 100vh;
-  background: linear-gradient(180deg, #f0f4ff 0%, #f5f7fa 100%);
+  background: linear-gradient(135deg, var(--warm-white) 0%, var(--cream) 55%, #F0E2D0 100%);
 }
 
 .page-content {
-  max-width: 1440px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 26px 22px 80px;
 }
 
 /* ========== 浮动按钮 ========== */
 .fab-btn {
   position: fixed;
-  bottom: 36px;
-  right: 36px;
+  bottom: 32px;
+  right: 32px;
   z-index: 99;
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
   border: none;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));
   color: #fff;
+  font-size: 26px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 24px rgba(102, 126, 234, 0.35);
-  transition: all 0.3s ease;
+  box-shadow: 0 10px 28px rgba(176, 132, 102, 0.42);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s;
 }
 .fab-btn:hover {
-  transform: translateY(-3px) rotate(90deg);
-  box-shadow: 0 10px 32px rgba(102, 126, 234, 0.45);
+  transform: translateY(-4px) rotate(90deg);
+  box-shadow: 0 16px 36px rgba(176, 132, 102, 0.5);
 }
 .fab-btn:active {
   transform: translateY(0) rotate(90deg);
@@ -734,11 +722,11 @@ function handleUserCmd(cmd) {
 }
 .mode-btn.active {
   background: #fff;
-  color: #667eea;
+  color: var(--terra-deep);
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
 .mode-btn:hover:not(.active) {
-  color: #64748b;
+  color: var(--text-secondary);
 }
 .quick-add-dialog :deep(.el-dialog__body) {
   padding: 20px 24px 24px;
@@ -774,14 +762,15 @@ function handleUserCmd(cmd) {
   transition: all 0.25s;
 }
 .mobile-menu-btn:hover {
-  background: rgba(102, 126, 234, 0.08);
-  color: #667eea;
+  background: rgba(200, 159, 133, 0.1);
+  color: var(--terra-deep);
 }
 
 /* ========== 响应式 ========== */
 @media (max-width: 768px) {
   .nav-inner {
     padding: 0 12px;
+    height: 60px;
   }
   .mobile-menu-btn {
     display: flex;
@@ -822,8 +811,8 @@ function handleUserCmd(cmd) {
   .fab-btn {
     bottom: 20px;
     right: 20px;
-    width: 50px;
-    height: 50px;
+    width: 52px;
+    height: 52px;
     border-radius: 14px;
   }
 

@@ -7,6 +7,7 @@ export const appConfig = {
    * 登录页风格
    * 'classic'  - 经典风格（SVG 插画 + 浮动装饰）
    * 'animated' - 动画风格（左右分栏 + 动画角色）
+   * 'warm'     - 暖色居家风格（手绘插画 + 温暖配色）
    */
-  loginStyle: 'animated'
+  loginStyle: 'warm'
 }

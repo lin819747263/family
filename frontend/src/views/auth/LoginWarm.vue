@@ -1,5 +1,5 @@
 <template>
-  <div class="warm-register">
+  <div class="warm-login">
     <!-- 背景漂浮柔光 -->
     <div class="ambient-dot dot-1"></div>
     <div class="ambient-dot dot-2"></div>
@@ -9,103 +9,70 @@
       <section class="scene" aria-hidden="true">
         <svg viewBox="0 0 400 340" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- 暖光灯光晕 -->
-          <circle class="lamp-glow" cx="200" cy="140" r="80" fill="#F5D3A0" opacity="0.4"/>
-          <circle class="lamp-glow" cx="200" cy="140" r="50" fill="#F8DFB4" opacity="0.5"/>
-
-          <!-- 家庭成员 - 爸爸 -->
-          <circle cx="140" cy="130" r="22" fill="#D9BE9C" opacity="0.8"/>
-          <rect x="124" y="158" width="32" height="48" rx="10" fill="#C89F85" opacity="0.7"/>
-          <!-- 家庭成员 - 妈妈 -->
-          <circle cx="200" cy="120" r="20" fill="#E8D5C4" opacity="0.8"/>
-          <rect x="186" y="146" width="28" height="44" rx="8" fill="#D3A98B" opacity="0.7"/>
-          <!-- 家庭成员 - 孩子 -->
-          <circle cx="260" cy="140" r="16" fill="#F3EADD" opacity="0.8"/>
-          <rect x="248" y="162" width="24" height="36" rx="6" fill="#E2CDB2" opacity="0.7"/>
-
-          <!-- 手牵手连线 -->
-          <line x1="162" y1="180" x2="186" y2="170" stroke="#C89F85" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-          <line x1="214" y1="170" x2="248" y2="180" stroke="#C89F85" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-
-          <!-- 爱心 -->
-          <g class="heart-float">
-            <path d="M200 90 C200 85, 208 80, 208 87 C208 92, 200 98, 200 98 C200 98, 192 92, 192 87 C192 80, 200 85, 200 90Z" fill="#C89F85" opacity="0.5"/>
-          </g>
-
-          <!-- 房子 -->
-          <rect x="100" y="220" width="200" height="100" rx="6" fill="#F6E7D3" opacity="0.5"/>
-          <path d="M80 228 L200 180 L320 228" stroke="#D9BE9C" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.4"/>
-          <!-- 门 -->
-          <rect x="175" y="270" width="50" height="50" rx="4" fill="#C89F85" opacity="0.5"/>
-          <circle cx="215" cy="298" r="3" fill="#B08466" opacity="0.6"/>
+          <circle class="lamp-glow" cx="115" cy="185" r="72" fill="#F5D3A0" opacity="0.5"/>
+          <circle class="lamp-glow" cx="115" cy="185" r="46" fill="#F8DFB4" opacity="0.6"/>
           <!-- 窗户 -->
-          <rect x="120" y="240" width="35" height="35" rx="3" fill="#FBF3E4" stroke="#D9BE9C" stroke-width="2" opacity="0.6"/>
-          <line x1="137.5" y1="240" x2="137.5" y2="275" stroke="#D9BE9C" stroke-width="1.5" opacity="0.5"/>
-          <line x1="120" y1="257.5" x2="155" y2="257.5" stroke="#D9BE9C" stroke-width="1.5" opacity="0.5"/>
-          <rect x="245" y="240" width="35" height="35" rx="3" fill="#FBF3E4" stroke="#D9BE9C" stroke-width="2" opacity="0.6"/>
-          <line x1="262.5" y1="240" x2="262.5" y2="275" stroke="#D9BE9C" stroke-width="1.5" opacity="0.5"/>
-          <line x1="245" y1="257.5" x2="280" y2="257.5" stroke="#D9BE9C" stroke-width="1.5" opacity="0.5"/>
-
-          <!-- 烟囱 -->
-          <rect x="270" y="190" width="20" height="35" rx="3" fill="#D9BE9C" opacity="0.5"/>
-          <!-- 烟 -->
-          <circle class="smoke smoke-1" cx="280" cy="180" r="6" fill="#E2CDB2" opacity="0.3"/>
-          <circle class="smoke smoke-2" cx="285" cy="168" r="5" fill="#E2CDB2" opacity="0.2"/>
-          <circle class="smoke smoke-3" cx="282" cy="155" r="4" fill="#E2CDB2" opacity="0.15"/>
-
-          <!-- 草地 -->
-          <ellipse cx="200" cy="325" rx="180" ry="15" fill="#A8B08A" opacity="0.2"/>
-
-          <!-- 花朵 -->
-          <g class="flower flower-1">
-            <circle cx="80" cy="310" r="4" fill="#C89F85" opacity="0.6"/>
-            <circle cx="80" cy="305" r="2.5" fill="#C89F85" opacity="0.4"/>
-            <circle cx="84" cy="308" r="2.5" fill="#C89F85" opacity="0.4"/>
-            <circle cx="76" cy="308" r="2.5" fill="#C89F85" opacity="0.4"/>
-            <line x1="80" y1="314" x2="80" y2="325" stroke="#A8B08A" stroke-width="1.5" opacity="0.4"/>
+          <rect x="230" y="52" width="120" height="150" rx="16" fill="#FBF3E4" stroke="#D9BE9C" stroke-width="4"/>
+          <line x1="290" y1="56" x2="290" y2="198" stroke="#D9BE9C" stroke-width="4"/>
+          <line x1="234" y1="127" x2="346" y2="127" stroke="#D9BE9C" stroke-width="4"/>
+          <!-- 窗外月亮与云 -->
+          <circle cx="263" cy="95" r="15" fill="#F3CE8F"/>
+          <path d="M305 100 q10 -10 20 0 q8 -7 15 1" stroke="#E4C8A4" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <!-- 窗台绿植 -->
+          <g class="leaf-sway">
+            <path d="M258 200 q-3 -26 -16 -34 q14 2 19 20 q2 -22 -6 -34 q12 8 12 34 q6 -16 16 -19 q-6 14 -11 33 Z" fill="#A8B08A" opacity="0.9"/>
           </g>
-          <g class="flower flower-2">
-            <circle cx="330" cy="305" r="3.5" fill="#D3A98B" opacity="0.5"/>
-            <circle cx="330" cy="300" r="2" fill="#D3A98B" opacity="0.35"/>
-            <circle cx="333" cy="303" r="2" fill="#D3A98B" opacity="0.35"/>
-            <circle cx="327" cy="303" r="2" fill="#D3A98B" opacity="0.35"/>
-            <line x1="330" y1="308" x2="330" y2="320" stroke="#A8B08A" stroke-width="1.5" opacity="0.35"/>
-          </g>
-
-          <!-- 星星装饰 -->
-          <circle class="star star-1" cx="60" cy="80" r="2.5" fill="#F3CE8F" opacity="0.5"/>
-          <circle class="star star-2" cx="350" cy="60" r="2" fill="#F3CE8F" opacity="0.4"/>
-          <circle class="star star-3" cx="40" cy="200" r="1.5" fill="#F3CE8F" opacity="0.4"/>
-          <circle class="star star-4" cx="370" cy="180" r="2.5" fill="#F3CE8F" opacity="0.35"/>
+          <path d="M247 198 h26 l-4 24 h-18 Z" fill="#C89F85"/>
+          <!-- 桌子 -->
+          <rect x="60" y="228" width="200" height="10" rx="5" fill="#D9BE9C"/>
+          <rect x="78" y="238" width="8" height="52" rx="4" fill="#CBA97F"/>
+          <rect x="234" y="238" width="8" height="52" rx="4" fill="#CBA97F"/>
+          <!-- 台灯 -->
+          <rect x="112" y="180" width="7" height="48" rx="3.5" fill="#A08D7A"/>
+          <path d="M92 182 q23 -26 47 0 Z" fill="#C89F85"/>
+          <ellipse cx="115.5" cy="228" rx="20" ry="5" fill="#A08D7A"/>
+          <!-- 热茶 -->
+          <path d="M178 214 h30 v10 q0 8 -15 8 q-15 0 -15 -8 Z" fill="#E8D5C4" stroke="#C9A983" stroke-width="2.5"/>
+          <path d="M186 206 q3 -6 0 -11 M196 206 q3 -6 0 -11" stroke="#D9BE9C" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <!-- 书 -->
+          <rect x="64" y="216" width="42" height="11" rx="4" fill="#B08466"/>
+          <rect x="68" y="211" width="34" height="8" rx="4" fill="#D3A98B"/>
+          <!-- 地毯 -->
+          <ellipse cx="160" cy="298" rx="130" ry="16" fill="#EBD9C0"/>
+          <!-- 远处小屋 -->
+          <path d="M30 292 v-40 l26 -20 26 20 v40 Z" fill="#DFC7A8"/>
+          <rect x="48" y="268" width="14" height="24" rx="3" fill="#B08466"/>
+          <circle cx="39" cy="266" r="4.5" fill="#F3CE8F"/>
         </svg>
 
         <p class="scene-quote">
-          一家人，<br>
-          <strong>就是最美的风景</strong>。
+          灯光为你留着，<br>
+          这里存放着 <strong>属于你们的温暖时光</strong>。
         </p>
       </section>
 
-      <!-- 右侧：注册表单 -->
+      <!-- 右侧：登录表单 -->
       <section class="form-side">
         <div class="brand">
           <div class="brand-badge">🏡</div>
           <span class="brand-name">家 · 私享空间</span>
         </div>
 
-        <h1>加入这个家 ✨</h1>
-        <p class="subtitle">创建账号，开始记录家庭的美好时光</p>
+        <h1>欢迎回家 🌙</h1>
+        <p class="subtitle">家人都在等你，说说今天的小确幸吧</p>
 
         <el-form
           ref="formRef"
           :model="form"
           :rules="rules"
-          @submit.prevent="handleRegister"
+          @submit.prevent="handleLogin"
         >
-          <!-- 用户名 -->
+          <!-- 账号 -->
           <div class="field">
             <span class="field-icon">🧸</span>
             <el-input
               v-model="form.username"
-              placeholder="请输入用户名"
+              placeholder="请输入您的账号"
               size="large"
               @focus="focusField = 'username'"
               @blur="focusField = ''"
@@ -118,7 +85,7 @@
             <el-input
               v-model="form.password"
               :type="showPassword ? 'text' : 'password'"
-              placeholder="设置密码（至少6位）"
+              placeholder="您的家门钥匙"
               size="large"
               @focus="focusField = 'password'"
               @blur="focusField = ''"
@@ -132,42 +99,40 @@
             </el-input>
           </div>
 
-          <!-- 家庭名称 -->
-          <div class="field">
-            <span class="field-icon">🏠</span>
-            <el-input
-              v-model="form.familyName"
-              placeholder="家庭名称（可选，创建新家庭）"
-              size="large"
-              @focus="focusField = 'familyName'"
-              @blur="focusField = ''"
-            />
+          <!-- 记住我 / 忘记密码 -->
+          <div class="row-between">
+            <label class="remember">
+              <input type="checkbox" v-model="rememberMe">
+              <span class="box">✓</span>
+              下次自动为我开门
+            </label>
+            <a class="link" href="#">忘记钥匙了？</a>
           </div>
 
           <!-- 错误提示 -->
           <div v-if="errorMsg" class="error-box">{{ errorMsg }}</div>
 
-          <!-- 注册按钮 -->
+          <!-- 登录按钮 -->
           <el-form-item style="margin-bottom: 0;">
             <button class="btn-home" type="submit" :disabled="loading">
-              {{ loading ? '创建中...' : '创 建 家 庭' }}
+              {{ loading ? '开门中...' : '推 开 家 门' }}
             </button>
           </el-form-item>
         </el-form>
 
         <!-- 分隔线 -->
-        <div class="divider">已经有家了？</div>
+        <div class="divider">有新家人要加入吗</div>
 
-        <!-- 登录入口 -->
-        <div class="invite-card" @click="router.push('/login')">
+        <!-- 注册入口 -->
+        <div class="invite-card" @click="router.push('/register')">
           <div class="invite-text">
-            <b>已有账号？</b><br>
-            回到温暖的家 🏡
+            <b>收到家人的邀请？</b><br>
+            注册新账号，搬进这个家 ✨
           </div>
-          <span class="invite-emoji">🌙</span>
+          <span class="invite-emoji">💌</span>
         </div>
 
-        <p class="footer-note">🔒 你的家庭空间安全私密 · 温柔守护每一份回忆</p>
+        <p class="footer-note">🔒 这个空间只属于你们 · 所有回忆都被温柔守护</p>
       </section>
     </main>
   </div>
@@ -188,27 +153,28 @@ const loading = ref(false)
 const errorMsg = ref('')
 const showPassword = ref(false)
 const focusField = ref('')
+const rememberMe = ref(true)
 
-const form = reactive({ username: '', password: '', familyName: '' })
+const form = reactive({ username: '', password: '' })
 const rules = {
-  username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+  username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 6, message: '密码长度不能少于6位', trigger: 'blur' }
   ]
 }
 
-async function handleRegister() {
+async function handleLogin() {
   if (!formRef.value) return
   await formRef.value.validate(async (valid) => {
     if (!valid) return
     loading.value = true
     errorMsg.value = ''
     try {
-      await authStore.register(form)
-      ElMessage.success('注册成功，欢迎回家')
+      await authStore.login(form)
+      ElMessage.success('欢迎回家')
     } catch (e) {
-      errorMsg.value = e.response?.data?.message || '注册失败，请稍后重试'
+      errorMsg.value = e.response?.data?.message || '账号或密码有误，请重新输入'
     } finally {
       loading.value = false
     }
@@ -217,7 +183,7 @@ async function handleRegister() {
 </script>
 
 <style scoped>
-.warm-register {
+.warm-login {
   --warm-white: #FBF6EF;
   --cream: #F3EADD;
   --apricot: #EDE0CE;
@@ -297,41 +263,11 @@ async function handleRegister() {
   0%, 100% { opacity: .45; transform: scale(1); }
   50%      { opacity: .8;  transform: scale(1.06); }
 }
-
-.heart-float { animation: heartFloat 5s ease-in-out infinite; }
-@keyframes heartFloat {
-  0%, 100% { transform: translateY(0) scale(1); opacity: 0.5; }
-  50% { transform: translateY(-10px) scale(1.1); opacity: 0.7; }
+.leaf-sway { animation: sway 5s ease-in-out infinite; transform-origin: bottom center; }
+@keyframes sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50%      { transform: rotate(2.5deg); }
 }
-
-.flower { animation: flowerSway 4s ease-in-out infinite; }
-.flower-2 { animation-delay: 1s; }
-@keyframes flowerSway {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(3deg); }
-  75% { transform: rotate(-3deg); }
-}
-
-.smoke { animation: smokeRise 4s ease-in-out infinite; }
-.smoke-1 { animation-delay: 0s; }
-.smoke-2 { animation-delay: 1.3s; }
-.smoke-3 { animation-delay: 2.6s; }
-@keyframes smokeRise {
-  0% { opacity: 0; transform: translateY(0) scale(1); }
-  50% { opacity: 0.3; }
-  100% { opacity: 0; transform: translateY(-20px) scale(1.4); }
-}
-
-.star { animation: starTwinkle 3s ease-in-out infinite; }
-.star-1 { animation-delay: 0s; }
-.star-2 { animation-delay: 0.8s; }
-.star-3 { animation-delay: 1.6s; }
-.star-4 { animation-delay: 2.4s; }
-@keyframes starTwinkle {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.3); }
-}
-
 .scene-quote {
   margin-top: 28px;
   text-align: center;
@@ -435,6 +371,44 @@ h1 {
 }
 .eye-toggle:hover { color: var(--text-deep); }
 
+/* 记住我 / 忘记密码 */
+.row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 2px 0 20px;
+  font-size: 13px;
+}
+.remember {
+  display: flex; align-items: center; gap: 6px;
+  cursor: pointer; color: var(--text-soft);
+  user-select: none;
+}
+.remember input { display: none; }
+.remember .box {
+  width: 17px; height: 17px;
+  border: 1.5px solid var(--wood-light);
+  border-radius: 6px;
+  background: #FFFDF9;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: transparent;
+  transition: all .25s ease;
+}
+.remember input:checked + .box {
+  background: var(--terracotta);
+  border-color: var(--terracotta);
+  color: #fff;
+  transform: scale(1.08);
+}
+.link {
+  color: var(--terracotta-d);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(176, 132, 102, .4);
+  padding-bottom: 1px;
+  transition: color .25s, border-color .25s;
+}
+.link:hover { color: #96684A; border-color: #96684A; }
+
 /* 错误提示 */
 .error-box {
   padding: 10px 14px;
@@ -485,7 +459,7 @@ h1 {
   background: linear-gradient(to right, transparent, var(--wood-light), transparent);
 }
 
-/* 登录卡片 */
+/* 注册卡片 */
 .invite-card {
   display: flex;
   align-items: center;
@@ -517,7 +491,7 @@ h1 {
 
 /* 响应式 */
 @media (max-width: 768px) {
-  .warm-register { padding: 12px; }
+  .warm-login { padding: 12px; }
   .shell {
     flex-direction: column;
     max-height: calc(100vh - 24px);

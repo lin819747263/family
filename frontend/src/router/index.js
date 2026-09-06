@@ -3,7 +3,9 @@ import { appConfig } from '@/config'
 
 const loginComponent = appConfig.loginStyle === 'animated'
   ? () => import('@/views/auth/LoginAnimated.vue')
-  : () => import('@/views/auth/Login.vue')
+  : appConfig.loginStyle === 'warm'
+    ? () => import('@/views/auth/LoginWarm.vue')
+    : () => import('@/views/auth/Login.vue')
 
 const routes = [
   { path: '/login', name: 'Login', component: loginComponent, meta: { guest: true } },

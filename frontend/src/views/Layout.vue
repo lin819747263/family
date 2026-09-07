@@ -49,25 +49,10 @@
               <span>点滴日常</span>
             </el-menu-item>
 
-            <el-sub-menu index="goals">
-              <template #title>
-                <el-icon><Aim /></el-icon>
-                <span>小目标</span>
-              </template>
-              <el-menu-item index="/annual-goals">🎯 年度目标</el-menu-item>
-              <el-menu-item index="/wishlist">家庭心愿</el-menu-item>
-            </el-sub-menu>
-
-            <el-sub-menu index="inventory">
-              <template #title>
-                <el-icon><Box /></el-icon>
-                <span>物品管理</span>
-              </template>
-              <el-menu-item index="/inventory">物品总览</el-menu-item>
-              <el-menu-item index="/inventory/spaces">空间管理</el-menu-item>
-              <el-menu-item index="/inventory/borrows">借物追踪</el-menu-item>
-              <el-menu-item index="/inventory/unused">断舍离助手</el-menu-item>
-            </el-sub-menu>
+            <el-menu-item index="/inventory">
+              <el-icon><Box /></el-icon>
+              <span>物品管理</span>
+            </el-menu-item>
 
             <el-sub-menu index="fun">
               <template #title>

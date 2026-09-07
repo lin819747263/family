@@ -19,6 +19,14 @@
             <div class="sb-info"><div class="sb-label">纪念日</div><div class="sb-desc">重要日期提醒</div></div>
             <span v-if="annivCount > 0" class="sb-badge">{{ annivCount }}</span>
           </div>
+          <div class="sb-item" :class="{ active: activeView === 'goals' }" @click="switchView('goals')">
+            <div class="sb-ico g-sky">🎯</div>
+            <div class="sb-info"><div class="sb-label">年度目标</div><div class="sb-desc">一年的小目标</div></div>
+          </div>
+          <div class="sb-item" :class="{ active: activeView === 'wishlist' }" @click="switchView('wishlist')">
+            <div class="sb-ico g-plum">💝</div>
+            <div class="sb-info"><div class="sb-label">家庭心愿</div><div class="sb-desc">想做的事想买的东西</div></div>
+          </div>
         </nav>
         <div class="sb-foot">
           <div class="foot-stat"><span class="fs-dot" style="background:var(--sage);"></span>{{ todoStats.pending }} 待办</div>
@@ -52,6 +60,22 @@
           </div>
           <AnniversaryPage embedded @count-update="c => annivCount = c" />
         </section>
+
+        <!-- ===== 年度目标 ===== -->
+        <section v-show="activeView === 'goals'" class="panel">
+          <div class="panel-head">
+            <div><div class="panel-title">🎯 年度目标</div><div class="panel-sub">今年想达成的事，一步步走过去</div></div>
+          </div>
+          <GoalsPage />
+        </section>
+
+        <!-- ===== 家庭心愿 ===== -->
+        <section v-show="activeView === 'wishlist'" class="panel">
+          <div class="panel-head">
+            <div><div class="panel-title">💝 家庭心愿</div><div class="panel-sub">想做的事、想买的东西，都记在这里</div></div>
+          </div>
+          <WishlistPage />
+        </section>
       </main>
     </div>
   </div>
@@ -65,6 +89,8 @@ import { useAuthStore } from '@/store/auth'
 import TodoPage from '@/views/todo/Index.vue'
 import CalendarPage from '@/views/anniversary/Calendar.vue'
 import AnniversaryPage from '@/views/anniversary/Index.vue'
+import GoalsPage from '@/views/annual-goals/Index.vue'
+import WishlistPage from '@/views/wishlist/Index.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -84,6 +110,8 @@ function updateActiveView() {
   const path = route.path
   if (path.includes('/calendar')) activeView.value = 'calendar'
   else if (path.includes('/anniversary')) activeView.value = 'anniversary'
+  else if (path.includes('/goals')) activeView.value = 'goals'
+  else if (path.includes('/wishlist')) activeView.value = 'wishlist'
   else activeView.value = 'todo'
 }
 
@@ -144,6 +172,8 @@ onMounted(async () => {
 .g-terra { background: linear-gradient(135deg, var(--terracotta), var(--terra-deep)); }
 .g-sage { background: linear-gradient(135deg, var(--sage), #7E8862); }
 .g-amber { background: linear-gradient(135deg, var(--amber), #C08A3E); }
+.g-sky { background: linear-gradient(135deg, var(--sky), #6E8CA0); }
+.g-plum { background: linear-gradient(135deg, var(--plum), #8A6B92); }
 .sb-info { flex: 1; min-width: 0; }
 .sb-label { font-size: 14px; font-weight: 600; }
 .sb-desc { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }

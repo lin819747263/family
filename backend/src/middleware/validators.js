@@ -119,7 +119,7 @@ const inventoryValidators = {
   ],
   createBorrow: [
     body('itemId').notEmpty().withMessage('物品 ID 不能为空'),
-    body('borrowerName').trim().notEmpty().withMessage('借用人姓名不能为空'),
+    body('borrowedBy').notEmpty().withMessage('借用人不能为空'),
     validate
   ]
 };

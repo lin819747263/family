@@ -1,53 +1,111 @@
 <template>
   <div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-      <div class="page-title" style="margin-bottom:0;">空间管理</div>
-      <el-button type="primary" @click="openCreate"><el-icon><Plus /></el-icon>新建空间</el-button>
+    <!-- 页面头部 -->
+    <div class="page-head">
+      <div>
+        <div class="page-title">📦 物品管理</div>
+        <div class="page-sub">家里的每件东西，都有属于自己的位置</div>
+      </div>
+      <div class="head-actions">
+        <el-button class="btn-ghost" @click="openCreate">
+          <span>🪄</span> AI 录入
+        </el-button>
+        <el-button class="btn-primary" @click="openCreate">
+          <span>＋</span> 添加物品
+        </el-button>
+      </div>
     </div>
 
-    <el-alert style="margin-bottom:16px;" title="以 家→房间→柜子→抽屉 层级管理您的家居空间" type="info" show-icon :closable="false" />
+    <!-- 子标签页 -->
+    <div class="subtabs">
+      <router-link to="/inventory" class="subtab">🗃 物品总览</router-link>
+      <router-link to="/inventory/spaces" class="subtab" :class="{ active: $route.path === '/inventory/spaces' }">🏠 空间管理</router-link>
+      <router-link to="/inventory/borrows" class="subtab">🤝 借物追踪</router-link>
+      <router-link to="/inventory/unused" class="subtab">🍃 断舍离</router-link>
+    </div>
 
-    <div class="card">
-      <div v-if="spaces.length === 0" style="text-align:center;padding:60px 20px;">
-        <el-icon :size="48" color="#cbd5e1"><FolderOpened /></el-icon>
-        <p style="margin-top:12px;color:#94a3b8;">还没有空间，点击右上角创建</p>
-      </div>
-      <template v-else>
-        <div style="font-size:12px;color:#94a3b8;margin-bottom:12px;">
-          <el-icon style="vertical-align:middle;"><Rank /></el-icon> 拖拽可调整排序
-        </div>
-        <el-tree
-          :data="spaces"
-          node-key="id"
-          default-expand-all
-          draggable
-          :allow-drop="allowDrop"
-          :props="{ label: 'name', children: 'children' }"
-          @node-drop="handleDrop"
-        >
-          <template #default="{ node, data }">
-            <div style="display:flex;align-items:center;justify-content:space-between;flex:1;padding-right:16px;">
-              <span>
-                <el-icon style="margin-right:6px;"><component :is="data.icon || 'FolderOpened'" /></el-icon>
-                {{ data.name }}
-                <el-tag size="small" type="info" style="margin-left:6px;">{{ levelLabel[data.level] || data.level }}</el-tag>
-              </span>
-              <span style="display:flex;gap:4px;align-items:center;">
-                <span style="font-size:12px;color:#999;margin-right:4px;">{{ data.itemCount || 0 }} 件</span>
-                <el-button v-if="data.level !== 'drawer'" text type="success" size="small" @click.stop="addChild(data)" title="添加子空间">
-                  <el-icon><Plus /></el-icon>
-                </el-button>
-                <el-button text type="primary" size="small" @click.stop="editSpace(data)">编辑</el-button>
-                <el-popconfirm title="确认删除？" @confirm.stop="handleDelete(data.id)">
-                  <template #reference><el-button text type="danger" size="small" @click.stop>删除</el-button></template>
-                </el-popconfirm>
-              </span>
+    <!-- 提示 -->
+    <div class="tree-hint reveal">
+      💡 以「家 → 房间 → 柜子 → 抽屉」层级管理空间 · 拖拽可调整排序
+    </div>
+
+    <!-- 空状态 -->
+    <div v-if="spaces.length === 0" class="card empty-card">
+      <el-icon :size="48" color="#cbd5e1"><FolderOpened /></el-icon>
+      <p>还没有空间，点击右上角创建</p>
+    </div>
+
+    <!-- 空间树 -->
+    <div v-else class="card tree-card reveal">
+      <template v-for="home in spaces" :key="home.id">
+        <div class="tree-node">
+          <div class="node-row" @click="toggleNode(home.id)">
+            <div class="node-ico lv-home">🏡</div>
+            <span class="node-name">{{ home.name }}</span>
+            <span class="node-lvl">家</span>
+            <span class="node-count">{{ home.itemCount || 0 }} 件</span>
+            <div class="node-acts">
+              <button class="act-btn" @click.stop="addChild(home)">＋</button>
+              <button class="act-btn" @click.stop="editSpace(home)">✎</button>
             </div>
-          </template>
-        </el-tree>
+          </div>
+
+          <!-- 房间层 -->
+          <div v-if="home.children?.length" class="children">
+            <div v-for="room in home.children" :key="room.id" class="tree-node">
+              <div class="node-row" @click="toggleNode(room.id)">
+                <div class="node-ico lv-room">{{ getRoomEmoji(room.name) }}</div>
+                <span class="node-name">{{ room.name }}</span>
+                <span class="node-lvl">房间</span>
+                <span class="node-count">{{ room.itemCount || 0 }} 件</span>
+                <div class="node-acts">
+                  <button class="act-btn" @click.stop="addChild(room)">＋</button>
+                  <button class="act-btn" @click.stop="editSpace(room)">✎</button>
+                </div>
+              </div>
+
+              <!-- 柜子层 -->
+              <div v-if="room.children?.length" class="children">
+                <div v-for="cab in room.children" :key="cab.id" class="tree-node">
+                  <div class="node-row" @click="toggleNode(cab.id)">
+                    <div class="node-ico lv-cab">{{ getCabEmoji(cab.name) }}</div>
+                    <span class="node-name">{{ cab.name }}</span>
+                    <span class="node-lvl">柜子</span>
+                    <span class="node-count">{{ cab.itemCount || 0 }} 件</span>
+                    <div class="node-acts">
+                      <button class="act-btn" @click.stop="addChild(cab)">＋</button>
+                      <button class="act-btn" @click.stop="editSpace(cab)">✎</button>
+                    </div>
+                  </div>
+
+                  <!-- 抽屉层 -->
+                  <div v-if="cab.children?.length" class="children">
+                    <div v-for="draw in cab.children" :key="draw.id" class="tree-node">
+                      <div class="node-row">
+                        <div class="node-ico lv-draw">🗃</div>
+                        <span class="node-name">{{ draw.name }}</span>
+                        <span class="node-lvl">抽屉</span>
+                        <span class="node-count">{{ draw.itemCount || 0 }} 件</span>
+                        <div class="node-acts">
+                          <button class="act-btn" @click.stop="editSpace(draw)">✎</button>
+                          <el-popconfirm title="确认删除？" @confirm="handleDelete(draw.id)">
+                            <template #reference>
+                              <button class="act-btn danger" @click.stop>🗑</button>
+                            </template>
+                          </el-popconfirm>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </template>
     </div>
 
+    <!-- 新建/编辑弹窗 -->
     <el-dialog v-model="showForm" :title="editing ? '编辑空间' : '新建空间'" width="400px">
       <el-form :model="form" label-width="80px">
         <el-form-item label="名称"><el-input v-model="form.name" placeholder="如：客厅、主卧" /></el-form-item>
@@ -76,11 +134,10 @@
 
 <script setup>
 import { useFamilyGuard } from "@/composables/useFamilyGuard"
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { inventoryApi } from '@/api'
 import { useAuthStore } from '@/store/auth'
 import { ElMessage } from 'element-plus'
-import { Rank } from '@element-plus/icons-vue'
 
 const authStore = useAuthStore()
 const spaces = ref([])
@@ -90,18 +147,46 @@ const editing = ref(false)
 const saving = ref(false)
 const form = ref({ name: '', level: 'room', parentId: null, parentName: '' })
 
-const levelLabel = { home: '家', room: '房间', cabinet: '柜子', drawer: '抽屉' }
 const childLevel = { home: 'room', room: 'cabinet', cabinet: 'drawer' }
+
+// 房间 emoji 映射
+function getRoomEmoji(name) {
+  const map = { '客厅': '🛋', '厨房': '🍳', '主卧': '🛏', '儿童房': '🧒', '书房': '📖', '阳台': '🌿', '卫生间': '🚿', '储物间': '📦' }
+  return map[name] || '🏠'
+}
+
+// 柜子 emoji 映射
+function getCabEmoji(name) {
+  const map = { '冰箱': '🧊', '衣柜': '🚪', '药箱': '💊', '电视柜': '🗄', '吊柜': '🚪', '书架': '📚', '玩具书架': '📚' }
+  return map[name] || '🗄'
+}
+
+function setupReveal() {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in')
+        io.unobserve(entry.target)
+      }
+    })
+  }, { threshold: 0.12 })
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el))
+}
 
 onMounted(async () => {
   if (!await useFamilyGuard()) return
-  loadSpaces()
+  await loadSpaces()
+  nextTick(setupReveal)
 })
 
 async function loadSpaces() {
   const res = await inventoryApi.getSpaces({ familyId: authStore.currentFamily?.id })
   spaces.value = res.data
   spaceOptions.value = res.data
+}
+
+function toggleNode(id) {
+  // 可选：展开/折叠逻辑
 }
 
 function openCreate() {
@@ -150,85 +235,248 @@ async function handleDelete(id) {
     loadSpaces()
   } catch(e) { ElMessage.error(e.response?.data?.message || '删除失败') }
 }
-
-// 拖拽：不允许放入其他节点内部
-function allowDrop(draggingNode, dropNode, type) {
-  return type !== 'inner'
-}
-
-// 拖拽完成：批量更新排序
-async function handleDrop(draggingNode, dropNode, dropType) {
-  if (!draggingNode?.data || !dropNode?.data) return
-
-  const dragId = draggingNode.data.id
-  const dropId = dropNode.data.id
-
-  // 找到同级列表：遍历 spaces 树找到包含 dragId 的数组
-  let siblings = null
-  function findSiblings(list) {
-    if (!list) return false
-    if (list.some(s => s.id === dragId)) {
-      siblings = list
-      return true
-    }
-    for (const item of list) {
-      if (item.children && findSiblings(item.children)) return true
-    }
-    return false
-  }
-  findSiblings(spaces.value)
-
-  if (!siblings) return
-
-  const dragIdx = siblings.findIndex(s => s.id === dragId)
-  const dropIdx = siblings.findIndex(s => s.id === dropId)
-  if (dragIdx === -1 || dropIdx === -1) return
-
-  // 从原位置移除，插入新位置
-  const [dragged] = siblings.splice(dragIdx, 1)
-  const newDropIdx = siblings.findIndex(s => s.id === dropId)
-  if (dropType === 'before') {
-    siblings.splice(newDropIdx, 0, dragged)
-  } else {
-    siblings.splice(newDropIdx + 1, 0, dragged)
-  }
-
-  // 批量更新 sort
-  const updates = siblings.map((s, i) => ({ id: s.id, sort: i + 1 }))
-
-  try {
-    await Promise.all(
-      updates.map(u => inventoryApi.updateSpace(u.id, { sort: u.sort }))
-    )
-    await loadSpaces()
-    ElMessage.success('排序已更新')
-  } catch {
-    ElMessage.error('排序更新失败')
-    loadSpaces()
-  }
-}
 </script>
 
 <style scoped>
-@media (max-width: 768px) {
+/* ===== 页面头部 ===== */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.page-sub {
+  margin-top: 6px;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+}
+.head-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ===== 按钮 ===== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 18px;
+  border-radius: 13px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
+  color: #FFF9F2;
+  box-shadow: 0 8px 20px rgba(200,159,133,.4);
+  transition: transform .3s, box-shadow .3s;
+}
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(200,159,133,.3);
+}
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 18px;
+  border-radius: 13px;
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  background: rgba(255,253,250,.85);
+  color: var(--terra-deep);
+  transition: transform .3s, box-shadow .3s;
+}
+.btn-ghost:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(200,159,133,.15);
+}
+
+/* ===== 子标签页 ===== */
+.subtabs {
+  display: flex;
+  gap: 6px;
+  background: rgba(243,234,221,.6);
+  border: 1px solid var(--border);
+  padding: 5px;
+  border-radius: 16px;
+  margin-bottom: 22px;
+  overflow-x: auto;
+}
+.subtab {
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .3s;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.subtab:hover { color: var(--terra-deep); }
+.subtab.active,
+.subtab.router-link-exact-active {
+  background: var(--bg-card);
+  color: var(--terra-deep);
+  box-shadow: 0 4px 14px rgba(160,120,90,.14);
+}
+
+/* ===== 提示 ===== */
+.tree-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+/* ===== 空状态 ===== */
+.empty-card {
+  text-align: center;
+  padding: 60px 20px;
+}
+.empty-card p {
+  margin-top: 12px;
+  color: var(--text-secondary);
+}
+
+/* ===== 空间树 ===== */
+.tree-card {
+  padding: 18px;
+}
+.tree-node {
+  position: relative;
+}
+.node-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: 13px;
+  transition: background .25s;
+  cursor: pointer;
+}
+.node-row:hover {
+  background: rgba(243,234,221,.7);
+}
+.node-ico {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #fff;
+  flex-shrink: 0;
+}
+.lv-home { background: linear-gradient(135deg, var(--terracotta), var(--terra-deep)); }
+.lv-room { background: linear-gradient(135deg, var(--amber), #C08A3E); }
+.lv-cab { background: linear-gradient(135deg, var(--sage), #7E8862); }
+.lv-draw { background: linear-gradient(135deg, var(--sky), #6E8CA0); }
+
+.node-name {
+  font-size: 14.5px;
+  font-weight: 700;
+}
+.node-lvl {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--apricot);
+  color: var(--terra-deep);
+}
+.node-count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.node-acts {
+  display: flex;
+  gap: 5px;
+  opacity: 0;
+  transition: opacity .25s;
+}
+.node-row:hover .node-acts {
+  opacity: 1;
+}
+.children {
+  margin-left: 26px;
+  padding-left: 16px;
+  border-left: 2px dashed var(--wood-light);
+}
+
+/* ===== 操作按钮 ===== */
+.act-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,253,250,.9);
+  color: var(--terra-deep);
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(160,120,90,.15);
+  transition: all .2s;
+}
+.act-btn:hover {
+  background: var(--terracotta);
+  color: #fff;
+}
+.act-btn.danger:hover {
+  background: #B06A6A;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 600px) {
+  .page-head {
+    gap: 12px;
+  }
   .page-title {
-    font-size: 18px;
+    font-size: 22px;
   }
-  .card {
-    padding: 12px;
-    border-radius: 10px;
+  .subtabs {
+    gap: 4px;
+    padding: 4px;
   }
-  :deep(.el-dialog) {
-    width: 92% !important;
-    margin: 0 auto;
-  }
-  :deep(.el-form-item__label) {
+  .subtab {
+    padding: 8px 12px;
     font-size: 13px;
   }
-  :deep(.el-tree-node__content) {
-    height: auto;
-    min-height: 32px;
-    padding-right: 4px;
+  .node-acts {
+    opacity: 1;
+  }
+  .node-row {
+    gap: 8px;
+    padding: 10px 10px;
+  }
+  .node-ico {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+  .node-name {
+    font-size: 13.5px;
+  }
+  .children {
+    margin-left: 16px;
+    padding-left: 10px;
   }
 }
 </style>

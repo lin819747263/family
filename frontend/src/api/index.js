@@ -222,3 +222,78 @@ export const annualGoalApi = {
   remove: id => request.delete(`/annual-goals/${id}`),
   getStats: params => request.get('/annual-goals/stats', { params })
 }
+
+// ===== 奶茶收藏 =====
+export const drinkApi = {
+  getList: params => request.get('/drink', { params }),
+  create: data => request.post('/drink', data),
+  update: (id, data) => request.put(`/drink/${id}`, data),
+  remove: id => request.delete(`/drink/${id}`),
+  toggleFav: id => request.put(`/drink/${id}/fav`)
+}
+
+// ===== 打卡小店 =====
+export const funShopApi = {
+  getList: params => request.get('/fun-shop', { params }),
+  create: data => request.post('/fun-shop', data),
+  update: (id, data) => request.put(`/fun-shop/${id}`, data),
+  remove: id => request.delete(`/fun-shop/${id}`),
+  toggleCheck: id => request.put(`/fun-shop/${id}/check`)
+}
+
+// ===== 出游景点 =====
+export const funPlaceApi = {
+  getList: params => request.get('/fun-place', { params }),
+  create: data => request.post('/fun-place', data),
+  update: (id, data) => request.put(`/fun-place/${id}`, data),
+  remove: id => request.delete(`/fun-place/${id}`),
+  toggleWish: id => request.put(`/fun-place/${id}/wish`)
+}
+
+// ===== 时令水果 =====
+export const funFruitApi = {
+  getList: params => request.get('/fun-fruit', { params }),
+  create: data => request.post('/fun-fruit', data),
+  update: (id, data) => request.put(`/fun-fruit/${id}`, data),
+  remove: id => request.delete(`/fun-fruit/${id}`)
+}
+
+// ===== 宠物档案 =====
+export const petApi = {
+  getList: params => request.get('/pet', { params }),
+  create: data => request.post('/pet', data),
+  update: (id, data) => request.put(`/pet/${id}`, data),
+  remove: id => request.delete(`/pet/${id}`)
+}
+
+// ===== 成就墙 =====
+export const achievementApi = {
+  getList: params => request.get('/achievement', { params }),
+  create: data => request.post('/achievement', data),
+  update: (id, data) => request.put(`/achievement/${id}`, data),
+  remove: id => request.delete(`/achievement/${id}`)
+}
+
+// ===== 情绪打卡 =====
+export const moodRecordApi = {
+  getList: params => request.get('/mood-record', { params }),
+  create: data => request.post('/mood-record', data),
+  update: (id, data) => request.put(`/mood-record/${id}`, data),
+  remove: id => request.delete(`/mood-record/${id}`)
+}
+
+// ===== 人生时间轴 =====
+export const timelineEventApi = {
+  getList: params => request.get('/timeline-event', { params }),
+  create: data => request.post('/timeline-event', data),
+  update: (id, data) => request.put(`/timeline-event/${id}`, data),
+  remove: id => request.delete(`/timeline-event/${id}`)
+}
+
+// ===== 说明书库 =====
+export const manualApi = {
+  getList: params => request.get('/manual', { params }),
+  create: data => request.post('/manual', data),
+  update: (id, data) => request.put(`/manual/${id}`, data),
+  remove: id => request.delete(`/manual/${id}`)
+}

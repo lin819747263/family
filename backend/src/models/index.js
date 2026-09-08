@@ -53,6 +53,15 @@ const Diary = require('./Diary')(sequelize);
 const SystemSetting = require('./SystemSetting')(sequelize);
 const Investment = require('./Investment')(sequelize);
 const AnnualGoal = require('./AnnualGoal')(sequelize);
+const Drink = require('./Drink')(sequelize);
+const FunShop = require('./FunShop')(sequelize);
+const FunPlace = require('./FunPlace')(sequelize);
+const FunFruit = require('./FunFruit')(sequelize);
+const Pet = require('./Pet')(sequelize);
+const Achievement = require('./Achievement')(sequelize);
+const MoodRecord = require('./MoodRecord')(sequelize);
+const TimelineEvent = require('./TimelineEvent')(sequelize);
+const Manual = require('./Manual')(sequelize);
 
 // 关联关系定义
 // 家庭 - 用户
@@ -184,6 +193,45 @@ Investment.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
 AnnualGoal.belongsTo(Family, { foreignKey: 'family_id' });
 AnnualGoal.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
 
+// 奶茶收藏
+Drink.belongsTo(Family, { foreignKey: 'family_id' });
+Drink.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+
+// 打卡小店
+FunShop.belongsTo(Family, { foreignKey: 'family_id' });
+FunShop.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+
+// 出游景点
+FunPlace.belongsTo(Family, { foreignKey: 'family_id' });
+FunPlace.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+
+// 时令水果
+FunFruit.belongsTo(Family, { foreignKey: 'family_id' });
+FunFruit.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+
+// 宠物
+Pet.belongsTo(Family, { foreignKey: 'family_id' });
+Pet.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+
+// 成就
+Achievement.belongsTo(Family, { foreignKey: 'family_id' });
+Achievement.belongsTo(MemberProfile, { foreignKey: 'profile_id', as: 'profile' });
+Achievement.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+
+// 情绪打卡
+MoodRecord.belongsTo(Family, { foreignKey: 'family_id' });
+MoodRecord.belongsTo(MemberProfile, { foreignKey: 'profile_id', as: 'profile' });
+MoodRecord.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+
+// 时间轴
+TimelineEvent.belongsTo(Family, { foreignKey: 'family_id' });
+TimelineEvent.belongsTo(MemberProfile, { foreignKey: 'profile_id', as: 'profile' });
+TimelineEvent.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+
+// 说明书
+Manual.belongsTo(Family, { foreignKey: 'family_id' });
+Manual.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+
 module.exports = {
   sequelize,
   User, Family, FamilyMember,
@@ -196,5 +244,7 @@ module.exports = {
   Todo,
   MemberProfile, WeightRecord, HeightRecord,
   Wishlist, Diary, SystemSetting,
-  Investment, AnnualGoal
+  Investment, AnnualGoal,
+  Drink, FunShop, FunPlace, FunFruit,
+  Pet, Achievement, MoodRecord, TimelineEvent, Manual
 };

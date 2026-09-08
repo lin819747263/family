@@ -47,7 +47,7 @@ const routes = [
           { path: 'wishlist', name: 'ReminderWishlist', component: () => import('@/views/wishlist/Index.vue') }
         ]
       },
-      { path: 'recipe', name: 'Recipe', component: () => import('@/views/recipe/Index.vue') },
+      { path: 'fun', name: 'Fun', component: () => import('@/views/fun/Index.vue') },
       { path: 'member', name: 'MemberProfile', component: () => import('@/views/member/Index.vue') },
       { path: 'wishlist', name: 'Wishlist', component: () => import('@/views/wishlist/Index.vue') },
       { path: 'diary', name: 'Diary', component: () => import('@/views/diary/Index.vue') },

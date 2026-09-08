@@ -7,7 +7,7 @@ const dayjs = require('dayjs');
 exports.create = async (req, res, next) => {
   try {
     const { familyId, userId, name, gender, birthday, height, bloodType, phone,
-      favoriteFoods, dislikedFoods, hobbies, allergies, notes } = req.body;
+      favoriteFoods, dislikedFoods, hobbies, allergies, notes, nickname, mbti, solarDate, lunarBirthday } = req.body;
     if (!name) return res.status(400).json({ code: 400, message: '请输入姓名' });
 
     const profile = await MemberProfile.create({
@@ -16,7 +16,7 @@ exports.create = async (req, res, next) => {
       dislikedFoods: stringifyArray(dislikedFoods),
       hobbies: stringifyArray(hobbies),
       allergies: stringifyArray(allergies),
-      notes,
+      notes, nickname, mbti, solarDate, lunarBirthday,
       createdBy: req.userId
     });
     res.status(201).json({ code: 0, data: profile, message: '创建成功' });
@@ -80,13 +80,13 @@ exports.update = async (req, res, next) => {
     if (!profile || profile.status === 'deleted') return res.status(404).json({ code: 404, message: '成员不存在' });
 
     const allowed = (({ userId, name, gender, birthday, height, bloodType, phone,
-      favoriteFoods, dislikedFoods, hobbies, allergies, notes }) =>
+      favoriteFoods, dislikedFoods, hobbies, allergies, notes, nickname, mbti, solarDate, lunarBirthday }) =>
       ({ userId, name, gender, birthday, height, bloodType, phone,
         favoriteFoods: stringifyArray(favoriteFoods),
         dislikedFoods: stringifyArray(dislikedFoods),
         hobbies: stringifyArray(hobbies),
         allergies: stringifyArray(allergies),
-        notes }))(req.body);
+        notes, nickname, mbti, solarDate, lunarBirthday }))(req.body);
 
     await profile.update(allowed);
     res.json({ code: 0, data: profile, message: '更新成功' });

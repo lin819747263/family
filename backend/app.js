@@ -56,6 +56,15 @@ app.use('/api/diary', require('./src/routes/diary'));
 app.use('/api/investment', require('./src/routes/investment'));
 app.use('/api/ai', require('./src/routes/ai'));
 app.use('/api/annual-goals', require('./src/routes/annualGoal'));
+app.use('/api/drink', require('./src/routes/drink'));
+app.use('/api/fun-shop', require('./src/routes/funShop'));
+app.use('/api/fun-place', require('./src/routes/funPlace'));
+app.use('/api/fun-fruit', require('./src/routes/funFruit'));
+app.use('/api/pet', require('./src/routes/pet'));
+app.use('/api/achievement', require('./src/routes/achievement'));
+app.use('/api/mood-record', require('./src/routes/moodRecord'));
+app.use('/api/timeline-event', require('./src/routes/timelineEvent'));
+app.use('/api/manual', require('./src/routes/manual'));
 
 // 健康检查
 app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));

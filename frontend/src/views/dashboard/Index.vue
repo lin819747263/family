@@ -217,7 +217,8 @@
     <section v-else class="moments">
       <div v-for="m in recentMoments" :key="m.id" class="moment reveal" @click="router.push('/album/moments')">
         <div class="moment-img" :class="momentBg(m)">
-          {{ momentEmoji(m) }}
+          <img v-if="m.images?.length" :src="m.images[0]" alt="" class="moment-photo" />
+          <span v-else class="moment-emoji">{{ momentEmoji(m) }}</span>
         </div>
         <div class="moment-body">
           <div class="moment-top">
@@ -709,7 +710,10 @@ onUnmounted(() => {
   box-shadow: var(--shadow-sm);
 }
 .moment:hover { transform: translateY(-6px) rotate(-0.6deg); box-shadow: 0 20px 40px rgba(160, 120, 90, 0.18); }
-.moment-img { height: 130px; display: flex; align-items: center; justify-content: center; font-size: 44px; }
+.moment-img { height: 130px; display: flex; align-items: center; justify-content: center; font-size: 44px; overflow: hidden; position: relative; }
+.moment-photo { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+.moment:hover .moment-photo { transform: scale(1.06); }
+.moment-emoji { font-size: 44px; }
 .m1 { background: linear-gradient(135deg, #F2DCC0, #E7C9A6); }
 .m2 { background: linear-gradient(135deg, #DDE6D2, #C6D2B6); }
 .m3 { background: linear-gradient(135deg, #F3DCDC, #E7C3C3); }

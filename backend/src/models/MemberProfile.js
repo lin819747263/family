@@ -15,6 +15,10 @@ module.exports = (sequelize) => {
     dislikedFoods: { type: DataTypes.TEXT, field: 'disliked_foods', comment: '不爱吃的食物(JSON数组)' },
     hobbies: { type: DataTypes.TEXT, comment: '爱好(JSON数组)' },
     allergies: { type: DataTypes.TEXT, comment: '过敏信息(JSON数组)' },
+    nickname: { type: DataTypes.STRING(50), comment: '昵称' },
+    mbti: { type: DataTypes.STRING(20), comment: 'MBTI类型' },
+    solarDate: { type: DataTypes.STRING(20), field: 'solar_date', comment: '阳历生日(YYYY-MM-DD)' },
+    lunarBirthday: { type: DataTypes.STRING(30), field: 'lunar_birthday', comment: '农历生日' },
     notes: { type: DataTypes.TEXT, comment: '备注' },
     createdBy: { type: DataTypes.INTEGER, allowNull: false, field: 'created_by' },
     status: { type: DataTypes.ENUM('active', 'deleted'), defaultValue: 'active' }

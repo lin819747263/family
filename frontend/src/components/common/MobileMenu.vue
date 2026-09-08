@@ -51,22 +51,22 @@
         <span>物品管理</span>
       </el-menu-item>
 
-      <el-sub-menu index="fun">
-        <template #title>
-          <el-icon><Food /></el-icon>
-          <span>更多</span>
-        </template>
-        <el-menu-item index="/recipe">🍲 菜谱管理</el-menu-item>
-        <el-menu-item index="/investment">💰 理财管理</el-menu-item>
-        <el-menu-item index="/member">👤 成员档案</el-menu-item>
-      </el-sub-menu>
+      <el-menu-item index="/fun">
+        <el-icon><Food /></el-icon>
+        <span>吃喝玩乐</span>
+      </el-menu-item>
+
+      <el-menu-item index="/member">
+        <el-icon><User /></el-icon>
+        <span>档案</span>
+      </el-menu-item>
     </el-menu>
   </el-drawer>
 </template>
 
 <script setup>
 import {
-  DataBoard, Coin, PictureFilled, Box, Bell, Aim, Food, Notebook
+  DataBoard, Coin, PictureFilled, Box, Bell, Aim, Food, Notebook, User
 } from '@element-plus/icons-vue'
 
 defineProps({

@@ -54,15 +54,15 @@
               <span>物品管理</span>
             </el-menu-item>
 
-            <el-sub-menu index="fun">
-              <template #title>
-                <el-icon><Food /></el-icon>
-                <span>更多</span>
-              </template>
-              <el-menu-item index="/recipe">🍲 菜谱管理</el-menu-item>
-              <el-menu-item index="/investment">💰 理财管理</el-menu-item>
-              <el-menu-item index="/member">👤 成员档案</el-menu-item>
-            </el-sub-menu>
+            <el-menu-item index="/fun">
+              <el-icon><Food /></el-icon>
+              <span>吃喝玩乐</span>
+            </el-menu-item>
+
+            <el-menu-item index="/member">
+              <el-icon><User /></el-icon>
+              <span>档案</span>
+            </el-menu-item>
           </el-menu>
         </nav>
 
@@ -365,8 +365,8 @@ function handleUserCmd(cmd) {
   height: 100%;
   display: flex;
   align-items: center;
-  padding: 0 22px;
-  gap: 14px;
+  padding: 0 16px;
+  gap: 8px;
 }
 
 /* Logo */
@@ -375,7 +375,7 @@ function handleUserCmd(cmd) {
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  margin-right: 8px;
+  margin-right: 4px;
   flex-shrink: 0;
   transition: opacity 0.2s;
 }
@@ -422,12 +422,12 @@ function handleUserCmd(cmd) {
 
 .nav-menu :deep(.el-menu-item),
 .nav-menu :deep(.el-sub-menu__title) {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary);
   border-bottom: none !important;
   transition: all 0.25s;
-  padding: 0 14px;
+  padding: 0 10px;
 }
 
 .nav-menu :deep(.el-menu-item:hover),
@@ -483,7 +483,7 @@ function handleUserCmd(cmd) {
 }
 
 .nav-menu :deep(.el-icon) {
-  margin-right: 4px;
+  margin-right: 3px;
 }
 
 /* 确保菜单不溢出 */
@@ -499,7 +499,7 @@ function handleUserCmd(cmd) {
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
-  margin-left: 8px;
+  margin-left: 4px;
 }
 
 .action-badge :deep(.el-badge__content.is-dot) {

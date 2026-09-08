@@ -63,6 +63,7 @@
               <el-icon><User /></el-icon>
               <span>档案</span>
             </el-menu-item>
+
           </el-menu>
         </nav>
 
@@ -422,12 +423,12 @@ function handleUserCmd(cmd) {
 
 .nav-menu :deep(.el-menu-item),
 .nav-menu :deep(.el-sub-menu__title) {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
   color: var(--text-secondary);
   border-bottom: none !important;
   transition: all 0.25s;
-  padding: 0 10px;
+  padding: 0 8px;
 }
 
 .nav-menu :deep(.el-menu-item:hover),

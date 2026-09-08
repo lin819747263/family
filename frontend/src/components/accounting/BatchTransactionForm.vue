@@ -214,6 +214,7 @@ async function handleSubmit() {
   loading.value = true
   let successCount = 0
   let failCount = 0
+  const failedEntries = []
 
   for (const entry of validEntries) {
     try {
@@ -228,6 +229,7 @@ async function handleSubmit() {
       successCount++
     } catch {
       failCount++
+      failedEntries.push(entry)
     }
   }
 
@@ -238,7 +240,9 @@ async function handleSubmit() {
     entries.value = [createEmptyEntry(), createEmptyEntry(), createEmptyEntry()]
     emit('success')
   } else {
-    ElMessage.warning(`成功 ${successCount} 笔，失败 ${failCount} 笔`)
+    ElMessage.warning(`成功 ${successCount} 笔，失败 ${failCount} 笔，失败记录已保留`)
+    // 只保留失败的条目，移除已成功的，避免重复提交
+    entries.value = failedEntries.length > 0 ? failedEntries : [createEmptyEntry()]
     if (successCount > 0) emit('success')
   }
 }

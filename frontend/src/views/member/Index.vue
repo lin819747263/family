@@ -23,7 +23,12 @@
         </button>
       </div>
       <div v-if="!curProfile" class="card empty-card"><p>还没有成员，点击右上角添加</p></div>
-      <div v-else class="id-layout">
+      <div v-else>
+      <div style="display:flex;gap:8px;margin-bottom:14px;">
+        <button class="btn-ghost" @click="openProfileForm(curProfile)">✏️ 编辑成员</button>
+        <button class="btn-ghost" style="color:#B06A6A;" @click="deleteProfile(curProfile.id, curProfile.name)">🗑 删除成员</button>
+      </div>
+      <div class="id-layout">
         <div class="card id-card">
           <div class="id-ava" :style="{ background: getProfileBg(curProfile) }">{{ (curProfile.nickname || curProfile.name || '?')[0] }}</div>
           <div class="id-name">{{ curProfile.name }}</div>
@@ -80,6 +85,19 @@
           </div>
         </div>
       </div>
+      <!-- 身高体重曲线 -->
+      <div class="card chart-section">
+        <div class="chart-head">
+          <div class="chart-title">📈 身高体重记录</div>
+          <div class="chart-tabs">
+            <button class="chart-tab" :class="{ active: chartType === 'weight' }" @click="chartType = 'weight'; renderChart()">体重</button>
+            <button class="chart-tab" :class="{ active: chartType === 'height' }" @click="chartType = 'height'; renderChart()">身高</button>
+          </div>
+        </div>
+        <div ref="chartRef" class="chart-container"></div>
+        <div v-if="!profileRecords.weight.length && !profileRecords.height.length" class="chart-empty">暂无记录，添加成员后可记录身高体重</div>
+      </div>
+      </div>
     </section>
 
     <!-- ===== 时间轴 ===== -->
@@ -102,7 +120,7 @@
               <span v-if="ev.profile" class="tl-who">{{ ev.profile.nickname || ev.profile.name }}</span>
             </div>
             <div v-if="ev.description" class="tl-desc">{{ ev.description }}</div>
-            <div class="tl-date">{{ ev.year }}年{{ ev.month || 1 }}月</div>
+            <div class="tl-date">{{ ev.year }}年{{ ev.month || 1 }}月 · <a class="tl-del" @click.stop="deleteTimeline(ev.id)">删除</a></div>
           </div>
         </div>
         <div v-if="filteredTimeline.length === 0" class="card empty-card"><p>还没有时间轴节点</p></div>
@@ -135,7 +153,7 @@
           <div class="mn-top"><div class="mn-ico" :style="{ background: getManualBg(m.category) }">{{ getManualEmoji(m.category) }}</div><span class="mn-badge" :class="getWarrantyClass(m.warrantyEnd)">{{ getWarrantyText(m.warrantyEnd) }}</span></div>
           <div class="mn-name">{{ m.name }}</div>
           <div class="mn-model">{{ m.modelNo || '未填型号' }}</div>
-          <div class="mn-meta">购买 {{ m.purchaseDate || '-' }} · 保修至 {{ m.warrantyEnd || '-' }}</div>
+          <div class="mn-meta">购买 {{ m.purchaseDate || '-' }} · 保修至 {{ m.warrantyEnd || '-' }} · <a class="tl-del" @click.stop="deleteManual(m.id, m.name)">删除</a></div>
         </div>
         <div v-if="filteredManuals.length === 0" class="card empty-card"><p>还没有归档说明书</p></div>
       </div>
@@ -152,6 +170,10 @@
       </div>
       <div v-if="!curPet" class="card empty-card"><p>还没有宠物档案</p></div>
       <div v-else>
+      <div style="display:flex;gap:8px;margin-bottom:14px;">
+        <button class="btn-ghost" @click="openPetForm(curPet)">✏️ 编辑</button>
+        <button class="btn-ghost" style="color:#B06A6A;" @click="deletePet(curPet.id, curPet.name)">🗑 删除</button>
+      </div>
         <div class="pet-grid">
           <div class="card pet-card">
             <div class="pet-ava" :style="{ background: 'linear-gradient(135deg,rgba(232,179,106,.35),rgba(232,179,106,.12))' }">{{ curPet.emoji || '🐱' }}</div>
@@ -194,6 +216,7 @@
           <div class="aw-foot">
             <span class="aw-who">{{ a.profile?.nickname || a.profile?.name || '-' }}</span>
             <span class="aw-date">{{ a.achievedDate }}</span>
+            <a class="tl-del" @click.stop="deleteAchievement(a.id)">删除</a>
           </div>
         </div>
       </div>
@@ -303,10 +326,11 @@
 
 <script setup>
 import { useFamilyGuard } from "@/composables/useFamilyGuard"
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
 import { memberProfileApi, petApi, achievementApi, moodRecordApi, timelineEventApi, manualApi } from '@/api'
 import { useAuthStore } from '@/store/auth'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import * as echarts from 'echarts'
 import dayjs from 'dayjs'
 
 const authStore = useAuthStore()
@@ -325,6 +349,10 @@ const tabs = [
 // ===== 身份卡 =====
 const profiles = ref([])
 const curProfile = ref(null)
+const chartRef = ref(null)
+const chartType = ref('weight')
+const profileRecords = reactive({ weight: [], height: [] })
+let chartInstance = null
 
 const profileBgs = [
   'linear-gradient(135deg,var(--terracotta),var(--terra-deep))',
@@ -358,8 +386,64 @@ function formatBirthday(d) { return d ? dayjs(d).format('YYYY年M月D日') : '-'
 async function loadProfiles() {
   const res = await memberProfileApi.getList({ familyId: familyId.value })
   profiles.value = res.data
-  if (profiles.value.length && !curProfile.value) curProfile.value = profiles.value[0]
+  if (profiles.value.length && !curProfile.value) {
+    curProfile.value = profiles.value[0]
+    loadProfileDetail(curProfile.value.id)
+  }
 }
+
+async function loadProfileDetail(id) {
+  try {
+    const res = await memberProfileApi.getOne(id)
+    const data = res.data
+    profileRecords.weight = (data.WeightRecords || []).map(r => ({ date: r.recordDate, value: parseFloat(r.weight) })).reverse()
+    profileRecords.height = (data.HeightRecords || []).map(r => ({ date: r.recordDate, value: parseFloat(r.height) })).reverse()
+    // 更新当前档案的体重
+    if (curProfile.value?.id === id) {
+      curProfile.value.WeightRecords = data.WeightRecords
+    }
+    nextTick(renderChart)
+  } catch (e) { console.error(e) }
+}
+
+function renderChart() {
+  if (!chartRef.value) return
+  if (!chartInstance) chartInstance = echarts.init(chartRef.value)
+  const records = chartType.value === 'weight' ? profileRecords.weight : profileRecords.height
+  const unit = chartType.value === 'weight' ? 'kg' : 'cm'
+  const color = chartType.value === 'weight' ? '#C89F85' : '#9FB8C9'
+
+  if (!records.length) {
+    chartInstance.clear()
+    return
+  }
+
+  const labels = records.map(r => dayjs(r.date).format('M月D日'))
+  const values = records.map(r => r.value)
+
+  chartInstance.setOption({
+    tooltip: { trigger: 'axis', formatter: p => `${p[0].axisValue}<br/>${p[0].marker} ${p[0].value} ${unit}` },
+    grid: { left: 50, right: 20, top: 20, bottom: 30 },
+    xAxis: { type: 'category', data: labels, axisLine: { lineStyle: { color: '#E2CDB2' } }, axisLabel: { color: '#A08D7A', fontSize: 11 } },
+    yAxis: { type: 'value', axisLine: { show: false }, splitLine: { lineStyle: { color: 'rgba(226,205,178,.3)' } }, axisLabel: { color: '#A08D7A', fontSize: 11 } },
+    series: [{
+      type: 'line',
+      data: values,
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 8,
+      lineStyle: { color, width: 3 },
+      itemStyle: { color, borderColor: '#fff', borderWidth: 2 },
+      areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+        { offset: 0, color: color + '40' },
+        { offset: 1, color: color + '08' }
+      ]) }
+    }]
+  })
+}
+
+// 切换成员时加载详情
+watch(curProfile, (p) => { if (p?.id) loadProfileDetail(p.id) })
 
 // ===== 时间轴 =====
 const timeline = ref([])
@@ -509,6 +593,23 @@ async function handleSave() {
   } catch (e) { console.error(e) }
 }
 
+// ===== 删除操作 =====
+async function deleteProfile(id, name) {
+  try { await ElMessageBox.confirm(`确定删除成员「${name}」？`, '确认删除', { type: 'warning' }); await memberProfileApi.remove(id); ElMessage.success('已删除'); loadProfiles() } catch (e) { if (e !== 'cancel') console.error(e) }
+}
+async function deleteTimeline(id) {
+  try { await ElMessageBox.confirm('确定删除此时间轴节点？', '确认删除', { type: 'warning' }); await timelineEventApi.remove(id); ElMessage.success('已删除'); loadTimeline() } catch (e) { if (e !== 'cancel') console.error(e) }
+}
+async function deleteManual(id, name) {
+  try { await ElMessageBox.confirm(`确定删除「${name}」？`, '确认删除', { type: 'warning' }); await manualApi.remove(id); ElMessage.success('已删除'); loadManuals() } catch (e) { if (e !== 'cancel') console.error(e) }
+}
+async function deletePet(id, name) {
+  try { await ElMessageBox.confirm(`确定删除宠物「${name}」？`, '确认删除', { type: 'warning' }); await petApi.remove(id); ElMessage.success('已删除'); loadPets() } catch (e) { if (e !== 'cancel') console.error(e) }
+}
+async function deleteAchievement(id) {
+  try { await ElMessageBox.confirm('确定删除此成就？', '确认删除', { type: 'warning' }); await achievementApi.remove(id); ElMessage.success('已删除'); loadAchievements() } catch (e) { if (e !== 'cancel') console.error(e) }
+}
+
 onMounted(async () => {
   if (!await useFamilyGuard()) return
   loadProfiles(); loadTimeline(); loadManuals(); loadPets(); loadAchievements()
@@ -593,6 +694,20 @@ onMounted(async () => {
 .tl-who { margin-left: auto; font-size: 11.5px; font-weight: 700; padding: 2px 10px; border-radius: 999px; background: var(--apricot); color: var(--terra-deep); }
 .tl-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.65; margin-top: 8px; }
 .tl-date { font-size: 11.5px; color: var(--text-secondary); margin-top: 8px; opacity: .8; }
+.tl-del { color: #B06A6A; cursor: pointer; font-weight: 600; text-decoration: none; }
+.tl-del:hover { text-decoration: underline; }
+.btn-ghost { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 11px; border: 1.5px solid var(--border); cursor: pointer; font-size: 13px; font-weight: 600; background: rgba(255,253,250,.85); color: var(--terra-deep); }
+
+/* ===== 身高体重图表 ===== */
+.chart-section { padding: 22px; margin-top: 18px; }
+.chart-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.chart-title { font-size: 15px; font-weight: 800; color: var(--terra-deep); }
+.chart-tabs { display: flex; gap: 4px; background: rgba(243,234,221,.6); border: 1px solid var(--border); padding: 3px; border-radius: 10px; }
+.chart-tab { padding: 6px 14px; border-radius: 8px; border: none; background: transparent; color: var(--text-secondary); font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all .25s; }
+.chart-tab:hover { color: var(--terra-deep); }
+.chart-tab.active { background: var(--bg-card); color: var(--terra-deep); box-shadow: 0 2px 8px rgba(160,120,90,.12); }
+.chart-container { width: 100%; height: 240px; }
+.chart-empty { text-align: center; padding: 30px; color: var(--text-secondary); font-size: 13px; }
 
 /* ===== 说明书库 ===== */
 .alert-card { display: flex; align-items: flex-start; gap: 12px; padding: 16px 18px; margin-bottom: 18px; border: 1.5px solid rgba(232,179,106,.5); background: rgba(232,179,106,.12); }

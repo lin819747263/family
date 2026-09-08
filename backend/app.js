@@ -53,7 +53,6 @@ app.use('/api/member-profile', require('./src/routes/memberProfile'));
 app.use('/api/calendar', require('./src/routes/calendar'));
 app.use('/api/wishlist', require('./src/routes/wishlist'));
 app.use('/api/diary', require('./src/routes/diary'));
-app.use('/api/investment', require('./src/routes/investment'));
 app.use('/api/ai', require('./src/routes/ai'));
 app.use('/api/annual-goals', require('./src/routes/annualGoal'));
 app.use('/api/drink', require('./src/routes/drink'));

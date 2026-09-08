@@ -51,7 +51,6 @@ const HeightRecord = require('./HeightRecord')(sequelize);
 const Wishlist = require('./Wishlist')(sequelize);
 const Diary = require('./Diary')(sequelize);
 const SystemSetting = require('./SystemSetting')(sequelize);
-const Investment = require('./Investment')(sequelize);
 const AnnualGoal = require('./AnnualGoal')(sequelize);
 const Drink = require('./Drink')(sequelize);
 const FunShop = require('./FunShop')(sequelize);
@@ -185,10 +184,6 @@ Wishlist.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
 Diary.belongsTo(Family, { foreignKey: 'family_id' });
 Diary.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
 
-// 理财投资
-Investment.belongsTo(Family, { foreignKey: 'family_id' });
-Investment.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
-
 // 年度目标
 AnnualGoal.belongsTo(Family, { foreignKey: 'family_id' });
 AnnualGoal.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
@@ -244,7 +239,7 @@ module.exports = {
   Todo,
   MemberProfile, WeightRecord, HeightRecord,
   Wishlist, Diary, SystemSetting,
-  Investment, AnnualGoal,
+  AnnualGoal,
   Drink, FunShop, FunPlace, FunFruit,
   Pet, Achievement, MoodRecord, TimelineEvent, Manual
 };

@@ -168,16 +168,6 @@ export const diaryApi = {
   remove: id => request.delete(`/diary/${id}`)
 }
 
-// ===== 理财投资 =====
-export const investmentApi = {
-  getPlatforms: params => request.get('/investment/platforms', { params }),
-  getList: params => request.get('/investment', { params }),
-  upsert: data => request.post('/investment', data),
-  remove: id => request.delete(`/investment/${id}`),
-  getYearlyStats: params => request.get('/investment/stats/yearly', { params }),
-  getMultiYearStats: params => request.get('/investment/stats/multi-year', { params })
-}
-
 // ===== 家庭成员档案 =====
 export const memberProfileApi = {
   getList: params => request.get('/member-profile', { params }),

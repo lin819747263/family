@@ -31,6 +31,16 @@
       </div>
     </div>
 
+    <!-- 加密相册密码验证弹窗 -->
+    <el-dialog v-model="showPassword" title="🔒 加密相册" width="380px" destroy-on-close append-to-body>
+      <div style="margin-bottom:12px;color:var(--text-secondary);font-size:14px;">请输入访问密码</div>
+      <el-input v-model="verifyPassword" type="password" show-password placeholder="输入密码" @keyup.enter="handleVerify" />
+      <template #footer>
+        <el-button @click="showPassword = false">取消</el-button>
+        <el-button type="primary" :loading="verifying" @click="handleVerify">确认</el-button>
+      </template>
+    </el-dialog>
+
     <!-- 创建相册弹窗 -->
     <el-dialog v-model="showCreate" title="创建相册" width="420px" destroy-on-close append-to-body class="warm-dialog">
       <el-form :model="form" label-width="80px">
@@ -68,6 +78,10 @@ const loading = ref(false)
 const showCreate = ref(false)
 const saving = ref(false)
 const form = ref({ name: '', type: 'normal', password: '', description: '' })
+const showPassword = ref(false)
+const verifyPassword = ref('')
+const verifying = ref(false)
+const pendingAlbum = ref(null)
 
 onMounted(async () => {
   if (!await useFamilyGuard()) return
@@ -85,9 +99,24 @@ async function loadAlbums() {
 
 function handleAlbumClick(a) {
   if (a.type === 'encrypted') {
-    // TODO: password prompt
+    pendingAlbum.value = a
+    verifyPassword.value = ''
+    showPassword.value = true
+    return
   }
   router.push(`/album/${a.id}`)
+}
+
+async function handleVerify() {
+  if (!verifyPassword.value) return ElMessage.warning('请输入密码')
+  verifying.value = true
+  try {
+    await albumApi.verifyAlbum(pendingAlbum.value.id, { password: verifyPassword.value })
+    showPassword.value = false
+    router.push(`/album/${pendingAlbum.value.id}`)
+  } catch (e) {
+    ElMessage.error(e.response?.data?.message || '密码错误')
+  } finally { verifying.value = false }
 }
 
 async function handleCreate() {

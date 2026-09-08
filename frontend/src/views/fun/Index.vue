@@ -40,6 +40,7 @@
             </div>
           </div>
           <div class="rview"><span>查看做法</span></div>
+          <button class="card-del" @click.stop="deleteItem('recipe', r.id, r.name)">🗑</button>
         </div>
       </div>
     </section>
@@ -51,6 +52,7 @@
       </div>
       <div class="drink-grid">
         <div v-for="d in drinks" :key="d.id" class="card drink-card">
+          <button class="card-del" @click.stop="deleteItem('drink', d.id, d.name)">🗑</button>
           <div class="dk-top">
             <div class="cup" :style="{ background: getDrinkBg(d.brand) }">{{ getDrinkEmoji(d.brand) }}</div>
             <button class="heart" :class="{ on: d.isFav }" @click="toggleDrinkFav(d)">
@@ -84,6 +86,7 @@
       </div>
       <div class="shop-list">
         <div v-for="s in shops" :key="s.id" class="card shop-card" :class="{ done: s.checkedIn }">
+          <button class="card-del" @click.stop="deleteItem('shop', s.id, s.name)">🗑</button>
           <span class="stamp">已打卡</span>
           <div class="sp-ico" :style="{ background: getShopBg(s.category) }">{{ getShopEmoji(s.category) }}</div>
           <div class="sp-body">
@@ -107,6 +110,7 @@
       </div>
       <div class="place-grid">
         <div v-for="p in places" :key="p.id" class="card place-card">
+          <button class="card-del" @click.stop="deleteItem('place', p.id, p.name)">🗑</button>
           <div class="scene" :style="{ background: getPlaceBg(p.season) }">
             <span class="scene-emoji">{{ getPlaceEmoji(p.season) }}</span>
             <span class="season-tag">{{ seasonLabel[p.season] }}</span>
@@ -139,6 +143,7 @@
       </div>
       <div class="fruit-grid">
         <div v-for="f in fruits" :key="f.id" class="card fruit-card">
+          <button class="card-del" @click.stop="deleteItem('fruit', f.id, f.name)">🗑</button>
           <div class="f-tile" :style="{ background: getFruitBg(f.name) }">{{ f.emoji }}</div>
           <div class="f-name">{{ f.name }}</div>
           <div class="f-months">
@@ -282,7 +287,7 @@ import { useFamilyGuard } from "@/composables/useFamilyGuard"
 import { ref, reactive, computed, onMounted } from 'vue'
 import { recipeApi, drinkApi, funShopApi, funPlaceApi, funFruitApi } from '@/api'
 import { useAuthStore } from '@/store/auth'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const authStore = useAuthStore()
 const activeTab = ref('eat')
@@ -441,6 +446,22 @@ async function handleSave() {
   } catch (e) { console.error(e) }
 }
 
+const deleteApiMap = {
+  recipe: { remove: recipeApi.remove, load: loadRecipes },
+  drink: { remove: drinkApi.remove, load: loadDrinks },
+  shop: { remove: funShopApi.remove, load: loadShops },
+  place: { remove: funPlaceApi.remove, load: loadPlaces },
+  fruit: { remove: funFruitApi.remove, load: loadFruits }
+}
+async function deleteItem(type, id, name) {
+  try {
+    await ElMessageBox.confirm(`确定删除「${name}」？`, '确认删除', { type: 'warning' })
+    await deleteApiMap[type].remove(id)
+    ElMessage.success('已删除')
+    deleteApiMap[type].load()
+  } catch (e) { if (e !== 'cancel') console.error(e) }
+}
+
 onMounted(async () => {
   if (!await useFamilyGuard()) return
   loadRecipes(); loadDrinks(); loadShops(); loadPlaces(); loadFruits()
@@ -470,6 +491,11 @@ onMounted(async () => {
 .fchip.active { background: var(--terracotta); border-color: var(--terracotta); color: #fff; }
 .filter-count { margin-left: auto; font-size: 12.5px; color: var(--text-secondary); }
 .filter-count b { color: var(--terra-deep); }
+
+/* ===== 卡片删除按钮 ===== */
+.card-del { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border-radius: 8px; border: none; background: rgba(255,253,250,.9); color: var(--terra-deep); cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(160,120,90,.15); opacity: 0; transition: all .25s; z-index: 2; }
+.recipe-card:hover .card-del, .drink-card:hover .card-del, .shop-card:hover .card-del, .place-card:hover .card-del, .fruit-card:hover .card-del { opacity: 1; }
+.card-del:hover { background: #B06A6A; color: #fff; }
 
 /* ===== 空状态 ===== */
 .empty-card { text-align: center; padding: 60px 20px; }

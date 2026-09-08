@@ -48,10 +48,10 @@ const routes = [
         ]
       },
       { path: 'fun', name: 'Fun', component: () => import('@/views/fun/Index.vue') },
+      { path: 'recipe', redirect: '/fun' },
       { path: 'member', name: 'MemberProfile', component: () => import('@/views/member/Index.vue') },
       { path: 'wishlist', name: 'Wishlist', component: () => import('@/views/wishlist/Index.vue') },
       { path: 'diary', name: 'Diary', component: () => import('@/views/diary/Index.vue') },
-      { path: 'investment', name: 'Investment', component: () => import('@/views/investment/Index.vue') },
       { path: 'annual-goals', name: 'AnnualGoals', component: () => import('@/views/annual-goals/Index.vue') },
       { path: 'admin', name: 'Admin', component: () => import('@/views/admin/Index.vue') }
     ]

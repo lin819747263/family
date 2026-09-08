@@ -60,6 +60,7 @@
         <el-icon><User /></el-icon>
         <span>档案</span>
       </el-menu-item>
+
     </el-menu>
   </el-drawer>
 </template>

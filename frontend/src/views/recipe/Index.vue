@@ -395,7 +395,7 @@ async function handleUpload(e) {
 }
 .page-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
 }
 .header-actions {
@@ -416,12 +416,12 @@ async function handleUpload(e) {
 .empty-title {
   font-size: 17px;
   font-weight: 600;
-  color: #64748b;
+  color: #A08D7A;
   margin-top: 16px;
 }
 .empty-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 6px;
 }
 
@@ -447,7 +447,7 @@ async function handleUpload(e) {
 
 .rc-image {
   height: 180px;
-  background: #f1f5f9;
+  background: #F3EADD;
   position: relative;
   overflow: hidden;
 }
@@ -462,7 +462,7 @@ async function handleUpload(e) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  background: linear-gradient(135deg, #FBF6EF, #F3EADD);
 }
 .rc-difficulty {
   position: absolute;
@@ -476,7 +476,7 @@ async function handleUpload(e) {
 }
 .rc-difficulty.easy {
   background: rgba(52,211,153,0.2);
-  color: #10b981;
+  color: #A8B08A;
 }
 .rc-difficulty.medium {
   background: rgba(251,191,36,0.2);
@@ -484,7 +484,7 @@ async function handleUpload(e) {
 }
 .rc-difficulty.hard {
   background: rgba(248,113,113,0.2);
-  color: #ef4444;
+  color: #D99A9A;
 }
 
 .rc-body {
@@ -493,12 +493,12 @@ async function handleUpload(e) {
 .rc-name {
   font-size: 17px;
   font-weight: 600;
-  color: #1e293b;
+  color: #6B5744;
   margin-bottom: 6px;
 }
 .rc-desc {
   font-size: 13px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-bottom: 10px;
   line-height: 1.5;
   display: -webkit-box;
@@ -510,7 +510,7 @@ async function handleUpload(e) {
   display: flex;
   gap: 14px;
   font-size: 13px;
-  color: #64748b;
+  color: #A08D7A;
 }
 .rc-meta span {
   display: flex;
@@ -540,12 +540,12 @@ async function handleUpload(e) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: #A08D7A;
   transition: all 0.2s;
 }
 .act-btn:hover {
   background: #fff;
-  color: #64748b;
+  color: #A08D7A;
 }
 .act-btn.danger:hover {
   color: #f87171;
@@ -564,7 +564,7 @@ async function handleUpload(e) {
 .recipe-dialog :deep(.el-dialog__header) {
   padding: 20px 24px 16px;
   margin: 0;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #F3EADD;
 }
 .recipe-dialog :deep(.el-dialog__title) {
   font-size: 17px;
@@ -580,7 +580,7 @@ async function handleUpload(e) {
 .upload-area {
   width: 160px;
   height: 120px;
-  border: 2px dashed #e2e8f0;
+  border: 2px dashed rgba(226,205,178,.7);
   border-radius: 12px;
   cursor: pointer;
   overflow: hidden;
@@ -603,7 +603,7 @@ async function handleUpload(e) {
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  color: #94a3b8;
+  color: #A08D7A;
   font-size: 13px;
 }
 
@@ -646,7 +646,7 @@ async function handleUpload(e) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #cbd5e1;
+  color: #E2CDB2;
   flex-shrink: 0;
   transition: all 0.2s;
 }
@@ -662,7 +662,7 @@ async function handleUpload(e) {
 .view-dialog :deep(.el-dialog__header) {
   padding: 20px 24px 16px;
   margin: 0;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #F3EADD;
 }
 .view-dialog :deep(.el-dialog__body) {
   padding: 0;
@@ -677,7 +677,7 @@ async function handleUpload(e) {
 .view-title {
   font-size: 20px;
   font-weight: 700;
-  color: #1e293b;
+  color: #6B5744;
 }
 
 /* 左右布局 */
@@ -688,7 +688,7 @@ async function handleUpload(e) {
 .view-left {
   width: 320px;
   flex-shrink: 0;
-  border-right: 1px solid #f1f5f9;
+  border-right: 1px solid #F3EADD;
   display: flex;
   flex-direction: column;
 }
@@ -715,7 +715,7 @@ async function handleUpload(e) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  background: linear-gradient(135deg, #FBF6EF, #F3EADD);
 }
 
 .view-info {
@@ -733,25 +733,25 @@ async function handleUpload(e) {
   align-items: center;
   gap: 4px;
   padding: 3px 10px;
-  background: #f1f5f9;
+  background: #F3EADD;
   border-radius: 20px;
   font-size: 12px;
-  color: #64748b;
+  color: #A08D7A;
   font-weight: 500;
 }
-.vi-tag.difficulty.easy { background: rgba(52,211,153,0.1); color: #10b981; }
+.vi-tag.difficulty.easy { background: rgba(52,211,153,0.1); color: #A8B08A; }
 .vi-tag.difficulty.medium { background: rgba(251,191,36,0.1); color: #d97706; }
-.vi-tag.difficulty.hard { background: rgba(248,113,113,0.1); color: #ef4444; }
+.vi-tag.difficulty.hard { background: rgba(248,113,113,0.1); color: #D99A9A; }
 .vi-desc {
   font-size: 13px;
-  color: #64748b;
+  color: #A08D7A;
   line-height: 1.6;
   margin: 0;
 }
 
 .view-section {
   padding: 16px 20px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid #F3EADD;
 }
 .view-section:first-child {
   border-top: none;
@@ -759,7 +759,7 @@ async function handleUpload(e) {
 .vs-title {
   font-size: 17px;
   font-weight: 700;
-  color: #1e293b;
+  color: #6B5744;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -771,8 +771,8 @@ async function handleUpload(e) {
 .vs-count {
   font-size: 12px;
   font-weight: 500;
-  color: #94a3b8;
-  background: #f1f5f9;
+  color: #A08D7A;
+  background: #F3EADD;
   padding: 2px 8px;
   border-radius: 10px;
 }
@@ -787,14 +787,14 @@ async function handleUpload(e) {
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid #f8fafc;
+  border-bottom: 1px solid #FBF6EF;
 }
 .ing-row:last-child {
   border-bottom: none;
 }
 .ing-name {
   font-size: 14px;
-  color: #334155;
+  color: #6B5744;
   font-weight: 500;
 }
 .ing-amount {
@@ -830,7 +830,7 @@ async function handleUpload(e) {
 .step-text {
   flex: 1;
   font-size: 13px;
-  color: #334155;
+  color: #6B5744;
   line-height: 1.6;
   padding-top: 2px;
 }
@@ -842,7 +842,7 @@ async function handleUpload(e) {
   .view-left {
     width: 100%;
     border-right: none;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid #F3EADD;
   }
   .view-right {
     max-height: none;

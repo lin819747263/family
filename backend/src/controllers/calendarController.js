@@ -42,7 +42,7 @@ exports.getMonthEvents = async (req, res, next) => {
             id: json.id,
             title: json.title,
             date: d.format('YYYY-MM-DD'),
-            color: json.color || '#667eea',
+            color: json.color || '#C89F85',
             icon: json.type === 'birthday' ? 'User' : json.type === 'anniversary' ? 'Star' : json.type === 'holiday' ? 'Flag' : 'Calendar',
             annType: json.type,
             lunarDisplay,
@@ -53,14 +53,16 @@ exports.getMonthEvents = async (req, res, next) => {
       }
     }
 
-    // 2. 获取待办
+    // 2. 获取待办（本月有截止日期的 + 无截止日期的显示在今天，排除已归档）
     const todos = await Todo.findAll({
       where: {
         familyId,
         status: 'active',
-        dueDate: {
-          [Op.between]: [startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD')]
-        }
+        archived: false,
+        [Op.or]: [
+          { dueDate: { [Op.between]: [startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD')] } },
+          { dueDate: null }
+        ]
       }
     });
 
@@ -70,11 +72,11 @@ exports.getMonthEvents = async (req, res, next) => {
         type: 'todo',
         id: json.id,
         title: json.title,
-        date: json.dueDate,
+        date: json.dueDate || today.format('YYYY-MM-DD'),
         dueTime: json.dueTime,
         priority: json.priority,
         completed: json.completed,
-        color: json.completed ? '#10b981' : json.priority === 'high' ? '#ef4444' : json.priority === 'medium' ? '#f59e0b' : '#667eea',
+        color: json.completed ? '#A8B08A' : json.priority === 'high' ? '#D99A9A' : json.priority === 'medium' ? '#E8B36A' : '#C89F85',
         icon: 'Finished',
         isToday: dayjs(json.dueDate).isSame(today, 'day'),
         isOverdue: !json.completed && json.dueDate < today.format('YYYY-MM-DD')
@@ -122,7 +124,7 @@ exports.getDayEvents = async (req, res, next) => {
           id: json.id,
           title: json.title,
           date: nextDate,
-          color: json.color || '#667eea',
+          color: json.color || '#C89F85',
           annType: json.type,
           lunarDisplay,
           daysLeft,
@@ -131,11 +133,12 @@ exports.getDayEvents = async (req, res, next) => {
       }
     }
 
-    // 2. 待办
+    // 2. 待办（排除已归档）
     const todos = await Todo.findAll({
       where: {
         familyId,
         status: 'active',
+        archived: false,
         dueDate: date
       }
     });
@@ -150,7 +153,7 @@ exports.getDayEvents = async (req, res, next) => {
         dueTime: json.dueTime,
         priority: json.priority,
         completed: json.completed,
-        color: json.completed ? '#10b981' : json.priority === 'high' ? '#ef4444' : '#f59e0b',
+        color: json.completed ? '#A8B08A' : json.priority === 'high' ? '#D99A9A' : '#E8B36A',
         isOverdue: !json.completed && json.dueDate < today.format('YYYY-MM-DD')
       });
     }

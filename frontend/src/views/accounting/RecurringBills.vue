@@ -35,7 +35,7 @@
 
     <!-- 任务列表 -->
     <div v-if="bills.length === 0" class="empty-card card">
-      <el-icon :size="56" color="#cbd5e1"><Timer /></el-icon>
+      <el-icon :size="56" color="#E2CDB2"><Timer /></el-icon>
       <p class="empty-title">暂无定时任务</p>
       <p class="empty-desc">创建定时记账任务，让物业费、工资、订阅等固定收支自动入账</p>
       <el-button type="primary" @click="openCreate" style="margin-top:12px;">
@@ -154,7 +154,7 @@
         <!-- 每月/每季/每年：选几号 -->
         <el-form-item v-if="['monthly','quarterly','yearly'].includes(form.frequency)" label="执行日">
           <el-input-number v-model="form.dayOfMonth" :min="1" :max="28" />
-          <span style="margin-left:8px;color:#94a3b8;font-size:13px;">号</span>
+          <span style="margin-left:8px;color:#A08D7A;font-size:13px;">号</span>
         </el-form-item>
 
         <!-- 每年：选月份 -->
@@ -171,7 +171,7 @@
         <el-form-item label="有效期">
           <div style="display:flex;gap:8px;align-items:center;width:100%;">
             <el-date-picker v-model="form.startDate" type="date" placeholder="起始日" value-format="YYYY-MM-DD" style="flex:1;" clearable />
-            <span style="color:#94a3b8;">至</span>
+            <span style="color:#A08D7A;">至</span>
             <el-date-picker v-model="form.endDate" type="date" placeholder="长期有效" value-format="YYYY-MM-DD" style="flex:1;" clearable />
           </div>
           <div v-if="!form.endDate" style="font-size:12px;color:#8b5cf6;margin-top:4px;">💡 不设截止日期 = 长期有效</div>
@@ -353,7 +353,7 @@ async function handleDelete(id) {
 }
 .page-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
 }
 .header-actions {
@@ -381,12 +381,12 @@ async function handleDelete(id) {
 .ms-num {
   font-size: 20px;
   font-weight: 700;
-  color: #1e293b;
+  color: #6B5744;
 }
 .ms-num.active { color: #34d399; }
 .ms-lbl {
   font-size: 13px;
-  color: #94a3b8;
+  color: #A08D7A;
 }
 
 /* 空状态 */
@@ -397,12 +397,12 @@ async function handleDelete(id) {
 .empty-title {
   font-size: 17px;
   font-weight: 600;
-  color: #64748b;
+  color: #A08D7A;
   margin-top: 16px;
 }
 .empty-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 6px;
   max-width: 360px;
   margin-left: auto;
@@ -451,22 +451,22 @@ async function handleDelete(id) {
   color: #fff;
 }
 .bill-icon.expense {
-  background: linear-gradient(135deg, #f87171, #ef4444);
+  background: linear-gradient(135deg, #f87171, #D99A9A);
 }
 .bill-icon.income {
-  background: linear-gradient(135deg, #34d399, #10b981);
+  background: linear-gradient(135deg, #34d399, #A8B08A);
 }
 
 .bill-name {
   font-size: 15px;
   font-weight: 600;
-  color: #1e293b;
+  color: #6B5744;
   display: flex;
   align-items: center;
 }
 .bill-meta {
   font-size: 13px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 3px;
   display: flex;
   align-items: center;
@@ -496,7 +496,7 @@ async function handleDelete(id) {
 .bill-amount.income { color: #34d399; }
 .bill-runs {
   font-size: 12px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 2px;
 }
 
@@ -516,20 +516,20 @@ async function handleDelete(id) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: #A08D7A;
   font-size: 16px;
   transition: all 0.2s;
 }
 .act-btn:hover:not(:disabled) {
-  background: #f1f5f9;
-  color: #64748b;
+  background: #F3EADD;
+  color: #A08D7A;
 }
 .act-btn.active {
   color: #34d399;
 }
 .act-btn.active:hover {
   background: rgba(52,211,153,0.1);
-  color: #10b981;
+  color: #A8B08A;
 }
 .act-btn.danger:hover {
   background: #fef2f2;
@@ -547,7 +547,7 @@ async function handleDelete(id) {
 .form-dialog :deep(.el-dialog__header) {
   padding: 20px 24px 16px;
   margin: 0;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #F3EADD;
 }
 .form-dialog :deep(.el-dialog__title) {
   font-size: 17px;

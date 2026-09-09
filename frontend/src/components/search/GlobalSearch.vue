@@ -361,10 +361,10 @@ watch(() => props.visible, (val) => {
   align-items: center;
   gap: 12px;
   padding: 16px 20px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #F3EADD;
 }
 .search-icon {
-  color: #94a3b8;
+  color: #A08D7A;
   flex-shrink: 0;
 }
 .search-input {
@@ -372,12 +372,12 @@ watch(() => props.visible, (val) => {
   border: none;
   outline: none;
   font-size: 16px;
-  color: #1e293b;
+  color: #6B5744;
   background: transparent;
   line-height: 1.5;
 }
 .search-input::placeholder {
-  color: #94a3b8;
+  color: #A08D7A;
 }
 .search-shortcut {
   flex-shrink: 0;
@@ -387,9 +387,9 @@ watch(() => props.visible, (val) => {
   padding: 2px 6px;
   font-size: 11px;
   font-family: inherit;
-  color: #94a3b8;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  color: #A08D7A;
+  background: #F3EADD;
+  border: 1px solid rgba(226,205,178,.7);
   border-radius: 4px;
 }
 
@@ -403,7 +403,7 @@ watch(() => props.visible, (val) => {
 .search-empty {
   text-align: center;
   padding: 32px 20px;
-  color: #94a3b8;
+  color: #A08D7A;
 }
 .search-empty-icon {
   font-size: 36px;
@@ -419,15 +419,15 @@ watch(() => props.visible, (val) => {
   gap: 16px;
   margin-top: 16px;
   font-size: 12px;
-  color: #cbd5e1;
+  color: #E2CDB2;
 }
 .search-tips kbd {
   display: inline-block;
   padding: 1px 5px;
   font-size: 11px;
   font-family: inherit;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  background: #F3EADD;
+  border: 1px solid rgba(226,205,178,.7);
   border-radius: 3px;
   margin-right: 4px;
 }
@@ -438,7 +438,7 @@ watch(() => props.visible, (val) => {
   justify-content: center;
   gap: 8px;
   padding: 32px;
-  color: #94a3b8;
+  color: #A08D7A;
   font-size: 14px;
 }
 
@@ -453,7 +453,7 @@ watch(() => props.visible, (val) => {
   padding: 8px 12px 4px;
   font-size: 12px;
   font-weight: 600;
-  color: #94a3b8;
+  color: #A08D7A;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -462,10 +462,10 @@ watch(() => props.visible, (val) => {
 }
 .group-count {
   font-size: 11px;
-  background: #f1f5f9;
+  background: #F3EADD;
   padding: 1px 6px;
   border-radius: 10px;
-  color: #94a3b8;
+  color: #A08D7A;
 }
 
 /* 结果项 */
@@ -480,7 +480,7 @@ watch(() => props.visible, (val) => {
 }
 .result-item:hover,
 .result-item.active {
-  background: #f1f5f9;
+  background: #F3EADD;
 }
 .result-item.active {
   background: rgba(102, 126, 234, 0.08);
@@ -502,7 +502,7 @@ watch(() => props.visible, (val) => {
 .result-title {
   font-size: 14px;
   font-weight: 500;
-  color: #1e293b;
+  color: #6B5744;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -515,7 +515,7 @@ watch(() => props.visible, (val) => {
 }
 .result-desc {
   font-size: 12px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 2px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -529,11 +529,11 @@ watch(() => props.visible, (val) => {
 }
 .result-meta {
   font-size: 12px;
-  color: #cbd5e1;
+  color: #E2CDB2;
   flex-shrink: 0;
 }
 .result-arrow {
-  color: #cbd5e1;
+  color: #E2CDB2;
   font-size: 14px;
   flex-shrink: 0;
   opacity: 0;
@@ -549,9 +549,9 @@ watch(() => props.visible, (val) => {
   display: flex;
   justify-content: center;
   padding: 10px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid #F3EADD;
   font-size: 11px;
-  color: #cbd5e1;
+  color: #E2CDB2;
 }
 
 /* 响应式 */

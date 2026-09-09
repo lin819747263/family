@@ -15,7 +15,7 @@
 
     <div v-if="loading" class="card" style="text-align:center;padding:60px;">
       <el-icon class="is-loading" :size="32"><Loading /></el-icon>
-      <p style="margin-top:12px;color:#94a3b8;">正在生成年度报告...</p>
+      <p style="margin-top:12px;color:#A08D7A;">正在生成年度报告...</p>
     </div>
 
     <template v-else>
@@ -311,68 +311,68 @@ function renderChart() {
 @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
 .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-.page-title { font-size: 24px; font-weight: 800; color: #1e293b; }
-.page-desc { font-size: 14px; color: #94a3b8; margin-top: 4px; }
+.page-title { font-size: 24px; font-weight: 800; color: #6B5744; }
+.page-desc { font-size: 14px; color: #A08D7A; margin-top: 4px; }
 .header-actions { display: flex; gap: 8px; }
-.card { background: #fff; border: 1px solid #f1f5f9; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+.card { background: #fff; border: 1px solid #F3EADD; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
 
 /* 总览卡片 */
 .overview-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
 .ov-card {
   display: flex; align-items: center; gap: 14px;
   padding: 20px; border-radius: 16px; background: #fff;
-  border: 1px solid #f1f5f9; transition: all 0.25s;
+  border: 1px solid #F3EADD; transition: all 0.25s;
 }
 .ov-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
 .ov-icon { font-size: 32px; }
-.ov-label { font-size: 12px; color: #94a3b8; margin-bottom: 4px; }
-.ov-value { font-size: 22px; font-weight: 800; color: #1e293b; }
-.ov-value.positive { color: #10b981; }
-.ov-value.negative { color: #ef4444; }
+.ov-label { font-size: 12px; color: #A08D7A; margin-bottom: 4px; }
+.ov-value { font-size: 22px; font-weight: 800; color: #6B5744; }
+.ov-value.positive { color: #A8B08A; }
+.ov-value.negative { color: #D99A9A; }
 
 /* 图表 */
 .chart-card { padding: 20px; }
-.chart-title { font-size: 17px; font-weight: 700; color: #1e293b; margin-bottom: 16px; }
+.chart-title { font-size: 17px; font-weight: 700; color: #6B5744; margin-bottom: 16px; }
 .chart-box { width: 100%; height: 300px; }
 
 /* 排行 */
 .rank-list { display: flex; flex-direction: column; gap: 12px; }
 .rank-item { display: flex; align-items: center; gap: 12px; }
 .rank-num {
-  width: 24px; height: 24px; border-radius: 6px; background: #f1f5f9;
+  width: 24px; height: 24px; border-radius: 6px; background: #F3EADD;
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 700; color: #64748b; flex-shrink: 0;
+  font-size: 12px; font-weight: 700; color: #A08D7A; flex-shrink: 0;
 }
 .rank-num.top { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; }
 .rank-info { flex: 1; min-width: 0; }
-.rank-name { font-size: 14px; color: #1e293b; margin-bottom: 4px; }
-.rank-bar-wrap { height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden; }
+.rank-name { font-size: 14px; color: #6B5744; margin-bottom: 4px; }
+.rank-bar-wrap { height: 8px; background: #F3EADD; border-radius: 4px; overflow: hidden; }
 .rank-bar { height: 100%; border-radius: 4px; transition: width 0.6s ease; min-width: 4px; }
-.rank-amount { font-size: 14px; font-weight: 700; color: #1e293b; flex-shrink: 0; min-width: 80px; text-align: right; }
-.rank-pct { font-size: 12px; color: #94a3b8; flex-shrink: 0; width: 36px; text-align: right; }
+.rank-amount { font-size: 14px; font-weight: 700; color: #6B5744; flex-shrink: 0; min-width: 80px; text-align: right; }
+.rank-pct { font-size: 12px; color: #A08D7A; flex-shrink: 0; width: 36px; text-align: right; }
 
 /* 消费习惯 */
 .habits-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
 .habit-item {
   display: flex; flex-direction: column; align-items: center; gap: 6px;
-  padding: 18px; border-radius: 14px; background: #f8fafc;
+  padding: 18px; border-radius: 14px; background: #FBF6EF;
 }
 .habit-emoji { font-size: 28px; }
-.habit-label { font-size: 12px; color: #94a3b8; }
-.habit-value { font-size: 20px; font-weight: 800; color: #1e293b; }
-.habit-note { font-size: 11px; color: #94a3b8; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.habit-label { font-size: 12px; color: #A08D7A; }
+.habit-value { font-size: 20px; font-weight: 800; color: #6B5744; }
+.habit-note { font-size: 11px; color: #A08D7A; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
 
 /* 成员对比 */
 .member-compare { display: flex; flex-direction: column; gap: 14px; }
 .member-row { display: flex; align-items: center; gap: 12px; }
-.member-name { font-size: 14px; color: #1e293b; width: 60px; flex-shrink: 0; }
-.member-bar-wrap { flex: 1; height: 28px; background: #f1f5f9; border-radius: 8px; overflow: hidden; }
+.member-name { font-size: 14px; color: #6B5744; width: 60px; flex-shrink: 0; }
+.member-bar-wrap { flex: 1; height: 28px; background: #F3EADD; border-radius: 8px; overflow: hidden; }
 .member-bar {
   height: 100%; border-radius: 8px; display: flex; align-items: center;
   padding: 0 10px; font-size: 12px; font-weight: 600; color: #fff;
   transition: width 0.6s ease; white-space: nowrap;
 }
-.expense-bar { background: linear-gradient(135deg, #ef4444, #f97316); }
+.expense-bar { background: linear-gradient(135deg, #D99A9A, #f97316); }
 
 /* 年度总结 */
 .summary-card { text-align: center; padding: 32px; background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: #fff; }
@@ -381,7 +381,7 @@ function renderChart() {
 .summary-text { font-size: 15px; line-height: 1.8; opacity: 0.9; }
 .summary-text strong { color: #fbbf24; }
 
-.empty-state { text-align: center; padding: 40px; color: #94a3b8; }
+.empty-state { text-align: center; padding: 40px; color: #A08D7A; }
 
 @media (max-width: 768px) {
   .overview-cards { grid-template-columns: repeat(2, 1fr); }

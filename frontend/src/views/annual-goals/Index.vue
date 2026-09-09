@@ -47,7 +47,7 @@
 
     <!-- 空状态 -->
     <div v-else-if="list.length === 0" class="card empty-card">
-      <el-icon :size="56" color="#cbd5e1"><Aim /></el-icon>
+      <el-icon :size="56" color="#E2CDB2"><Aim /></el-icon>
       <p class="empty-title">还没有年度目标</p>
       <p class="empty-desc">设定目标，让这一年更有意义</p>
       <el-button type="primary" @click="openCreate" style="margin-top:12px;">
@@ -394,7 +394,7 @@ function categoryType(c) {
 }
 .page-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
 }
 .header-actions {
@@ -421,14 +421,14 @@ function categoryType(c) {
 .ms-num {
   font-size: 24px;
   font-weight: 700;
-  color: #1e293b;
+  color: #6B5744;
 }
 .ms-num.active { color: #667eea; }
 .ms-num.done { color: #34d399; }
-.ms-num.rate { color: #f59e0b; }
+.ms-num.rate { color: #E8B36A; }
 .ms-lbl {
   font-size: 12px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
 }
 
@@ -440,12 +440,12 @@ function categoryType(c) {
 .empty-title {
   font-size: 16px;
   font-weight: 600;
-  color: #475569;
+  color: #A08D7A;
   margin-top: 16px;
 }
 .empty-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 8px;
 }
 
@@ -470,7 +470,7 @@ function categoryType(c) {
 }
 .goal-card.completed .goal-title {
   text-decoration: line-through;
-  color: #94a3b8;
+  color: #A08D7A;
 }
 .goal-card.cancelled {
   opacity: 0.5;
@@ -482,13 +482,13 @@ function categoryType(c) {
   border-left: 3px solid #667eea;
 }
 .goal-card.category-finance {
-  border-left: 3px solid #f59e0b;
+  border-left: 3px solid #E8B36A;
 }
 .goal-card.category-life {
   border-left: 3px solid #06b6d4;
 }
 .goal-card.category-other {
-  border-left: 3px solid #94a3b8;
+  border-left: 3px solid #A08D7A;
 }
 
 .goal-header {
@@ -511,12 +511,12 @@ function categoryType(c) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: #A08D7A;
   transition: all 0.2s;
 }
 .goal-more:hover {
-  background: #f1f5f9;
-  color: #64748b;
+  background: #F3EADD;
+  color: #A08D7A;
 }
 
 .goal-body {
@@ -525,12 +525,12 @@ function categoryType(c) {
 .goal-title {
   font-size: 16px;
   font-weight: 600;
-  color: #1e293b;
+  color: #6B5744;
   line-height: 1.4;
 }
 .goal-desc {
   font-size: 13px;
-  color: #64748b;
+  color: #A08D7A;
   margin-top: 8px;
   line-height: 1.5;
   display: -webkit-box;
@@ -551,7 +551,7 @@ function categoryType(c) {
 }
 .progress-label {
   font-size: 12px;
-  color: #94a3b8;
+  color: #A08D7A;
 }
 .progress-value {
   font-size: 14px;
@@ -566,7 +566,7 @@ function categoryType(c) {
   gap: 8px;
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid #F3EADD;
 }
 .quarter-item {
   display: flex;
@@ -575,7 +575,7 @@ function categoryType(c) {
   gap: 4px;
   padding: 6px;
   border-radius: 6px;
-  background: #f8fafc;
+  background: #FBF6EF;
 }
 .quarter-item.active {
   background: #e0e7ff;
@@ -584,11 +584,11 @@ function categoryType(c) {
 .quarter-label {
   font-size: 11px;
   font-weight: 600;
-  color: #64748b;
+  color: #A08D7A;
 }
 .quarter-value {
   font-size: 10px;
-  color: #94a3b8;
+  color: #A08D7A;
 }
 .quarter-progress-form {
   display: grid;
@@ -601,7 +601,7 @@ function categoryType(c) {
   justify-content: space-between;
   align-items: center;
   padding: 10px 16px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid #F3EADD;
   background: #fafbfc;
 }
 .goal-meta {
@@ -617,7 +617,7 @@ function categoryType(c) {
 }
 .goal-creator {
   font-size: 12px;
-  color: #94a3b8;
+  color: #A08D7A;
 }
 .goal-completed {
   font-size: 12px;

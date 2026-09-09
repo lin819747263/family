@@ -327,7 +327,7 @@ watch(() => props.visible, (val) => {
 .chat-empty {
   text-align: center;
   padding: 40px 20px;
-  color: #94a3b8;
+  color: #A08D7A;
 }
 .chat-empty-icon {
   font-size: 48px;
@@ -339,7 +339,7 @@ watch(() => props.visible, (val) => {
 }
 .chat-empty-hint {
   font-size: 12px !important;
-  color: #cbd5e1;
+  color: #E2CDB2;
 }
 .chat-suggestions {
   display: flex;
@@ -349,10 +349,10 @@ watch(() => props.visible, (val) => {
 }
 .suggestion-btn {
   padding: 10px 16px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(226,205,178,.7);
   border-radius: 10px;
-  background: #f8fafc;
-  color: #475569;
+  background: #FBF6EF;
+  color: #A08D7A;
   font-size: 13px;
   cursor: pointer;
   transition: all 0.2s;
@@ -395,8 +395,8 @@ watch(() => props.visible, (val) => {
   border-bottom-right-radius: 4px;
 }
 .chat-msg.assistant .msg-bubble {
-  background: #f1f5f9;
-  color: #334155;
+  background: #F3EADD;
+  color: #6B5744;
   border-bottom-left-radius: 4px;
 }
 
@@ -418,7 +418,7 @@ watch(() => props.visible, (val) => {
 }
 .txn-card-label {
   font-size: 12px;
-  color: #94a3b8;
+  color: #A08D7A;
   font-weight: 500;
 }
 .txn-card-amount {
@@ -427,10 +427,10 @@ watch(() => props.visible, (val) => {
   margin-bottom: 8px;
 }
 .txn-card-amount.expense {
-  color: #ef4444;
+  color: #D99A9A;
 }
 .txn-card-amount.income {
-  color: #10b981;
+  color: #A8B08A;
 }
 .txn-card-detail {
   display: flex;
@@ -448,11 +448,11 @@ watch(() => props.visible, (val) => {
 }
 .txn-card-note {
   font-size: 12px;
-  color: #94a3b8;
+  color: #A08D7A;
 }
 .txn-card-date {
   font-size: 12px;
-  color: #cbd5e1;
+  color: #E2CDB2;
   margin-bottom: 8px;
 }
 .txn-card-status {
@@ -463,7 +463,7 @@ watch(() => props.visible, (val) => {
   font-weight: 500;
 }
 .txn-card-status.success {
-  color: #10b981;
+  color: #A8B08A;
 }
 
 /* 待办卡片 */
@@ -484,13 +484,13 @@ watch(() => props.visible, (val) => {
 }
 .todo-card-label {
   font-size: 12px;
-  color: #94a3b8;
+  color: #A08D7A;
   font-weight: 500;
 }
 .todo-card-title {
   font-size: 16px;
   font-weight: 600;
-  color: #1e293b;
+  color: #6B5744;
   margin-bottom: 10px;
   line-height: 1.4;
 }
@@ -506,8 +506,8 @@ watch(() => props.visible, (val) => {
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  color: #64748b;
-  background: #f1f5f9;
+  color: #A08D7A;
+  background: #F3EADD;
   padding: 3px 8px;
   border-radius: 6px;
 }
@@ -519,15 +519,15 @@ watch(() => props.visible, (val) => {
 }
 .todo-card-priority.high {
   background: #fef2f2;
-  color: #ef4444;
+  color: #D99A9A;
 }
 .todo-card-priority.medium {
   background: #eff6ff;
-  color: #3b82f6;
+  color: #C89F85;
 }
 .todo-card-priority.low {
-  background: #f1f5f9;
-  color: #94a3b8;
+  background: #F3EADD;
+  color: #A08D7A;
 }
 .todo-card-status {
   display: flex;
@@ -537,7 +537,7 @@ watch(() => props.visible, (val) => {
   font-weight: 500;
 }
 .todo-card-status.success {
-  color: #10b981;
+  color: #A8B08A;
 }
 
 /* Markdown 样式 */
@@ -558,8 +558,8 @@ watch(() => props.visible, (val) => {
   background: rgba(255,255,255,0.2);
 }
 .msg-content :deep(pre) {
-  background: #1e293b;
-  color: #e2e8f0;
+  background: #6B5744;
+  color: rgba(226,205,178,.7);
   padding: 12px;
   border-radius: 8px;
   overflow-x: auto;
@@ -577,7 +577,7 @@ watch(() => props.visible, (val) => {
   border-left: 3px solid #667eea;
   padding-left: 12px;
   margin: 8px 0;
-  color: #64748b;
+  color: #A08D7A;
 }
 
 /* 加载动画 */
@@ -589,7 +589,7 @@ watch(() => props.visible, (val) => {
 .msg-loading span {
   width: 6px;
   height: 6px;
-  background: #94a3b8;
+  background: #A08D7A;
   border-radius: 50%;
   animation: bounce 1.2s infinite;
 }
@@ -606,18 +606,18 @@ watch(() => props.visible, (val) => {
   align-items: flex-end;
   gap: 8px;
   padding: 12px 16px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid #F3EADD;
   background: #fff;
   flex-shrink: 0;
 }
 .chat-input {
   flex: 1;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(226,205,178,.7);
   border-radius: 12px;
   padding: 10px 14px;
   font-size: 14px;
   line-height: 1.5;
-  color: #334155;
+  color: #6B5744;
   resize: none;
   outline: none;
   max-height: 120px;
@@ -628,7 +628,7 @@ watch(() => props.visible, (val) => {
   border-color: #667eea;
 }
 .chat-input::placeholder {
-  color: #94a3b8;
+  color: #A08D7A;
 }
 .chat-send {
   width: 40px;

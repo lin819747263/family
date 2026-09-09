@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container" :class="{ dark: appStore.darkMode }">
+  <div class="app-container">
     <!-- 顶部导航栏 -->
     <header class="top-nav">
       <div class="nav-inner">
@@ -116,14 +116,6 @@
             </button>
           </el-badge>
 
-          <!-- 暗黑模式 -->
-          <button class="action-btn" @click="appStore.toggleDarkMode">
-            <el-icon :size="18">
-              <Moon v-if="!appStore.darkMode" />
-              <Sunny v-else />
-            </el-icon>
-          </button>
-
           <!-- 用户头像 -->
           <el-dropdown trigger="click" @command="handleUserCmd">
             <div class="user-avatar-wrap">
@@ -225,7 +217,7 @@ import MobileMenu from '@/components/common/MobileMenu.vue'
 import NotificationPanel from '@/components/common/NotificationPanel.vue'
 import {
   DataBoard, Coin, PictureFilled, Box, Bell, Expand, Aim, Food,
-  Search, Moon, Sunny, ArrowDown, Download, User, UserFilled,
+  Search, ArrowDown, Download, User, UserFilled,
   Setting, SwitchButton, Notebook, Check, Plus, EditPen, Document
 } from '@element-plus/icons-vue'
 

@@ -266,7 +266,7 @@ function priorityType(p) {
 }
 .page-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
 }
 .header-actions {
@@ -293,13 +293,13 @@ function priorityType(p) {
 .ms-num {
   font-size: 24px;
   font-weight: 700;
-  color: #1e293b;
+  color: #6B5744;
 }
 .ms-num.pending { color: #667eea; }
 .ms-num.done { color: #34d399; }
 .ms-lbl {
   font-size: 12px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
 }
 
@@ -311,12 +311,12 @@ function priorityType(p) {
 .empty-title {
   font-size: 16px;
   font-weight: 600;
-  color: #475569;
+  color: #A08D7A;
   margin-top: 16px;
 }
 .empty-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 8px;
 }
 
@@ -341,7 +341,7 @@ function priorityType(p) {
 }
 .wish-card.fulfilled .wish-title {
   text-decoration: line-through;
-  color: #94a3b8;
+  color: #A08D7A;
 }
 .wish-card.cancelled {
   opacity: 0.5;
@@ -353,7 +353,7 @@ function priorityType(p) {
   border-left: 3px solid #667eea;
 }
 .wish-card.priority-low {
-  border-left: 3px solid #94a3b8;
+  border-left: 3px solid #A08D7A;
 }
 
 .wish-header {
@@ -372,12 +372,12 @@ function priorityType(p) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: #A08D7A;
   transition: all 0.2s;
 }
 .wish-more:hover {
-  background: #f1f5f9;
-  color: #64748b;
+  background: #F3EADD;
+  color: #A08D7A;
 }
 
 .wish-body {
@@ -390,12 +390,12 @@ function priorityType(p) {
 .wish-title {
   font-size: 16px;
   font-weight: 600;
-  color: #1e293b;
+  color: #6B5744;
   line-height: 1.4;
 }
 .wish-desc {
   font-size: 13px;
-  color: #64748b;
+  color: #A08D7A;
   margin-top: 8px;
   line-height: 1.5;
   display: -webkit-box;
@@ -415,7 +415,7 @@ function priorityType(p) {
   justify-content: space-between;
   align-items: center;
   padding: 10px 16px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid #F3EADD;
   background: #fafbfc;
 }
 .wish-meta {
@@ -431,7 +431,7 @@ function priorityType(p) {
 }
 .wish-creator {
   font-size: 12px;
-  color: #94a3b8;
+  color: #A08D7A;
 }
 .wish-fulfilled {
   font-size: 12px;

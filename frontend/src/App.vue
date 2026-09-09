@@ -26,13 +26,6 @@ import { useAppStore } from '@/store/app'
 
 const appStore = useAppStore()
 
-// 同步 dark class 到 html 元素
-function syncDarkClass(val) {
-  document.documentElement.classList.toggle('dark', val)
-}
-syncDarkClass(appStore.darkMode)
-watch(() => appStore.darkMode, syncDarkClass)
-
 // PWA 安装
 const showInstallBanner = ref(false)
 let deferredPrompt = null

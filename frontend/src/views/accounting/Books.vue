@@ -263,7 +263,7 @@ async function handleCreate() {
   box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
 }
 .book-icon.personal {
-  background: linear-gradient(135deg, #34d399, #10b981);
+  background: linear-gradient(135deg, #34d399, #A8B08A);
   box-shadow: 0 4px 14px rgba(52, 211, 153, 0.3);
 }
 
@@ -277,23 +277,23 @@ async function handleCreate() {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: #A08D7A;
   transition: all 0.2s;
 }
 .book-more:hover {
-  background: #f1f5f9;
-  color: #64748b;
+  background: #F3EADD;
+  color: #A08D7A;
 }
 
 .book-name {
   font-size: 17px;
   font-weight: 600;
-  color: #1e293b;
+  color: #6B5744;
   margin-bottom: 4px;
 }
 .book-desc {
   font-size: 13px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-bottom: 14px;
   line-height: 1.5;
 }
@@ -311,7 +311,7 @@ async function handleCreate() {
 }
 .empty-card p {
   margin-top: 12px;
-  color: #94a3b8;
+  color: #A08D7A;
   font-size: 14px;
 }
 
@@ -337,16 +337,16 @@ async function handleCreate() {
 .warn-title {
   font-size: 15px;
   font-weight: 600;
-  color: #1e293b;
+  color: #6B5744;
   margin-bottom: 6px;
 }
 .warn-detail {
   font-size: 13px;
-  color: #64748b;
+  color: #A08D7A;
   line-height: 1.6;
 }
 .warn-detail strong {
-  color: #ef4444;
+  color: #D99A9A;
 }
 
 .force-check {
@@ -354,7 +354,7 @@ async function handleCreate() {
 }
 .force-check :deep(.el-checkbox__label) {
   font-size: 13px;
-  color: #64748b;
+  color: #A08D7A;
 }
 
 /* 弹窗样式 */
@@ -364,7 +364,7 @@ async function handleCreate() {
 .form-dialog :deep(.el-dialog__header) {
   padding: 20px 24px 16px;
   margin: 0;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #F3EADD;
 }
 .form-dialog :deep(.el-dialog__title) {
   font-size: 17px;

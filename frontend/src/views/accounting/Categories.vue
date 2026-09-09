@@ -288,7 +288,7 @@ async function handleDelete(id) {
 }
 .page-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
 }
 
@@ -314,7 +314,7 @@ async function handleDelete(id) {
 }
 .empty-card p {
   margin-top: 12px;
-  color: #94a3b8;
+  color: #A08D7A;
   font-size: 14px;
 }
 
@@ -346,7 +346,7 @@ async function handleDelete(id) {
 }
 
 .cat-parent {
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #F3EADD;
 }
 .cat-parent.builtin {
   background: rgba(248, 250, 252, 0.5);
@@ -371,12 +371,12 @@ async function handleDelete(id) {
 .cat-name {
   font-size: 15px;
   font-weight: 500;
-  color: #1e293b;
+  color: #6B5744;
 }
 
 .cat-child-count {
   font-size: 12px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-left: 4px;
 }
 
@@ -414,12 +414,12 @@ async function handleDelete(id) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: #A08D7A;
   transition: all 0.2s;
 }
 .act-btn:hover:not(:disabled) {
-  background: #f1f5f9;
-  color: #64748b;
+  background: #F3EADD;
+  color: #A08D7A;
 }
 .act-btn.danger:hover {
   background: #fef2f2;
@@ -442,14 +442,14 @@ async function handleDelete(id) {
 .ip-item {
   width: 38px;
   height: 38px;
-  border: 2px solid #e2e8f0;
+  border: 2px solid rgba(226,205,178,.7);
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s;
-  color: #64748b;
+  color: #A08D7A;
 }
 .ip-item:hover {
   border-color: #a5b4fc;
@@ -463,7 +463,7 @@ async function handleDelete(id) {
 
 .form-tip {
   font-size: 12px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
 }
 
@@ -474,7 +474,7 @@ async function handleDelete(id) {
 .form-dialog :deep(.el-dialog__header) {
   padding: 20px 24px 16px;
   margin: 0;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #F3EADD;
 }
 .form-dialog :deep(.el-dialog__title) {
   font-size: 17px;

@@ -219,7 +219,7 @@ async function handleLeave() {
 }
 .page-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
 }
 
@@ -251,11 +251,11 @@ async function handleLeave() {
 .fi-name {
   font-size: 20px;
   font-weight: 700;
-  color: #1e293b;
+  color: #6B5744;
 }
 .fi-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
 }
 
@@ -271,7 +271,7 @@ async function handleLeave() {
 }
 .fi-invite-label {
   font-size: 13px;
-  color: #64748b;
+  color: #A08D7A;
   font-weight: 500;
 }
 .fi-invite-code {
@@ -283,7 +283,7 @@ async function handleLeave() {
 }
 .fi-tip {
   font-size: 13px;
-  color: #94a3b8;
+  color: #A08D7A;
 }
 
 /* 成员列表 */
@@ -312,14 +312,14 @@ async function handleLeave() {
 .mc-name {
   font-size: 15px;
   font-weight: 600;
-  color: #1e293b;
+  color: #6B5744;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 .mc-meta {
   font-size: 13px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
   display: flex;
   gap: 12px;

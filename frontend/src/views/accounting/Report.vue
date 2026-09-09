@@ -469,7 +469,7 @@ async function exportReport(format) {
 }
 .stat-label {
   font-size: 13px;
-  color: #94a3b8;
+  color: #A08D7A;
 }
 
 /* 年度统计 */
@@ -479,7 +479,7 @@ async function exportReport(format) {
 }
 .asc-label {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-bottom: 10px;
 }
 .asc-value {
@@ -501,8 +501,8 @@ async function exportReport(format) {
   align-items: center;
   padding: 10px 12px;
   border-radius: 10px;
-  background: #f8fafc;
-  border: 1px solid #f1f5f9;
+  background: #FBF6EF;
+  border: 1px solid #F3EADD;
 }
 .rank-left {
   display: flex;
@@ -523,7 +523,7 @@ async function exportReport(format) {
 .rank-name {
   font-size: 14px;
   font-weight: 500;
-  color: #334155;
+  color: #6B5744;
 }
 .rank-right {
   display: flex;
@@ -533,11 +533,11 @@ async function exportReport(format) {
 .rank-amount {
   font-size: 15px;
   font-weight: 700;
-  color: #1e293b;
+  color: #6B5744;
 }
 .rank-pct {
   font-size: 13px;
-  color: #94a3b8;
+  color: #A08D7A;
   min-width: 36px;
   text-align: right;
 }
@@ -548,7 +548,7 @@ async function exportReport(format) {
 }
 .empty-state p {
   margin: 0;
-  color: #94a3b8;
+  color: #A08D7A;
   font-size: 13px;
 }
 
@@ -564,18 +564,18 @@ async function exportReport(format) {
 .matrix-table th,
 .matrix-table td {
   padding: 10px 8px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #F3EADD;
   text-align: right;
   white-space: nowrap;
 }
 .matrix-table th {
   font-weight: 600;
-  color: #64748b;
-  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  color: #A08D7A;
+  background: linear-gradient(135deg, #FBF6EF, #F3EADD);
   position: sticky;
   top: 0;
   z-index: 1;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid rgba(226,205,178,.7);
 }
 .matrix-table .col-cat,
 .matrix-table .col-sub {
@@ -584,13 +584,13 @@ async function exportReport(format) {
 .matrix-table .col-cat { width: 110px; }
 .matrix-table .col-sub { width: 120px; }
 .matrix-table .col-month { min-width: 70px; }
-.matrix-table .col-total { min-width: 80px; font-weight: 700; color: #1e293b; }
+.matrix-table .col-total { min-width: 80px; font-weight: 700; color: #6B5744; }
 .matrix-table .col-parent-total { min-width: 90px; font-weight: 700; color: #667eea; }
 
 /* 分组颜色 - 4 种交替色 */
 .group-0 { --group-accent: #667eea; --group-bg: rgba(102, 126, 234, 0.04); --group-bg-hover: rgba(102, 126, 234, 0.08); }
-.group-1 { --group-accent: #10b981; --group-bg: rgba(16, 185, 129, 0.04); --group-bg-hover: rgba(16, 185, 129, 0.08); }
-.group-2 { --group-accent: #f59e0b; --group-bg: rgba(245, 158, 11, 0.04); --group-bg-hover: rgba(245, 158, 11, 0.08); }
+.group-1 { --group-accent: #A8B08A; --group-bg: rgba(16, 185, 129, 0.04); --group-bg-hover: rgba(16, 185, 129, 0.08); }
+.group-2 { --group-accent: #E8B36A; --group-bg: rgba(245, 158, 11, 0.04); --group-bg-hover: rgba(245, 158, 11, 0.08); }
 .group-3 { --group-accent: #ec4899; --group-bg: rgba(236, 72, 153, 0.04); --group-bg-hover: rgba(236, 72, 153, 0.08); }
 
 .parent-row {
@@ -602,7 +602,7 @@ async function exportReport(format) {
 .cell-parent {
   text-align: left !important;
   font-weight: 700;
-  color: #1e293b;
+  color: #6B5744;
   font-size: 14px;
   vertical-align: middle;
   background: var(--group-bg, #fafbff);
@@ -613,13 +613,13 @@ async function exportReport(format) {
   transition: background 0.15s;
 }
 .child-row:hover {
-  background: var(--group-bg-hover, #f8fafc);
+  background: var(--group-bg-hover, #FBF6EF);
 }
 .cell-sub {
   text-align: left !important;
-  color: #475569;
+  color: #A08D7A;
   padding-left: 16px;
-  border-right: 1px solid #f1f5f9;
+  border-right: 1px solid #F3EADD;
   position: relative;
 }
 /* 子分类前的圆点指示器 */
@@ -629,17 +629,17 @@ async function exportReport(format) {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--group-accent, #94a3b8);
+  background: var(--group-accent, #A08D7A);
   margin-right: 8px;
   vertical-align: middle;
   opacity: 0.6;
 }
 .cell-amount {
-  color: #94a3b8;
+  color: #A08D7A;
   font-variant-numeric: tabular-nums;
 }
 .cell-clickable {
-  color: #334155;
+  color: #6B5744;
   cursor: pointer;
   transition: all 0.2s;
   border-radius: 4px;
@@ -651,9 +651,9 @@ async function exportReport(format) {
 }
 .cell-total {
   font-weight: 700;
-  color: #1e293b;
+  color: #6B5744;
   font-variant-numeric: tabular-nums;
-  border-left: 2px solid #e2e8f0;
+  border-left: 2px solid rgba(226,205,178,.7);
 }
 
 /* 年度总计列 */
@@ -677,17 +677,17 @@ async function exportReport(format) {
 .cell-grand-label {
   text-align: left !important;
   font-size: 14px;
-  color: #1e293b;
+  color: #6B5744;
   padding-left: 12px;
 }
 .cell-grand {
-  color: #475569;
+  color: #A08D7A;
   font-variant-numeric: tabular-nums;
 }
 .cell-grand-total {
   color: #f87171;
   font-size: 15px;
-  border-left: 2px solid #e2e8f0;
+  border-left: 2px solid rgba(226,205,178,.7);
 }
 .cell-grand-parent-total {
   color: #667eea;

@@ -52,7 +52,7 @@
       <el-icon class="is-loading" :size="32"><Loading /></el-icon>
     </div>
     <div v-else-if="list.length === 0" class="empty-card card">
-      <el-icon :size="56" color="#cbd5e1"><Finished /></el-icon>
+      <el-icon :size="56" color="#E2CDB2"><Finished /></el-icon>
       <p class="empty-title">{{ filter === 'archived' ? '暂无归档' : filter ? '没有匹配的待办' : '暂无待办' }}</p>
       <p class="empty-desc">{{ filter === 'archived' ? '完成的待办会自动归档到这里' : filter ? '试试切换筛选条件' : '在上方输入框快速添加，或点击右上角创建' }}</p>
     </div>
@@ -71,7 +71,7 @@
           <el-icon v-if="item.completed"><Check /></el-icon>
         </button>
         <div v-else class="ti-archived-icon">
-          <el-icon :size="16" color="#94a3b8"><FolderChecked /></el-icon>
+          <el-icon :size="16" color="#A08D7A"><FolderChecked /></el-icon>
         </div>
 
         <!-- 内容 -->
@@ -277,7 +277,7 @@ const list = ref([])
 const loading = ref(false)
 const filter = ref('')
 const filterPriority = ref('')
-const timeFilter = ref('today')
+const timeFilter = ref('all')
 const quickTitle = ref('')
 const showDialog = ref(false)
 const isEdit = ref(false)
@@ -537,7 +537,7 @@ async function handleDelete(id) {
 }
 .page-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
 }
 .header-actions {
@@ -606,13 +606,13 @@ async function handleDelete(id) {
   color: var(--terracotta);
   line-height: 1.2;
 }
-.stat-card.pending .stat-num { color: #f59e0b; }
-.stat-card.overdue .stat-num { color: #ef4444; }
-.stat-card.done .stat-num { color: #10b981; }
-.stat-card.archived .stat-num { color: #94a3b8; }
+.stat-card.pending .stat-num { color: #E8B36A; }
+.stat-card.overdue .stat-num { color: #D99A9A; }
+.stat-card.done .stat-num { color: #A8B08A; }
+.stat-card.archived .stat-num { color: #A08D7A; }
 .stat-label {
   font-size: 13px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
 }
 
@@ -649,12 +649,12 @@ async function handleDelete(id) {
 .empty-title {
   font-size: 17px;
   font-weight: 600;
-  color: #64748b;
+  color: #A08D7A;
   margin-top: 16px;
 }
 .empty-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 6px;
 }
 
@@ -682,10 +682,10 @@ async function handleDelete(id) {
 }
 .todo-item.archived {
   opacity: 0.5;
-  background: #f8fafc;
+  background: #FBF6EF;
 }
 .todo-item.overdue {
-  border-left: 3px solid #ef4444;
+  border-left: 3px solid #D99A9A;
 }
 .ti-archived-icon {
   width: 24px;
@@ -698,8 +698,8 @@ async function handleDelete(id) {
 }
 .archived-tag {
   font-size: 11px;
-  color: #94a3b8;
-  background: #f1f5f9;
+  color: #A08D7A;
+  background: #F3EADD;
   padding: 0 6px;
   border-radius: 4px;
 }
@@ -732,16 +732,16 @@ async function handleDelete(id) {
 .ti-title {
   font-size: 15px;
   font-weight: 600;
-  color: #1e293b;
+  color: #6B5744;
   line-height: 1.4;
 }
 .ti-title.line-through {
   text-decoration: line-through;
-  color: #94a3b8;
+  color: #A08D7A;
 }
 .ti-desc {
   font-size: 13px;
-  color: #64748b;
+  color: #A08D7A;
   margin-top: 4px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -820,7 +820,7 @@ async function handleDelete(id) {
 
 .repeat-label {
   font-size: 14px;
-  color: #64748b;
+  color: #A08D7A;
 }
 
 .weekday-picker {
@@ -832,14 +832,14 @@ async function handleDelete(id) {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 2px solid #e2e8f0;
+  border: 2px solid rgba(226,205,178,.7);
   background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 13px;
   font-weight: 500;
-  color: #64748b;
+  color: #A08D7A;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -853,7 +853,7 @@ async function handleDelete(id) {
 .repeat-hint {
   margin-left: 8px;
   font-size: 13px;
-  color: #94a3b8;
+  color: #A08D7A;
 }
 
 @media (max-width: 768px) {

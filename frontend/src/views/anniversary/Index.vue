@@ -565,7 +565,7 @@ async function handleDelete(id) {
 }
 .page-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
 }
 .header-actions {
@@ -612,12 +612,12 @@ async function handleDelete(id) {
 .empty-title {
   font-size: 17px;
   font-weight: 600;
-  color: #64748b;
+  color: #A08D7A;
   margin-top: 16px;
 }
 .empty-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 6px;
   max-width: 360px;
   margin-left: auto;
@@ -703,7 +703,7 @@ async function handleDelete(id) {
 }
 .leap-error {
   font-size: 12px;
-  color: #f59e0b;
+  color: #E8B36A;
 }
 
 /* 农历/公历预览 */
@@ -720,7 +720,7 @@ async function handleDelete(id) {
   border-radius: 8px;
 }
 .solar-preview {
-  color: #f59e0b;
+  color: #E8B36A;
   background: rgba(245, 158, 11, 0.06);
 }
 
@@ -748,12 +748,12 @@ async function handleDelete(id) {
 
 .ac-meta {
   font-size: 13px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-bottom: 6px;
 }
 .ac-note {
   font-size: 13px;
-  color: #94a3b8;
+  color: #A08D7A;
   line-height: 1.5;
   margin-bottom: 8px;
   display: -webkit-box;
@@ -788,12 +788,12 @@ async function handleDelete(id) {
   align-items: center;
   gap: 4px;
   padding: 10px 8px;
-  border: 2px solid #e2e8f0;
+  border: 2px solid rgba(226,205,178,.7);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s;
   font-size: 12px;
-  color: #64748b;
+  color: #A08D7A;
 }
 .tp-item:hover { border-color: var(--accent); color: var(--accent); }
 .tp-item.active {
@@ -819,7 +819,7 @@ async function handleDelete(id) {
   transform: scale(1.15);
 }
 .cp-dot.active {
-  border-color: #1e293b;
+  border-color: #6B5744;
   box-shadow: 0 0 0 2px #fff, 0 0 0 4px currentColor;
   transform: scale(1.15);
 }

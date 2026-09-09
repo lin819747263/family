@@ -315,7 +315,7 @@ async function handleSaveSettings() {
 }
 .page-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
 }
 
@@ -340,11 +340,11 @@ async function handleSaveSettings() {
 .stat-value {
   font-size: 22px;
   font-weight: 700;
-  color: #1e293b;
+  color: #6B5744;
 }
 .stat-label {
   font-size: 13px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 2px;
 }
 
@@ -354,7 +354,7 @@ async function handleSaveSettings() {
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #F3EADD;
 }
 .toolbar-left {
   display: flex;
@@ -364,7 +364,7 @@ async function handleSaveSettings() {
 .toolbar-title {
   font-size: 16px;
   font-weight: 600;
-  color: #1e293b;
+  color: #6B5744;
 }
 .toolbar-right {
   display: flex;
@@ -401,14 +401,14 @@ async function handleSaveSettings() {
 .settings-title {
   font-size: 18px;
   font-weight: 700;
-  color: #1e293b;
+  color: #6B5744;
 }
 .settings-form {
   max-width: 600px;
 }
 .form-tip {
   font-size: 12px;
-  color: #94a3b8;
+  color: #A08D7A;
   margin-top: 4px;
 }
 </style>

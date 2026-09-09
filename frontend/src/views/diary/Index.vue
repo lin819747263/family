@@ -351,13 +351,13 @@ defineExpose({ openCreate })
 
 <style scoped>
 .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-.page-desc { font-size: 14px; color: #94a3b8; margin-top: 4px; }
+.page-desc { font-size: 14px; color: #A08D7A; margin-top: 4px; }
 .header-actions { display: flex; gap: 8px; align-items: center; }
 
 /* 空状态 */
 .empty-card { text-align: center; padding: 60px 20px; }
-.empty-title { font-size: 16px; font-weight: 600; color: #475569; margin-top: 16px; }
-.empty-desc { font-size: 14px; color: #94a3b8; margin-top: 8px; }
+.empty-title { font-size: 16px; font-weight: 600; color: #A08D7A; margin-top: 16px; }
+.empty-desc { font-size: 14px; color: #A08D7A; margin-top: 8px; }
 
 /* 日记列表 - 暖色 */
 .diary-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
@@ -395,14 +395,14 @@ defineExpose({ openCreate })
 .pagination-wrap { display: flex; justify-content: center; padding: 16px 0 0; }
 
 /* 查看弹窗 */
-.diary-view-drawer :deep(.el-drawer__header) { padding: 20px 24px 16px; margin: 0; border-bottom: 1px solid #f1f5f9; }
+.diary-view-drawer :deep(.el-drawer__header) { padding: 20px 24px 16px; margin: 0; border-bottom: 1px solid #F3EADD; }
 .diary-view-drawer :deep(.el-drawer__body) { padding: 24px; }
 .view-header { width: 100%; }
-.view-title { font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 8px; }
-.view-meta { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #94a3b8; }
+.view-title { font-size: 20px; font-weight: 700; color: #6B5744; margin-bottom: 8px; }
+.view-meta { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #A08D7A; }
 .view-date { margin-left: 4px; }
-.view-tag { background: #f1f5f9; padding: 2px 8px; border-radius: 6px; font-size: 12px; color: #64748b; }
-.view-content { line-height: 1.8; color: #334155; }
+.view-tag { background: #F3EADD; padding: 2px 8px; border-radius: 6px; font-size: 12px; color: #A08D7A; }
+.view-content { line-height: 1.8; color: #6B5744; }
 .view-footer { display: flex; gap: 8px; }
 
 /* ========== 编辑器全屏 ========== */
@@ -421,60 +421,60 @@ defineExpose({ openCreate })
 /* 顶部栏 */
 .editor-topbar {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 10px 16px; border-bottom: 1px solid #f1f5f9;
+  padding: 10px 16px; border-bottom: 1px solid #F3EADD;
   background: #fff; flex-shrink: 0;
 }
 .editor-topbar-left, .editor-topbar-right { display: flex; align-items: center; gap: 8px; }
-.editor-topbar-title { font-size: 15px; font-weight: 600; color: #1e293b; }
+.editor-topbar-title { font-size: 15px; font-weight: 600; color: #6B5744; }
 .editor-btn {
   width: 36px; height: 36px; border-radius: 8px; border: none;
   background: transparent; cursor: pointer; display: flex;
-  align-items: center; justify-content: center; color: #64748b;
+  align-items: center; justify-content: center; color: #A08D7A;
   transition: all 0.2s;
 }
-.editor-btn:hover { background: #f1f5f9; color: #1e293b; }
-.editor-btn.active { background: #eff6ff; color: #3b82f6; }
+.editor-btn:hover { background: #F3EADD; color: #6B5744; }
+.editor-btn.active { background: #eff6ff; color: #C89F85; }
 
 /* 标题和元信息 */
 .editor-meta-bar { padding: 12px 16px 0; flex-shrink: 0; }
 .editor-title-input {
   width: 100%; border: none; outline: none; font-size: 22px; font-weight: 700;
-  color: #1e293b; padding: 8px 0; background: transparent;
+  color: #6B5744; padding: 8px 0; background: transparent;
 }
-.editor-title-input::placeholder { color: #cbd5e1; }
+.editor-title-input::placeholder { color: #E2CDB2; }
 .editor-meta-fields { display: flex; gap: 12px; margin-top: 8px; }
 .editor-meta-input {
-  border: none; outline: none; font-size: 13px; color: #64748b;
-  background: #f8fafc; padding: 6px 12px; border-radius: 8px; width: 120px;
+  border: none; outline: none; font-size: 13px; color: #A08D7A;
+  background: #FBF6EF; padding: 6px 12px; border-radius: 8px; width: 120px;
 }
-.editor-meta-input::placeholder { color: #cbd5e1; }
+.editor-meta-input::placeholder { color: #E2CDB2; }
 
 /* Markdown 工具栏 */
 .editor-toolbar {
   display: flex; align-items: center; gap: 2px; padding: 8px 16px;
-  border-bottom: 1px solid #f1f5f9; flex-shrink: 0; flex-wrap: wrap;
+  border-bottom: 1px solid #F3EADD; flex-shrink: 0; flex-wrap: wrap;
 }
 .toolbar-btn {
   width: 32px; height: 32px; border-radius: 6px; border: none;
   background: transparent; cursor: pointer; display: flex;
-  align-items: center; justify-content: center; color: #64748b;
+  align-items: center; justify-content: center; color: #A08D7A;
   font-size: 13px; transition: all 0.15s;
 }
-.toolbar-btn:hover { background: #f1f5f9; color: #1e293b; }
-.toolbar-divider { width: 1px; height: 20px; background: #e2e8f0; margin: 0 4px; }
+.toolbar-btn:hover { background: #F3EADD; color: #6B5744; }
+.toolbar-divider { width: 1px; height: 20px; background: rgba(226,205,178,.7); margin: 0 4px; }
 
 /* 编辑区 */
 .editor-body {
   flex: 1; display: flex; overflow: hidden; min-height: 0;
 }
-.editor-body.split-mode { gap: 1px; background: #e2e8f0; }
+.editor-body.split-mode { gap: 1px; background: rgba(226,205,178,.7); }
 .editor-body.split-mode .editor-pane,
 .editor-body.split-mode .preview-pane { flex: 1; }
 
 .editor-pane { flex: 1; display: flex; min-width: 0; }
 .editor-textarea {
   flex: 1; width: 100%; border: none; outline: none; padding: 16px;
-  font-size: 15px; line-height: 1.8; color: #334155; background: #fff;
+  font-size: 15px; line-height: 1.8; color: #6B5744; background: #fff;
   resize: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
 }
 
@@ -486,24 +486,24 @@ defineExpose({ openCreate })
 /* 底部状态栏 */
 .editor-statusbar {
   display: flex; gap: 16px; padding: 6px 16px;
-  border-top: 1px solid #f1f5f9; background: #f8fafc; flex-shrink: 0;
+  border-top: 1px solid #F3EADD; background: #FBF6EF; flex-shrink: 0;
 }
-.status-item { font-size: 12px; color: #94a3b8; }
+.status-item { font-size: 12px; color: #A08D7A; }
 
 /* Markdown 样式 */
-.markdown-body :deep(h1) { font-size: 24px; font-weight: 700; margin: 20px 0 12px; padding-bottom: 8px; border-bottom: 2px solid #f1f5f9; }
+.markdown-body :deep(h1) { font-size: 24px; font-weight: 700; margin: 20px 0 12px; padding-bottom: 8px; border-bottom: 2px solid #F3EADD; }
 .markdown-body :deep(h2) { font-size: 20px; font-weight: 600; margin: 18px 0 10px; }
 .markdown-body :deep(h3) { font-size: 17px; font-weight: 600; margin: 14px 0 8px; }
 .markdown-body :deep(p) { margin: 10px 0; }
 .markdown-body :deep(ul), .markdown-body :deep(ol) { padding-left: 24px; margin: 10px 0; }
 .markdown-body :deep(li) { margin: 4px 0; }
-.markdown-body :deep(blockquote) { border-left: 4px solid var(--terracotta); padding: 8px 16px; margin: 12px 0; background: rgba(102,126,234,0.04); color: #475569; border-radius: 0 8px 8px 0; }
-.markdown-body :deep(code) { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 13px; color: #e11d48; }
-.markdown-body :deep(pre) { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 10px; overflow-x: auto; margin: 12px 0; }
+.markdown-body :deep(blockquote) { border-left: 4px solid var(--terracotta); padding: 8px 16px; margin: 12px 0; background: rgba(102,126,234,0.04); color: #A08D7A; border-radius: 0 8px 8px 0; }
+.markdown-body :deep(code) { background: #F3EADD; padding: 2px 6px; border-radius: 4px; font-size: 13px; color: #e11d48; }
+.markdown-body :deep(pre) { background: #6B5744; color: rgba(226,205,178,.7); padding: 16px; border-radius: 10px; overflow-x: auto; margin: 12px 0; }
 .markdown-body :deep(pre code) { background: none; color: inherit; padding: 0; }
-.markdown-body :deep(strong) { font-weight: 700; color: #1e293b; }
+.markdown-body :deep(strong) { font-weight: 700; color: #6B5744; }
 .markdown-body :deep(em) { font-style: italic; }
-.markdown-body :deep(hr) { border: none; border-top: 2px solid #f1f5f9; margin: 20px 0; }
+.markdown-body :deep(hr) { border: none; border-top: 2px solid #F3EADD; margin: 20px 0; }
 .markdown-body :deep(a) { color: var(--terracotta); text-decoration: none; }
 .markdown-body :deep(a:hover) { text-decoration: underline; }
 .markdown-body :deep(img) { max-width: 100%; border-radius: 8px; margin: 8px 0; }

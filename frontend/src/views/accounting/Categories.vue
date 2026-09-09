@@ -16,13 +16,28 @@
       <el-tab-pane label="收入分类" name="income" />
     </el-tabs>
 
+    <!-- 加载中 -->
+    <div v-if="loading" class="empty-card card">
+      <div class="loading-spinner"></div>
+      <p>加载中...</p>
+    </div>
+
+    <!-- 加载失败 -->
+    <div v-else-if="loadError" class="empty-card card error-state">
+      <el-icon :size="48" color="#f87171"><CircleCloseFilled /></el-icon>
+      <p>数据加载失败，请稍后重试</p>
+      <el-button type="primary" style="margin-top:12px;" @click="loadCategories">
+        🔄 重新加载
+      </el-button>
+    </div>
+
     <!-- 分类列表 -->
-    <div v-if="treeList.length === 0" class="empty-card card">
+    <div v-else-if="treeList.length === 0" class="empty-card card">
       <el-icon :size="48" color="#cbd5e1"><Folder /></el-icon>
       <p>暂无{{ activeType === 'expense' ? '支出' : '收入' }}分类</p>
     </div>
 
-    <div v-else class="cat-list">
+    <div v-else-if="treeList.length > 0" class="cat-list">
       <div v-for="cat in treeList" :key="cat.id" class="cat-group">
         <!-- 一级分类 -->
         <div class="cat-row cat-parent" :class="{ builtin: cat.builtIn }">
@@ -156,6 +171,8 @@ const showDialog = ref(false)
 const isEdit = ref(false)
 const editId = ref(null)
 const saving = ref(false)
+const loading = ref(false)
+const loadError = ref(false)
 
 const defaultForm = {
   name: '', type: 'expense', icon: 'MoreFilled', parentId: null, sort: 0
@@ -211,10 +228,17 @@ watch(activeType, () => {
 })
 
 async function loadCategories() {
+  loadError.value = false
+  loading.value = true
   try {
     const res = await accountingApi.getCategories({ familyId: authStore.currentFamily?.id })
     allCategories.value = res.data
-  } catch (e) { console.error(e) }
+  } catch (e) {
+    console.error('[Categories] 加载失败', e)
+    loadError.value = true
+  } finally {
+    loading.value = false
+  }
 }
 
 function openCreate(parentId) {
@@ -316,6 +340,23 @@ async function handleDelete(id) {
   margin-top: 12px;
   color: #A08D7A;
   font-size: 14px;
+}
+
+/* 加载/错误状态 */
+.loading-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #E2CDB2;
+  border-top-color: #C89F85;
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+  margin: 0 auto;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.error-state p {
+  color: #A08D7A;
 }
 
 /* 分类列表 */

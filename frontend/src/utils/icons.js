@@ -13,6 +13,7 @@ export {
   ChatDotRound,
   Check,
   CircleCheck,
+  CircleCloseFilled,
   Clock,
   Close,
   Cloudy,

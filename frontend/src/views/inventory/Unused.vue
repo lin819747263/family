@@ -45,8 +45,23 @@
       <span class="months-label">未使用</span>
     </div>
 
+    <!-- 加载中 -->
+    <div v-if="loading" class="card empty-card">
+      <div class="loading-spinner"></div>
+      <p>加载中...</p>
+    </div>
+
+    <!-- 加载失败 -->
+    <div v-else-if="loadError" class="card error-card">
+      <el-icon :size="48" color="#f87171"><CircleCloseFilled /></el-icon>
+      <p>数据加载失败，请稍后重试</p>
+      <el-button class="btn-primary" style="margin-top:12px;" @click="loadItems">
+        🔄 重新加载
+      </el-button>
+    </div>
+
     <!-- 汇总卡片 -->
-    <div v-if="items.length > 0" class="card summary-card reveal">
+    <div v-else-if="items.length > 0" class="card summary-card reveal">
       <div class="summary-ico">🍃</div>
       <div class="summary-text">
         发现 <b>{{ items.length }} 件</b> 长期闲置物品，合计价值约 <b>¥{{ totalValue.toLocaleString() }}</b>。
@@ -55,7 +70,7 @@
     </div>
 
     <!-- 空状态 -->
-    <div v-if="items.length === 0" class="card empty-card">
+    <div v-else-if="items.length === 0" class="card empty-card">
       <el-icon :size="48" color="#67C23A"><Check /></el-icon>
       <p>没有发现长期未使用的物品，继续保持！</p>
     </div>
@@ -101,6 +116,8 @@ import dayjs from 'dayjs'
 const authStore = useAuthStore()
 const items = ref([])
 const months = ref(12)
+const loading = ref(false)
+const loadError = ref(false)
 
 const totalValue = computed(() => {
   return items.value.reduce((sum, item) => sum + (parseFloat(item.price) || 0), 0)
@@ -150,9 +167,18 @@ onMounted(async () => {
 })
 
 async function loadItems() {
-  const res = await inventoryApi.getUnused({ familyId: authStore.currentFamily?.id, months: months.value })
-  items.value = res.data
-  nextTick(setupReveal)
+  loadError.value = false
+  loading.value = true
+  try {
+    const res = await inventoryApi.getUnused({ familyId: authStore.currentFamily?.id, months: months.value })
+    items.value = res.data
+    nextTick(setupReveal)
+  } catch (e) {
+    console.error('[Unused] 加载失败', e)
+    loadError.value = true
+  } finally {
+    loading.value = false
+  }
 }
 
 const statusLabels = { discarded: '丢弃', donated: '捐赠', sold: '二手出售' }
@@ -331,6 +357,28 @@ async function handleAction(row, status) {
   padding: 60px 20px;
 }
 .empty-card p {
+  margin-top: 12px;
+  color: var(--text-secondary);
+}
+
+/* ===== 加载/错误状态 ===== */
+.loading-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--terracotta);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+  margin: 0 auto;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.error-card {
+  text-align: center;
+  padding: 60px 20px;
+}
+.error-card p {
   margin-top: 12px;
   color: var(--text-secondary);
 }

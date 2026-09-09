@@ -29,14 +29,29 @@
       💡 以「家 → 房间 → 柜子 → 抽屉」层级管理空间 · 拖拽可调整排序
     </div>
 
+    <!-- 加载中 -->
+    <div v-if="loading" class="card empty-card">
+      <div class="loading-spinner"></div>
+      <p>加载中...</p>
+    </div>
+
+    <!-- 加载失败 -->
+    <div v-else-if="loadError" class="card error-card">
+      <el-icon :size="48" color="#f87171"><CircleCloseFilled /></el-icon>
+      <p>数据加载失败，请稍后重试</p>
+      <el-button class="btn-primary" style="margin-top:12px;" @click="loadSpaces">
+        🔄 重新加载
+      </el-button>
+    </div>
+
     <!-- 空状态 -->
-    <div v-if="spaces.length === 0" class="card empty-card">
+    <div v-else-if="spaces.length === 0" class="card empty-card">
       <el-icon :size="48" color="#cbd5e1"><FolderOpened /></el-icon>
       <p>还没有空间，点击右上角创建</p>
     </div>
 
     <!-- 空间树 -->
-    <div v-else class="card tree-card reveal">
+    <div v-else-if="spaces.length > 0" class="card tree-card reveal">
       <template v-for="home in spaces" :key="home.id">
         <div class="tree-node">
           <div class="node-row" @click="toggleNode(home.id)">
@@ -145,6 +160,8 @@ const spaceOptions = ref([])
 const showForm = ref(false)
 const editing = ref(false)
 const saving = ref(false)
+const loading = ref(false)
+const loadError = ref(false)
 const form = ref({ name: '', level: 'room', parentId: null, parentName: '' })
 
 const childLevel = { home: 'room', room: 'cabinet', cabinet: 'drawer' }
@@ -180,9 +197,18 @@ onMounted(async () => {
 })
 
 async function loadSpaces() {
-  const res = await inventoryApi.getSpaces({ familyId: authStore.currentFamily?.id })
-  spaces.value = res.data
-  spaceOptions.value = res.data
+  loadError.value = false
+  loading.value = true
+  try {
+    const res = await inventoryApi.getSpaces({ familyId: authStore.currentFamily?.id })
+    spaces.value = res.data
+    spaceOptions.value = res.data
+  } catch (e) {
+    console.error('[Spaces] 加载失败', e)
+    loadError.value = true
+  } finally {
+    loading.value = false
+  }
 }
 
 function toggleNode(id) {
@@ -348,6 +374,28 @@ async function handleDelete(id) {
   padding: 60px 20px;
 }
 .empty-card p {
+  margin-top: 12px;
+  color: var(--text-secondary);
+}
+
+/* ===== 加载/错误状态 ===== */
+.loading-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--terracotta);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+  margin: 0 auto;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.error-card {
+  text-align: center;
+  padding: 60px 20px;
+}
+.error-card p {
   margin-top: 12px;
   color: var(--text-secondary);
 }

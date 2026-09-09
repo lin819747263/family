@@ -358,8 +358,8 @@ function handleUserCmd(cmd) {
   height: 100%;
   display: flex;
   align-items: center;
-  padding: 0 16px;
-  gap: 8px;
+  padding: 0 22px;
+  gap: 12px;
 }
 
 /* Logo */
@@ -368,7 +368,7 @@ function handleUserCmd(cmd) {
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  margin-right: 4px;
+  margin-right: 2px;
   flex-shrink: 0;
   transition: opacity 0.2s;
 }
@@ -415,12 +415,12 @@ function handleUserCmd(cmd) {
 
 .nav-menu :deep(.el-menu-item),
 .nav-menu :deep(.el-sub-menu__title) {
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary);
   border-bottom: none !important;
   transition: all 0.25s;
-  padding: 0 8px;
+  padding: 0 13px;
 }
 
 .nav-menu :deep(.el-menu-item:hover),
@@ -476,7 +476,7 @@ function handleUserCmd(cmd) {
 }
 
 .nav-menu :deep(.el-icon) {
-  margin-right: 3px;
+  margin-right: 4px;
 }
 
 /* 确保菜单不溢出 */
@@ -492,7 +492,7 @@ function handleUserCmd(cmd) {
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
-  margin-left: 4px;
+  margin-left: 2px;
 }
 
 .action-badge :deep(.el-badge__content.is-dot) {

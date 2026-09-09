@@ -70,35 +70,52 @@
       <BatchTransactionForm v-else @success="onTxnSuccess" />
     </el-dialog>
 
+    <!-- 加载中 -->
+    <div v-if="dashboardLoading && !loadError" class="card" style="text-align:center;padding:48px 16px;margin-bottom:24px;">
+      <div style="font-size:28px;margin-bottom:10px;">⏳</div>
+      <span style="color:var(--text-secondary);font-size:14px;">正在加载家庭数据...</span>
+    </div>
+
+    <!-- 加载失败 -->
+    <div v-if="loadError" class="card" style="text-align:center;padding:48px 16px;margin-bottom:24px;">
+      <div style="font-size:28px;margin-bottom:10px;">😵</div>
+      <p style="color:var(--text-primary);font-size:15px;font-weight:600;margin-bottom:6px;">数据加载失败</p>
+      <p style="color:var(--text-secondary);font-size:13px;margin-bottom:16px;">网络可能不稳定，请稍后再试</p>
+      <button class="hbtn primary" style="margin:0 auto;" @click="retryAll">
+        🔄 重新加载
+      </button>
+    </div>
+
     <!-- ========== 快捷入口 ========== -->
     <section class="shortcuts">
       <div class="sc reveal" @click="router.push('/accounting')">
         <div class="sc-ico g-terra"><span>🪙</span></div>
-        <span>记账</span>
+        <span>小家账本</span>
+      </div>
+      <div class="sc reveal" @click="router.push('/reminder')">
+        <div class="sc-ico g-amber"><span>🔔</span></div>
+        <span>家庭提醒</span>
       </div>
       <div class="sc reveal" @click="router.push('/album')">
         <div class="sc-ico g-rose"><span>📷</span></div>
-        <span>相册</span>
+        <span>点滴日常</span>
       </div>
       <div class="sc reveal" @click="router.push('/inventory')">
         <div class="sc-ico g-sage"><span>📦</span></div>
-        <span>物品</span>
+        <span>物品管理</span>
       </div>
-      <div class="sc reveal" @click="router.push('/reminder/anniversary')">
-        <div class="sc-ico g-amber"><span>📅</span></div>
-        <span>纪念日</span>
-      </div>
-      <div class="sc reveal" @click="router.push('/recipe')">
-        <div class="sc-ico g-sky"><span>🍲</span></div>
-        <span>菜谱</span>
+      <div class="sc reveal" @click="router.push('/fun')">
+        <div class="sc-ico g-sky"><span>🎡</span></div>
+        <span>吃喝玩乐</span>
       </div>
       <div class="sc reveal" @click="router.push('/member')">
-        <div class="sc-ico g-plum"><span>👨‍👩‍👧</span></div>
-        <span>成员档案</span>
+        <div class="sc-ico g-plum"><span>🗂</span></div>
+        <span>档案</span>
       </div>
     </section>
 
     <!-- ========== 待办 + 今日吃什么 ========== -->
+    <template v-if="!dashboardLoading && !loadError">
     <section class="grid-2">
       <!-- 待办 -->
       <div class="card reveal">
@@ -235,6 +252,7 @@
         </div>
       </div>
     </section>
+    </template>
 
     <!-- 页脚 -->
     <div class="footer">
@@ -267,6 +285,8 @@ const pendingTodos = ref([])
 const todayRecipe = ref(null)
 const recipeLoading = ref(false)
 const recentMoments = ref([])
+const loadError = ref(false)
+const dashboardLoading = ref(true)
 
 const todayStr = computed(() => dayjs().format('YYYY年M月D日 · dddd'))
 const todayShort = computed(() => dayjs().format('MM月DD日'))
@@ -378,6 +398,8 @@ watch(() => authStore.currentFamily, (family) => {
 
 function loadDashboard() {
   if (!authStore.currentFamily) return
+  loadError.value = false
+  dashboardLoading.value = true
   const params = { familyId: authStore.currentFamily.id }
   if (accountingStore.currentBookId) params.bookId = accountingStore.currentBookId
   dashboardApi.getData(params)
@@ -385,11 +407,16 @@ function loadDashboard() {
       data.value = res.data
       nextTick(() => observeRevealElements())
     })
-    .catch(() => { /* 静默处理 */ })
+    .catch(e => {
+      loadError.value = true
+      console.error(e)
+    })
+    .finally(() => { dashboardLoading.value = false })
 }
 
 async function loadTodos() {
   if (!authStore.currentFamily) return
+  loadError.value = false
   try {
     const res = await todoApi.getList({ familyId: authStore.currentFamily.id, filter: 'pending' })
     const today = dayjs().format('YYYY-MM-DD')
@@ -398,7 +425,7 @@ async function loadTodos() {
       overdue: !t.completed && t.dueDate && t.dueDate < today,
       daysLeft: t.dueDate ? dayjs(t.dueDate).diff(dayjs(), 'day') : null
     }))
-  } catch (e) { console.error(e) }
+  } catch (e) { loadError.value = true; console.error(e) }
 }
 
 async function handleToggleTodo(t) {
@@ -411,10 +438,11 @@ async function handleToggleTodo(t) {
 
 async function loadRecipe() {
   if (!authStore.currentFamily) return
+  loadError.value = false
   try {
     const res = await recipeApi.random({ familyId: authStore.currentFamily.id, count: 1 })
     todayRecipe.value = res.data[0] || null
-  } catch (e) { console.error(e) }
+  } catch (e) { loadError.value = true; console.error(e) }
 }
 
 async function shuffleRecipe() {
@@ -425,6 +453,7 @@ async function shuffleRecipe() {
 
 async function loadMoments() {
   if (!authStore.currentFamily) return
+  loadError.value = false
   try {
     const res = await momentApi.getList({ familyId: authStore.currentFamily.id, page: 1, pageSize: 5 })
     recentMoments.value = (res.data.list || []).map(m => {
@@ -434,7 +463,11 @@ async function loadMoments() {
     })
     // 数据加载后重新观察新渲染的 .reveal 元素
     nextTick(() => observeRevealElements())
-  } catch (e) { console.error(e) }
+  } catch (e) { loadError.value = true; console.error(e) }
+}
+
+function retryAll() {
+  loadDashboard(); loadTodos(); loadRecipe(); loadMoments()
 }
 
 // === 滚动渐入动画 ===

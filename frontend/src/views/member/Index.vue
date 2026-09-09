@@ -16,6 +16,12 @@
 
     <!-- ===== 身份卡 ===== -->
     <section v-show="activeTab === 'id'">
+      <div v-if="loadingProfiles" class="card empty-card"><p>加载中...</p></div>
+      <div v-else-if="errorProfiles" class="card empty-card">
+        <p style="color:#B06A6A;">{{ errorProfiles }}</p>
+        <button class="btn-ghost" style="margin-top:10px;" @click="loadProfiles">重试</button>
+      </div>
+      <template v-else>
       <div class="mem-chips">
         <button v-for="p in profiles" :key="p.id" class="mem-chip" :class="{ active: curProfile?.id === p.id }" @click="curProfile = p">
           <span class="mav" :style="{ background: getProfileBg(p) }">{{ (p.nickname || p.name || '?')[0] }}</span>
@@ -98,10 +104,17 @@
         <div v-if="!profileRecords.weight.length && !profileRecords.height.length" class="chart-empty">暂无记录，添加成员后可记录身高体重</div>
       </div>
       </div>
+      </template>
     </section>
 
     <!-- ===== 时间轴 ===== -->
     <section v-show="activeTab === 'timeline'">
+      <div v-if="loadingTimeline" class="card empty-card"><p>加载中...</p></div>
+      <div v-else-if="errorTimeline" class="card empty-card">
+        <p style="color:#B06A6A;">{{ errorTimeline }}</p>
+        <button class="btn-ghost" style="margin-top:10px;" @click="loadTimeline">重试</button>
+      </div>
+      <template v-else>
       <div class="panel-head">
         <div class="chips">
           <button class="chip" :class="{ active: tlFilter === 'all' }" @click="tlFilter = 'all'">全部</button>
@@ -125,10 +138,17 @@
         </div>
         <div v-if="filteredTimeline.length === 0" class="card empty-card"><p>还没有时间轴节点</p></div>
       </div>
+      </template>
     </section>
 
     <!-- ===== 说明书库 ===== -->
     <section v-show="activeTab === 'manual'">
+      <div v-if="loadingManuals" class="card empty-card"><p>加载中...</p></div>
+      <div v-else-if="errorManuals" class="card empty-card">
+        <p style="color:#B06A6A;">{{ errorManuals }}</p>
+        <button class="btn-ghost" style="margin-top:10px;" @click="loadManuals">重试</button>
+      </div>
+      <template v-else>
       <div v-if="manualAlerts.length" class="card alert-card">
         <div class="alert-ai">⚠️</div>
         <div style="flex:1;">
@@ -157,10 +177,17 @@
         </div>
         <div v-if="filteredManuals.length === 0" class="card empty-card"><p>还没有归档说明书</p></div>
       </div>
+      </template>
     </section>
 
     <!-- ===== 宠物档案 ===== -->
     <section v-show="activeTab === 'pet'">
+      <div v-if="loadingPets" class="card empty-card"><p>加载中...</p></div>
+      <div v-else-if="errorPets" class="card empty-card">
+        <p style="color:#B06A6A;">{{ errorPets }}</p>
+        <button class="btn-ghost" style="margin-top:10px;" @click="loadPets">重试</button>
+      </div>
+      <template v-else>
       <div class="mem-chips">
         <button v-for="p in pets" :key="p.id" class="mem-chip" :class="{ active: curPet?.id === p.id }" @click="curPet = p">
           <span class="mav" :style="{ background: 'rgba(232,179,106,.3)' }">{{ p.emoji || '🐾' }}</span>
@@ -192,10 +219,17 @@
           </div>
         </div>
       </div>
+      </template>
     </section>
 
     <!-- ===== 成就墙 ===== -->
     <section v-show="activeTab === 'achieve'">
+      <div v-if="loadingAchievements" class="card empty-card"><p>加载中...</p></div>
+      <div v-else-if="errorAchievements" class="card empty-card">
+        <p style="color:#B06A6A;">{{ errorAchievements }}</p>
+        <button class="btn-ghost" style="margin-top:10px;" @click="loadAchievements">重试</button>
+      </div>
+      <template v-else>
       <div class="aw-stats">
         <div class="card stat-card"><div class="stat-icon" style="background:linear-gradient(135deg,var(--amber),#C08A3E);">🏅</div><div class="stat-num" style="color:#C08A3E;">{{ achievements.length }}</div><div class="stat-lbl">成就总数</div></div>
         <div class="card stat-card"><div class="stat-icon" style="background:linear-gradient(135deg,var(--sage),#7E8862);">🌟</div><div class="stat-num" style="color:#7E8862;">{{ yearAchievements }}</div><div class="stat-lbl">今年新增</div></div>
@@ -219,11 +253,14 @@
             <a class="tl-del" @click.stop="deleteAchievement(a.id)">删除</a>
           </div>
         </div>
+        <div v-if="achievements.length === 0" class="card empty-card"><p>还没有成就记录，点击右上角记一笔吧</p></div>
       </div>
+      </template>
     </section>
 
     <!-- ===== 情绪温度计 ===== -->
     <section v-show="activeTab === 'mood'">
+      <div v-if="moodSel < 0" class="card empty-card" style="margin-bottom:16px;"><p>今天还没有打卡，选一个心情开始记录吧</p></div>
       <div class="mood-grid">
         <div class="card ck-card">
           <div class="sec-title"><span class="ti" style="background:linear-gradient(135deg,var(--amber),#C08A3E);">🌡</span>今日心情打卡</div>
@@ -317,7 +354,7 @@
       <template #footer>
         <div class="dialog-footer">
           <button class="btn-cancel" @click="showForm = false">取消</button>
-          <button class="btn-confirm" @click="handleSave">{{ editingId ? '更新' : '保存' }}</button>
+          <button class="btn-confirm" :disabled="!isFormValid || saving" @click="handleSave">{{ saving ? '保存中...' : (editingId ? '更新' : '保存') }}</button>
         </div>
       </template>
     </el-dialog>
@@ -345,6 +382,20 @@ const tabs = [
   { key: 'achieve', icon: '🏅', label: '成就墙' },
   { key: 'mood', icon: '🌡', label: '情绪温度计' }
 ]
+
+// ===== Loading / Error 状态 =====
+const loadingProfiles = ref(false)
+const loadingTimeline = ref(false)
+const loadingManuals = ref(false)
+const loadingPets = ref(false)
+const loadingAchievements = ref(false)
+const saving = ref(false)
+
+const errorProfiles = ref('')
+const errorTimeline = ref('')
+const errorManuals = ref('')
+const errorPets = ref('')
+const errorAchievements = ref('')
 
 // ===== 身份卡 =====
 const profiles = ref([])
@@ -384,11 +435,20 @@ const latestWeight = computed(() => {
 function formatBirthday(d) { return d ? dayjs(d).format('YYYY年M月D日') : '-' }
 
 async function loadProfiles() {
-  const res = await memberProfileApi.getList({ familyId: familyId.value })
-  profiles.value = res.data
-  if (profiles.value.length && !curProfile.value) {
-    curProfile.value = profiles.value[0]
-    loadProfileDetail(curProfile.value.id)
+  loadingProfiles.value = true
+  errorProfiles.value = ''
+  try {
+    const res = await memberProfileApi.getList({ familyId: familyId.value })
+    profiles.value = res.data
+    if (profiles.value.length && !curProfile.value) {
+      curProfile.value = profiles.value[0]
+      loadProfileDetail(curProfile.value.id)
+    }
+  } catch (e) {
+    errorProfiles.value = '加载成员列表失败，请重试'
+    console.error(e)
+  } finally {
+    loadingProfiles.value = false
   }
 }
 
@@ -403,7 +463,10 @@ async function loadProfileDetail(id) {
       curProfile.value.WeightRecords = data.WeightRecords
     }
     nextTick(renderChart)
-  } catch (e) { console.error(e) }
+  } catch (e) {
+    ElMessage.error('加载成员详情失败')
+    console.error(e)
+  }
 }
 
 function renderChart() {
@@ -458,7 +521,19 @@ const filteredTimeline = computed(() => {
 })
 const timelineColors = ['var(--terracotta)', 'var(--rose)', 'var(--amber)', 'var(--sage)', 'var(--sky)']
 function getTimelineColor(ev) { return timelineColors[(ev.profileId || 0) % timelineColors.length] }
-async function loadTimeline() { const res = await timelineEventApi.getList({ familyId: familyId.value }); timeline.value = res.data }
+async function loadTimeline() {
+  loadingTimeline.value = true
+  errorTimeline.value = ''
+  try {
+    const res = await timelineEventApi.getList({ familyId: familyId.value })
+    timeline.value = res.data
+  } catch (e) {
+    errorTimeline.value = '加载时间轴失败，请重试'
+    console.error(e)
+  } finally {
+    loadingTimeline.value = false
+  }
+}
 
 // ===== 说明书库 =====
 const manuals = ref([])
@@ -482,12 +557,37 @@ const manualBgMap = { '大家电': 'rgba(159,184,201,.2)', '厨卫': 'rgba(232,1
 const manualEmojiMap = { '大家电': '🔌', '厨卫': '🍳', '数码': '📱', '清洁': '🧹' }
 function getManualBg(cat) { return manualBgMap[cat] || 'rgba(237,224,206,.8)' }
 function getManualEmoji(cat) { return manualEmojiMap[cat] || '📦' }
-async function loadManuals() { const res = await manualApi.getList({ familyId: familyId.value }); manuals.value = res.data }
+async function loadManuals() {
+  loadingManuals.value = true
+  errorManuals.value = ''
+  try {
+    const res = await manualApi.getList({ familyId: familyId.value })
+    manuals.value = res.data
+  } catch (e) {
+    errorManuals.value = '加载说明书库失败，请重试'
+    console.error(e)
+  } finally {
+    loadingManuals.value = false
+  }
+}
 
 // ===== 宠物 =====
 const pets = ref([])
 const curPet = ref(null)
-async function loadPets() { const res = await petApi.getList({ familyId: familyId.value }); pets.value = res.data; if (pets.value.length && !curPet.value) curPet.value = pets.value[0] }
+async function loadPets() {
+  loadingPets.value = true
+  errorPets.value = ''
+  try {
+    const res = await petApi.getList({ familyId: familyId.value })
+    pets.value = res.data
+    if (pets.value.length && !curPet.value) curPet.value = pets.value[0]
+  } catch (e) {
+    errorPets.value = '加载宠物档案失败，请重试'
+    console.error(e)
+  } finally {
+    loadingPets.value = false
+  }
+}
 
 // ===== 成就 =====
 const achievements = ref([])
@@ -498,7 +598,19 @@ const topAchiever = computed(() => {
   const mx = Math.max(...Object.values(cnt), 0)
   return Object.keys(cnt).filter(k => cnt[k] === mx).join(' & ') || '—'
 })
-async function loadAchievements() { const res = await achievementApi.getList({ familyId: familyId.value }); achievements.value = res.data }
+async function loadAchievements() {
+  loadingAchievements.value = true
+  errorAchievements.value = ''
+  try {
+    const res = await achievementApi.getList({ familyId: familyId.value })
+    achievements.value = res.data
+  } catch (e) {
+    errorAchievements.value = '加载成就墙失败，请重试'
+    console.error(e)
+  } finally {
+    loadingAchievements.value = false
+  }
+}
 
 // ===== 情绪 =====
 const moods = [{ e: '😄', s: 92, l: '超棒' }, { e: '😌', s: 76, l: '舒服' }, { e: '😐', s: 58, l: '一般' }, { e: '😞', s: 38, l: '低落' }, { e: '😫', s: 22, l: '疲惫' }]
@@ -562,8 +674,36 @@ function openAchievementForm() {
 
 function splitStr(s) { return s ? s.split(/[,，]/).map(x => x.trim()).filter(Boolean) : [] }
 
+const isFormValid = computed(() => {
+  if (formType.value === 'profile') return !!formData.name?.trim()
+  if (formType.value === 'timeline') return !!formData.title?.trim() && !!formData.year
+  if (formType.value === 'manual') return !!formData.name?.trim()
+  if (formType.value === 'pet') return !!formData.name?.trim()
+  if (formType.value === 'achievement') return !!formData.title?.trim()
+  return true
+})
+
 async function handleSave() {
+  // 表单校验
+  if (formType.value === 'profile' && !formData.name?.trim()) {
+    return ElMessage.warning('请填写姓名')
+  }
+  if (formType.value === 'timeline') {
+    if (!formData.title?.trim()) return ElMessage.warning('请填写标题')
+    if (!formData.year) return ElMessage.warning('请填写年份')
+  }
+  if (formType.value === 'manual' && !formData.name?.trim()) {
+    return ElMessage.warning('请填写物品名称')
+  }
+  if (formType.value === 'pet' && !formData.name?.trim()) {
+    return ElMessage.warning('请填写宠物名')
+  }
+  if (formType.value === 'achievement' && !formData.title?.trim()) {
+    return ElMessage.warning('请填写成就标题')
+  }
+
   const fid = familyId.value
+  saving.value = true
   try {
     if (formType.value === 'profile') {
       const payload = { ...formData, familyId: fid, allergies: splitStr(formData.allergiesStr), dislikedFoods: splitStr(formData.dislikedFoodsStr), favoriteFoods: splitStr(formData.favoriteFoodsStr), hobbies: splitStr(formData.hobbiesStr) }
@@ -590,7 +730,12 @@ async function handleSave() {
     }
     ElMessage.success(editingId.value ? '更新成功' : '保存成功')
     showForm.value = false
-  } catch (e) { console.error(e) }
+  } catch (e) {
+    ElMessage.error('保存失败，请重试')
+    console.error(e)
+  } finally {
+    saving.value = false
+  }
 }
 
 // ===== 删除操作 =====
@@ -805,6 +950,7 @@ onMounted(async () => {
 .dialog-footer { display: flex; justify-content: flex-end; gap: 10px; }
 .btn-cancel { padding: 10px 20px; border-radius: 12px; border: 1.5px solid var(--border); background: rgba(255,253,250,.85); color: var(--text-secondary); font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
 .btn-confirm { padding: 10px 24px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--terracotta), #D3A98B); color: #FFF9F2; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 6px 18px rgba(200,159,133,.35); font-family: inherit; }
+.btn-confirm:disabled { opacity: .55; cursor: not-allowed; box-shadow: none; }
 
 /* ===== 响应式 ===== */
 @media (max-width: 960px) {

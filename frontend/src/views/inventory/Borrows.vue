@@ -51,14 +51,29 @@
       </el-button>
     </div>
 
+    <!-- 加载中 -->
+    <div v-if="loading" class="card empty-card">
+      <div class="loading-spinner"></div>
+      <p>加载中...</p>
+    </div>
+
+    <!-- 加载失败 -->
+    <div v-else-if="loadError" class="card error-card">
+      <el-icon :size="48" color="#f87171"><CircleCloseFilled /></el-icon>
+      <p>数据加载失败，请稍后重试</p>
+      <el-button class="btn-primary" style="margin-top:12px;" @click="loadBorrows">
+        🔄 重新加载
+      </el-button>
+    </div>
+
     <!-- 空状态 -->
-    <div v-if="borrows.length === 0" class="card empty-card">
+    <div v-else-if="borrows.length === 0" class="card empty-card">
       <el-icon :size="48" color="#cbd5e1"><Share /></el-icon>
       <p>暂无借出记录</p>
     </div>
 
     <!-- 借物列表 -->
-    <div v-else class="borrows-list">
+    <div v-else-if="borrows.length > 0" class="borrows-list">
       <div
         v-for="(borrow, idx) in borrows"
         :key="borrow.id"
@@ -157,6 +172,8 @@ const familyMembers = ref([])
 const filterStatus = ref('')
 const showForm = ref(false)
 const saving = ref(false)
+const loading = ref(false)
+const loadError = ref(false)
 const form = ref({ itemId: null, borrowedBy: '', expectedReturnDate: '', note: '' })
 
 // 借物颜色映射
@@ -210,11 +227,20 @@ async function loadBorrows() {
     console.warn('[Borrows] currentFamily 未就绪，跳过加载', authStore.currentFamily)
     return
   }
-  const params = { familyId, pageSize: 50 }
-  if (filterStatus.value) params.status = filterStatus.value
-  const res = await inventoryApi.getBorrows(params)
-  borrows.value = res.data.list
-  nextTick(setupReveal)
+  loadError.value = false
+  loading.value = true
+  try {
+    const params = { familyId, pageSize: 50 }
+    if (filterStatus.value) params.status = filterStatus.value
+    const res = await inventoryApi.getBorrows(params)
+    borrows.value = res.data.list
+    nextTick(setupReveal)
+  } catch (e) {
+    console.error('[Borrows] 加载失败', e)
+    loadError.value = true
+  } finally {
+    loading.value = false
+  }
 }
 
 async function handleCreate() {
@@ -372,6 +398,28 @@ async function handleRemind(id) {
   padding: 60px 20px;
 }
 .empty-card p {
+  margin-top: 12px;
+  color: var(--text-secondary);
+}
+
+/* ===== 加载/错误状态 ===== */
+.loading-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--terracotta);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+  margin: 0 auto;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.error-card {
+  text-align: center;
+  padding: 60px 20px;
+}
+.error-card p {
   margin-top: 12px;
   color: var(--text-secondary);
 }

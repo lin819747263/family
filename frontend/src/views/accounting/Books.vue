@@ -7,7 +7,22 @@
       </el-button>
     </div>
 
-    <div class="books-grid">
+    <!-- 加载中 -->
+    <div v-if="loading" class="empty-card card">
+      <div class="loading-spinner"></div>
+      <p>加载中...</p>
+    </div>
+
+    <!-- 加载失败 -->
+    <div v-else-if="loadError" class="empty-card card error-state">
+      <el-icon :size="48" color="#f87171"><CircleCloseFilled /></el-icon>
+      <p>数据加载失败，请稍后重试</p>
+      <el-button type="primary" style="margin-top:12px;" @click="loadBooks">
+        🔄 重新加载
+      </el-button>
+    </div>
+
+    <div v-else class="books-grid">
       <div
         v-for="b in books"
         :key="b.id"
@@ -130,6 +145,8 @@ const accountingStore = useAccountingStore()
 const books = ref([])
 const showCreate = ref(false)
 const saving = ref(false)
+const loading = ref(false)
+const loadError = ref(false)
 const form = ref({ name: '', type: 'family', description: '' })
 
 // 删除相关
@@ -145,9 +162,18 @@ onMounted(async () => {
 })
 
 async function loadBooks() {
-  const res = await accountingApi.getBooks({ familyId: authStore.currentFamily?.id })
-  books.value = res.data
-  accountingStore.books = res.data
+  loadError.value = false
+  loading.value = true
+  try {
+    const res = await accountingApi.getBooks({ familyId: authStore.currentFamily?.id })
+    books.value = res.data
+    accountingStore.books = res.data
+  } catch (e) {
+    console.error('[Books] 加载失败', e)
+    loadError.value = true
+  } finally {
+    loading.value = false
+  }
 }
 
 function selectBook(book) {
@@ -313,6 +339,23 @@ async function handleCreate() {
   margin-top: 12px;
   color: #A08D7A;
   font-size: 14px;
+}
+
+/* 加载/错误状态 */
+.loading-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #E2CDB2;
+  border-top-color: #C89F85;
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+  margin: 0 auto;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.error-state {
+  grid-column: 1 / -1;
 }
 
 /* 删除弹窗 */

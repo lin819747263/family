@@ -23,7 +23,9 @@
         <button v-for="d in diffOptions" :key="d.value" class="fchip" :class="{ active: recipeFilter === d.value }" @click="recipeFilter = d.value; loadRecipes()">{{ d.label }}</button>
         <span class="filter-count">共 <b>{{ recipeTotal }}</b> 道家常菜</span>
       </div>
-      <div v-if="recipes.length === 0" class="card empty-card"><p>还没有菜谱，点击右上角记一道菜</p></div>
+      <div v-if="recipeLoading" class="card loading-card"><div class="loading-spinner"></div><p>加载中...</p></div>
+      <div v-else-if="loadErrors.recipe" class="card error-card"><p>加载失败，请稍后重试</p><button class="btn-ghost" @click="loadRecipes()">🔄 重试</button></div>
+      <div v-else-if="recipes.length === 0" class="card empty-card"><p>还没有菜谱，点击右上角记一道菜</p></div>
       <div v-else class="recipe-grid">
         <div v-for="r in recipes" :key="r.id" class="card recipe-card" @click="viewRecipe(r)">
           <div class="rcov" :style="{ background: getRecipeBg(r.difficulty) }">
@@ -50,6 +52,10 @@
       <div class="filter-bar">
         <span class="filter-count">🧋 收藏了 <b>{{ drinks.length }}</b> 杯好喝的 · 点 ❤ 标记想再喝</span>
       </div>
+      <div v-if="drinkLoading" class="card loading-card"><div class="loading-spinner"></div><p>加载中...</p></div>
+      <div v-else-if="loadErrors.drink" class="card error-card"><p>加载失败，请稍后重试</p><button class="btn-ghost" @click="loadDrinks()">🔄 重试</button></div>
+      <template v-else>
+      <div v-if="drinks.length === 0" class="card empty-card"><p>还没有奶茶收藏，点击下方添加一杯</p></div>
       <div class="drink-grid">
         <div v-for="d in drinks" :key="d.id" class="card drink-card">
           <button class="card-del" @click.stop="deleteItem('drink', d.id, d.name)">🗑</button>
@@ -73,11 +79,16 @@
           <span>收藏一杯新的</span>
         </div>
       </div>
+      </template>
     </section>
 
     <!-- ===== 打卡小店 ===== -->
     <section v-show="activeTab === 'shop'">
-      <div class="card ck-summary">
+      <div v-if="shopLoading" class="card loading-card"><div class="loading-spinner"></div><p>加载中...</p></div>
+      <div v-else-if="loadErrors.shop" class="card error-card"><p>加载失败，请稍后重试</p><button class="btn-ghost" @click="loadShops()">🔄 重试</button></div>
+      <template v-else>
+      <div v-if="shops.length === 0" class="card empty-card"><p>还没有打卡小店，点击下方添加</p></div>
+      <div v-if="shops.length > 0" class="card ck-summary">
         <div class="ck-ico">📍</div>
         <div class="ck-info">
           <div class="ck-text">今年打卡计划 · 已完成 <b>{{ checkedCount }}</b> / {{ shops.length }} 家小店</div>
@@ -100,14 +111,19 @@
         </div>
         <div class="card shop-add" @click="openShopForm()"><span>＋ 添加小店</span></div>
       </div>
+      </template>
     </section>
 
     <!-- ===== 出游景点 ===== -->
     <section v-show="activeTab === 'play'">
+      <div v-if="placeLoading" class="card loading-card"><div class="loading-spinner"></div><p>加载中...</p></div>
+      <div v-else-if="loadErrors.place" class="card error-card"><p>加载失败，请稍后重试</p><button class="btn-ghost" @click="loadPlaces()">🔄 重试</button></div>
+      <template v-else>
       <div class="filter-bar">
         <button v-for="s in seasonOptions" :key="s.value" class="fchip" :class="{ active: seasonFilter === s.value }" @click="seasonFilter = s.value; loadPlaces()">{{ s.label }}</button>
         <span class="filter-count">❤ 标记想去的愿望清单</span>
       </div>
+      <div v-if="places.length === 0" class="card empty-card"><p>还没有出游景点，点击下方添加</p></div>
       <div class="place-grid">
         <div v-for="p in places" :key="p.id" class="card place-card">
           <button class="card-del" @click.stop="deleteItem('place', p.id, p.name)">🗑</button>
@@ -133,14 +149,19 @@
         </div>
         <div class="card place-add" @click="openPlaceForm()"><span>＋ 添加景点</span></div>
       </div>
+      </template>
     </section>
 
     <!-- ===== 时令水果 ===== -->
     <section v-show="activeTab === 'fruit'">
+      <div v-if="fruitLoading" class="card loading-card"><div class="loading-spinner"></div><p>加载中...</p></div>
+      <div v-else-if="loadErrors.fruit" class="card error-card"><p>加载失败，请稍后重试</p><button class="btn-ghost" @click="loadFruits()">🔄 重试</button></div>
+      <template v-else>
       <div class="card fruit-banner">
         <div class="fb-ico">🍑</div>
         <div class="fb-text">现在是 <b>{{ currentMonth }} 月</b> · 当季水果最新鲜，错过又要等一年。</div>
       </div>
+      <div v-if="fruits.length === 0" class="card empty-card"><p>还没有时令水果，点击下方添加</p></div>
       <div class="fruit-grid">
         <div v-for="f in fruits" :key="f.id" class="card fruit-card">
           <button class="card-del" @click.stop="deleteItem('fruit', f.id, f.name)">🗑</button>
@@ -156,6 +177,7 @@
         </div>
         <div class="card fruit-add" @click="openFruitForm()"><span>＋ 添加水果</span></div>
       </div>
+      </template>
     </section>
 
     <!-- 菜谱详情弹窗 -->
@@ -275,7 +297,7 @@
       <template #footer>
         <div class="dialog-footer">
           <button class="btn-cancel" @click="showForm = false">取消</button>
-          <button class="btn-confirm" @click="handleSave">{{ editingId ? '更新' : '保存' }}</button>
+          <button class="btn-confirm" @click="handleSave" :disabled="saving">{{ saving ? '保存中...' : (editingId ? '更新' : '保存') }}</button>
         </div>
       </template>
     </el-dialog>
@@ -293,6 +315,13 @@ const authStore = useAuthStore()
 const activeTab = ref('eat')
 const familyId = computed(() => authStore.currentFamily?.id)
 const currentMonth = new Date().getMonth() + 1
+const saving = ref(false)
+const recipeLoading = ref(false)
+const drinkLoading = ref(false)
+const shopLoading = ref(false)
+const placeLoading = ref(false)
+const fruitLoading = ref(false)
+const loadErrors = reactive({ recipe: false, drink: false, shop: false, place: false, fruit: false })
 
 const tabs = [
   { key: 'eat', icon: '🍳', label: '家常菜谱' },
@@ -321,11 +350,20 @@ const showRecipeDetail = ref(false)
 const detailRecipe = ref({})
 
 async function loadRecipes() {
-  const params = { familyId: familyId.value, pageSize: 50 }
-  if (recipeFilter.value !== 'all') params.difficulty = recipeFilter.value
-  const res = await recipeApi.getList(params)
-  recipes.value = res.data.list
-  recipeTotal.value = res.data.total
+  recipeLoading.value = true
+  loadErrors.recipe = false
+  try {
+    const params = { familyId: familyId.value, pageSize: 50 }
+    if (recipeFilter.value !== 'all') params.difficulty = recipeFilter.value
+    const res = await recipeApi.getList(params)
+    recipes.value = res.data.list
+    recipeTotal.value = res.data.total
+  } catch (e) {
+    loadErrors.recipe = true
+    console.error(e)
+  } finally {
+    recipeLoading.value = false
+  }
 }
 
 function viewRecipe(r) { detailRecipe.value = r; showRecipeDetail.value = true }
@@ -340,7 +378,19 @@ async function shuffleRecipe() {
 
 // ===== 奶茶 =====
 const drinks = ref([])
-async function loadDrinks() { const res = await drinkApi.getList({ familyId: familyId.value }); drinks.value = res.data.list }
+async function loadDrinks() {
+  drinkLoading.value = true
+  loadErrors.drink = false
+  try {
+    const res = await drinkApi.getList({ familyId: familyId.value })
+    drinks.value = res.data.list
+  } catch (e) {
+    loadErrors.drink = true
+    console.error(e)
+  } finally {
+    drinkLoading.value = false
+  }
+}
 async function toggleDrinkFav(d) { const res = await drinkApi.toggleFav(d.id); d.isFav = res.data.isFav; d.likes = res.data.likes }
 const drinkBgs = ['rgba(232,179,106,.2)', 'rgba(217,154,154,.2)', 'rgba(169,139,176,.2)', 'rgba(159,184,201,.2)', 'rgba(168,176,138,.2)']
 const drinkEmojis = ['🧋', '🍓', '🍇', '🥥', '🍋', '🍑']
@@ -350,7 +400,19 @@ function getDrinkEmoji(brand) { const i = (brand || '').length % drinkEmojis.len
 // ===== 小店 =====
 const shops = ref([])
 const checkedCount = computed(() => shops.value.filter(s => s.checkedIn).length)
-async function loadShops() { const res = await funShopApi.getList({ familyId: familyId.value }); shops.value = res.data.list }
+async function loadShops() {
+  shopLoading.value = true
+  loadErrors.shop = false
+  try {
+    const res = await funShopApi.getList({ familyId: familyId.value })
+    shops.value = res.data.list
+  } catch (e) {
+    loadErrors.shop = true
+    console.error(e)
+  } finally {
+    shopLoading.value = false
+  }
+}
 async function toggleShopCheck(s) { const res = await funShopApi.toggleCheck(s.id); s.checkedIn = res.data.checkedIn; s.checkedAt = res.data.checkedAt }
 const shopBgs = { '烘焙': 'rgba(232,179,106,.2)', '糖水': 'rgba(217,154,154,.2)', '咖啡': 'rgba(168,176,138,.2)', '火锅': 'rgba(200,159,133,.2)', '日料': 'rgba(159,184,201,.2)' }
 const shopEmojis = { '烘焙': '🥐', '糖水': '🍧', '咖啡': '☕', '火锅': '🍲', '日料': '🏮', '奶茶': '🧋' }
@@ -373,16 +435,37 @@ const placeEmojis = { spring: '🌸', summer: '🎋', autumn: '🍁', winter: '�
 function getPlaceBg(s) { return placeBgs[s] || placeBgs.all }
 function getPlaceEmoji(s) { return placeEmojis[s] || '🏞' }
 async function loadPlaces() {
-  const params = { familyId: familyId.value }
-  if (seasonFilter.value !== 'all') params.season = seasonFilter.value
-  const res = await funPlaceApi.getList(params)
-  places.value = res.data.list
+  placeLoading.value = true
+  loadErrors.place = false
+  try {
+    const params = { familyId: familyId.value }
+    if (seasonFilter.value !== 'all') params.season = seasonFilter.value
+    const res = await funPlaceApi.getList(params)
+    places.value = res.data.list
+  } catch (e) {
+    loadErrors.place = true
+    console.error(e)
+  } finally {
+    placeLoading.value = false
+  }
 }
 async function togglePlaceWish(p) { const res = await funPlaceApi.toggleWish(p.id); p.isWish = res.data.isWish }
 
 // ===== 水果 =====
 const fruits = ref([])
-async function loadFruits() { const res = await funFruitApi.getList({ familyId: familyId.value }); fruits.value = res.data.list }
+async function loadFruits() {
+  fruitLoading.value = true
+  loadErrors.fruit = false
+  try {
+    const res = await funFruitApi.getList({ familyId: familyId.value })
+    fruits.value = res.data.list
+  } catch (e) {
+    loadErrors.fruit = true
+    console.error(e)
+  } finally {
+    fruitLoading.value = false
+  }
+}
 const fruitBgs = ['rgba(217,154,154,.2)', 'rgba(169,139,176,.2)', 'rgba(200,159,133,.2)', 'rgba(232,179,106,.2)', 'rgba(168,176,138,.2)', 'rgba(159,184,201,.2)']
 function getFruitBg(name) { const i = (name || '').length % fruitBgs.length; return fruitBgs[i] }
 
@@ -416,7 +499,30 @@ function openPlaceForm() { resetForm(); formType.value = 'place'; formTitle.valu
 function openFruitForm() { resetForm(); formType.value = 'fruit'; formTitle.value = '🍑 添加水果'; Object.assign(formData, { name: '', emoji: '🍎', sweetness: 3, seasonFrom: 1, seasonTo: 12, price: '', tip: '' }); showForm.value = true }
 
 async function handleSave() {
+  // 表单验证
+  if (formType.value === 'recipe' && !formData.name?.trim()) {
+    ElMessage.warning('请输入菜谱名称')
+    return
+  }
+  if (formType.value === 'drink' && !formData.name?.trim()) {
+    ElMessage.warning('请输入饮品名称')
+    return
+  }
+  if (formType.value === 'shop' && !formData.name?.trim()) {
+    ElMessage.warning('请输入店名')
+    return
+  }
+  if (formType.value === 'place' && !formData.name?.trim()) {
+    ElMessage.warning('请输入景点名称')
+    return
+  }
+  if (formType.value === 'fruit' && !formData.name?.trim()) {
+    ElMessage.warning('请输入水果名称')
+    return
+  }
+
   const fid = familyId.value
+  saving.value = true
   try {
     if (formType.value === 'recipe') {
       const payload = { ...formData, familyId: fid, ingredients: formData.ingredients?.filter(i => i.name), steps: formData.steps?.filter(s => s) }
@@ -444,6 +550,7 @@ async function handleSave() {
     ElMessage.success(editingId.value ? '更新成功' : '保存成功')
     showForm.value = false
   } catch (e) { console.error(e) }
+  finally { saving.value = false }
 }
 
 const deleteApiMap = {
@@ -500,6 +607,16 @@ onMounted(async () => {
 /* ===== 空状态 ===== */
 .empty-card { text-align: center; padding: 60px 20px; }
 .empty-card p { color: var(--text-secondary); margin: 0; }
+
+/* ===== 加载状态 ===== */
+.loading-card { text-align: center; padding: 60px 20px; }
+.loading-card p { color: var(--text-secondary); margin: 12px 0 0; }
+.loading-spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--terracotta); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== 错误状态 ===== */
+.error-card { text-align: center; padding: 60px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.error-card p { color: #B06A6A; margin: 0; }
 
 /* ===== 菜谱卡片 ===== */
 .recipe-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
@@ -639,6 +756,8 @@ onMounted(async () => {
 .btn-cancel:hover { border-color: var(--terracotta); color: var(--terra-deep); }
 .btn-confirm { padding: 10px 24px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--terracotta), #D3A98B); color: #FFF9F2; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 6px 18px rgba(200,159,133,.35); transition: all .25s; font-family: inherit; }
 .btn-confirm:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(200,159,133,.4); }
+.btn-confirm:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-confirm:disabled:hover { transform: none; box-shadow: none; }
 
 /* ===== 响应式 ===== */
 @media (max-width: 960px) {

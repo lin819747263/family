@@ -23,8 +23,11 @@ body.el-popup-parent--hidden {
   --terracotta-d: #B08466;
   --terra-deep: #96684A;
   --sage: #A8B08A;
+  --sage-d: #7E8862;
   --amber: #E8B36A;
+  --amber-d: #C08A3E;
   --rose: #D99A9A;
+  --rose-d: #B06A6A;
   --sky: #9FB8C9;
   --plum: #A98BB0;
   --glow: rgba(230, 190, 150, 0.45);
@@ -172,15 +175,167 @@ html, body, #app {
   }
 }
 
-/* ========== 空状态 ========== */
-.empty-state {
+/* ========== 空 / 加载 / 错误 状态 ========== */
+.empty-state,
+.empty-card,
+.loading-card,
+.error-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
   padding: 60px 20px;
 }
-.empty-state p {
-  margin-top: 12px;
-  color: var(--text-muted);
+
+.empty-state p,
+.empty-card p,
+.loading-card p,
+.error-card p {
+  margin: 12px 0 0;
   font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* 文案是唯一子元素时不需要顶距 */
+.empty-state > p:first-child,
+.empty-card > p:first-child,
+.loading-card > p:first-child,
+.error-card > p:first-child {
+  margin-top: 0;
+}
+
+.error-card p {
+  color: var(--rose-d);
+}
+
+.empty-state .empty-title,
+.empty-card .empty-title,
+.loading-card .empty-title {
+  margin-top: 16px;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.empty-state .empty-desc,
+.empty-card .empty-desc,
+.loading-card .empty-desc {
+  margin-top: 6px;
+  max-width: 360px;
+  line-height: 1.6;
+}
+
+.empty-state > button,
+.empty-card > button,
+.loading-card > button,
+.error-card > button {
+  margin-top: 12px;
+}
+
+.loading-spinner {
+  width: 36px;
+  height: 36px;
+  margin: 0 auto;
+  border: 3px solid var(--border);
+  border-top-color: var(--terracotta);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ========== 暖色弹窗 ========== */
+.warm-dialog.el-dialog {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(160, 120, 90, 0.18);
+  overflow: hidden;
+}
+.warm-dialog .el-dialog__header {
+  padding: 20px 24px 16px;
+  margin: 0;
+  border-bottom: 1px solid var(--border);
+}
+.warm-dialog .el-dialog__title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--terra-deep);
+}
+.warm-dialog .el-dialog__body {
+  padding: 20px 24px;
+}
+.warm-dialog .el-dialog__footer {
+  padding: 12px 24px 20px;
+}
+
+/* 弹窗内表单控件 */
+.warm-form {
+  --el-color-primary: var(--terracotta);
+}
+.warm-form .el-form-item__label {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 13px;
+}
+.warm-form .el-input__wrapper,
+.warm-form .el-textarea__inner {
+  background: var(--bg-card);
+  border: 1.5px solid var(--wood-light);
+  border-radius: 12px;
+  box-shadow: none;
+}
+.warm-form .el-input__wrapper:hover,
+.warm-form .el-textarea__inner:hover {
+  border-color: var(--terracotta);
+}
+.warm-form .el-input__wrapper.is-focus,
+.warm-form .el-textarea__inner:focus {
+  border-color: var(--terracotta);
+  box-shadow: 0 0 0 3px rgba(200, 159, 133, 0.12);
+}
+.warm-form .el-select__wrapper {
+  background: var(--bg-card);
+  border-radius: 12px;
+  box-shadow: 0 0 0 1.5px var(--wood-light) inset;
+}
+.warm-form .el-select__wrapper:hover {
+  box-shadow: 0 0 0 1.5px var(--terracotta) inset;
+}
+.warm-form .el-select__wrapper.is-focused {
+  box-shadow: 0 0 0 1.5px var(--terracotta) inset, 0 0 0 3px rgba(200, 159, 133, 0.12);
+}
+.warm-form .el-input-group__prepend {
+  background: var(--cream);
+  border: 1.5px solid var(--wood-light);
+  border-right: 0;
+  border-radius: 12px 0 0 12px;
+  color: var(--text-secondary);
+}
+.warm-form .el-input-group--prepend .el-input__wrapper {
+  border-radius: 0 12px 12px 0;
+}
+.warm-form .el-input-number__decrease,
+.warm-form .el-input-number__increase {
+  background: var(--cream);
+  color: var(--text-secondary);
+}
+.warm-form .el-input-number__decrease:hover,
+.warm-form .el-input-number__increase:hover {
+  color: var(--terra-deep);
+}
+.warm-form .el-radio-button__inner {
+  background: var(--bg-card);
+  border-color: var(--border);
+  color: var(--text-secondary);
+  box-shadow: none;
+}
+.warm-form .el-radio-button__original-radio:checked + .el-radio-button__inner {
+  background: var(--terracotta);
+  border-color: var(--terracotta);
+  color: #FFF9F2;
 }
 
 /* ========== 加载状态 ========== */
@@ -269,8 +424,8 @@ html, body, #app {
     margin-bottom: 16px;
   }
 
-  /* 卡片 */
-  .card {
+  /* 卡片（状态卡有自己的移动端内边距，见下方空状态规则） */
+  .card:not(.empty-card):not(.loading-card):not(.error-card):not(.empty-state) {
     padding: 16px;
     border-radius: 16px;
   }
@@ -358,8 +513,11 @@ html, body, #app {
     font-size: 12px;
   }
 
-  /* 空状态 */
-  .empty-state {
+  /* 空 / 加载 / 错误 状态 */
+  .empty-state,
+  .empty-card,
+  .loading-card,
+  .error-card {
     padding: 40px 16px;
   }
   .empty-state p {

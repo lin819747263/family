@@ -61,10 +61,10 @@
       </div>
 
       <div v-else-if="list.length === 0" class="empty-card card">
-        <el-icon :size="56" color="#cbd5e1"><Calendar /></el-icon>
+        <el-icon :size="56" color="var(--wood-light)"><Calendar /></el-icon>
         <p class="empty-title">还没有纪念日</p>
         <p class="empty-desc">添加生日、结婚纪念日、重要节日等，系统会提前提醒您</p>
-        <el-button type="primary" @click="openCreate" style="margin-top:12px;">
+        <el-button type="primary" @click="openCreate">
           <el-icon><Plus /></el-icon>添加第一个纪念日
         </el-button>
       </div>
@@ -81,7 +81,7 @@
 
           <!-- 头部：图标 + 类型 -->
           <div class="ac-head">
-            <div class="ac-icon" :style="{ background: item.color + '18', color: item.color }">
+            <div class="ac-icon">
               <el-icon :size="22"><component :is="typeIcon(item.type)" /></el-icon>
             </div>
             <el-tag size="small" :type="typeTagType(item.type)" effect="light" round>
@@ -151,10 +151,10 @@
       v-model="showDialog"
       :title="isEdit ? '编辑纪念日' : '添加纪念日'"
       width="480px"
-      class="form-dialog"
+      class="warm-dialog"
       :close-on-click-modal="false"
     >
-      <el-form :model="form" label-width="80px">
+      <el-form :model="form" label-width="80px" class="warm-form">
         <el-form-item label="名称">
           <el-input v-model="form.title" placeholder="如：妈妈生日、结婚纪念日" maxlength="50" />
         </el-form-item>
@@ -307,23 +307,23 @@ const lunarDays = computed(() => Array.from({ length: 30 }, (_, i) => i + 1))
 // ===== 表单 =====
 const defaultForm = {
   title: '', date: '', type: 'other', icon: 'Calendar',
-  color: 'var(--terracotta)', calendarType: 'solar', lunarDate: '',
+  color: '#C89F85', calendarType: 'solar', lunarDate: '',
   repeatYearly: true, reminderDays: 3, note: ''
 }
 const form = ref({ ...defaultForm })
 
 const typeOptions = [
-  { value: 'birthday', label: '生日', icon: 'User', color: '#f472b6' },
-  { value: 'anniversary', label: '纪念日', icon: 'Star', color: 'var(--terracotta)' },
-  { value: 'holiday', label: '节日', icon: 'Flag', color: '#34d399' },
-  { value: 'countdown', label: '倒数日', icon: 'Timer', color: '#f97316' },
-  { value: 'other', label: '其他', icon: 'MoreFilled', color: '#fbbf24' }
+  { value: 'birthday', label: '生日', icon: 'User', color: '#D99A9A' },
+  { value: 'anniversary', label: '纪念日', icon: 'Star', color: '#C89F85' },
+  { value: 'holiday', label: '节日', icon: 'Flag', color: '#A8B08A' },
+  { value: 'countdown', label: '倒数日', icon: 'Timer', color: '#C08A3E' },
+  { value: 'other', label: '其他', icon: 'MoreFilled', color: '#9FB8C9' }
 ]
 
 const colorOptions = [
-  'var(--terracotta)', '#764ba2', '#f472b6', '#ef4444',
-  '#f97316', '#fbbf24', '#34d399', '#06b6d4',
-  '#3b82f6', '#8b5cf6', '#ec4899', '#64748b'
+  '#C89F85', '#B08466', '#96684A', '#E8B36A',
+  '#C08A3E', '#A8B08A', '#7E8862', '#D99A9A',
+  '#B06A6A', '#9FB8C9', '#A98BB0', '#6E8CA0'
 ]
 
 function typeLabel(t) {
@@ -463,7 +463,7 @@ async function openEdit(item) {
     date: item.date,
     type: item.type,
     icon: item.icon || 'Calendar',
-    color: item.color || 'var(--terracotta)',
+    color: item.color || '#C89F85',
     calendarType: item.calendarType || 'solar',
     lunarDate: item.lunarDate || '',
     repeatYearly: item.repeatYearly !== false,
@@ -605,25 +605,6 @@ async function handleDelete(id) {
 .uc-lunar { margin-top: 3px; font-size: 11.5px; opacity: 0.8; }
 
 /* 空状态 */
-.empty-card {
-  text-align: center;
-  padding: 60px 20px;
-}
-.empty-title {
-  font-size: 17px;
-  font-weight: 600;
-  color: #A08D7A;
-  margin-top: 16px;
-}
-.empty-desc {
-  font-size: 14px;
-  color: #A08D7A;
-  margin-top: 6px;
-  max-width: 360px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.6;
-}
 
 /* 卡片网格 - 暖色 */
 .card-grid {
@@ -657,6 +638,8 @@ async function handleDelete(id) {
 .ac-icon {
   width: 44px; height: 44px; border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+  color: var(--accent);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .anniv-card:hover .ac-icon { transform: scale(1.12) rotate(-8deg); }
@@ -824,14 +807,6 @@ async function handleDelete(id) {
   transform: scale(1.15);
 }
 
-/* 弹窗 - 暖色 */
-.form-dialog :deep(.el-dialog) { border-radius: 20px; overflow: hidden; }
-.form-dialog :deep(.el-dialog__header) {
-  padding: 20px 24px 16px; margin: 0; border-bottom: 1px solid var(--border);
-}
-.form-dialog :deep(.el-dialog__title) { font-size: 17px; font-weight: 600; color: var(--terra-deep); }
-.form-dialog :deep(.el-dialog__body) { padding: 20px 24px; }
-
 @media (max-width: 768px) {
   .page-header {
     flex-direction: column;
@@ -842,18 +817,6 @@ async function handleDelete(id) {
   }
   .upcoming-card {
     width: 120px;
-  }
-  .form-dialog :deep(.el-dialog) {
-    width: 92vw !important;
-    max-width: 92vw !important;
-  }
-  .form-dialog :deep(.el-dialog__header) {
-    padding: 16px 16px 12px;
-  }
-  .form-dialog :deep(.el-dialog__body) {
-    padding: 12px 16px 16px;
-    max-height: 70vh;
-    overflow-y: auto;
   }
 }
 </style>

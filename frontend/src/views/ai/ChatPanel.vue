@@ -273,7 +273,7 @@ watch(() => props.visible, (val) => {
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
   color: #fff;
   flex-shrink: 0;
 }
@@ -359,9 +359,9 @@ watch(() => props.visible, (val) => {
   text-align: left;
 }
 .suggestion-btn:hover {
-  border-color: #667eea;
-  color: #667eea;
-  background: rgba(102,126,234,0.04);
+  border-color: var(--terracotta);
+  color: var(--terra-deep);
+  background: rgba(200, 159, 133, 0.04);
 }
 
 /* 消息 */
@@ -390,7 +390,7 @@ watch(() => props.visible, (val) => {
   line-height: 1.6;
 }
 .chat-msg.user .msg-bubble {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
   color: #fff;
   border-bottom-right-radius: 4px;
 }
@@ -402,7 +402,7 @@ watch(() => props.visible, (val) => {
 
 /* 记账卡片 */
 .txn-card {
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 10px;
   padding: 14px;
   min-width: 200px;
@@ -440,8 +440,8 @@ watch(() => props.visible, (val) => {
 }
 .txn-card-cat {
   font-size: 13px;
-  color: #667eea;
-  background: rgba(102,126,234,0.08);
+  color: var(--terra-deep);
+  background: rgba(200, 159, 133, 0.08);
   padding: 2px 8px;
   border-radius: 6px;
   font-weight: 500;
@@ -468,7 +468,7 @@ watch(() => props.visible, (val) => {
 
 /* 待办卡片 */
 .todo-card {
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 10px;
   padding: 14px;
   min-width: 200px;
@@ -574,7 +574,7 @@ watch(() => props.visible, (val) => {
   font-weight: 700;
 }
 .msg-content :deep(blockquote) {
-  border-left: 3px solid #667eea;
+  border-left: 3px solid var(--terracotta);
   padding-left: 12px;
   margin: 8px 0;
   color: #A08D7A;
@@ -625,7 +625,7 @@ watch(() => props.visible, (val) => {
   transition: border-color 0.2s;
 }
 .chat-input:focus {
-  border-color: #667eea;
+  border-color: var(--terracotta);
 }
 .chat-input::placeholder {
   color: #A08D7A;
@@ -634,7 +634,7 @@ watch(() => props.visible, (val) => {
   width: 40px;
   height: 40px;
   border: none;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
   color: #fff;
   border-radius: 12px;
   cursor: pointer;

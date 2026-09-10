@@ -96,7 +96,7 @@
 
     <!-- 空状态 -->
     <div v-else-if="items.length === 0" class="card empty-card">
-      <el-icon :size="48" color="#cbd5e1"><Box /></el-icon>
+      <el-icon :size="48" color="var(--wood-light)"><Box /></el-icon>
       <p>暂无物品，点击右上角添加</p>
     </div>
 
@@ -897,14 +897,6 @@ async function handleDelete(id) {
 }
 
 /* ===== 空状态 ===== */
-.empty-card {
-  text-align: center;
-  padding: 60px 20px;
-}
-.empty-card p {
-  margin-top: 12px;
-  color: var(--text-secondary);
-}
 
 /* ===== 分页 ===== */
 .pagination-wrap {
@@ -913,7 +905,7 @@ async function handleDelete(id) {
 }
 
 /* ===== 暖色弹窗 ===== */
-:deep(.warm-dialog .el-dialog) {
+:deep(.warm-dialog.el-dialog) {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 20px;
@@ -923,23 +915,23 @@ async function handleDelete(id) {
 :deep(.warm-dialog .el-overlay) {
   overflow: visible;
 }
-:deep(.warm-dialog .el-dialog__header) {
+:deep(.warm-dialog.el-dialog .el-dialog__header) {
   padding: 20px 24px 0;
   margin: 0;
 }
-:deep(.warm-dialog .el-dialog__title) {
+:deep(.warm-dialog.el-dialog .el-dialog__title) {
   font-size: 18px;
   font-weight: 700;
   color: var(--terra-deep);
 }
-:deep(.warm-dialog .el-dialog__headerbtn .el-dialog__close) {
+:deep(.warm-dialog.el-dialog .el-dialog__headerbtn .el-dialog__close) {
   color: var(--text-secondary);
   font-size: 18px;
 }
-:deep(.warm-dialog .el-dialog__body) {
+:deep(.warm-dialog.el-dialog .el-dialog__body) {
   padding: 16px 24px 8px;
 }
-:deep(.warm-dialog .el-dialog__footer) {
+:deep(.warm-dialog.el-dialog .el-dialog__footer) {
   padding: 8px 24px 20px;
 }
 
@@ -1120,10 +1112,10 @@ async function handleDelete(id) {
 <!-- 全局：暖色下拉框（teleport 到 body，scoped 覆盖不到） -->
 <style>
 /* ===== 强制弹窗不裁剪 ===== */
-.warm-dialog .el-dialog {
+.warm-dialog.el-dialog {
   overflow: visible !important;
 }
-.warm-dialog .el-dialog__body {
+.warm-dialog.el-dialog .el-dialog__body {
   overflow: visible !important;
 }
 

@@ -46,9 +46,9 @@
     <el-image-viewer v-if="previewVisible" :url-list="photos.map(p => p.url)" :initial-index="previewIndex" @close="previewVisible = false" />
 
     <!-- 分享弹窗 -->
-    <el-dialog v-model="showShare" title="分享相册" width="400px">
+    <el-dialog v-model="showShare" title="分享相册" width="400px" class="warm-dialog">
       <div style="text-align:center;padding:20px 0;">
-        <p style="margin-bottom:16px;color:#64748b;">将以下链接分享给家庭成员：</p>
+        <p style="margin-bottom:16px;color:var(--text-secondary);">将以下链接分享给家庭成员：</p>
         <el-input v-model="shareLink" readonly>
           <template #append>
             <el-button @click="copyLink">复制</el-button>
@@ -186,16 +186,8 @@ async function handleDeletePhoto(id) {
   .page-title {
     font-size: 18px;
   }
-  .card {
-    padding: 12px;
-    border-radius: 10px;
-  }
   .photo-delete-btn {
     opacity: 1;
-  }
-  :deep(.el-dialog) {
-    width: 92% !important;
-    margin: 0 auto;
   }
   :deep(.el-upload) {
     display: block;

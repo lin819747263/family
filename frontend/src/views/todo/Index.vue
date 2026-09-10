@@ -124,10 +124,10 @@
       v-model="showDialog"
       :title="isEdit ? '编辑待办' : '新建待办'"
       width="480px"
-      class="form-dialog"
+      class="warm-dialog"
       :close-on-click-modal="false"
     >
-      <el-form :model="form" label-width="80px">
+      <el-form :model="form" label-width="80px" class="warm-form">
         <el-form-item label="标题">
           <el-input v-model="form.title" placeholder="待办事项" maxlength="200" />
         </el-form-item>
@@ -579,43 +579,6 @@ async function handleDelete(id) {
 }
 .time-tab.active .tab-count { background: rgba(255, 255, 255, 0.3); color: #fff; }
 
-/* 统计卡片 */
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.stat-card {
-  background: rgba(255,255,255,0.8);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.9);
-  border-radius: 14px;
-  padding: 16px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.25s;
-}
-.stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-}
-.stat-num {
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--terracotta);
-  line-height: 1.2;
-}
-.stat-card.pending .stat-num { color: #E8B36A; }
-.stat-card.overdue .stat-num { color: #D99A9A; }
-.stat-card.done .stat-num { color: #A8B08A; }
-.stat-card.archived .stat-num { color: #A08D7A; }
-.stat-label {
-  font-size: 13px;
-  color: #A08D7A;
-  margin-top: 4px;
-}
-
 /* 快速添加 */
 .quick-add {
   margin-bottom: 16px;
@@ -627,36 +590,13 @@ async function handleDelete(id) {
   font-size: 15px;
 }
 .quick-add :deep(.el-input__inner) {
-  color: var(--text-deep);
+  color: var(--text-primary);
 }
 .quick-add :deep(.el-input__inner::placeholder) {
-  color: var(--text-soft);
-}
-
-/* 卡片 */
-.card {
-  background: #FFFDFA;
-  border: 1px solid rgba(226, 205, 178, 0.7);
-  border-radius: 24px;
-  box-shadow: 0 8px 28px rgba(160, 120, 90, 0.08);
+  color: var(--text-secondary);
 }
 
 /* 空状态 */
-.empty-card {
-  text-align: center;
-  padding: 60px 20px;
-}
-.empty-title {
-  font-size: 17px;
-  font-weight: 600;
-  color: #A08D7A;
-  margin-top: 16px;
-}
-.empty-desc {
-  font-size: 14px;
-  color: #A08D7A;
-  margin-top: 6px;
-}
 
 /* 待办列表 */
 .todo-list {
@@ -796,21 +736,6 @@ async function handleDelete(id) {
 .act-btn:hover { background: rgba(200, 159, 133, 0.28); }
 .act-btn.danger:hover { background: rgba(217, 154, 154, 0.3); color: #B06A6A; }
 
-/* 弹窗 - 暖色 */
-.form-dialog :deep(.el-dialog) {
-  border-radius: 20px; overflow: hidden;
-}
-.form-dialog :deep(.el-dialog__header) {
-  padding: 20px 24px 16px; margin: 0;
-  border-bottom: 1px solid var(--border);
-}
-.form-dialog :deep(.el-dialog__title) {
-  font-size: 17px; font-weight: 600; color: var(--terra-deep);
-}
-.form-dialog :deep(.el-dialog__body) {
-  padding: 20px 24px;
-}
-
 /* 自定义重复选项 */
 .custom-repeat-row {
   display: flex;
@@ -863,21 +788,6 @@ async function handleDelete(id) {
   }
   .header-actions {
     flex-wrap: wrap;
-  }
-  .stats-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .form-dialog :deep(.el-dialog) {
-    width: 92vw !important;
-    max-width: 92vw !important;
-  }
-  .form-dialog :deep(.el-dialog__header) {
-    padding: 16px 16px 12px;
-  }
-  .form-dialog :deep(.el-dialog__body) {
-    padding: 12px 16px 16px;
-    max-height: 70vh;
-    overflow-y: auto;
   }
 }
 </style>

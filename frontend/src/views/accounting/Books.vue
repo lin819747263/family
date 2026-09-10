@@ -14,10 +14,10 @@
     </div>
 
     <!-- 加载失败 -->
-    <div v-else-if="loadError" class="empty-card card error-state">
-      <el-icon :size="48" color="#f87171"><CircleCloseFilled /></el-icon>
+    <div v-else-if="loadError" class="card error-card">
+      <el-icon :size="48" color="var(--rose-d)"><CircleCloseFilled /></el-icon>
       <p>数据加载失败，请稍后重试</p>
-      <el-button type="primary" style="margin-top:12px;" @click="loadBooks">
+      <el-button type="primary" @click="loadBooks">
         🔄 重新加载
       </el-button>
     </div>
@@ -40,8 +40,8 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item command="delete">
-                  <el-icon color="#f87171"><Delete /></el-icon>
-                  <span style="color:#f87171;">删除账本</span>
+                  <el-icon color="var(--rose-d)"><Delete /></el-icon>
+                  <span style="color:var(--rose-d);">删除账本</span>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -63,14 +63,14 @@
 
       <!-- 空状态 -->
       <div v-if="books.length === 0" class="empty-card card">
-        <el-icon :size="48" color="#cbd5e1"><Coin /></el-icon>
+        <el-icon :size="48" color="var(--wood-light)"><Coin /></el-icon>
         <p>还没有账本，点击右上角创建一个吧</p>
       </div>
     </div>
 
     <!-- 新建账本弹窗 -->
-    <el-dialog v-model="showCreate" title="新建账本" width="440px" class="form-dialog">
-      <el-form :model="form" label-width="80px">
+    <el-dialog v-model="showCreate" title="新建账本" width="440px" class="warm-dialog">
+      <el-form :model="form" label-width="80px" class="warm-form">
         <el-form-item label="账本名称">
           <el-input v-model="form.name" placeholder="如：家庭生活、旅行基金" />
         </el-form-item>
@@ -95,12 +95,12 @@
       v-model="showDelete"
       title="删除账本"
       width="440px"
-      class="form-dialog"
+      class="warm-dialog"
       :close-on-click-modal="false"
     >
       <div class="delete-warn">
         <div class="warn-icon">
-          <el-icon :size="28" color="#f87171"><WarningFilled /></el-icon>
+          <el-icon :size="28" color="var(--rose-d)"><WarningFilled /></el-icon>
         </div>
         <div class="warn-body">
           <div class="warn-title">确定要删除账本「{{ deleteTarget?.name }}」吗？</div>
@@ -285,8 +285,8 @@ async function handleCreate() {
   color: #fff;
 }
 .book-icon.family {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  box-shadow: 0 4px 14px rgba(102, 126, 234, 0.3);
+  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
+  box-shadow: 0 4px 14px rgba(200, 159, 133, 0.3);
 }
 .book-icon.personal {
   background: linear-gradient(135deg, #34d399, #A8B08A);
@@ -330,33 +330,9 @@ async function handleCreate() {
 }
 
 /* 空状态 */
-.empty-card {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 60px 20px;
-}
-.empty-card p {
-  margin-top: 12px;
-  color: #A08D7A;
-  font-size: 14px;
-}
+.empty-card,
+.error-card { grid-column: 1 / -1; }
 
-/* 加载/错误状态 */
-.loading-spinner {
-  width: 36px;
-  height: 36px;
-  border: 3px solid #E2CDB2;
-  border-top-color: #C89F85;
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
-  margin: 0 auto;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-.error-state {
-  grid-column: 1 / -1;
-}
 
 /* 删除弹窗 */
 .delete-warn {
@@ -400,38 +376,9 @@ async function handleCreate() {
   color: #A08D7A;
 }
 
-/* 弹窗样式 */
-.form-dialog :deep(.el-dialog) {
-  border-radius: 20px;
-}
-.form-dialog :deep(.el-dialog__header) {
-  padding: 20px 24px 16px;
-  margin: 0;
-  border-bottom: 1px solid #F3EADD;
-}
-.form-dialog :deep(.el-dialog__title) {
-  font-size: 17px;
-  font-weight: 600;
-}
-.form-dialog :deep(.el-dialog__body) {
-  padding: 20px 24px;
-}
-
 @media (max-width: 640px) {
   .books-grid {
     grid-template-columns: 1fr;
-  }
-  .form-dialog :deep(.el-dialog) {
-    width: 92vw !important;
-    max-width: 92vw !important;
-  }
-  .form-dialog :deep(.el-dialog__header) {
-    padding: 16px 16px 12px;
-  }
-  .form-dialog :deep(.el-dialog__body) {
-    padding: 12px 16px 16px;
-    max-height: 70vh;
-    overflow-y: auto;
   }
 }
 </style>

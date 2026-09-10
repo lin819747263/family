@@ -19,7 +19,7 @@
       </div>
     </template>
     <div v-if="notifications.length === 0" class="empty-notice">
-      <el-icon :size="48" color="#cbd5e1"><Bell /></el-icon>
+      <el-icon :size="48" color="var(--wood-light)"><Bell /></el-icon>
       <p>暂无新通知</p>
     </div>
     <div

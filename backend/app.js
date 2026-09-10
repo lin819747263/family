@@ -17,7 +17,7 @@ app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(cors({ origin: process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : '*', credentials: true }));
 
 // 限流
-const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: { code: 429, message: '请求过于频繁，请稍后再试' } });
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 1000, message: { code: 429, message: '请求过于频繁，请稍后再试' } });
 app.use('/api', limiter);
 
 // 请求日志

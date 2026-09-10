@@ -264,7 +264,7 @@ async function handleSubmit() {
   display: flex; align-items: center; gap: 10px; flex: 1;
 }
 .d-label {
-  font-size: 13px; color: var(--text-soft, #A08D7A);
+  font-size: 13px; color: var(--text-secondary);
   white-space: nowrap; flex-shrink: 0;
 }
 .d-chip {
@@ -285,21 +285,21 @@ async function handleSubmit() {
 }
 .entry-card:hover { border-color: var(--wood-light, #E2CDB2); }
 .entry-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-.entry-index { font-size: 12px; font-weight: 800; color: var(--text-soft, #A08D7A); }
+.entry-index { font-size: 12px; font-weight: 800; color: var(--text-secondary); }
 .entry-type-toggle {
   display: flex; background: var(--cream, #F3EADD); border-radius: 8px; padding: 2px; margin-left: auto;
 }
 .mini-type-btn {
   padding: 4px 11px; border-radius: 6px; border: none;
   background: transparent; font-size: 12px; font-weight: 700;
-  color: var(--text-soft, #A08D7A); cursor: pointer; transition: all 0.25s;
+  color: var(--text-secondary); cursor: pointer; transition: all 0.25s;
 }
 .mini-type-btn.active.expense { background: var(--rose, #D99A9A); color: #fff; }
 .mini-type-btn.active.income { background: var(--sage, #A8B08A); color: #fff; }
 
 .entry-remove {
   margin-left: 8px; width: 24px; height: 24px; border-radius: 7px;
-  border: none; background: transparent; color: var(--text-soft, #A08D7A);
+  border: none; background: transparent; color: var(--text-secondary);
   cursor: pointer; display: flex; align-items: center; justify-content: center;
   transition: all 0.2s;
 }
@@ -315,7 +315,7 @@ async function handleSubmit() {
 .entry-currency { font-size: 16px; font-weight: 800; color: var(--terra-deep, #96684A); }
 .entry-amount-input {
   flex: 1; border: none; background: transparent; outline: none;
-  font-size: 20px; font-weight: 700; color: var(--text-deep, #6B5744); min-width: 0;
+  font-size: 20px; font-weight: 700; color: var(--text-primary); min-width: 0;
 }
 .entry-amount-input::placeholder { color: var(--wood-light, #E2CDB2); }
 .entry-amount-input::-webkit-outer-spin-button,
@@ -331,7 +331,7 @@ async function handleSubmit() {
 .d-field-sm {
   width: 120px; padding: 8px 10px; border-radius: 11px;
   border: 1.5px solid var(--wood-light, #E2CDB2); background: #FFFDF9;
-  font-size: 12.5px; color: var(--text-deep, #6B5744); outline: none;
+  font-size: 12.5px; color: var(--text-primary); outline: none;
   transition: all 0.25s;
 }
 .d-field-sm:focus {
@@ -343,7 +343,7 @@ async function handleSubmit() {
 .add-entry-btn {
   width: 100%; margin-top: 4px; padding: 11px;
   border-radius: 12px; border: 2px dashed var(--wood-light, #E2CDB2);
-  background: transparent; color: var(--text-soft, #A08D7A);
+  background: transparent; color: var(--text-secondary);
   font-size: 13.5px; font-weight: 700; cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: 6px;
   transition: all 0.25s;
@@ -357,7 +357,7 @@ async function handleSubmit() {
 .batch-footer {
   display: flex; align-items: center; justify-content: space-between;
   padding: 11px 14px; border-radius: 12px;
-  background: var(--cream, #F3EADD); font-size: 13.5px; color: var(--text-soft, #A08D7A);
+  background: var(--cream, #F3EADD); font-size: 13.5px; color: var(--text-secondary);
 }
 .batch-summary { }
 .summary-amount { font-size: 17px; color: var(--terra-deep, #96684A); font-weight: 700; }

@@ -110,7 +110,7 @@
             <el-icon class="is-loading" :size="24"><Loading /></el-icon>
           </div>
           <div v-else-if="matrixData.length === 0" class="empty-state">
-            <el-icon :size="48" color="#cbd5e1"><Document /></el-icon>
+            <el-icon :size="48" color="var(--wood-light)"><Document /></el-icon>
             <p>暂无数据</p>
           </div>
           <table v-else class="matrix-table">
@@ -210,7 +210,7 @@ const matrixData = ref([])
 const matrixLoading = ref(false)
 
 let chartInstances = []
-const rankColors = ['#667eea', '#764ba2', '#f472b6', '#fbbf24', '#34d399', '#f87171', '#60a5fa', '#a78bfa']
+const rankColors = ['#B08466', '#96684A', '#7E8862', '#B06A6A', '#C08A3E', '#A98BB0', '#C89F85', '#6E8CA0']
 
 const dailyMonthLabel = computed(() => {
   const [y, m] = dailyMonth.value.split('-')
@@ -405,13 +405,13 @@ function renderYearlyCharts() {
         data: yearlyData.value.map(d => d.expense),
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: '#667eea' },
-            { offset: 1, color: '#a5b4fc' }
+            { offset: 0, color: '#C89F85' },
+            { offset: 1, color: '#E2CDB2' }
           ]),
           borderRadius: [4, 4, 0, 0]
         },
         barMaxWidth: 36,
-        emphasis: { itemStyle: { color: '#4f46e5' } }
+        emphasis: { itemStyle: { color: '#96684A' } }
       }]
     })
     chartInstances.push(chart)
@@ -485,7 +485,7 @@ async function exportReport(format) {
 .asc-value {
   font-size: 32px;
   font-weight: 700;
-  color: #f87171;
+  color: var(--rose-d);
   line-height: 1.2;
 }
 
@@ -543,12 +543,10 @@ async function exportReport(format) {
 }
 
 .empty-state {
-  text-align: center;
   padding: 20px 0;
 }
 .empty-state p {
   margin: 0;
-  color: #A08D7A;
   font-size: 13px;
 }
 
@@ -585,10 +583,10 @@ async function exportReport(format) {
 .matrix-table .col-sub { width: 120px; }
 .matrix-table .col-month { min-width: 70px; }
 .matrix-table .col-total { min-width: 80px; font-weight: 700; color: #6B5744; }
-.matrix-table .col-parent-total { min-width: 90px; font-weight: 700; color: #667eea; }
+.matrix-table .col-parent-total { min-width: 90px; font-weight: 700; color: var(--terra-deep); }
 
 /* 分组颜色 - 4 种交替色 */
-.group-0 { --group-accent: #667eea; --group-bg: rgba(102, 126, 234, 0.04); --group-bg-hover: rgba(102, 126, 234, 0.08); }
+.group-0 { --group-accent: var(--terracotta); --group-bg: rgba(200, 159, 133, 0.04); --group-bg-hover: rgba(200, 159, 133, 0.08); }
 .group-1 { --group-accent: #A8B08A; --group-bg: rgba(16, 185, 129, 0.04); --group-bg-hover: rgba(16, 185, 129, 0.08); }
 .group-2 { --group-accent: #E8B36A; --group-bg: rgba(245, 158, 11, 0.04); --group-bg-hover: rgba(245, 158, 11, 0.08); }
 .group-3 { --group-accent: #ec4899; --group-bg: rgba(236, 72, 153, 0.04); --group-bg-hover: rgba(236, 72, 153, 0.08); }
@@ -606,7 +604,7 @@ async function exportReport(format) {
   font-size: 14px;
   vertical-align: middle;
   background: var(--group-bg, #fafbff);
-  border-right: 3px solid var(--group-accent, #667eea);
+  border-right: 3px solid var(--group-accent, var(--terracotta));
   padding-left: 12px;
 }
 .child-row {
@@ -645,8 +643,8 @@ async function exportReport(format) {
   border-radius: 4px;
 }
 .cell-clickable:hover {
-  background: rgba(102, 126, 234, 0.1);
-  color: #667eea;
+  background: rgba(200, 159, 133, 0.1);
+  color: var(--terra-deep);
   font-weight: 600;
 }
 .cell-total {
@@ -661,9 +659,9 @@ async function exportReport(format) {
   text-align: right !important;
   font-weight: 700;
   font-size: 14px;
-  color: var(--group-accent, #667eea);
-  background: var(--group-bg, rgba(102, 126, 234, 0.03));
-  border-left: 2px solid var(--group-accent, #667eea);
+  color: var(--group-accent, var(--terracotta));
+  background: var(--group-bg, rgba(200, 159, 133, 0.03));
+  border-left: 2px solid var(--group-accent, var(--terracotta));
   vertical-align: middle;
   padding-right: 12px;
 }
@@ -672,7 +670,7 @@ async function exportReport(format) {
 }
 .grand-total-row td {
   font-weight: 700;
-  border-top: 2px solid #667eea;
+  border-top: 2px solid var(--terracotta);
 }
 .cell-grand-label {
   text-align: left !important;
@@ -685,28 +683,21 @@ async function exportReport(format) {
   font-variant-numeric: tabular-nums;
 }
 .cell-grand-total {
-  color: #f87171;
+  color: var(--rose-d);
   font-size: 15px;
   border-left: 2px solid rgba(226,205,178,.7);
 }
 .cell-grand-parent-total {
-  color: #667eea;
+  color: var(--terra-deep);
   font-size: 15px;
   font-weight: 700;
-  border-left: 2px solid rgba(102, 126, 234, 0.15);
-  background: rgba(102, 126, 234, 0.03);
+  border-left: 2px solid rgba(200, 159, 133, 0.15);
+  background: rgba(200, 159, 133, 0.03);
 }
 
 @media (max-width: 768px) {
   .page-title {
     font-size: 18px;
-  }
-  .card {
-    padding: 12px;
-    border-radius: 10px;
-  }
-  .stat-card {
-    padding: 14px;
   }
   .stat-value {
     font-size: 20px;
@@ -739,10 +730,6 @@ async function exportReport(format) {
   }
   :deep(.el-tabs__item) {
     font-size: 14px;
-  }
-  :deep(.el-dialog) {
-    width: 92% !important;
-    margin: 0 auto;
   }
 }
 </style>

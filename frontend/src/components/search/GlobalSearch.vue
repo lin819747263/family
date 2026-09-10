@@ -5,7 +5,7 @@
     :width="560"
     top="12vh"
     destroy-on-close
-    class="global-search-dialog"
+    class="global-search-dialog warm-dialog"
     @closed="$emit('close')"
   >
     <!-- 搜索输入框 -->
@@ -126,11 +126,11 @@ const resultGroups = computed(() => {
   const recipes = items.filter(i => i._type === 'recipe')
   const anniversaries = items.filter(i => i._type === 'anniversary')
 
-  if (txns.length) groups.push({ label: '记账', icon: '💰', color: 'linear-gradient(135deg, #667eea, #764ba2)', items: txns })
-  if (todos.length) groups.push({ label: '待办', icon: '📋', color: 'linear-gradient(135deg, #f59e0b, #d97706)', items: todos })
-  if (inventory.length) groups.push({ label: '物品', icon: '📦', color: 'linear-gradient(135deg, #10b981, #059669)', items: inventory })
-  if (recipes.length) groups.push({ label: '菜谱', icon: '🍳', color: 'linear-gradient(135deg, #ef4444, #dc2626)', items: recipes })
-  if (anniversaries.length) groups.push({ label: '纪念日', icon: '📅', color: 'linear-gradient(135deg, #8b5cf6, #7c3aed)', items: anniversaries })
+  if (txns.length) groups.push({ label: '记账', icon: '💰', color: 'linear-gradient(135deg, var(--terracotta), var(--terracotta-d))', items: txns })
+  if (todos.length) groups.push({ label: '待办', icon: '📋', color: 'linear-gradient(135deg, var(--amber), var(--amber-d))', items: todos })
+  if (inventory.length) groups.push({ label: '物品', icon: '📦', color: 'linear-gradient(135deg, var(--sage), var(--sage-d))', items: inventory })
+  if (recipes.length) groups.push({ label: '菜谱', icon: '🍳', color: 'linear-gradient(135deg, var(--rose), var(--rose-d))', items: recipes })
+  if (anniversaries.length) groups.push({ label: '纪念日', icon: '📅', color: 'linear-gradient(135deg, var(--plum), var(--sky))', items: anniversaries })
 
   return groups
 })
@@ -342,16 +342,13 @@ watch(() => props.visible, (val) => {
 
 <style scoped>
 /* 搜索对话框 */
-.global-search-dialog :deep(.el-dialog) {
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+.global-search-dialog.el-dialog {
   padding: 0;
 }
-.global-search-dialog :deep(.el-dialog__header) {
+.global-search-dialog.el-dialog .el-dialog__header {
   display: none;
 }
-.global-search-dialog :deep(.el-dialog__body) {
+.global-search-dialog.el-dialog .el-dialog__body {
   padding: 0;
 }
 
@@ -483,7 +480,7 @@ watch(() => props.visible, (val) => {
   background: #F3EADD;
 }
 .result-item.active {
-  background: rgba(102, 126, 234, 0.08);
+  background: rgba(200, 159, 133, 0.08);
 }
 .result-icon {
   width: 36px;
@@ -508,8 +505,8 @@ watch(() => props.visible, (val) => {
   white-space: nowrap;
 }
 .result-title :deep(mark) {
-  background: rgba(102, 126, 234, 0.15);
-  color: #667eea;
+  background: rgba(200, 159, 133, 0.15);
+  color: var(--terra-deep);
   padding: 0 2px;
   border-radius: 2px;
 }
@@ -522,8 +519,8 @@ watch(() => props.visible, (val) => {
   white-space: nowrap;
 }
 .result-desc :deep(mark) {
-  background: rgba(102, 126, 234, 0.1);
-  color: #667eea;
+  background: rgba(200, 159, 133, 0.1);
+  color: var(--terra-deep);
   padding: 0 2px;
   border-radius: 2px;
 }
@@ -552,13 +549,5 @@ watch(() => props.visible, (val) => {
   border-top: 1px solid #F3EADD;
   font-size: 11px;
   color: #E2CDB2;
-}
-
-/* 响应式 */
-@media (max-width: 768px) {
-  .global-search-dialog :deep(.el-dialog) {
-    width: 92vw !important;
-    margin: 0 auto;
-  }
 }
 </style>

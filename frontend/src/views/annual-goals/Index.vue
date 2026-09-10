@@ -50,7 +50,7 @@
       <el-icon :size="56" color="#E2CDB2"><Aim /></el-icon>
       <p class="empty-title">还没有年度目标</p>
       <p class="empty-desc">设定目标，让这一年更有意义</p>
-      <el-button type="primary" @click="openCreate" style="margin-top:12px;">
+      <el-button type="primary" @click="openCreate">
         <el-icon><Plus /></el-icon>创建第一个目标
       </el-button>
     </div>
@@ -143,8 +143,8 @@
     </div>
 
     <!-- 创建/编辑弹窗 -->
-    <el-dialog v-model="showDialog" :title="isEdit ? '编辑目标' : '新增年度目标'" width="520px" destroy-on-close class="form-dialog">
-      <el-form :model="form" label-width="80px">
+    <el-dialog v-model="showDialog" :title="isEdit ? '编辑目标' : '新增年度目标'" width="520px" destroy-on-close class="warm-dialog">
+      <el-form :model="form" label-width="80px" class="warm-form">
         <el-form-item label="年份">
           <el-select v-model="form.year" style="width:100%;">
             <el-option v-for="y in yearOptions" :key="y" :label="y + '年'" :value="y" />
@@ -179,8 +179,8 @@
     </el-dialog>
 
     <!-- 更新进度弹窗 -->
-    <el-dialog v-model="showProgressDialog" title="更新进度" width="500px" destroy-on-close class="form-dialog">
-      <el-form :model="progressForm" label-width="80px">
+    <el-dialog v-model="showProgressDialog" title="更新进度" width="500px" destroy-on-close class="warm-dialog">
+      <el-form :model="progressForm" label-width="80px" class="warm-form">
         <el-form-item label="年度进度">
           <el-slider v-model="progressForm.progress" :max="100" show-input />
         </el-form-item>
@@ -423,7 +423,7 @@ function categoryType(c) {
   font-weight: 700;
   color: #6B5744;
 }
-.ms-num.active { color: #667eea; }
+.ms-num.active { color: var(--terra-deep); }
 .ms-num.done { color: #34d399; }
 .ms-num.rate { color: #E8B36A; }
 .ms-lbl {
@@ -433,21 +433,6 @@ function categoryType(c) {
 }
 
 /* 空状态 */
-.empty-card {
-  text-align: center;
-  padding: 60px 20px;
-}
-.empty-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #A08D7A;
-  margin-top: 16px;
-}
-.empty-desc {
-  font-size: 14px;
-  color: #A08D7A;
-  margin-top: 8px;
-}
 
 /* 目标网格 */
 .goal-grid {
@@ -479,7 +464,7 @@ function categoryType(c) {
   border-left: 3px solid #34d399;
 }
 .goal-card.category-study {
-  border-left: 3px solid #667eea;
+  border-left: 3px solid var(--terracotta);
 }
 .goal-card.category-finance {
   border-left: 3px solid #E8B36A;
@@ -556,7 +541,7 @@ function categoryType(c) {
 .progress-value {
   font-size: 14px;
   font-weight: 600;
-  color: #667eea;
+  color: var(--terra-deep);
 }
 
 /* 季度进度 */
@@ -579,7 +564,7 @@ function categoryType(c) {
 }
 .quarter-item.active {
   background: #e0e7ff;
-  border: 1px solid #667eea;
+  border: 1px solid var(--terracotta);
 }
 .quarter-label {
   font-size: 11px;
@@ -610,7 +595,7 @@ function categoryType(c) {
   gap: 6px;
 }
 .goal-avatar {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
   color: #fff;
   font-size: 10px;
   font-weight: 600;
@@ -648,10 +633,6 @@ function categoryType(c) {
   }
   .goal-grid {
     grid-template-columns: 1fr;
-  }
-  .form-dialog :deep(.el-dialog) {
-    width: 92vw !important;
-    max-width: 92vw !important;
   }
 }
 </style>

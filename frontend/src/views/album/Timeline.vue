@@ -19,7 +19,7 @@
       <el-icon class="is-loading" :size="32"><Loading /></el-icon>
     </div>
     <div v-else-if="groups.length === 0" class="empty-card card">
-      <el-icon :size="56" color="#cbd5e1"><PictureFilled /></el-icon>
+      <el-icon :size="56" color="var(--wood-light)"><PictureFilled /></el-icon>
       <p class="empty-title">暂无照片</p>
       <p class="empty-desc">去相册上传一些照片吧</p>
     </div>
@@ -49,7 +49,7 @@
     </div>
 
     <!-- 图片预览 -->
-    <el-dialog v-model="showPreview" width="auto" class="preview-dialog" destroy-on-close>
+    <el-dialog v-model="showPreview" width="auto" class="preview-dialog warm-dialog" destroy-on-close>
       <img v-if="previewPhoto" :src="previewPhoto.url" class="preview-img" />
     </el-dialog>
   </div>
@@ -152,21 +152,6 @@ function openPreview(photo) {
   text-align: center;
   padding: 60px;
 }
-.empty-card {
-  text-align: center;
-  padding: 60px 20px;
-}
-.empty-title {
-  font-size: 17px;
-  font-weight: 600;
-  color: #64748b;
-  margin-top: 16px;
-}
-.empty-desc {
-  font-size: 14px;
-  color: #94a3b8;
-  margin-top: 6px;
-}
 
 /* 时光轴 */
 .date-group {
@@ -216,15 +201,15 @@ function openPreview(photo) {
 }
 
 /* 预览 */
-.preview-dialog :deep(.el-dialog) {
+.preview-dialog.el-dialog {
   background: transparent;
   box-shadow: none;
   max-width: 90vw;
 }
-.preview-dialog :deep(.el-dialog__header) {
+.preview-dialog.el-dialog .el-dialog__header {
   display: none;
 }
-.preview-dialog :deep(.el-dialog__body) {
+.preview-dialog.el-dialog .el-dialog__body {
   padding: 0;
   display: flex;
   align-items: center;

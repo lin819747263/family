@@ -37,15 +37,15 @@
         </div>
       </el-col>
       <el-col v-if="budgets.length === 0" :span="24">
-        <div class="card" style="text-align:center;padding:40px;">
-          <el-icon :size="48" color="#cbd5e1"><Coin /></el-icon>
-          <p style="margin-top:12px;color:#94a3b8;">还没有预算，点击右上角设置</p>
+        <div class="card empty-card">
+          <el-icon :size="48" color="var(--wood-light)"><Coin /></el-icon>
+          <p>还没有预算，点击右上角设置</p>
         </div>
       </el-col>
     </el-row>
 
-    <el-dialog v-model="showDialog" :title="isEdit ? '编辑预算' : '设置预算'" width="420px" destroy-on-close>
-      <el-form :model="budgetForm" label-width="80px">
+    <el-dialog v-model="showDialog" :title="isEdit ? '编辑预算' : '设置预算'" width="420px" destroy-on-close class="warm-dialog">
+      <el-form :model="budgetForm" label-width="80px" class="warm-form">
         <el-form-item label="分类">
           <el-select v-model="budgetForm.categoryId" placeholder="选择分类(不选为总预算)" style="width:100%" clearable filterable :disabled="isEdit">
             <el-option v-for="c in categories" :key="c.id" :label="c.name" :value="c.id" />
@@ -191,34 +191,26 @@ async function handleDelete(id) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: var(--text-secondary);
   transition: all 0.2s;
 }
 .ba-btn:hover {
   background: #fff;
-  color: #64748b;
+  color: var(--text-primary);
 }
 .ba-btn.danger:hover {
-  color: #f87171;
+  color: var(--rose-d);
 }
 
 @media (max-width: 768px) {
   .page-title {
     font-size: 18px;
   }
-  .card {
-    padding: 12px;
-    border-radius: 10px;
-  }
   .budget-card {
     padding: 12px;
   }
   .budget-actions {
     opacity: 1;
-  }
-  :deep(.el-dialog) {
-    width: 92% !important;
-    margin: 0 auto;
   }
   :deep(.el-form-item__label) {
     font-size: 13px;

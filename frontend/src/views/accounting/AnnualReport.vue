@@ -13,9 +13,9 @@
       </div>
     </div>
 
-    <div v-if="loading" class="card" style="text-align:center;padding:60px;">
+    <div v-if="loading" class="card loading-card">
       <el-icon class="is-loading" :size="32"><Loading /></el-icon>
-      <p style="margin-top:12px;color:#A08D7A;">正在生成年度报告...</p>
+      <p>正在生成年度报告...</p>
     </div>
 
     <template v-else>
@@ -197,8 +197,8 @@ const maxCategoryIncome = computed(() => Math.max(...(report.value.incomeCategor
 const maxMemberExpense = computed(() => Math.max(...(report.value.memberStats || []).map(m => m.expense), 1))
 
 const categoryColors = [
-  '#667eea', '#f472b6', '#f97316', '#fbbf24', '#34d399',
-  '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#64748b'
+  '#C89F85', '#E8B36A', '#A8B08A', '#9FB8C9', '#D99A9A',
+  '#A98BB0', '#96684A', '#C08A3E', '#7E8862', '#B06A6A'
 ]
 
 onMounted(async () => {
@@ -314,16 +314,16 @@ function renderChart() {
 .page-title { font-size: 24px; font-weight: 800; color: #6B5744; }
 .page-desc { font-size: 14px; color: #A08D7A; margin-top: 4px; }
 .header-actions { display: flex; gap: 8px; }
-.card { background: #fff; border: 1px solid #F3EADD; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+.card { margin-bottom: 16px; }
 
 /* 总览卡片 */
 .overview-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
 .ov-card {
   display: flex; align-items: center; gap: 14px;
-  padding: 20px; border-radius: 16px; background: #fff;
-  border: 1px solid #F3EADD; transition: all 0.25s;
+  padding: 20px; border-radius: var(--radius-md); background: var(--bg-card);
+  border: 1px solid var(--border); transition: all 0.25s;
 }
-.ov-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+.ov-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
 .ov-icon { font-size: 32px; }
 .ov-label { font-size: 12px; color: #A08D7A; margin-bottom: 4px; }
 .ov-value { font-size: 22px; font-weight: 800; color: #6B5744; }
@@ -343,7 +343,7 @@ function renderChart() {
   display: flex; align-items: center; justify-content: center;
   font-size: 12px; font-weight: 700; color: #A08D7A; flex-shrink: 0;
 }
-.rank-num.top { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; }
+.rank-num.top { background: linear-gradient(135deg, var(--terracotta), #D3A98B); color: #fff; }
 .rank-info { flex: 1; min-width: 0; }
 .rank-name { font-size: 14px; color: #6B5744; margin-bottom: 4px; }
 .rank-bar-wrap { height: 8px; background: #F3EADD; border-radius: 4px; overflow: hidden; }
@@ -375,13 +375,13 @@ function renderChart() {
 .expense-bar { background: linear-gradient(135deg, #D99A9A, #f97316); }
 
 /* 年度总结 */
-.summary-card { text-align: center; padding: 32px; background: linear-gradient(135deg, #667eea, #764ba2); border: none; color: #fff; }
+.summary-card { text-align: center; padding: 32px; background: linear-gradient(135deg, var(--terracotta), #D3A98B); border: none; color: #fff; }
 .summary-emoji { font-size: 48px; margin-bottom: 12px; }
 .summary-title { font-size: 20px; font-weight: 800; margin-bottom: 12px; }
 .summary-text { font-size: 15px; line-height: 1.8; opacity: 0.9; }
-.summary-text strong { color: #fbbf24; }
+.summary-text strong { color: #fff; font-weight: 800; }
 
-.empty-state { text-align: center; padding: 40px; color: #A08D7A; }
+.empty-state { padding: 40px; }
 
 @media (max-width: 768px) {
   .overview-cards { grid-template-columns: repeat(2, 1fr); }

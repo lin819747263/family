@@ -37,16 +37,16 @@
 
     <!-- 加载失败 -->
     <div v-else-if="loadError" class="card error-card">
-      <el-icon :size="48" color="#f87171"><CircleCloseFilled /></el-icon>
+      <el-icon :size="48" color="var(--rose-d)"><CircleCloseFilled /></el-icon>
       <p>数据加载失败，请稍后重试</p>
-      <el-button class="btn-primary" style="margin-top:12px;" @click="loadSpaces">
+      <el-button class="btn-primary" @click="loadSpaces">
         🔄 重新加载
       </el-button>
     </div>
 
     <!-- 空状态 -->
     <div v-else-if="spaces.length === 0" class="card empty-card">
-      <el-icon :size="48" color="#cbd5e1"><FolderOpened /></el-icon>
+      <el-icon :size="48" color="var(--wood-light)"><FolderOpened /></el-icon>
       <p>还没有空间，点击右上角创建</p>
     </div>
 
@@ -121,8 +121,8 @@
     </div>
 
     <!-- 新建/编辑弹窗 -->
-    <el-dialog v-model="showForm" :title="editing ? '编辑空间' : '新建空间'" width="400px">
-      <el-form :model="form" label-width="80px">
+    <el-dialog v-model="showForm" :title="editing ? '编辑空间' : '新建空间'" width="400px" class="warm-dialog">
+      <el-form :model="form" label-width="80px" class="warm-form">
         <el-form-item label="名称"><el-input v-model="form.name" placeholder="如：客厅、主卧" /></el-form-item>
         <el-form-item label="层级">
           <el-select v-model="form.level" style="width:100%">
@@ -369,36 +369,7 @@ async function handleDelete(id) {
 }
 
 /* ===== 空状态 ===== */
-.empty-card {
-  text-align: center;
-  padding: 60px 20px;
-}
-.empty-card p {
-  margin-top: 12px;
-  color: var(--text-secondary);
-}
 
-/* ===== 加载/错误状态 ===== */
-.loading-spinner {
-  width: 36px;
-  height: 36px;
-  border: 3px solid var(--border);
-  border-top-color: var(--terracotta);
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
-  margin: 0 auto;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-.error-card {
-  text-align: center;
-  padding: 60px 20px;
-}
-.error-card p {
-  margin-top: 12px;
-  color: var(--text-secondary);
-}
 
 /* ===== 空间树 ===== */
 .tree-card {

@@ -86,8 +86,8 @@
     </div>
 
     <!-- 编辑家庭信息弹窗 -->
-    <el-dialog v-model="showEditInfo" title="编辑家庭信息" width="420px" destroy-on-close>
-      <el-form :model="editForm" label-width="80px">
+    <el-dialog v-model="showEditInfo" title="编辑家庭信息" width="420px" destroy-on-close class="warm-dialog">
+      <el-form :model="editForm" label-width="80px" class="warm-form">
         <el-form-item label="家庭名称">
           <el-input v-model="editForm.name" placeholder="输入家庭名称" />
         </el-form-item>
@@ -237,7 +237,7 @@ async function handleLeave() {
   width: 60px;
   height: 60px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -264,8 +264,8 @@ async function handleLeave() {
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.04), rgba(118, 75, 162, 0.04));
-  border: 1px solid rgba(102, 126, 234, 0.15);
+  background: linear-gradient(135deg, rgba(200, 159, 133, 0.04), rgba(150, 104, 74, 0.04));
+  border: 1px solid rgba(200, 159, 133, 0.15);
   border-radius: 12px;
   margin-bottom: 12px;
 }
@@ -277,7 +277,7 @@ async function handleLeave() {
 .fi-invite-code {
   font-size: 20px;
   font-weight: 700;
-  color: #667eea;
+  color: var(--terra-deep);
   letter-spacing: 2px;
   font-family: 'Courier New', monospace;
 }
@@ -304,7 +304,7 @@ async function handleLeave() {
   gap: 14px;
 }
 .mc-avatar {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
   color: #fff;
   font-weight: 600;
   font-size: 16px;

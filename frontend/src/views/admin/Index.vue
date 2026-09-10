@@ -143,13 +143,13 @@
     </div>
 
     <!-- 重置密码弹窗 -->
-    <el-dialog v-model="showResetPwd" title="重置密码" width="400px" destroy-on-close>
+    <el-dialog v-model="showResetPwd" title="重置密码" width="400px" destroy-on-close class="warm-dialog">
       <div style="margin-bottom:16px;">
-        <span style="color:#64748b;">为用户 </span>
+        <span style="color:var(--text-secondary);">为用户 </span>
         <span style="font-weight:600;">{{ resetTarget?.nickname || resetTarget?.username }}</span>
-        <span style="color:#64748b;"> 重置密码</span>
+        <span style="color:var(--text-secondary);"> 重置密码</span>
       </div>
-      <el-form :model="pwdForm" label-width="80px">
+      <el-form :model="pwdForm" label-width="80px" class="warm-form">
         <el-form-item label="新密码">
           <el-input v-model="pwdForm.newPassword" type="password" show-password placeholder="至少6位" />
         </el-form-item>
@@ -213,10 +213,10 @@ const settings = reactive({ ai_api_key: '', ai_base_url: '', ai_model: '', ai_sy
 const savingSettings = ref(false)
 
 const statCards = computed(() => [
-  { label: '总用户', value: stats.totalUsers, icon: 'User', bg: 'linear-gradient(135deg, #667eea, #764ba2)' },
-  { label: '活跃用户', value: stats.activeUsers, icon: 'UserFilled', bg: 'linear-gradient(135deg, #34d399, #059669)' },
-  { label: '已禁用', value: stats.disabledUsers, icon: 'User', bg: 'linear-gradient(135deg, #f87171, #dc2626)' },
-  { label: '家庭数', value: stats.totalFamilies, icon: 'House', bg: 'linear-gradient(135deg, #fbbf24, #d97706)' }
+  { label: '总用户', value: stats.totalUsers, icon: 'User', bg: 'linear-gradient(135deg, var(--terracotta), var(--terracotta-d))' },
+  { label: '活跃用户', value: stats.activeUsers, icon: 'UserFilled', bg: 'linear-gradient(135deg, var(--sage), var(--sage-d))' },
+  { label: '已禁用', value: stats.disabledUsers, icon: 'User', bg: 'linear-gradient(135deg, var(--rose), var(--rose-d))' },
+  { label: '家庭数', value: stats.totalFamilies, icon: 'House', bg: 'linear-gradient(135deg, var(--amber), var(--amber-d))' }
 ])
 
 function formatDate(d) {
@@ -374,7 +374,7 @@ async function handleSaveSettings() {
 
 /* 用户头像 */
 .user-avatar {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
   color: #fff;
   font-weight: 600;
 }

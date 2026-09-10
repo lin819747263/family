@@ -23,17 +23,17 @@
     </div>
 
     <!-- 加载失败 -->
-    <div v-else-if="loadError" class="empty-card card error-state">
-      <el-icon :size="48" color="#f87171"><CircleCloseFilled /></el-icon>
+    <div v-else-if="loadError" class="card error-card">
+      <el-icon :size="48" color="var(--rose-d)"><CircleCloseFilled /></el-icon>
       <p>数据加载失败，请稍后重试</p>
-      <el-button type="primary" style="margin-top:12px;" @click="loadCategories">
+      <el-button type="primary" @click="loadCategories">
         🔄 重新加载
       </el-button>
     </div>
 
     <!-- 分类列表 -->
     <div v-else-if="treeList.length === 0" class="empty-card card">
-      <el-icon :size="48" color="#cbd5e1"><Folder /></el-icon>
+      <el-icon :size="48" color="var(--wood-light)"><Folder /></el-icon>
       <p>暂无{{ activeType === 'expense' ? '支出' : '收入' }}分类</p>
     </div>
 
@@ -42,7 +42,7 @@
         <!-- 一级分类 -->
         <div class="cat-row cat-parent" :class="{ builtin: cat.builtIn }">
           <div class="cat-left">
-            <div class="cat-icon" :style="{ background: cat.builtIn ? 'rgba(102,126,234,0.1)' : 'rgba(52,211,153,0.1)', color: cat.builtIn ? '#667eea' : '#10b981' }">
+            <div class="cat-icon" :style="{ background: cat.builtIn ? 'rgba(200, 159, 133, 0.1)' : 'rgba(52,211,153,0.1)', color: cat.builtIn ? 'var(--terracotta)' : '#10b981' }">
               <el-icon :size="18"><component :is="cat.icon || 'MoreFilled'" /></el-icon>
             </div>
             <span class="cat-name">{{ cat.name }}</span>
@@ -74,7 +74,7 @@
         <div v-if="cat.children?.length" class="cat-children">
           <div v-for="child in cat.children" :key="child.id" class="cat-row cat-child">
             <div class="cat-left">
-              <div class="child-dot" :style="{ background: cat.builtIn ? '#667eea' : '#10b981' }"></div>
+              <div class="child-dot" :style="{ background: cat.builtIn ? 'var(--terracotta)' : '#10b981' }"></div>
               <span class="cat-name">{{ child.name }}</span>
               <el-tag v-if="child.builtIn" size="small" type="info" effect="plain" round>预设</el-tag>
             </div>
@@ -102,10 +102,10 @@
       v-model="showDialog"
       :title="isEdit ? '编辑分类' : '添加分类'"
       width="440px"
-      class="form-dialog"
+      class="warm-dialog"
       :close-on-click-modal="false"
     >
-      <el-form :model="form" label-width="80px">
+      <el-form :model="form" label-width="80px" class="warm-form">
         <el-form-item label="分类名称">
           <el-input v-model="form.name" placeholder="如：早餐、交通补贴" maxlength="20" />
         </el-form-item>
@@ -324,40 +324,15 @@ async function handleDelete(id) {
   margin: 0;
 }
 .cat-tabs :deep(.el-tabs__item.is-active) {
-  color: #667eea;
+  color: var(--terra-deep);
   font-weight: 600;
 }
 .cat-tabs :deep(.el-tabs__active-bar) {
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, var(--terracotta), #D3A98B);
 }
 
 /* 空状态 */
-.empty-card {
-  text-align: center;
-  padding: 60px 20px;
-}
-.empty-card p {
-  margin-top: 12px;
-  color: #A08D7A;
-  font-size: 14px;
-}
 
-/* 加载/错误状态 */
-.loading-spinner {
-  width: 36px;
-  height: 36px;
-  border: 3px solid #E2CDB2;
-  border-top-color: #C89F85;
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
-  margin: 0 auto;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-.error-state p {
-  color: #A08D7A;
-}
 
 /* 分类列表 */
 .cat-list {
@@ -383,7 +358,7 @@ async function handleDelete(id) {
   transition: background 0.2s;
 }
 .cat-row:hover {
-  background: rgba(102, 126, 234, 0.03);
+  background: rgba(200, 159, 133, 0.03);
 }
 
 .cat-parent {
@@ -464,7 +439,7 @@ async function handleDelete(id) {
 }
 .act-btn.danger:hover {
   background: #fef2f2;
-  color: #f87171;
+  color: var(--rose-d);
 }
 .act-btn:disabled {
   opacity: 0.3;
@@ -490,16 +465,16 @@ async function handleDelete(id) {
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 .ip-item:hover {
-  border-color: #a5b4fc;
-  color: #667eea;
+  border-color: var(--primary-light);
+  color: var(--terra-deep);
 }
 .ip-item.active {
-  border-color: #667eea;
-  background: rgba(102, 126, 234, 0.08);
-  color: #667eea;
+  border-color: var(--terracotta);
+  background: rgba(200, 159, 133, 0.08);
+  color: var(--terra-deep);
 }
 
 .form-tip {
@@ -508,39 +483,10 @@ async function handleDelete(id) {
   margin-top: 4px;
 }
 
-/* 弹窗 */
-.form-dialog :deep(.el-dialog) {
-  border-radius: 20px;
-}
-.form-dialog :deep(.el-dialog__header) {
-  padding: 20px 24px 16px;
-  margin: 0;
-  border-bottom: 1px solid #F3EADD;
-}
-.form-dialog :deep(.el-dialog__title) {
-  font-size: 17px;
-  font-weight: 600;
-}
-.form-dialog :deep(.el-dialog__body) {
-  padding: 20px 24px;
-}
-
 @media (max-width: 640px) {
   .page-header {
     flex-direction: column;
     gap: 12px;
-  }
-  .form-dialog :deep(.el-dialog) {
-    width: 92vw !important;
-    max-width: 92vw !important;
-  }
-  .form-dialog :deep(.el-dialog__header) {
-    padding: 16px 16px 12px;
-  }
-  .form-dialog :deep(.el-dialog__body) {
-    padding: 12px 16px 16px;
-    max-height: 70vh;
-    overflow-y: auto;
   }
 }
 </style>

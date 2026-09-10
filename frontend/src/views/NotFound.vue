@@ -2,13 +2,13 @@
   <div class="not-found">
     <div class="nf-illustration">
       <svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="100" cy="80" r="60" fill="#f0f4ff" stroke="#667eea" stroke-width="2" stroke-dasharray="8 4"/>
+        <circle cx="100" cy="80" r="60" fill="#f0f4ff" stroke="var(--terracotta)" stroke-width="2" stroke-dasharray="8 4"/>
         <text x="100" y="75" text-anchor="middle" font-size="48" font-weight="900" fill="url(#grad)">404</text>
         <text x="100" y="100" text-anchor="middle" font-size="12" fill="#94a3b8">页面走丢了</text>
         <defs>
           <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#667eea"/>
-            <stop offset="100%" style="stop-color:#764ba2"/>
+            <stop offset="0%" style="stop-color:var(--terracotta)"/>
+            <stop offset="100%" style="stop-color:#D3A98B"/>
           </linearGradient>
         </defs>
       </svg>

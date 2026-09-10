@@ -204,7 +204,7 @@ async function handleLogin() {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  color: var(--text-deep);
+  color: var(--text-primary);
   overflow: hidden;
   position: relative;
   font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
@@ -273,7 +273,7 @@ async function handleLogin() {
   text-align: center;
   font-size: 15px;
   line-height: 1.9;
-  color: var(--text-soft);
+  color: var(--text-secondary);
   letter-spacing: .06em;
 }
 .scene-quote strong { color: var(--terracotta-d); font-weight: 600; }
@@ -302,7 +302,7 @@ async function handleLogin() {
   font-size: 18px;
   box-shadow: 0 4px 12px rgba(200, 159, 133, .3);
 }
-.brand-name { font-size: 14px; letter-spacing: .12em; color: var(--text-soft); }
+.brand-name { font-size: 14px; letter-spacing: .12em; color: var(--text-secondary); }
 
 h1 {
   font-size: 24px;
@@ -312,7 +312,7 @@ h1 {
 }
 .subtitle {
   font-size: 13px;
-  color: var(--text-soft);
+  color: var(--text-secondary);
   margin-bottom: 24px;
   letter-spacing: .05em;
 }
@@ -342,10 +342,10 @@ h1 {
 }
 .field :deep(.el-input__inner) {
   font-size: 15px;
-  color: var(--text-deep);
+  color: var(--text-primary);
 }
 .field :deep(.el-input__inner::placeholder) {
-  color: var(--text-soft);
+  color: var(--text-secondary);
 }
 .field-icon {
   position: absolute;
@@ -362,14 +362,14 @@ h1 {
 }
 
 .eye-toggle {
-  color: var(--text-soft);
+  color: var(--text-secondary);
   cursor: pointer;
   font-size: 16px;
   display: flex;
   align-items: center;
   transition: color .2s;
 }
-.eye-toggle:hover { color: var(--text-deep); }
+.eye-toggle:hover { color: var(--text-primary); }
 
 /* 记住我 / 忘记密码 */
 .row-between {
@@ -381,7 +381,7 @@ h1 {
 }
 .remember {
   display: flex; align-items: center; gap: 6px;
-  cursor: pointer; color: var(--text-soft);
+  cursor: pointer; color: var(--text-secondary);
   user-select: none;
 }
 .remember input { display: none; }
@@ -450,7 +450,7 @@ h1 {
 .divider {
   display: flex; align-items: center; gap: 14px;
   margin: 20px 0 14px;
-  color: var(--text-soft);
+  color: var(--text-secondary);
   font-size: 12px;
   letter-spacing: .1em;
 }
@@ -477,8 +477,8 @@ h1 {
   background: rgba(243, 234, 221, .9);
   transform: translateY(-2px);
 }
-.invite-text { font-size: 12.5px; color: var(--text-soft); line-height: 1.5; }
-.invite-text b { color: var(--text-deep); font-weight: 600; }
+.invite-text { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; }
+.invite-text b { color: var(--text-primary); font-weight: 600; }
 .invite-emoji { font-size: 22px; }
 
 .footer-note {

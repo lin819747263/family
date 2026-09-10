@@ -52,7 +52,7 @@
     </section>
 
     <!-- 快捷记账弹窗 -->
-    <el-dialog v-model="showQuickAdd" :width="quickAddMode === 'batch' ? '520px' : '440px'" top="10vh" destroy-on-close :lock-scroll="false" append-to-body class="quick-add-dialog">
+    <el-dialog v-model="showQuickAdd" :width="quickAddMode === 'batch' ? '520px' : '440px'" top="10vh" destroy-on-close :lock-scroll="false" append-to-body class="quick-add-dialog warm-dialog">
       <template #header>
         <div class="quick-add-header">
           <span class="quick-add-title">快速记账</span>
@@ -768,15 +768,15 @@ onUnmounted(() => {
 
 /* ========== 弹窗 ========== */
 .quick-add-dialog :deep(.el-overlay) { transition: none !important; }
-.quick-add-dialog :deep(.el-dialog) { transition: none !important; border-radius: 20px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.12); }
-.quick-add-dialog :deep(.el-dialog__header) { padding: 20px 24px 16px; margin: 0; border-bottom: 1px solid var(--border); }
+.quick-add-dialog.el-dialog { transition: none !important; box-shadow: 0 16px 48px rgba(0,0,0,0.12); }
+.quick-add-dialog.el-dialog .el-dialog__header { padding: 20px 24px 16px; margin: 0; border-bottom: 1px solid var(--border); }
 .quick-add-header { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 .quick-add-title { font-size: 17px; font-weight: 600; color: var(--text-primary); }
 .mode-toggle { display: flex; gap: 4px; background: var(--apricot); border-radius: 10px; padding: 3px; }
 .mode-btn { display: flex; align-items: center; gap: 4px; padding: 6px 14px; border: none; border-radius: 8px; background: transparent; font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; }
 .mode-btn.active { background: #fff; color: var(--terra-deep); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
 .mode-btn:hover:not(.active) { color: var(--text-primary); }
-.quick-add-dialog :deep(.el-dialog__body) { padding: 20px 24px 24px; }
+.quick-add-dialog.el-dialog .el-dialog__body { padding: 20px 24px 24px; }
 
 /* ========== 响应式 ========== */
 @media (max-width: 960px) {

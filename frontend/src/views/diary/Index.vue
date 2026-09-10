@@ -20,10 +20,10 @@
 
     <!-- 空状态 -->
     <div v-else-if="list.length === 0" class="card empty-card">
-      <el-icon :size="56" color="#cbd5e1"><Notebook /></el-icon>
+      <el-icon :size="56" color="var(--wood-light)"><Notebook /></el-icon>
       <p class="empty-title">{{ searchKeyword ? '没有找到相关日记' : '还没有日记' }}</p>
       <p class="empty-desc">{{ searchKeyword ? '换个关键词试试' : '写下第一篇家庭日记吧' }}</p>
-      <el-button v-if="!searchKeyword" type="primary" @click="openCreate" style="margin-top:12px;">
+      <el-button v-if="!searchKeyword" type="primary" @click="openCreate">
         <el-icon><EditPen /></el-icon>写第一篇日记
       </el-button>
     </div>
@@ -355,9 +355,6 @@ defineExpose({ openCreate })
 .header-actions { display: flex; gap: 8px; align-items: center; }
 
 /* 空状态 */
-.empty-card { text-align: center; padding: 60px 20px; }
-.empty-title { font-size: 16px; font-weight: 600; color: #A08D7A; margin-top: 16px; }
-.empty-desc { font-size: 14px; color: #A08D7A; margin-top: 8px; }
 
 /* 日记列表 - 暖色 */
 .diary-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
@@ -378,7 +375,7 @@ defineExpose({ openCreate })
   color: #fff; font-size: 14px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
 }
-.diary-author { font-size: 13.5px; font-weight: 700; color: var(--text-deep); }
+.diary-author { font-size: 13.5px; font-weight: 700; color: var(--text-primary); }
 .diary-date { font-size: 12px; color: var(--text-secondary); }
 .diary-tags { margin-left: auto; display: flex; gap: 6px; }
 .diary-tag { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: var(--apricot); color: var(--terra-deep); }
@@ -497,7 +494,7 @@ defineExpose({ openCreate })
 .markdown-body :deep(p) { margin: 10px 0; }
 .markdown-body :deep(ul), .markdown-body :deep(ol) { padding-left: 24px; margin: 10px 0; }
 .markdown-body :deep(li) { margin: 4px 0; }
-.markdown-body :deep(blockquote) { border-left: 4px solid var(--terracotta); padding: 8px 16px; margin: 12px 0; background: rgba(102,126,234,0.04); color: #A08D7A; border-radius: 0 8px 8px 0; }
+.markdown-body :deep(blockquote) { border-left: 4px solid var(--terracotta); padding: 8px 16px; margin: 12px 0; background: rgba(200, 159, 133, 0.04); color: #A08D7A; border-radius: 0 8px 8px 0; }
 .markdown-body :deep(code) { background: #F3EADD; padding: 2px 6px; border-radius: 4px; font-size: 13px; color: #e11d48; }
 .markdown-body :deep(pre) { background: #6B5744; color: rgba(226,205,178,.7); padding: 16px; border-radius: 10px; overflow-x: auto; margin: 12px 0; }
 .markdown-body :deep(pre code) { background: none; color: inherit; padding: 0; }

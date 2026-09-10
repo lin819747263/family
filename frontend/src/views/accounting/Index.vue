@@ -130,7 +130,7 @@
       </div>
       <div class="rep-grid">
         <div class="card rep-card reveal">
-          <div class="rep-title">每日支出明细 <span style="font-size:12px;color:var(--text-soft);font-weight:500;">本月</span></div>
+          <div class="rep-title">每日支出明细 <span style="font-size:12px;color:var(--text-secondary);font-weight:500;">本月</span></div>
           <div class="bars">
             <div v-for="d in dailyData" :key="d.day" class="bcol">
               <div class="bbar" :class="{ hi: isHighest(d.expense) }" :style="{ height: getBarHeight(d.expense) + '%' }"></div>
@@ -181,7 +181,7 @@
               <button class="book-more" @click.stop>⋯</button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item command="delete"><span style="color:#f87171;">删除账本</span></el-dropdown-item>
+                  <el-dropdown-item command="delete"><span style="color:var(--rose-d);">删除账本</span></el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -794,10 +794,6 @@ onMounted(async () => {
 .book-add:hover { border-color: var(--terracotta); color: var(--terra-deep); background: rgba(243, 234, 221, 0.8); transform: translateY(-4px); }
 .book-add .plus { font-size: 30px; line-height: 1; }
 
-/* ===== 弹窗 ===== */
-.warm-dialog :deep(.el-dialog) { border-radius: 20px; overflow: hidden; }
-.warm-dialog :deep(.el-dialog__header) { padding: 20px 24px 16px; margin: 0; border-bottom: 1px solid var(--border); }
-.warm-dialog :deep(.el-dialog__body) { padding: 20px 24px 24px; }
 .dialog-header { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 .dialog-title { font-size: 17px; font-weight: 600; color: var(--text-primary); }
 .mode-toggle { display: flex; gap: 4px; background: var(--apricot); border-radius: 10px; padding: 3px; }
@@ -832,6 +828,5 @@ onMounted(async () => {
   .row-acts { opacity: 1; }
   .b-card-actions { opacity: 1; }
   .group { padding: 4px 16px 10px; }
-  .warm-dialog :deep(.el-dialog) { width: 92vw !important; max-width: 92vw !important; }
 }
 </style>

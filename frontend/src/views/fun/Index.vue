@@ -605,18 +605,9 @@ onMounted(async () => {
 .card-del:hover { background: #B06A6A; color: #fff; }
 
 /* ===== 空状态 ===== */
-.empty-card { text-align: center; padding: 60px 20px; }
-.empty-card p { color: var(--text-secondary); margin: 0; }
 
-/* ===== 加载状态 ===== */
-.loading-card { text-align: center; padding: 60px 20px; }
-.loading-card p { color: var(--text-secondary); margin: 12px 0 0; }
-.loading-spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--terracotta); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto; }
-@keyframes spin { to { transform: rotate(360deg); } }
 
 /* ===== 错误状态 ===== */
-.error-card { text-align: center; padding: 60px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
-.error-card p { color: #B06A6A; margin: 0; }
 
 /* ===== 菜谱卡片 ===== */
 .recipe-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
@@ -777,15 +768,15 @@ onMounted(async () => {
 
 <!-- 全局弹窗样式 -->
 <style>
-.warm-dialog .el-dialog { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 20px 60px rgba(160,120,90,.18); overflow: visible; }
-.warm-dialog .el-dialog__header { padding: 20px 24px 0; margin: 0; }
-.warm-dialog .el-dialog__title { font-size: 18px; font-weight: 700; color: var(--terra-deep); }
-.warm-dialog .el-dialog__body { padding: 16px 24px 8px; overflow: visible; }
-.warm-dialog .el-dialog__footer { padding: 8px 24px 20px; }
+.warm-dialog.el-dialog { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 20px 60px rgba(160,120,90,.18); overflow: visible; }
+.warm-dialog.el-dialog .el-dialog__header { padding: 20px 24px 0; margin: 0; }
+.warm-dialog.el-dialog .el-dialog__title { font-size: 18px; font-weight: 700; color: var(--terra-deep); }
+.warm-dialog.el-dialog .el-dialog__body { padding: 16px 24px 8px; overflow: visible; }
+.warm-dialog.el-dialog .el-dialog__footer { padding: 8px 24px 20px; }
 .warm-form .el-form-item__label { color: var(--text-primary); font-weight: 600; font-size: 13px; }
 .warm-form .el-input__wrapper, .warm-form .el-textarea__inner { background: #FFFDF9; border: 1.5px solid #E2CDB2; border-radius: 12px; box-shadow: none; }
 .warm-form .el-input__wrapper:hover, .warm-form .el-textarea__inner:hover { border-color: #C89F85; }
 .warm-form .el-input__wrapper.is-focus, .warm-form .el-textarea__inner:focus { border-color: #C89F85; box-shadow: 0 0 0 3px rgba(200,159,133,.12); }
 .warm-form .el-select .el-input__wrapper { background: #FFFDF9; }
-.recipe-detail-dialog .el-dialog { max-width: 760px; }
+.recipe-detail-dialog.el-dialog { max-width: 760px; }
 </style>

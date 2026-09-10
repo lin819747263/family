@@ -32,7 +32,7 @@
     </div>
 
     <!-- 加密相册密码验证弹窗 -->
-    <el-dialog v-model="showPassword" title="🔒 加密相册" width="380px" destroy-on-close append-to-body>
+    <el-dialog v-model="showPassword" title="🔒 加密相册" width="380px" destroy-on-close append-to-body class="warm-dialog">
       <div style="margin-bottom:12px;color:var(--text-secondary);font-size:14px;">请输入访问密码</div>
       <el-input v-model="verifyPassword" type="password" show-password placeholder="输入密码" @keyup.enter="handleVerify" />
       <template #footer>
@@ -43,7 +43,7 @@
 
     <!-- 创建相册弹窗 -->
     <el-dialog v-model="showCreate" title="创建相册" width="420px" destroy-on-close append-to-body class="warm-dialog">
-      <el-form :model="form" label-width="80px">
+      <el-form :model="form" label-width="80px" class="warm-form">
         <el-form-item label="相册名称"><el-input v-model="form.name" placeholder="如：2026春节、海边旅行" /></el-form-item>
         <el-form-item label="相册类型">
           <el-radio-group v-model="form.type">
@@ -183,11 +183,6 @@ defineExpose({ openCreate: () => { showCreate.value = true } })
   background: rgba(243, 234, 221, 0.8); transform: translateY(-4px);
 }
 .album-add .plus { font-size: 32px; line-height: 1; }
-
-/* 弹窗 */
-.warm-dialog :deep(.el-dialog) { border-radius: 20px; overflow: hidden; }
-.warm-dialog :deep(.el-dialog__header) { padding: 20px 24px 16px; margin: 0; border-bottom: 1px solid rgba(226, 205, 178, 0.7); }
-.warm-dialog :deep(.el-dialog__body) { padding: 20px 24px; }
 
 @media (max-width: 960px) { .albums-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 600px) { .albums-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }

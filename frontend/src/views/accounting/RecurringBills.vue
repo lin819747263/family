@@ -38,7 +38,7 @@
       <el-icon :size="56" color="#E2CDB2"><Timer /></el-icon>
       <p class="empty-title">暂无定时任务</p>
       <p class="empty-desc">创建定时记账任务，让物业费、工资、订阅等固定收支自动入账</p>
-      <el-button type="primary" @click="openCreate" style="margin-top:12px;">
+      <el-button type="primary" @click="openCreate">
         <el-icon><Plus /></el-icon>创建第一个任务
       </el-button>
     </div>
@@ -106,10 +106,10 @@
       v-model="showDialog"
       :title="isEdit ? '编辑定时任务' : '新建定时任务'"
       width="480px"
-      class="form-dialog"
+      class="warm-dialog"
       :close-on-click-modal="false"
     >
-      <el-form :model="form" label-width="90px">
+      <el-form :model="form" label-width="90px" class="warm-form">
         <el-form-item label="任务名称">
           <el-input v-model="form.name" placeholder="如：物业费、工资入账" />
         </el-form-item>
@@ -154,7 +154,7 @@
         <!-- 每月/每季/每年：选几号 -->
         <el-form-item v-if="['monthly','quarterly','yearly'].includes(form.frequency)" label="执行日">
           <el-input-number v-model="form.dayOfMonth" :min="1" :max="28" />
-          <span style="margin-left:8px;color:#A08D7A;font-size:13px;">号</span>
+          <span style="margin-left:8px;color:var(--text-secondary);font-size:13px;">号</span>
         </el-form-item>
 
         <!-- 每年：选月份 -->
@@ -171,10 +171,10 @@
         <el-form-item label="有效期">
           <div style="display:flex;gap:8px;align-items:center;width:100%;">
             <el-date-picker v-model="form.startDate" type="date" placeholder="起始日" value-format="YYYY-MM-DD" style="flex:1;" clearable />
-            <span style="color:#A08D7A;">至</span>
+            <span style="color:var(--text-secondary);">至</span>
             <el-date-picker v-model="form.endDate" type="date" placeholder="长期有效" value-format="YYYY-MM-DD" style="flex:1;" clearable />
           </div>
-          <div v-if="!form.endDate" style="font-size:12px;color:#8b5cf6;margin-top:4px;">💡 不设截止日期 = 长期有效</div>
+          <div v-if="!form.endDate" style="font-size:12px;color:var(--terra-deep);margin-top:4px;">💡 不设截止日期 = 长期有效</div>
         </el-form-item>
 
         <el-form-item label="备注">
@@ -390,25 +390,6 @@ async function handleDelete(id) {
 }
 
 /* 空状态 */
-.empty-card {
-  text-align: center;
-  padding: 60px 20px;
-}
-.empty-title {
-  font-size: 17px;
-  font-weight: 600;
-  color: #A08D7A;
-  margin-top: 16px;
-}
-.empty-desc {
-  font-size: 14px;
-  color: #A08D7A;
-  margin-top: 6px;
-  max-width: 360px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.6;
-}
 
 /* 任务列表 */
 .bill-list {
@@ -451,7 +432,7 @@ async function handleDelete(id) {
   color: #fff;
 }
 .bill-icon.expense {
-  background: linear-gradient(135deg, #f87171, #D99A9A);
+  background: linear-gradient(135deg, var(--rose-d), #D99A9A);
 }
 .bill-icon.income {
   background: linear-gradient(135deg, #34d399, #A8B08A);
@@ -477,8 +458,8 @@ async function handleDelete(id) {
 .freq-tag {
   display: inline-block;
   padding: 1px 8px;
-  background: rgba(102,126,234,0.08);
-  color: #667eea;
+  background: rgba(200, 159, 133, 0.08);
+  color: var(--terra-deep);
   border-radius: 6px;
   font-size: 12px;
   font-weight: 500;
@@ -492,7 +473,7 @@ async function handleDelete(id) {
   font-size: 18px;
   font-weight: 700;
 }
-.bill-amount.expense { color: #f87171; }
+.bill-amount.expense { color: var(--rose-d); }
 .bill-amount.income { color: #34d399; }
 .bill-runs {
   font-size: 12px;
@@ -533,28 +514,11 @@ async function handleDelete(id) {
 }
 .act-btn.danger:hover {
   background: #fef2f2;
-  color: #f87171;
+  color: var(--rose-d);
 }
 .act-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
-}
-
-/* 弹窗 */
-.form-dialog :deep(.el-dialog) {
-  border-radius: 20px;
-}
-.form-dialog :deep(.el-dialog__header) {
-  padding: 20px 24px 16px;
-  margin: 0;
-  border-bottom: 1px solid #F3EADD;
-}
-.form-dialog :deep(.el-dialog__title) {
-  font-size: 17px;
-  font-weight: 600;
-}
-.form-dialog :deep(.el-dialog__body) {
-  padding: 20px 24px;
 }
 
 @media (max-width: 768px) {
@@ -567,18 +531,6 @@ async function handleDelete(id) {
   }
   .bill-center {
     text-align: left;
-  }
-  .form-dialog :deep(.el-dialog) {
-    width: 92vw !important;
-    max-width: 92vw !important;
-  }
-  .form-dialog :deep(.el-dialog__header) {
-    padding: 16px 16px 12px;
-  }
-  .form-dialog :deep(.el-dialog__body) {
-    padding: 12px 16px 16px;
-    max-height: 70vh;
-    overflow-y: auto;
   }
 }
 </style>

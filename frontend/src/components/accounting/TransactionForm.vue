@@ -334,7 +334,7 @@ async function handleSubmit() {
 }
 .type-tab {
   position: relative; z-index: 2; padding: 10px; border-radius: 10px;
-  border: none; background: transparent; color: var(--text-soft, #A08D7A);
+  border: none; background: transparent; color: var(--text-secondary);
   font-size: 14px; font-weight: 700; cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: 7px;
   transition: color 0.3s;
@@ -367,7 +367,7 @@ async function handleSubmit() {
 }
 .amount-field {
   flex: 1; border: none; background: transparent; outline: none;
-  font-size: 34px; font-weight: 800; color: var(--text-deep, #6B5744);
+  font-size: 34px; font-weight: 800; color: var(--text-primary);
   letter-spacing: -0.02em; min-width: 0;
 }
 .amount-field::placeholder { color: var(--wood-light, #E2CDB2); }
@@ -407,7 +407,7 @@ async function handleSubmit() {
 }
 .voice-result-close {
   border: none; background: none; cursor: pointer;
-  color: var(--text-soft, #A08D7A); font-size: 14px; padding: 2px; margin-left: auto;
+  color: var(--text-secondary); font-size: 14px; padding: 2px; margin-left: auto;
 }
 
 /* ========== 分类选择 ========== */
@@ -422,7 +422,7 @@ async function handleSubmit() {
 .detail-section { display: flex; flex-direction: column; gap: 10px; }
 .detail-row { display: flex; align-items: center; gap: 10px; }
 .d-label {
-  font-size: 13px; color: var(--text-soft, #A08D7A);
+  font-size: 13px; color: var(--text-secondary);
   white-space: nowrap; flex-shrink: 0;
 }
 .d-chip {
@@ -435,7 +435,7 @@ async function handleSubmit() {
 .d-field {
   flex: 1; padding: 9px 12px; border-radius: 11px;
   border: 1.5px solid var(--wood-light, #E2CDB2); background: #FFFDF9;
-  font-size: 13.5px; color: var(--text-deep, #6B5744); outline: none;
+  font-size: 13.5px; color: var(--text-primary); outline: none;
   transition: all 0.25s; min-width: 0;
 }
 .d-field:focus {

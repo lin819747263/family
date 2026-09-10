@@ -9,7 +9,8 @@
     </div>
 
     <!-- 发布弹窗 -->
-    <el-dialog v-model="showPublish" title="发布瞬间" width="520px" :close-on-click-modal="false" destroy-on-close class="publish-dialog">
+    <el-dialog v-model="showPublish" title="发布瞬间" width="520px" :close-on-click-modal="false" destroy-on-close class="publish-dialog warm-dialog">
+      <div class="warm-form">
       <el-input
         v-model="publishForm.content"
         type="textarea"
@@ -50,6 +51,7 @@
           <el-option label="🎉 庆祝" value="庆祝" />
         </el-select>
       </div>
+      </div>
       <template #footer>
         <el-button @click="showPublish = false">取消</el-button>
         <el-button type="primary" :loading="publishing" @click="handlePublish">发布</el-button>
@@ -58,10 +60,10 @@
 
     <!-- 空状态 -->
     <div v-if="list.length === 0 && !loading" class="empty-card card">
-      <el-icon :size="56" color="#cbd5e1"><Sunrise /></el-icon>
+      <el-icon :size="56" color="var(--wood-light)"><Sunrise /></el-icon>
       <p class="empty-title">还没有精彩瞬间</p>
       <p class="empty-desc">记录家庭生活中的美好时刻</p>
-      <el-button type="primary" @click="showPublish = true" style="margin-top:12px;">
+      <el-button type="primary" @click="showPublish = true">
         <el-icon><EditPen /></el-icon>发布第一条
       </el-button>
     </div>
@@ -370,21 +372,6 @@ defineExpose({ openPublish: () => { showPublish.value = true } })
 }
 
 /* 空状态 */
-.empty-card {
-  text-align: center;
-  padding: 60px 20px;
-}
-.empty-title {
-  font-size: 17px;
-  font-weight: 600;
-  color: #64748b;
-  margin-top: 16px;
-}
-.empty-desc {
-  font-size: 14px;
-  color: #94a3b8;
-  margin-top: 6px;
-}
 
 /* 日期分隔线 */
 .day-label {

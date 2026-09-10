@@ -24,17 +24,17 @@
       <el-icon class="is-loading" :size="32"><Loading /></el-icon>
     </div>
     <div v-else-if="list.length === 0" class="empty-card card">
-      <el-icon :size="56" color="#cbd5e1"><Dish /></el-icon>
+      <el-icon :size="56" color="var(--wood-light)"><Dish /></el-icon>
       <p class="empty-title">还没有菜谱</p>
       <p class="empty-desc">点击右上角创建你的第一个菜谱吧</p>
-      <el-button type="primary" @click="openCreate" style="margin-top:12px;"><el-icon><Plus /></el-icon>创建菜谱</el-button>
+      <el-button type="primary" @click="openCreate"><el-icon><Plus /></el-icon>创建菜谱</el-button>
     </div>
     <div v-else class="recipe-grid">
       <div v-for="item in list" :key="item.id" class="recipe-card card" @click="openView(item)">
         <div class="rc-image">
           <img v-if="item.image" :src="item.image" :alt="item.name" />
           <div v-else class="rc-placeholder">
-            <el-icon :size="36" color="#cbd5e1"><Dish /></el-icon>
+            <el-icon :size="36" color="var(--wood-light)"><Dish /></el-icon>
           </div>
           <div class="rc-difficulty" :class="item.difficulty">
             {{ difficultyLabel(item.difficulty) }}
@@ -75,11 +75,11 @@
       v-model="showDialog"
       :title="isEdit ? '编辑菜谱' : '新建菜谱'"
       width="680px"
-      class="recipe-dialog"
+      class="recipe-dialog warm-dialog"
       :close-on-click-modal="false"
       destroy-on-close
     >
-      <el-form :model="form" label-width="80px">
+      <el-form :model="form" label-width="80px" class="warm-form">
         <!-- 封面图 -->
         <el-form-item label="封面图">
           <div class="upload-area" @click="triggerUpload">
@@ -169,7 +169,7 @@
     <el-dialog
       v-model="showView"
       width="880px"
-      class="view-dialog"
+      class="view-dialog warm-dialog"
       destroy-on-close
     >
       <template #header>
@@ -188,7 +188,7 @@
             <img :src="viewData.image" :alt="viewData.name" />
           </div>
           <div v-else class="view-cover-placeholder">
-            <el-icon :size="48" color="#cbd5e1"><Dish /></el-icon>
+            <el-icon :size="48" color="var(--wood-light)"><Dish /></el-icon>
           </div>
           <div class="view-info">
             <div class="vi-tags">
@@ -409,21 +409,6 @@ async function handleUpload(e) {
   text-align: center;
   padding: 60px;
 }
-.empty-card {
-  text-align: center;
-  padding: 60px 20px;
-}
-.empty-title {
-  font-size: 17px;
-  font-weight: 600;
-  color: #A08D7A;
-  margin-top: 16px;
-}
-.empty-desc {
-  font-size: 14px;
-  color: #A08D7A;
-  margin-top: 6px;
-}
 
 /* 菜谱网格 */
 .recipe-grid {
@@ -548,32 +533,13 @@ async function handleUpload(e) {
   color: #A08D7A;
 }
 .act-btn.danger:hover {
-  color: #f87171;
+  color: var(--rose-d);
 }
 
 /* 分页 */
 .pagination-wrap {
   text-align: center;
   padding: 20px 0;
-}
-
-/* 弹窗 */
-.recipe-dialog :deep(.el-dialog) {
-  border-radius: 20px;
-}
-.recipe-dialog :deep(.el-dialog__header) {
-  padding: 20px 24px 16px;
-  margin: 0;
-  border-bottom: 1px solid #F3EADD;
-}
-.recipe-dialog :deep(.el-dialog__title) {
-  font-size: 17px;
-  font-weight: 600;
-}
-.recipe-dialog :deep(.el-dialog__body) {
-  padding: 20px 24px;
-  max-height: 65vh;
-  overflow-y: auto;
 }
 
 /* 上传区域 */
@@ -590,8 +556,8 @@ async function handleUpload(e) {
   justify-content: center;
 }
 .upload-area:hover {
-  border-color: #667eea;
-  background: rgba(102,126,234,0.03);
+  border-color: var(--terracotta);
+  background: rgba(200, 159, 133, 0.03);
 }
 .upload-preview {
   width: 100%;
@@ -626,7 +592,7 @@ async function handleUpload(e) {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
   color: #fff;
   font-size: 13px;
   font-weight: 600;
@@ -652,22 +618,12 @@ async function handleUpload(e) {
 }
 .dyn-remove:hover {
   background: #fef2f2;
-  color: #f87171;
+  color: var(--rose-d);
 }
 
 /* 查看弹窗 */
-.view-dialog :deep(.el-dialog) {
-  border-radius: 20px;
-}
-.view-dialog :deep(.el-dialog__header) {
-  padding: 20px 24px 16px;
-  margin: 0;
-  border-bottom: 1px solid #F3EADD;
-}
-.view-dialog :deep(.el-dialog__body) {
+.view-dialog.el-dialog .el-dialog__body {
   padding: 0;
-  max-height: 70vh;
-  overflow-y: auto;
 }
 .view-header {
   display: flex;
@@ -766,7 +722,7 @@ async function handleUpload(e) {
   margin-bottom: 16px;
 }
 .vs-title .el-icon {
-  color: #667eea;
+  color: var(--terra-deep);
 }
 .vs-count {
   font-size: 12px;
@@ -799,7 +755,7 @@ async function handleUpload(e) {
 }
 .ing-amount {
   font-size: 14px;
-  color: #667eea;
+  color: var(--terra-deep);
   font-weight: 600;
 }
 
@@ -817,7 +773,7 @@ async function handleUpload(e) {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
   color: #fff;
   font-size: 12px;
   font-weight: 700;
@@ -853,21 +809,6 @@ async function handleUpload(e) {
   .header-actions {
     width: 100%;
     flex-wrap: wrap;
-  }
-  .recipe-dialog :deep(.el-dialog),
-  .view-dialog :deep(.el-dialog) {
-    width: 92vw !important;
-    max-width: 92vw !important;
-  }
-  .recipe-dialog :deep(.el-dialog__header),
-  .view-dialog :deep(.el-dialog__header) {
-    padding: 16px 16px 12px;
-  }
-  .recipe-dialog :deep(.el-dialog__body),
-  .view-dialog :deep(.el-dialog__body) {
-    padding: 12px 16px 16px;
-    max-height: 70vh;
-    overflow-y: auto;
   }
 }
 </style>

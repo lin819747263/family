@@ -238,7 +238,7 @@ function goToday() {
 }
 .vt-btn:hover { color: var(--terra-deep); }
 .vt-btn.active {
-  background: var(--card); color: var(--terra-deep);
+  background: var(--bg-card); color: var(--terra-deep);
   box-shadow: 0 3px 10px rgba(160, 120, 90, 0.14);
 }
 .btn {
@@ -252,23 +252,18 @@ function goToday() {
 .cal-nav { display: flex; align-items: center; gap: 6px; margin-left: auto; }
 .cn-btn {
   width: 34px; height: 34px; border-radius: 10px;
-  border: 1.5px solid var(--line); background: rgba(255, 253, 250, 0.8);
-  color: var(--text-soft); cursor: pointer; font-size: 15px; transition: all 0.25s;
+  border: 1.5px solid var(--border); background: rgba(255, 253, 250, 0.8);
+  color: var(--text-secondary); cursor: pointer; font-size: 15px; transition: all 0.25s;
 }
 .cn-btn:hover { border-color: var(--terracotta); color: var(--terra-deep); }
 .cal-label { min-width: 110px; text-align: center; font-size: 15px; font-weight: 700; color: var(--terra-deep); }
-
-.card {
-  background: #FFFDFA; border: 1px solid rgba(226, 205, 178, 0.7);
-  border-radius: 24px; box-shadow: 0 8px 28px rgba(160, 120, 90, 0.08);
-}
 
 /* ===== 月视图 ===== */
 .month-grid {
   display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; padding: 16px;
 }
 .mg-weekday {
-  text-align: center; font-size: 12px; font-weight: 700; color: var(--text-soft); padding: 6px 0;
+  text-align: center; font-size: 12px; font-weight: 700; color: var(--text-secondary); padding: 6px 0;
 }
 .mg-day {
   min-height: 86px; border-radius: 12px; padding: 8px;
@@ -281,7 +276,7 @@ function goToday() {
 }
 .mg-day.other { opacity: 0.4; }
 .mg-num {
-  font-size: 13px; font-weight: 700; color: var(--text-deep);
+  font-size: 13px; font-weight: 700; color: var(--text-primary);
   width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%;
 }
 .mg-day.today .mg-num {
@@ -314,9 +309,9 @@ function goToday() {
   box-shadow: inset 0 0 0 1.5px var(--terracotta);
 }
 .wg-head {
-  text-align: center; padding-bottom: 8px; border-bottom: 1px dashed var(--line);
+  text-align: center; padding-bottom: 8px; border-bottom: 1px dashed var(--border);
 }
-.wg-wd { font-size: 11px; color: var(--text-soft); }
+.wg-wd { font-size: 11px; color: var(--text-secondary); }
 .wg-num { font-size: 18px; font-weight: 800; color: var(--terra-deep); margin-top: 2px; }
 .wg-col.today .wg-num {
   color: #fff; background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));

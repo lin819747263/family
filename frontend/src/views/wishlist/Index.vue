@@ -38,10 +38,10 @@
 
     <!-- 空状态 -->
     <div v-else-if="list.length === 0" class="card empty-card">
-      <el-icon :size="56" color="#cbd5e1"><Star /></el-icon>
+      <el-icon :size="56" color="var(--wood-light)"><Star /></el-icon>
       <p class="empty-title">还没有心愿</p>
       <p class="empty-desc">添加家庭心愿，一起努力实现它</p>
-      <el-button type="primary" @click="openCreate" style="margin-top:12px;">
+      <el-button type="primary" @click="openCreate">
         <el-icon><Plus /></el-icon>许下第一个心愿
       </el-button>
     </div>
@@ -99,8 +99,8 @@
     </div>
 
     <!-- 创建/编辑弹窗 -->
-    <el-dialog v-model="showDialog" :title="isEdit ? '编辑心愿' : '许下心愿'" width="480px" destroy-on-close class="form-dialog">
-      <el-form :model="form" label-width="80px">
+    <el-dialog v-model="showDialog" :title="isEdit ? '编辑心愿' : '许下心愿'" width="480px" destroy-on-close class="warm-dialog">
+      <el-form :model="form" label-width="80px" class="warm-form">
         <el-form-item label="心愿标题">
           <el-input v-model="form.title" placeholder="写下你的心愿" maxlength="100" show-word-limit />
         </el-form-item>
@@ -295,7 +295,7 @@ function priorityType(p) {
   font-weight: 700;
   color: #6B5744;
 }
-.ms-num.pending { color: #667eea; }
+.ms-num.pending { color: var(--terra-deep); }
 .ms-num.done { color: #34d399; }
 .ms-lbl {
   font-size: 12px;
@@ -304,21 +304,6 @@ function priorityType(p) {
 }
 
 /* 空状态 */
-.empty-card {
-  text-align: center;
-  padding: 60px 20px;
-}
-.empty-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #A08D7A;
-  margin-top: 16px;
-}
-.empty-desc {
-  font-size: 14px;
-  color: #A08D7A;
-  margin-top: 8px;
-}
 
 /* 心愿网格 */
 .wish-grid {
@@ -347,10 +332,10 @@ function priorityType(p) {
   opacity: 0.5;
 }
 .wish-card.priority-high {
-  border-left: 3px solid #f87171;
+  border-left: 3px solid var(--rose-d);
 }
 .wish-card.priority-medium {
-  border-left: 3px solid #667eea;
+  border-left: 3px solid var(--terracotta);
 }
 .wish-card.priority-low {
   border-left: 3px solid #A08D7A;
@@ -406,7 +391,7 @@ function priorityType(p) {
 .wish-price {
   font-size: 18px;
   font-weight: 700;
-  color: #f87171;
+  color: var(--rose-d);
   margin-top: 10px;
 }
 
@@ -424,7 +409,7 @@ function priorityType(p) {
   gap: 6px;
 }
 .wish-avatar {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
   color: #fff;
   font-size: 10px;
   font-weight: 600;
@@ -462,10 +447,6 @@ function priorityType(p) {
   }
   .wish-grid {
     grid-template-columns: 1fr;
-  }
-  .form-dialog :deep(.el-dialog) {
-    width: 92vw !important;
-    max-width: 92vw !important;
   }
 }
 </style>

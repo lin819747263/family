@@ -238,7 +238,7 @@
 <script setup>
 import { useFamilyGuard } from "@/composables/useFamilyGuard"
 import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
-import { inventoryApi, dashboardApi } from '@/api'
+import { inventoryApi } from '@/api'
 import { useAuthStore } from '@/store/auth'
 import { ElMessage } from 'element-plus'
 import dayjs from 'dayjs'
@@ -434,9 +434,8 @@ function setupReveal() {
 
 onMounted(async () => {
   if (!await useFamilyGuard()) return
-  await loadSpaces()
+  loadSpaces()
   loadItems()
-  loadStats()
   loadReminders()
   nextTick(setupReveal)
 })
@@ -456,22 +455,16 @@ async function loadItems() {
     const res = await inventoryApi.getItems(params)
     items.value = res.data.list
     total.value = res.data.total
+    stats.total = res.data.total
     nextTick(setupReveal)
   } finally { loading.value = false }
-}
-
-async function loadStats() {
-  try {
-    const dashRes = await dashboardApi.getData({ familyId: authStore.currentFamily?.id })
-    stats.total = dashRes.data.inventory?.totalItems || 0
-    stats.expiring = dashRes.data.inventory?.expiringItems || 0
-  } catch (e) { console.error(e) }
 }
 
 async function loadReminders() {
   try {
     const res = await inventoryApi.getReminders({ familyId: authStore.currentFamily?.id })
     reminders.value = res.data || []
+    stats.expiring = reminders.value.length
   } catch (e) { console.error(e) }
 }
 

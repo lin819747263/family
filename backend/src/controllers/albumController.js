@@ -1,5 +1,5 @@
 const { Album, Photo, AlbumShare, PhotoComment, StorageSpace, User, FamilyMember } = require('../models');
-const { Op } = require('sequelize');
+const { Op, fn, col } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dayjs = require('dayjs');
@@ -252,15 +252,13 @@ exports.getTimeline = async (req, res, next) => {
     if (albumIds.length === 0) return res.json({ code: 0, data: { years: [], photos: [], total: 0 } });
 
     // 获取所有可用年份（用于年份筛选，按北京时间）
-    const allPhotos = await Photo.findAll({
+    const yearRows = await Photo.findAll({
       where: { albumId: { [Op.in]: albumIds }, isDeleted: false },
-      attributes: ['createdAt'],
-      order: [['createdAt', 'DESC']]
+      attributes: [[fn('YEAR', fn('CONVERT_TZ', col('created_at'), '+00:00', '+08:00')), 'year']],
+      group: ['year'],
+      raw: true
     });
-    const years = [...new Set(allPhotos.map(p => {
-      const localDate = utcToLocalDate(p.createdAt);
-      return parseInt(localDate.slice(0, 4));
-    }))].sort((a, b) => b - a);
+    const years = yearRows.map(r => r.year).filter(Boolean).sort((a, b) => b - a);
 
     // 构建查询条件
     const where = { albumId: { [Op.in]: albumIds }, isDeleted: false };

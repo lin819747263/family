@@ -1,17 +1,26 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const { isTokenBlacklisted } = require('../controllers/authController');
+const NodeCache = require('node-cache');
+const userCache = new NodeCache({ stdTTL: 300, checkperiod: 60 });
+
+async function getUserById(userId) {
+  const cached = userCache.get(userId);
+  if (cached) return cached;
+  const user = await User.findByPk(userId, { attributes: { exclude: ['password'] } });
+  if (user) userCache.set(userId, user.toJSON());
+  return user;
+}
 
 const authenticate = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
     if (!token) return res.status(401).json({ code: 401, message: '未登录' });
-    // 检查 token 是否已被注销
     if (isTokenBlacklisted(token)) return res.status(401).json({ code: 401, message: '登录已失效，请重新登录' });
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findByPk(decoded.userId, { attributes: { exclude: ['password'] } });
+    const user = await getUserById(decoded.userId);
     if (!user || user.status === 'disabled') return res.status(401).json({ code: 401, message: '用户不存在或已禁用' });
-    req.user = user.toJSON();
+    req.user = typeof user.toJSON === 'function' ? user.toJSON() : user;
     req.userId = user.id;
     next();
   } catch (err) {
@@ -25,8 +34,11 @@ const optionalAuth = async (req, res, next) => {
     const token = req.headers.authorization?.replace('Bearer ', '');
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const user = await User.findByPk(decoded.userId, { attributes: { exclude: ['password'] } });
-      if (user && user.status === 'active') { req.user = user.toJSON(); req.userId = user.id; }
+      const user = await getUserById(decoded.userId);
+      if (user && user.status === 'active') {
+        req.user = typeof user.toJSON === 'function' ? user.toJSON() : user;
+        req.userId = user.id;
+      }
     }
   } catch (_) { /* ignore */ }
   next();

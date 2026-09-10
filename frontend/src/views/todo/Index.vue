@@ -353,7 +353,6 @@ function formatDate(d) {
 onMounted(async () => {
   if (!await useFamilyGuard()) return
   loadList()
-  loadStats()
 })
 
 async function loadList() {

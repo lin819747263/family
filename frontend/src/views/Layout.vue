@@ -203,18 +203,18 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/store/auth'
 import { useAppStore } from '@/store/app'
 import { useAccountingStore } from '@/store/accounting'
 import { dashboardApi } from '@/api'
-import TransactionForm from '@/components/accounting/TransactionForm.vue'
-import BatchTransactionForm from '@/components/accounting/BatchTransactionForm.vue'
-import ChatPanel from '@/views/ai/ChatPanel.vue'
-import GlobalSearch from '@/components/search/GlobalSearch.vue'
-import MobileMenu from '@/components/common/MobileMenu.vue'
-import NotificationPanel from '@/components/common/NotificationPanel.vue'
+const TransactionForm = defineAsyncComponent(() => import('@/components/accounting/TransactionForm.vue'))
+const BatchTransactionForm = defineAsyncComponent(() => import('@/components/accounting/BatchTransactionForm.vue'))
+const ChatPanel = defineAsyncComponent(() => import('@/views/ai/ChatPanel.vue'))
+const GlobalSearch = defineAsyncComponent(() => import('@/components/search/GlobalSearch.vue'))
+const MobileMenu = defineAsyncComponent(() => import('@/components/common/MobileMenu.vue'))
+const NotificationPanel = defineAsyncComponent(() => import('@/components/common/NotificationPanel.vue'))
 import {
   DataBoard, Coin, PictureFilled, Box, Bell, Expand, Aim, Food,
   Search, ArrowDown, Download, User, UserFilled,

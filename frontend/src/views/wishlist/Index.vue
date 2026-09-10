@@ -80,7 +80,7 @@
         </div>
 
         <div class="wish-body">
-          <img v-if="item.image" :src="item.image" class="wish-image" />
+          <img v-if="item.image" :src="item.image" class="wish-image" loading="lazy" />
           <div class="wish-title">{{ item.title }}</div>
           <div v-if="item.description" class="wish-desc">{{ item.description }}</div>
           <div v-if="item.price" class="wish-price">¥{{ parseFloat(item.price).toFixed(2) }}</div>

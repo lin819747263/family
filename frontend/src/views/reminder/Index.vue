@@ -37,7 +37,7 @@
       <!-- 内容区 -->
       <main class="content">
         <!-- ===== 清单 ===== -->
-        <section v-show="activeView === 'todo'" class="panel">
+        <section v-if="activeView === 'todo'" class="panel">
           <div class="panel-head">
             <div><div class="panel-title">📝 待办清单</div><div class="panel-sub">把家里的大小事，一件件安心放下</div></div>
             <button class="btn primary" @click="$refs.todoPage?.openCreate?.()">＋ 新建待办</button>
@@ -46,7 +46,7 @@
         </section>
 
         <!-- ===== 日历 ===== -->
-        <section v-show="activeView === 'calendar'" class="panel">
+        <section v-if="activeView === 'calendar'" class="panel">
           <div class="panel-head">
             <div><div class="panel-title">📅 日历视图</div><div class="panel-sub">一家人的日程，摊开在同一张纸上</div></div>
           </div>
@@ -54,7 +54,7 @@
         </section>
 
         <!-- ===== 纪念日 ===== -->
-        <section v-show="activeView === 'anniversary'" class="panel">
+        <section v-if="activeView === 'anniversary'" class="panel">
           <div class="panel-head">
             <div><div class="panel-title">⭐ 纪念日</div><div class="panel-sub">重要的日子，一个都不错过</div></div>
           </div>
@@ -62,7 +62,7 @@
         </section>
 
         <!-- ===== 年度目标 ===== -->
-        <section v-show="activeView === 'goals'" class="panel">
+        <section v-if="activeView === 'goals'" class="panel">
           <div class="panel-head">
             <div><div class="panel-title">🎯 年度目标</div><div class="panel-sub">今年想达成的事，一步步走过去</div></div>
           </div>
@@ -70,7 +70,7 @@
         </section>
 
         <!-- ===== 家庭心愿 ===== -->
-        <section v-show="activeView === 'wishlist'" class="panel">
+        <section v-if="activeView === 'wishlist'" class="panel">
           <div class="panel-head">
             <div><div class="panel-title">💝 家庭心愿</div><div class="panel-sub">想做的事、想买的东西，都记在这里</div></div>
           </div>

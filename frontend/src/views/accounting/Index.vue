@@ -26,7 +26,7 @@
     </div>
 
     <!-- ========== 流水账单 ========== -->
-    <div v-show="activeTab === 'flow'">
+    <div v-if="activeTab === 'flow'">
       <!-- 汇总 -->
       <div class="summary">
         <div class="sum-card income reveal">
@@ -89,7 +89,7 @@
     </div>
 
     <!-- ========== 预算管理 ========== -->
-    <div v-show="activeTab === 'budget'">
+    <div v-if="activeTab === 'budget'">
       <div class="card budget-total reveal">
         <div class="bt-head">
           <div class="bt-title">{{ monthLabel }}总预算</div>
@@ -123,7 +123,7 @@
     </div>
 
     <!-- ========== 报表分析 ========== -->
-    <div v-show="activeTab === 'report'">
+    <div v-if="activeTab === 'report'">
       <div class="report-head-actions reveal">
         <button class="btn ghost" @click="$router.push('/accounting/annual-report')">📊 年度报告</button>
         <button class="btn ghost" @click="exportReport('xlsx')">📥 导出Excel</button>
@@ -171,7 +171,7 @@
     </div>
 
     <!-- ========== 账本管理 ========== -->
-    <div v-show="activeTab === 'books'">
+    <div v-if="activeTab === 'books'">
       <div class="books-grid">
         <div v-for="b in booksList" :key="b.id" class="card book reveal" :class="{ current: b.id === accountingStore.currentBookId }" @click="selectBook(b)">
           <div class="book-top">

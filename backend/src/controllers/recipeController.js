@@ -1,4 +1,4 @@
-const { Recipe, User, sequelize } = require('../models');
+const { Recipe, User } = require('../models');
 const { Op } = require('sequelize');
 
 // ===== 菜谱 CRUD =====
@@ -84,12 +84,14 @@ exports.uploadImage = async (req, res, next) => {
 exports.random = async (req, res, next) => {
   try {
     const { familyId, count = 1 } = req.query;
+    const limit = Math.min(parseInt(count), 5);
     const where = { familyId, status: 'active' };
+    const ids = await Recipe.findAll({ where, attributes: ['id'], raw: true });
+    if (ids.length === 0) return res.json({ code: 0, data: [] });
+    const shuffled = ids.map(r => r.id).sort(() => Math.random() - 0.5).slice(0, limit);
     const recipes = await Recipe.findAll({
-      where,
-      include: [{ model: User, as: 'creator', attributes: ['id', 'nickname'] }],
-      order: sequelize.random(),
-      limit: Math.min(parseInt(count), 5)
+      where: { id: { [Op.in]: shuffled } },
+      include: [{ model: User, as: 'creator', attributes: ['id', 'nickname'] }]
     });
     res.json({ code: 0, data: recipes });
   } catch (err) { next(err); }

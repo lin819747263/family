@@ -13,7 +13,7 @@
       </div>
       <div class="mem-grid">
         <div v-for="p in memories.yearAgo" :key="p.id" class="photo-item" @click="router.push(`/album/${p.albumId}`)">
-          <img :src="p.url || p.thumbnailUrl" />
+          <img :src="p.url || p.thumbnailUrl" loading="lazy" />
           <span class="mem-year">{{ getPhotoYear(p) }}</span>
         </div>
       </div>
@@ -27,7 +27,7 @@
       </div>
       <div class="mem-grid">
         <div v-for="p in memories.weekBest" :key="p.id" class="photo-item" @click="router.push(`/album/${p.albumId}`)">
-          <img :src="p.url || p.thumbnailUrl" />
+          <img :src="p.url || p.thumbnailUrl" loading="lazy" />
         </div>
       </div>
     </div>

@@ -32,7 +32,7 @@
     <div v-else class="recipe-grid">
       <div v-for="item in list" :key="item.id" class="recipe-card card" @click="openView(item)">
         <div class="rc-image">
-          <img v-if="item.image" :src="item.image" :alt="item.name" />
+          <img v-if="item.image" :src="item.image" :alt="item.name" loading="lazy" />
           <div v-else class="rc-placeholder">
             <el-icon :size="36" color="var(--wood-light)"><Dish /></el-icon>
           </div>

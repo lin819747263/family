@@ -28,7 +28,7 @@
 
     <div v-else class="photo-grid">
       <div v-for="p in photos" :key="p.id" class="photo-item" @click="previewPhoto(p)">
-        <img :src="p.thumbnailUrl || p.url" :alt="p.originalName" />
+        <img :src="p.thumbnailUrl || p.url" :alt="p.originalName" loading="lazy" />
         <div class="photo-overlay">
           <div>{{ p.uploader?.nickname || '未知' }}</div>
         </div>

@@ -19,6 +19,8 @@ module.exports = (sequelize) => {
     isEncrypted: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'is_encrypted' },
     isDeleted: { type: DataTypes.BOOLEAN, defaultValue: false, field: 'is_deleted' }
   }, { tableName: 'photos', underscored: true, indexes: [
-    { fields: ['album_id', 'is_deleted'] }
+    { fields: ['album_id', 'is_deleted'] },
+    { fields: ['created_at'] },
+    { fields: ['uploaded_by'] }
   ] });
 };

@@ -14,7 +14,7 @@
         <div class="al-cover">
           <div v-if="a.Photos?.length" class="al-photos">
             <div v-for="p in a.Photos.slice(0, 4)" :key="p.id" class="al-photo">
-              <img :src="p.thumbnailUrl || p.url" />
+              <img :src="p.thumbnailUrl || p.url" loading="lazy" />
             </div>
           </div>
           <div v-else class="al-empty"><span>📸</span></div>

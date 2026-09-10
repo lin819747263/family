@@ -15,7 +15,7 @@
     </div>
 
     <!-- ===== 身份卡 ===== -->
-    <section v-show="activeTab === 'id'">
+    <section v-if="activeTab === 'id'">
       <div v-if="loadingProfiles" class="card empty-card"><p>加载中...</p></div>
       <div v-else-if="errorProfiles" class="card empty-card">
         <p style="color:#B06A6A;">{{ errorProfiles }}</p>
@@ -108,7 +108,7 @@
     </section>
 
     <!-- ===== 时间轴 ===== -->
-    <section v-show="activeTab === 'timeline'">
+    <section v-if="activeTab === 'timeline'">
       <div v-if="loadingTimeline" class="card empty-card"><p>加载中...</p></div>
       <div v-else-if="errorTimeline" class="card empty-card">
         <p style="color:#B06A6A;">{{ errorTimeline }}</p>
@@ -142,7 +142,7 @@
     </section>
 
     <!-- ===== 说明书库 ===== -->
-    <section v-show="activeTab === 'manual'">
+    <section v-if="activeTab === 'manual'">
       <div v-if="loadingManuals" class="card empty-card"><p>加载中...</p></div>
       <div v-else-if="errorManuals" class="card empty-card">
         <p style="color:#B06A6A;">{{ errorManuals }}</p>
@@ -181,7 +181,7 @@
     </section>
 
     <!-- ===== 宠物档案 ===== -->
-    <section v-show="activeTab === 'pet'">
+    <section v-if="activeTab === 'pet'">
       <div v-if="loadingPets" class="card empty-card"><p>加载中...</p></div>
       <div v-else-if="errorPets" class="card empty-card">
         <p style="color:#B06A6A;">{{ errorPets }}</p>
@@ -223,7 +223,7 @@
     </section>
 
     <!-- ===== 成就墙 ===== -->
-    <section v-show="activeTab === 'achieve'">
+    <section v-if="activeTab === 'achieve'">
       <div v-if="loadingAchievements" class="card empty-card"><p>加载中...</p></div>
       <div v-else-if="errorAchievements" class="card empty-card">
         <p style="color:#B06A6A;">{{ errorAchievements }}</p>
@@ -259,7 +259,7 @@
     </section>
 
     <!-- ===== 情绪温度计 ===== -->
-    <section v-show="activeTab === 'mood'">
+    <section v-if="activeTab === 'mood'">
       <div v-if="moodSel < 0" class="card empty-card" style="margin-bottom:16px;"><p>今天还没有打卡，选一个心情开始记录吧</p></div>
       <div class="mood-grid">
         <div class="card ck-card">
@@ -755,9 +755,20 @@ async function deleteAchievement(id) {
   try { await ElMessageBox.confirm('确定删除此成就？', '确认删除', { type: 'warning' }); await achievementApi.remove(id); ElMessage.success('已删除'); loadAchievements() } catch (e) { if (e !== 'cancel') console.error(e) }
 }
 
+const loadedTabs = reactive(new Set(['id']))
+
+watch(() => activeTab.value, (tab) => {
+  if (loadedTabs.has(tab)) return
+  loadedTabs.add(tab)
+  if (tab === 'timeline') loadTimeline()
+  else if (tab === 'manual') loadManuals()
+  else if (tab === 'pet') loadPets()
+  else if (tab === 'achieve') loadAchievements()
+})
+
 onMounted(async () => {
   if (!await useFamilyGuard()) return
-  loadProfiles(); loadTimeline(); loadManuals(); loadPets(); loadAchievements()
+  loadProfiles()
 })
 </script>
 

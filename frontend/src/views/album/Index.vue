@@ -16,11 +16,11 @@
     </div>
 
     <!-- 内容区 -->
-    <div v-show="activeTab === 'albums'"><AlbumsPage ref="albumsRef" embedded /></div>
-    <div v-show="activeTab === 'moments'"><MomentsPage ref="momentsRef" embedded /></div>
-    <div v-show="activeTab === 'timeline'"><TimelinePage embedded /></div>
-    <div v-show="activeTab === 'memories'"><MemoriesPage embedded /></div>
-    <div v-show="activeTab === 'diary'"><DiaryPage ref="diaryRef" embedded /></div>
+    <div v-if="activeTab === 'albums'"><AlbumsPage ref="albumsRef" embedded /></div>
+    <div v-if="activeTab === 'moments'"><MomentsPage ref="momentsRef" embedded /></div>
+    <div v-if="activeTab === 'timeline'"><TimelinePage embedded /></div>
+    <div v-if="activeTab === 'memories'"><MemoriesPage embedded /></div>
+    <div v-if="activeTab === 'diary'"><DiaryPage ref="diaryRef" embedded /></div>
   </div>
 </template>
 

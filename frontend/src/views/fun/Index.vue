@@ -18,7 +18,7 @@
     </div>
 
     <!-- ===== 家常菜谱 ===== -->
-    <section v-show="activeTab === 'eat'">
+    <section v-if="activeTab === 'eat'">
       <div class="filter-bar">
         <button v-for="d in diffOptions" :key="d.value" class="fchip" :class="{ active: recipeFilter === d.value }" @click="recipeFilter = d.value; loadRecipes()">{{ d.label }}</button>
         <span class="filter-count">共 <b>{{ recipeTotal }}</b> 道家常菜</span>
@@ -48,7 +48,7 @@
     </section>
 
     <!-- ===== 奶茶收藏 ===== -->
-    <section v-show="activeTab === 'drink'">
+    <section v-if="activeTab === 'drink'">
       <div class="filter-bar">
         <span class="filter-count">🧋 收藏了 <b>{{ drinks.length }}</b> 杯好喝的 · 点 ❤ 标记想再喝</span>
       </div>
@@ -83,7 +83,7 @@
     </section>
 
     <!-- ===== 打卡小店 ===== -->
-    <section v-show="activeTab === 'shop'">
+    <section v-if="activeTab === 'shop'">
       <div v-if="shopLoading" class="card loading-card"><div class="loading-spinner"></div><p>加载中...</p></div>
       <div v-else-if="loadErrors.shop" class="card error-card"><p>加载失败，请稍后重试</p><button class="btn-ghost" @click="loadShops()">🔄 重试</button></div>
       <template v-else>
@@ -115,7 +115,7 @@
     </section>
 
     <!-- ===== 出游景点 ===== -->
-    <section v-show="activeTab === 'play'">
+    <section v-if="activeTab === 'play'">
       <div v-if="placeLoading" class="card loading-card"><div class="loading-spinner"></div><p>加载中...</p></div>
       <div v-else-if="loadErrors.place" class="card error-card"><p>加载失败，请稍后重试</p><button class="btn-ghost" @click="loadPlaces()">🔄 重试</button></div>
       <template v-else>
@@ -153,7 +153,7 @@
     </section>
 
     <!-- ===== 时令水果 ===== -->
-    <section v-show="activeTab === 'fruit'">
+    <section v-if="activeTab === 'fruit'">
       <div v-if="fruitLoading" class="card loading-card"><div class="loading-spinner"></div><p>加载中...</p></div>
       <div v-else-if="loadErrors.fruit" class="card error-card"><p>加载失败，请稍后重试</p><button class="btn-ghost" @click="loadFruits()">🔄 重试</button></div>
       <template v-else>
@@ -306,7 +306,7 @@
 
 <script setup>
 import { useFamilyGuard } from "@/composables/useFamilyGuard"
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { recipeApi, drinkApi, funShopApi, funPlaceApi, funFruitApi } from '@/api'
 import { useAuthStore } from '@/store/auth'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -569,9 +569,20 @@ async function deleteItem(type, id, name) {
   } catch (e) { if (e !== 'cancel') console.error(e) }
 }
 
+const loadedTabs = reactive(new Set(['eat']))
+
+watch(activeTab, (tab) => {
+  if (loadedTabs.has(tab)) return
+  loadedTabs.add(tab)
+  if (tab === 'drink') loadDrinks()
+  else if (tab === 'shop') loadShops()
+  else if (tab === 'play') loadPlaces()
+  else if (tab === 'fruit') loadFruits()
+})
+
 onMounted(async () => {
   if (!await useFamilyGuard()) return
-  loadRecipes(); loadDrinks(); loadShops(); loadPlaces(); loadFruits()
+  loadRecipes()
 })
 </script>
 

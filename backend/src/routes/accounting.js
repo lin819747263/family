@@ -19,6 +19,7 @@ router.post('/transactions', accountingValidators.createTransaction, ctrl.create
 router.get('/transactions', ctrl.getTransactions);
 router.put('/transactions/:id', idParam, ctrl.updateTransaction);
 router.delete('/transactions/:id', idParam, ctrl.deleteTransaction);
+router.post('/transactions/import', ctrl.importTransactions);
 
 // 分类
 router.get('/categories', verifyFamilyAccess, ctrl.getCategories);

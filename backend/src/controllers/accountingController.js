@@ -143,6 +143,43 @@ exports.deleteTransaction = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
+exports.importTransactions = async (req, res, next) => {
+  try {
+    const { bookId, transactions } = req.body;
+    if (!bookId) return res.status(400).json({ code: 400, message: '请选择账本' });
+    if (!Array.isArray(transactions) || transactions.length === 0) {
+      return res.status(400).json({ code: 400, message: '没有可导入的记录' });
+    }
+    if (transactions.length > 5000) {
+      return res.status(400).json({ code: 400, message: '单次导入不能超过 5000 条' });
+    }
+    // 验证账本访问权限
+    if (!await verifyBookAccess(bookId, req.userId)) {
+      return res.status(403).json({ code: 403, message: '无权访问该账本' });
+    }
+
+    // 安全校验：只接受 income/expense
+    const validTxns = transactions.filter(t => t.type === 'income' || t.type === 'expense');
+    if (validTxns.length === 0) {
+      return res.status(400).json({ code: 400, message: '没有有效的收支记录可导入' });
+    }
+
+    const records = validTxns.map(t => ({
+      bookId,
+      type: t.type,
+      amount: Math.abs(parseFloat(t.amount)),
+      categoryId: t.categoryId || null,
+      note: t.note || '',
+      transactionDate: t.transactionDate || dayjs().format('YYYY-MM-DD'),
+      createdBy: req.userId,
+      source: 'manual'
+    }));
+
+    const result = await Transaction.bulkCreate(records);
+    res.status(201).json({ code: 0, data: { imported: result.length }, message: `成功导入 ${result.length} 条记录` });
+  } catch (err) { next(err); }
+};
+
 // ===== 分类管理 =====
 exports.getCategories = async (req, res, next) => {
   try {

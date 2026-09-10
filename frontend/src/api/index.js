@@ -33,6 +33,7 @@ export const accountingApi = {
   createTransaction: data => request.post('/accounting/transactions', data),
   updateTransaction: (id, data) => request.put(`/accounting/transactions/${id}`, data),
   deleteTransaction: id => request.delete(`/accounting/transactions/${id}`),
+  importTransactions: data => request.post('/accounting/transactions/import', data),
   getCategories: params => request.get('/accounting/categories', { params }),
   createCategory: data => request.post('/accounting/categories', data),
   updateCategory: (id, data) => request.put(`/accounting/categories/${id}`, data),

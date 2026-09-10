@@ -22,6 +22,7 @@
       <button class="subtab" :class="{ active: activeTab === 'flow' }" @click="switchTab('flow')">📃 流水账单</button>
       <button class="subtab" :class="{ active: activeTab === 'budget' }" @click="switchTab('budget')">🎯 预算管理</button>
       <button class="subtab" :class="{ active: activeTab === 'report' }" @click="switchTab('report')">📊 报表分析</button>
+      <button class="subtab" :class="{ active: activeTab === 'import' }" @click="switchTab('import')">📥 账单导入</button>
       <button class="subtab" :class="{ active: activeTab === 'books' }" @click="switchTab('books')">📚 账本管理</button>
     </div>
 
@@ -170,6 +171,11 @@
       </div>
     </div>
 
+    <!-- ========== 账单导入 ========== -->
+    <div v-if="activeTab === 'import'">
+      <BillImport :book-id="accountingStore.currentBookId" @imported="onImported" />
+    </div>
+
     <!-- ========== 账本管理 ========== -->
     <div v-if="activeTab === 'books'">
       <div class="books-grid">
@@ -276,6 +282,7 @@ import { useAccountingStore } from '@/store/accounting'
 import { useAuthStore } from '@/store/auth'
 import TransactionForm from '@/components/accounting/TransactionForm.vue'
 import BatchTransactionForm from '@/components/accounting/BatchTransactionForm.vue'
+import BillImport from '@/components/accounting/BillImport.vue'
 import { ElMessage } from 'element-plus'
 import { formatMoney } from '@/utils/format'
 import dayjs from 'dayjs'
@@ -304,6 +311,7 @@ function switchTab(tab) {
   else if (tab === 'budget') loadBudgets().then(() => observeReveal())
   else if (tab === 'report') loadReport().then(() => observeReveal())
   else if (tab === 'books') loadBooks().then(() => observeReveal())
+  else if (tab === 'import') nextTick(() => observeReveal())
 }
 
 // ===== 流水账单 =====
@@ -362,6 +370,7 @@ function handleFilter() { currentPage.value = 1; loadTransactions() }
 
 function openEdit(t) { editTarget.value = { ...t }; showEdit.value = true }
 function onTxnSuccess() { showCreate.value = false; loadTransactions() }
+function onImported() { switchTab('flow') }
 
 async function handleDelete(id) {
   try { await accountingApi.deleteTransaction(id); ElMessage.success('已删除'); loadTransactions() } catch (e) { console.error(e) }
@@ -827,7 +836,16 @@ onMounted(async () => {
   .sum-val { font-size: 26px; }
   .budget-grid, .books-grid { grid-template-columns: 1fr; }
   .row-acts { opacity: 1; }
+  .act { width: 36px; height: 36px; font-size: 15px; }
   .b-card-actions { opacity: 1; }
+  .book-more { width: 36px; height: 36px; }
+  .mn-btn { width: 40px; height: 40px; }
+  .blbl { font-size: 9px; }
+  .bars { gap: 4px; }
+  .bbar { max-width: 20px; }
+  .donut { width: 130px; height: 130px; }
+  .rank-name { min-width: 70px; font-size: 13px; }
+  .rank-val { min-width: 60px; font-size: 12px; }
   .group { padding: 4px 16px 10px; }
 }
 </style>

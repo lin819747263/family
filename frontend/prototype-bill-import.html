@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>账单导入 · 暖色居家原型</title>
+<style>
+  :root{
+    --warm-white:#FBF6EF; --cream:#F3EADD; --apricot:#EDE0CE; --wood-light:#E2CDB2;
+    --terracotta:#C89F85; --terracotta-d:#B08466; --terra-deep:#96684A;
+    --sage:#A8B08A; --sage-d:#7E8862; --amber:#E8B36A; --rose:#D99A9A; --rose-d:#B06A6A; --sky:#9FB8C9;
+    --text-deep:#6B5744; --text-soft:#A08D7A; --glow:rgba(230,190,150,.45);
+    --card:#FFFDFA; --card-shadow:0 16px 48px rgba(160,120,90,.14); --line:rgba(226,205,178,.7);
+    --r-lg:24px; --r-md:16px; --r-sm:12px;
+    --font:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);color:var(--text-deep);background:linear-gradient(135deg,var(--warm-white) 0%,var(--cream) 55%,#F0E2D0 100%);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;}
+  ::selection{background:var(--terracotta);color:#fff;}
+  button{font-family:var(--font);}
+
+  .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .ambient span{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:drift 16s ease-in-out infinite alternate;}
+  .a1{width:300px;height:300px;background:#F2D9B8;top:-80px;left:-60px;}
+  .a2{width:240px;height:240px;background:#E8C9AE;bottom:-60px;right:-40px;animation-delay:-6s;}
+  @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(34px,26px) scale(1.1);}}
+
+  /* ===== 顶部导航 ===== */
+  .top-nav{position:sticky;top:0;z-index:50;background:rgba(255,252,247,.85);backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line);box-shadow:0 2px 20px rgba(160,120,90,.06);}
+  .nav-inner{max-width:1240px;margin:0 auto;height:62px;display:flex;align-items:center;gap:14px;padding:0 22px;}
+  .logo{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;}
+  .logo-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--terracotta),#D9B697);display:flex;align-items:center;justify-content:center;box-shadow:0 5px 14px rgba(200,159,133,.4);font-size:19px;}
+  .logo-text{font-size:17px;font-weight:700;letter-spacing:.06em;color:var(--terra-deep);}
+  .logo-text small{display:block;font-size:10px;font-weight:400;letter-spacing:.2em;color:var(--text-soft);margin-top:-2px;}
+  .crumb{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-soft);}
+  .crumb b{color:var(--terra-deep);font-weight:600;}
+
+  .page{max-width:1240px;margin:0 auto;padding:26px 22px 90px;position:relative;z-index:1;}
+
+  /* ===== 页头 ===== */
+  .page-head{margin-bottom:24px;}
+  .page-title{font-size:26px;font-weight:800;letter-spacing:.02em;color:var(--terra-deep);display:flex;align-items:center;gap:10px;}
+  .page-sub{margin-top:6px;font-size:13.5px;color:var(--text-soft);}
+
+  /* ===== 按钮 ===== */
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:11px 20px;border-radius:13px;border:none;cursor:pointer;font-size:14px;font-weight:600;transition:transform .3s,box-shadow .3s,background .3s;}
+  .btn.primary{background:linear-gradient(135deg,var(--terracotta),#D3A98B);color:#FFF9F2;box-shadow:0 8px 20px rgba(200,159,133,.4);}
+  .btn.ghost{background:rgba(255,253,250,.85);color:var(--terra-deep);border:1.5px solid var(--line);}
+  .btn.danger{background:linear-gradient(135deg,var(--rose),#E0AAAA);color:#fff;box-shadow:0 6px 16px rgba(217,154,154,.3);}
+  .btn.sage{background:linear-gradient(135deg,var(--sage),#B8C09A);color:#fff;box-shadow:0 6px 16px rgba(168,176,138,.35);}
+  .btn:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(200,159,133,.3);}
+  .btn:active{transform:translateY(-1px) scale(.98);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+  .btn.sm{padding:7px 14px;font-size:13px;border-radius:10px;}
+
+  /* ===== 上传区 ===== */
+  .upload-zone{background:var(--card);border:2px dashed var(--wood-light);border-radius:var(--r-lg);padding:48px 32px;text-align:center;cursor:pointer;transition:all .35s;position:relative;overflow:hidden;}
+  .upload-zone:hover,.upload-zone.dragover{border-color:var(--terracotta);background:rgba(200,159,133,.06);transform:translateY(-3px);box-shadow:0 12px 36px rgba(160,120,90,.12);}
+  .upload-zone .icon{font-size:48px;margin-bottom:16px;display:block;}
+  .upload-zone h3{font-size:18px;font-weight:700;color:var(--terra-deep);margin-bottom:8px;}
+  .upload-zone p{font-size:13.5px;color:var(--text-soft);line-height:1.7;}
+  .upload-zone .formats{display:flex;gap:10px;justify-content:center;margin-top:16px;}
+  .upload-zone .fmt-tag{padding:6px 14px;border-radius:999px;font-size:12px;font-weight:600;}
+  .fmt-tag.wx{background:#E8F5E9;color:#2E7D32;}
+  .fmt-tag.ali{background:#E3F2FD;color:#1565C0;}
+  .upload-zone input{display:none;}
+
+  /* ===== 解析信息 ===== */
+  .parse-info{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;box-shadow:0 6px 20px rgba(160,120,90,.07);}
+  .parse-info .info-item{display:flex;align-items:center;gap:8px;font-size:14px;}
+  .parse-info .info-label{color:var(--text-soft);}
+  .parse-info .info-val{font-weight:700;color:var(--terra-deep);}
+  .parse-info .src-tag{padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600;}
+  .src-tag.wx{background:#E8F5E9;color:#2E7D32;}
+  .src-tag.ali{background:#E3F2FD;color:#1565C0;}
+
+  /* ===== 汇总条 ===== */
+  .review-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+  .rev-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;box-shadow:0 4px 14px rgba(160,120,90,.06);}
+  .rev-card .rev-label{font-size:12px;color:var(--text-soft);margin-bottom:4px;}
+  .rev-card .rev-val{font-size:22px;font-weight:800;}
+  .rev-card .rev-val.exp{color:var(--rose-d);}
+  .rev-card .rev-val.inc{color:var(--sage-d);}
+  .rev-card .rev-val.neu{color:var(--text-soft);}
+  .rev-card .rev-val.cnt{color:var(--terra-deep);}
+
+  /* ===== 筛选栏 ===== */
+  .filter-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px;}
+  .search-wrap{position:relative;flex:1;min-width:180px;max-width:300px;}
+  .search-wrap .mag{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.5;}
+  .search-input{width:100%;padding:10px 12px 10px 36px;border-radius:12px;border:1.5px solid var(--wood-light);background:#FFFDF9;font-size:13.5px;color:var(--text-deep);font-family:var(--font);outline:none;transition:all .3s;}
+  .search-input:focus{border-color:var(--terracotta);box-shadow:0 0 0 3px rgba(200,159,133,.12);}
+  .chip-btn{padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:rgba(255,253,250,.8);color:var(--text-soft);font-size:13px;font-weight:600;cursor:pointer;transition:all .25s;}
+  .chip-btn:hover{border-color:var(--terracotta);color:var(--terra-deep);}
+  .chip-btn.active{background:var(--terracotta);border-color:var(--terracotta);color:#fff;}
+
+  /* ===== 表格 ===== */
+  .review-table-wrap{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;box-shadow:0 8px 28px rgba(160,120,90,.08);}
+  .review-table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  .review-table thead{background:rgba(243,234,221,.5);}
+  .review-table th{padding:13px 14px;text-align:left;font-weight:600;color:var(--terra-deep);font-size:12.5px;border-bottom:1.5px solid var(--line);white-space:nowrap;}
+  .review-table td{padding:12px 14px;border-bottom:1px solid rgba(226,205,178,.4);vertical-align:middle;}
+  .review-table tr:last-child td{border-bottom:none;}
+  .review-table tr:hover{background:rgba(200,159,133,.04);}
+  .review-table tr.deleted{opacity:.35;text-decoration:line-through;}
+  .review-table tr.edited{background:rgba(232,179,106,.06);}
+
+  .td-amount{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .td-amount.exp{color:var(--rose-d);}
+  .td-amount.inc{color:var(--sage-d);}
+  .td-amount.neu{color:var(--text-soft);}
+
+  .td-time{white-space:nowrap;color:var(--text-soft);font-size:12.5px;}
+  .td-counterparty{max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .td-desc{max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-soft);font-size:12.5px;}
+
+  /* 分类选择 */
+  .cat-select{padding:6px 10px;border-radius:8px;border:1.5px solid var(--line);background:#FFFDF9;font-size:12.5px;color:var(--text-deep);font-family:var(--font);cursor:pointer;outline:none;transition:all .25s;min-width:90px;}
+  .cat-select:focus{border-color:var(--terracotta);box-shadow:0 0 0 3px rgba(200,159,133,.12);}
+  .cat-select.modified{border-color:var(--amber);background:rgba(232,179,106,.08);}
+
+  /* 备注输入 */
+  .note-input{padding:6px 10px;border-radius:8px;border:1.5px solid transparent;background:transparent;font-size:12.5px;color:var(--text-deep);font-family:var(--font);outline:none;width:120px;transition:all .25s;}
+  .note-input:hover{border-color:var(--line);background:#FFFDF9;}
+  .note-input:focus{border-color:var(--terracotta);background:#FFFDF9;box-shadow:0 0 0 3px rgba(200,159,133,.12);width:160px;}
+  .note-input.has-note{border-color:var(--line);background:#FFFDF9;}
+
+  /* 操作按钮 */
+  .row-actions{display:flex;gap:6px;}
+  .row-btn{width:30px;height:30px;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .25s;background:transparent;color:var(--text-soft);}
+  .row-btn:hover{transform:scale(1.15);}
+  .row-btn.del:hover{background:rgba(217,154,154,.15);color:var(--rose-d);}
+  .row-btn.restore:hover{background:rgba(168,176,138,.15);color:var(--sage-d);}
+
+  .badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;}
+  .badge.exp{background:rgba(217,154,154,.15);color:var(--rose-d);}
+  .badge.inc{background:rgba(168,176,138,.15);color:var(--sage-d);}
+  .badge.neu{background:rgba(160,141,122,.12);color:var(--text-soft);}
+
+  .edit-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);display:inline-block;margin-left:4px;vertical-align:middle;}
+
+  /* ===== 底部操作栏 ===== */
+  .bottom-bar{position:sticky;bottom:0;z-index:40;background:rgba(255,252,247,.92);backdrop-filter:blur(18px) saturate(1.4);border-top:1px solid var(--line);padding:14px 22px;margin:20px -22px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+  .bottom-bar .stats{font-size:13.5px;color:var(--text-soft);}
+  .bottom-bar .stats b{color:var(--terra-deep);}
+  .bottom-bar .actions{display:flex;gap:10px;}
+
+  /* ===== 空状态 ===== */
+  .empty-state{text-align:center;padding:60px 20px;}
+  .empty-state .icon{font-size:56px;margin-bottom:16px;display:block;opacity:.6;}
+  .empty-state h3{font-size:17px;font-weight:700;color:var(--terra-deep);margin-bottom:8px;}
+  .empty-state p{font-size:13.5px;color:var(--text-soft);}
+
+  /* ===== Toast ===== */
+  .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:999;opacity:0;transition:all .4s cubic-bezier(.22,1,.36,1);pointer-events:none;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .toast.success{background:var(--sage);color:#fff;box-shadow:0 8px 24px rgba(168,176,138,.4);}
+  .toast.error{background:var(--rose);color:#fff;box-shadow:0 8px 24px rgba(217,154,154,.4);}
+  .toast.info{background:var(--terracotta);color:#fff;box-shadow:0 8px 24px rgba(200,159,133,.4);}
+
+  /* ===== 进度条 ===== */
+  .progress-bar{height:4px;background:var(--cream);border-radius:2px;overflow:hidden;margin-top:12px;display:none;}
+  .progress-bar.active{display:block;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--terracotta),var(--amber));border-radius:2px;transition:width .3s;width:0;}
+
+  /* ===== 响应式 ===== */
+  @media(max-width:768px){
+    .review-summary{grid-template-columns:repeat(2,1fr);}
+    .review-table-wrap{overflow-x:auto;}
+    .review-table{min-width:800px;}
+    .parse-info{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient"><span class="a1"></span><span class="a2"></span></div>
+
+<!-- 顶部导航 -->
+<nav class="top-nav">
+  <div class="nav-inner">
+    <div class="logo">
+      <div class="logo-mark">🏠</div>
+      <div class="logo-text">小家账本<small>FAMILY LEDGER</small></div>
+    </div>
+    <div class="crumb">
+      <span>记账</span>
+      <span>›</span>
+      <b>账单导入</b>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="page-head">
+    <div class="page-title">📥 账单导入</div>
+    <p class="page-sub">上传微信或支付宝账单文件，逐条审核后一键导入</p>
+  </div>
+
+  <!-- Step 1: 上传区 -->
+  <div id="uploadSection">
+    <div class="upload-zone" id="dropZone">
+      <span class="icon">📄</span>
+      <h3>拖拽文件到此处，或点击选择文件</h3>
+      <p>支持微信支付账单（.xlsx）和支付宝账单（.csv）</p>
+      <div class="formats">
+        <span class="fmt-tag wx">💚 微信账单 .xlsx</span>
+        <span class="fmt-tag ali">💙 支付宝账单 .csv</span>
+      </div>
+      <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" />
+      <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+  </div>
+
+  <!-- Step 2: 审核区 -->
+  <div id="reviewSection" style="display:none;">
+
+    <!-- 解析信息 -->
+    <div class="parse-info" id="parseInfo"></div>
+
+    <!-- 汇总 -->
+    <div class="review-summary" id="reviewSummary"></div>
+
+    <!-- 筛选 -->
+    <div class="filter-bar">
+      <div class="search-wrap">
+        <span class="mag">🔍</span>
+        <input class="search-input" id="searchInput" placeholder="搜索交易对方、商品说明..." />
+      </div>
+      <button class="chip-btn active" data-filter="all" onclick="setFilter('all')">全部</button>
+      <button class="chip-btn" data-filter="expense" onclick="setFilter('expense')">支出</button>
+      <button class="chip-btn" data-filter="income" onclick="setFilter('income')">收入</button>
+      <button class="chip-btn" data-filter="neutral" onclick="setFilter('neutral')">不计收支</button>
+      <button class="chip-btn" data-filter="edited" onclick="setFilter('edited')">已编辑</button>
+      <div style="margin-left:auto;display:flex;gap:8px;">
+        <button class="btn ghost sm" onclick="resetAll()">↩ 重置全部</button>
+        <button class="btn ghost sm" onclick="backToUpload()">← 重新上传</button>
+      </div>
+    </div>
+
+    <!-- 表格 -->
+    <div class="review-table-wrap">
+      <table class="review-table">
+        <thead>
+          <tr>
+            <th style="width:40px;"><input type="checkbox" id="checkAll" checked onchange="toggleAll(this)" /></th>
+            <th>时间</th>
+            <th>交易对方</th>
+            <th>商品说明</th>
+            <th>收支</th>
+            <th>金额</th>
+            <th>分类</th>
+            <th>备注</th>
+            <th style="width:70px;">操作</th>
+          </tr>
+        </thead>
+        <tbody id="reviewBody"></tbody>
+      </table>
+    </div>
+
+    <!-- 底部操作栏 -->
+    <div class="bottom-bar">
+      <div class="stats" id="bottomStats"></div>
+      <div class="actions">
+        <button class="btn ghost" onclick="backToUpload()">取消</button>
+        <button class="btn primary" id="importBtn" onclick="confirmImport()">✅ 确认导入</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== 分类数据（与系统分类保持一致） =====
+const CATEGORIES = {
+  expense: [
+    { id: 1, name: '餐饮美食' },
+    { id: 2, name: '交通出行' },
+    { id: 3, name: '日用百货' },
+    { id: 4, name: '购物消费' },
+    { id: 5, name: '爱车养车' },
+    { id: 6, name: '通讯网络' },
+    { id: 7, name: '充值缴费' },
+    { id: 8, name: '住房物业' },
+    { id: 9, name: '医疗健康' },
+    { id: 10, name: '教育培训' },
+    { id: 11, name: '休闲娱乐' },
+    { id: 12, name: '人情社交' },
+    { id: 13, name: '服饰美容' },
+    { id: 14, name: '母婴亲子' },
+    { id: 15, name: '转账红包' },
+    { id: 16, name: '投资理财' },
+    { id: 99, name: '其他' },
+  ],
+  income: [
+    { id: 101, name: '工资薪资' },
+    { id: 102, name: '奖金补贴' },
+    { id: 103, name: '理财收益' },
+    { id: 104, name: '转账收入' },
+    { id: 105, name: '红包收入' },
+    { id: 106, name: '退款' },
+    { id: 199, name: '其他收入' },
+  ]
+};
+
+// 支付宝分类 → 系统分类 映射
+const ALI_CATEGORY_MAP = {
+  '餐饮美食': '餐饮美食',
+  '交通出行': '交通出行',
+  '日用百货': '日用百货',
+  '购物消费': '购物消费',
+  '爱车养车': '爱车养车',
+  '通讯网络': '通讯网络',
+  '充值缴费': '充值缴费',
+  '住房物业': '住房物业',
+  '医疗健康': '医疗健康',
+  '教育培训': '教育培训',
+  '休闲娱乐': '休闲娱乐',
+  '人情社交': '人情社交',
+  '转账红包': '转账红包',
+  '投资理财': '投资理财',
+};
+
+// 微信交易类型 → 系统分类 映射
+const WX_TYPE_MAP = {
+  '商户消费': '餐饮美食',
+  '转账': '转账红包',
+  '亲属卡交易': '人情社交',
+  '扫二维码付款': '餐饮美食',
+  '群收款': '人情社交',
+  '二维码收款': '其他收入',
+};
+
+let allRecords = [];
+let currentFilter = 'all';
+let fileSource = ''; // 'wx' | 'ali'
+
+// ===== 文件上传 =====
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', e => { if (e.target.files.length) handleFile(e.target.files[0]); });
+
+function handleFile(file) {
+  const ext = file.name.split('.').pop().toLowerCase();
+  const progressBar = document.getElementById('progressBar');
+  const progressFill = document.getElementById('progressFill');
+
+  progressBar.classList.add('active');
+  progressFill.style.width = '30%';
+
+  if (ext === 'csv') {
+    const reader = new FileReader();
+    reader.onload = e => {
+      progressFill.style.width = '60%';
+      try {
+        const text = decodeGBK(e.target.result);
+        const records = parseAlipayCSV(text);
+        progressFill.style.width = '100%';
+        setTimeout(() => {
+          progressBar.classList.remove('active');
+          progressFill.style.width = '0';
+          if (records.length === 0) { showToast('未解析到有效交易记录', 'error'); return; }
+          fileSource = 'ali';
+          allRecords = records;
+          showReview(file.name, records);
+          showToast(`成功解析 ${records.length} 条支付宝记录`, 'success');
+        }, 400);
+      } catch (err) {
+        progressBar.classList.remove('active');
+        progressFill.style.width = '0';
+        showToast('文件解析失败: ' + err.message, 'error');
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  } else if (ext === 'xlsx' || ext === 'xls') {
+    const reader = new FileReader();
+    reader.onload = e => {
+      progressFill.style.width = '60%';
+      try {
+        const data = new Uint8Array(e.target.result);
+        const records = parseWechatXLSX(data);
+        progressFill.style.width = '100%';
+        setTimeout(() => {
+          progressBar.classList.remove('active');
+          progressFill.style.width = '0';
+          if (records.length === 0) { showToast('未解析到有效交易记录', 'error'); return; }
+          fileSource = 'wx';
+          allRecords = records;
+          showReview(file.name, records);
+          showToast(`成功解析 ${records.length} 条微信记录`, 'success');
+        }, 400);
+      } catch (err) {
+        progressBar.classList.remove('active');
+        progressFill.style.width = '0';
+        showToast('文件解析失败: ' + err.message, 'error');
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  } else {
+    progressBar.classList.remove('active');
+    progressFill.style.width = '0';
+    showToast('不支持的文件格式，请上传 .xlsx 或 .csv 文件', 'error');
+  }
+}
+
+// ===== GBK 解码 =====
+function decodeGBK(buffer) {
+  try {
+    return new TextDecoder('gbk').decode(buffer);
+  } catch {
+    return new TextDecoder('gb2312').decode(buffer);
+  }
+}
+
+// ===== 支付宝 CSV 解析 =====
+function parseAlipayCSV(text) {
+  const lines = text.split(/\r?\n/).filter(l => l.trim());
+  // 找到表头行
+  let headerIdx = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].startsWith('交易时间,交易分类')) { headerIdx = i; break; }
+  }
+  if (headerIdx === -1) throw new Error('未找到支付宝账单表头');
+
+  const records = [];
+  for (let i = headerIdx + 1; i < lines.length; i++) {
+    const cols = splitCSV(lines[i]);
+    if (cols.length < 7 || !cols[0].match(/^\d{4}-/)) continue;
+
+    const direction = cols[5]?.trim();
+    let type, amount;
+    if (direction === '支出') { type = 'expense'; amount = -Math.abs(parseFloat(cols[6])); }
+    else if (direction === '收入') { type = 'income'; amount = Math.abs(parseFloat(cols[6])); }
+    else { type = 'neutral'; amount = parseFloat(cols[6]); }
+
+    const aliCategory = cols[1]?.trim() || '';
+    const mappedCat = ALI_CATEGORY_MAP[aliCategory] || '其他';
+    const catList = type === 'income' ? CATEGORIES.income : CATEGORIES.expense;
+    const matchedCat = catList.find(c => c.name === mappedCat) || catList[catList.length - 1];
+
+    records.push({
+      id: records.length,
+      time: cols[0]?.trim() || '',
+      counterparty: cols[2]?.trim() || '',
+      description: cols[4]?.trim() || '',
+      type,
+      amount,
+      originalCategory: aliCategory,
+      categoryId: matchedCat.id,
+      categoryName: matchedCat.name,
+      note: cols[11]?.trim() || '',
+      paymentMethod: cols[7]?.trim() || '',
+      status: cols[8]?.trim() || '',
+      deleted: false,
+      edited: false,
+      selected: true,
+      source: 'ali',
+    });
+  }
+  return records;
+}
+
+function splitCSV(line) {
+  const result = [];
+  let current = '';
+  let inQuote = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') { inQuote = !inQuote; }
+    else if (ch === ',' && !inQuote) { result.push(current); current = ''; }
+    else { current += ch; }
+  }
+  result.push(current);
+  return result;
+}
+
+// Excel 日期序列号转字符串
+function excelDateToSerial(serial) {
+  const utcDays = Math.floor(serial - 25569);
+  const utcValue = utcDays * 86400;
+  const dateInfo = new Date(utcValue * 1000);
+  const fractionalDay = serial - Math.floor(serial) + 0.0000001;
+  let totalSeconds = Math.floor(86400 * fractionalDay);
+  const seconds = totalSeconds % 60;
+  totalSeconds = Math.floor(totalSeconds / 60);
+  const minutes = totalSeconds % 60;
+  const hours = Math.floor(totalSeconds / 60);
+  const y = dateInfo.getUTCFullYear();
+  const m = String(dateInfo.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(dateInfo.getUTCDate()).padStart(2, '0');
+  const h = String(hours).padStart(2, '0');
+  const min = String(minutes).padStart(2, '0');
+  const s = String(seconds).padStart(2, '0');
+  return `${y}-${m}-${d} ${h}:${min}:${s}`;
+}
+
+// 列字母转索引 (A=0, B=1, ..., Z=25, AA=26, ...)
+function colToIndex(col) {
+  let idx = 0;
+  for (let i = 0; i < col.length; i++) {
+    idx = idx * 26 + (col.charCodeAt(i) - 64);
+  }
+  return idx - 1;
+}
+
+// ===== 微信 XLSX 解析（纯 JS 轻量解析） =====
+function parseWechatXLSX(data) {
+  const zip = unzipSync(data);
+  const sharedStrings = [];
+  if (zip['xl/sharedStrings.xml']) {
+    const xml = new TextDecoder().decode(zip['xl/sharedStrings.xml']);
+    const siMatches = xml.matchAll(/<si>([\s\S]*?)<\/si>/g);
+    for (const m of siMatches) {
+      const textMatches = m[1].matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g);
+      let text = '';
+      for (const t of textMatches) text += t[1];
+      sharedStrings.push(decodeXMLEntities(text));
+    }
+  }
+
+  const sheetXml = new TextDecoder().decode(zip['xl/worksheets/sheet1.xml']);
+  const rowMatches = sheetXml.matchAll(/<row[^>]*>([\s\S]*?)<\/row>/g);
+  const rows = [];
+  for (const rm of rowMatches) {
+    const cells = {};
+    const cellMatches = rm[1].matchAll(/<c\s+r="([A-Z]+)\d+"([^>]*?)(?:\/>|>(?:<v>([\s\S]*?)<\/v>)?<\/c>)/g);
+    for (const cm of cellMatches) {
+      const col = cm[1];
+      const attrs = cm[2];
+      const val = cm[3] || '';
+      const isString = attrs.includes('t="s"');
+      const colIdx = colToIndex(col);
+      if (isString) {
+        cells[colIdx] = sharedStrings[parseInt(val)] || val;
+      } else {
+        cells[colIdx] = val;
+      }
+    }
+    rows.push(cells);
+  }
+
+  // 找到表头行
+  let headerIdx = -1;
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+    if (row[0] && (row[0] === '交易时间' || row[0]?.includes('交易时间'))) { headerIdx = i; break; }
+  }
+  if (headerIdx === -1) throw new Error('未找到微信账单表头');
+
+  const records = [];
+  for (let i = headerIdx + 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (!r[0]) continue;
+
+    // 时间列可能是 Excel 日期序列号或字符串
+    let timeStr;
+    if (r[0].match(/^\d{4}-/)) {
+      timeStr = r[0];
+    } else {
+      const serial = parseFloat(r[0]);
+      if (!isNaN(serial) && serial > 30000) {
+        timeStr = excelDateToSerial(serial);
+      } else {
+        continue;
+      }
+    }
+
+    const direction = r[4]?.trim();
+    let type, amount;
+    const rawAmount = parseFloat(r[5] || '0');
+    if (direction === '支出') { type = 'expense'; amount = -Math.abs(rawAmount); }
+    else if (direction === '收入') { type = 'income'; amount = Math.abs(rawAmount); }
+    else { type = 'neutral'; amount = rawAmount; }
+
+    const wxType = r[1]?.trim() || '';
+    const mappedCat = WX_TYPE_MAP[wxType] || '其他';
+    const catList = type === 'income' ? CATEGORIES.income : CATEGORIES.expense;
+    const matchedCat = catList.find(c => c.name === mappedCat) || catList[catList.length - 1];
+
+    records.push({
+      id: records.length,
+      time: timeStr,
+      counterparty: r[2]?.trim() || '',
+      description: r[3]?.trim() || '',
+      type,
+      amount,
+      originalCategory: wxType,
+      categoryId: matchedCat.id,
+      categoryName: matchedCat.name,
+      note: (r[10] && r[10] !== '/') ? r[10]?.trim() : '',
+      paymentMethod: r[6]?.trim() || '',
+      status: r[7]?.trim() || '',
+      deleted: false,
+      edited: false,
+      selected: true,
+      source: 'wx',
+    });
+  }
+  return records;
+}
+
+// ===== 轻量 ZIP 解压（deflate raw） =====
+function unzipSync(data) {
+  const view = new DataView(data.buffer);
+  const files = {};
+
+  // 查找 End of Central Directory
+  let eocdOffset = -1;
+  for (let i = data.length - 22; i >= 0; i--) {
+    if (view.getUint32(i, true) === 0x06054b50) { eocdOffset = i; break; }
+  }
+  if (eocdOffset === -1) throw new Error('Invalid ZIP');
+
+  const cdOffset = view.getUint32(eocdOffset + 16, true);
+  const cdEntries = view.getUint16(eocdOffset + 10, true);
+
+  let offset = cdOffset;
+  for (let i = 0; i < cdEntries; i++) {
+    if (view.getUint32(offset, true) !== 0x02014b50) break;
+    const method = view.getUint16(offset + 10, true);
+    const compSize = view.getUint32(offset + 20, true);
+    const nameLen = view.getUint16(offset + 28, true);
+    const extraLen = view.getUint16(offset + 30, true);
+    const commentLen = view.getUint16(offset + 32, true);
+    const localOffset = view.getUint32(offset + 42, true);
+    const name = new TextDecoder().decode(data.slice(localOffset + 30, localOffset + 30 + nameLen));
+
+    if (!name.endsWith('/')) {
+      const localCompSize = view.getUint32(localOffset + 18, true);
+      const localNameLen = view.getUint16(localOffset + 26, true);
+      const localExtraLen = view.getUint16(localOffset + 28, true);
+      const compData = data.slice(
+        localOffset + 30 + localNameLen + localExtraLen,
+        localOffset + 30 + localNameLen + localExtraLen + localCompSize
+      );
+
+      if (method === 0) {
+        files[name] = compData;
+      } else if (method === 8) {
+        try {
+          files[name] = inflateRaw(compData);
+        } catch { files[name] = new Uint8Array(); }
+      }
+    }
+    offset += 46 + nameLen + extraLen + commentLen;
+  }
+  return files;
+}
+
+function inflateRaw(data) {
+  // 使用 DecompressionStream API
+  const ds = new DecompressionStream('deflate-raw');
+  const writer = ds.writable.getWriter();
+  const reader = ds.readable.getReader();
+  const chunks = [];
+  let done = false;
+
+  writer.write(data).then(() => writer.close());
+
+  function pump() {
+    return reader.read().then(({ value, done: d }) => {
+      if (value) chunks.push(value);
+      if (d) { done = true; return; }
+      return pump();
+    });
+  }
+
+  // 同步方式：使用 pako-like 手动实现太复杂，用同步 XHR 不行
+  // 改用简单方案：因为原型只需要解析，我们用 TextDecoder 试一下
+  // 实际上需要真正的 inflate。这里用一个 trick：
+  return inflateSync(data);
+}
+
+// 同步 inflate（简化版，用于原型）
+function inflateSync(compressed) {
+  // 使用原生 sync 方案：通过构造 Blob + 同步读取不可行
+  // 原型方案：使用 JS 实现的 inflate
+  return pakoInflate(compressed);
+}
+
+// 极简 inflate 实现
+function pakoInflate(data) {
+  const BTYPE_NO = 0, BTYPE_FIXED = 1, BTYPE_DYNAMIC = 2;
+  let pos = 0;
+  const src = new Uint8Array(data);
+  const bitBuf = { val: 0, cnt: 0 };
+
+  function readBits(n) {
+    while (bitBuf.cnt < n) {
+      bitBuf.val |= (src[pos++] << bitBuf.cnt);
+      bitBuf.cnt += 8;
+    }
+    const v = bitBuf.val & ((1 << n) - 1);
+    bitBuf.val >>= n;
+    bitBuf.cnt -= n;
+    return v;
+  }
+
+  function readByte() { bitBuf.val = 0; bitBuf.cnt = 0; return src[pos++]; }
+
+  // Huffman tree
+  function buildTree(lengths) {
+    const maxLen = Math.max(...lengths);
+    const blCount = new Array(maxLen + 1).fill(0);
+    for (const l of lengths) if (l > 0) blCount[l]++;
+    const nextCode = new Array(maxLen + 1).fill(0);
+    let code = 0;
+    for (let i = 1; i <= maxLen; i++) { code = (code + blCount[i - 1]) << 1; nextCode[i] = code; }
+    const tree = {};
+    for (let i = 0; i < lengths.length; i++) {
+      if (lengths[i] > 0) {
+        let node = tree;
+        const c = nextCode[lengths[i]]++;
+        for (let j = lengths[i] - 1; j >= 0; j--) {
+          const bit = (c >> j) & 1;
+          if (!node[bit]) node[bit] = {};
+          node = node[bit];
+        }
+        node.val = i;
+      }
+    }
+    return { tree, maxLen };
+  }
+
+  function readCode(huff) {
+    let node = huff.tree;
+    for (let i = 0; i < huff.maxLen; i++) {
+      const bit = readBits(1);
+      node = node[bit];
+      if (!node) return -1;
+      if (node.val !== undefined) return node.val;
+    }
+    return -1;
+  }
+
+  const LEN_EXTRA = [0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0];
+  const LEN_BASE = [3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258];
+  const DIST_EXTRA = [0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13];
+  const DIST_BASE = [1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577];
+  const CL_ORDER = [16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15];
+
+  const FIXED_LIT = (() => { const l = []; for(let i=0;i<=143;i++)l.push(8); for(let i=144;i<=255;i++)l.push(9); for(let i=256;i<=279;i++)l.push(7); for(let i=280;i<=287;i++)l.push(8); return buildTree(l); })();
+  const FIXED_DIST = buildTree(new Array(32).fill(5));
+
+  const out = [];
+
+  let bfinal = 0;
+  while (!bfinal) {
+    bfinal = readBits(1);
+    const btype = readBits(2);
+
+    let litHuff, distHuff;
+    if (btype === BTYPE_FIXED) {
+      litHuff = FIXED_LIT; distHuff = FIXED_DIST;
+    } else if (btype === BTYPE_DYNAMIC) {
+      const hlit = readBits(5) + 257;
+      const hdist = readBits(5) + 1;
+      const hclen = readBits(4) + 4;
+      const clLens = new Array(19).fill(0);
+      for (let i = 0; i < hclen; i++) clLens[CL_ORDER[i]] = readBits(3);
+      const clHuff = buildTree(clLens);
+      const allLens = [];
+      const total = hlit + hdist;
+      while (allLens.length < total) {
+        const sym = readCode(clHuff);
+        if (sym < 16) { allLens.push(sym); }
+        else if (sym === 16) { const rep = readBits(2) + 3; const prev = allLens[allLens.length-1]||0; for(let i=0;i<rep;i++) allLens.push(prev); }
+        else if (sym === 17) { const rep = readBits(3) + 3; for(let i=0;i<rep;i++) allLens.push(0); }
+        else { const rep = readBits(7) + 11; for(let i=0;i<rep;i++) allLens.push(0); }
+      }
+      litHuff = buildTree(allLens.slice(0, hlit));
+      distHuff = buildTree(allLens.slice(hlit));
+    } else if (btype === BTYPE_NO) {
+      bitBuf.val = 0; bitBuf.cnt = 0;
+      if (pos % 1 !== 0) pos = Math.ceil(pos);
+      const len = src[pos] | (src[pos+1] << 8); pos += 4;
+      for (let i = 0; i < len; i++) out.push(src[pos++]);
+      continue;
+    } else {
+      throw new Error('Invalid block type');
+    }
+
+    while (true) {
+      const sym = readCode(litHuff);
+      if (sym < 256) { out.push(sym); }
+      else if (sym === 256) { break; }
+      else {
+        const lenIdx = sym - 257;
+        const length = LEN_BASE[lenIdx] + readBits(LEN_EXTRA[lenIdx]);
+        const distSym = readCode(distHuff);
+        const dist = DIST_BASE[distSym] + readBits(DIST_EXTRA[distSym]);
+        const start = out.length - dist;
+        for (let i = 0; i < length; i++) out.push(out[start + i]);
+      }
+    }
+  }
+  return new Uint8Array(out);
+}
+
+function decodeXMLEntities(s) {
+  return s.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&apos;/g,"'");
+}
+
+// ===== 审核界面 =====
+function showReview(fileName, records) {
+  document.getElementById('uploadSection').style.display = 'none';
+  document.getElementById('reviewSection').style.display = 'block';
+
+  // 解析信息
+  const srcTag = fileSource === 'wx' ? '<span class="src-tag wx">💚 微信账单</span>' : '<span class="src-tag ali">💙 支付宝账单</span>';
+  const expenseCount = records.filter(r => r.type === 'expense').length;
+  const incomeCount = records.filter(r => r.type === 'income').length;
+  document.getElementById('parseInfo').innerHTML = `
+    ${srcTag}
+    <div class="info-item"><span class="info-label">文件：</span><span class="info-val">${fileName}</span></div>
+    <div class="info-item"><span class="info-label">共</span><span class="info-val">${records.length}</span><span class="info-label">条记录</span></div>
+    <div class="info-item"><span class="info-label">支出</span><span class="info-val">${expenseCount}</span><span class="info-label">笔</span></div>
+    <div class="info-item"><span class="info-label">收入</span><span class="info-val">${incomeCount}</span><span class="info-label">笔</span></div>
+  `;
+
+  renderSummary();
+  renderTable();
+}
+
+function renderSummary() {
+  const active = allRecords.filter(r => !r.deleted);
+  const expTotal = active.filter(r => r.type === 'expense').reduce((s, r) => s + Math.abs(r.amount), 0);
+  const incTotal = active.filter(r => r.type === 'income').reduce((s, r) => s + r.amount, 0);
+  const neuTotal = active.filter(r => r.type === 'neutral').reduce((s, r) => s + r.amount, 0);
+  const editedCount = allRecords.filter(r => r.edited && !r.deleted).length;
+
+  document.getElementById('reviewSummary').innerHTML = `
+    <div class="rev-card"><div class="rev-label">待导入</div><div class="rev-val cnt">${active.length} 笔</div></div>
+    <div class="rev-card"><div class="rev-label">支出合计</div><div class="rev-val exp">¥${expTotal.toFixed(2)}</div></div>
+    <div class="rev-card"><div class="rev-label">收入合计</div><div class="rev-val inc">¥${incTotal.toFixed(2)}</div></div>
+    <div class="rev-card"><div class="rev-label">已编辑</div><div class="rev-val neu">${editedCount} 笔</div></div>
+  `;
+}
+
+function renderTable() {
+  const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
+  let filtered = allRecords.filter(r => {
+    if (currentFilter === 'expense' && r.type !== 'expense') return false;
+    if (currentFilter === 'income' && r.type !== 'income') return false;
+    if (currentFilter === 'neutral' && r.type !== 'neutral') return false;
+    if (currentFilter === 'edited' && (!r.edited || r.deleted)) return false;
+    if (keyword) {
+      const hay = (r.counterparty + r.description + r.note).toLowerCase();
+      if (!hay.includes(keyword)) return false;
+    }
+    return true;
+  });
+
+  const body = document.getElementById('reviewBody');
+  if (filtered.length === 0) {
+    body.innerHTML = `<tr><td colspan="9"><div class="empty-state"><span class="icon">🔍</span><h3>没有匹配的记录</h3><p>尝试调整筛选条件或搜索关键词</p></div></td></tr>`;
+    updateBottomStats();
+    return;
+  }
+
+  body.innerHTML = filtered.map(r => {
+    const typeLabel = r.type === 'expense' ? '支出' : r.type === 'income' ? '收入' : '不计收支';
+    const badgeClass = r.type === 'expense' ? 'exp' : r.type === 'income' ? 'inc' : 'neu';
+    const amountClass = r.type === 'expense' ? 'exp' : r.type === 'income' ? 'inc' : 'neu';
+    const amountStr = r.type === 'expense' ? `-¥${Math.abs(r.amount).toFixed(2)}` : `+¥${r.amount.toFixed(2)}`;
+    const rowClass = r.deleted ? 'deleted' : (r.edited ? 'edited' : '');
+
+    const catList = r.type === 'income' ? CATEGORIES.income : CATEGORIES.expense;
+    const catOptions = catList.map(c =>
+      `<option value="${c.id}" ${c.id === r.categoryId ? 'selected' : ''}>${c.name}</option>`
+    ).join('');
+
+    const catClass = r.edited && r._catChanged ? 'cat-select modified' : 'cat-select';
+
+    return `<tr class="${rowClass}" data-id="${r.id}">
+      <td><input type="checkbox" ${r.selected ? 'checked' : ''} onchange="toggleRow(${r.id}, this.checked)" ${r.deleted ? 'disabled' : ''} /></td>
+      <td class="td-time">${r.time.substring(0, 16)}</td>
+      <td class="td-counterparty" title="${esc(r.counterparty)}">${esc(r.counterparty)}</td>
+      <td class="td-desc" title="${esc(r.description)}">${esc(r.description)}</td>
+      <td><span class="badge ${badgeClass}">${typeLabel}</span></td>
+      <td class="td-amount ${amountClass}">${amountStr}</td>
+      <td><select class="${catClass}" onchange="changeCategory(${r.id}, this.value)">${catOptions}</select>${r._catChanged ? '<span class="edit-dot"></span>' : ''}</td>
+      <td><input class="note-input ${r.note ? 'has-note' : ''}" value="${esc(r.note)}" placeholder="添加备注..." onchange="changeNote(${r.id}, this.value)" /></td>
+      <td>
+        <div class="row-actions">
+          ${r.deleted
+            ? `<button class="row-btn restore" title="恢复" onclick="restoreRow(${r.id})">↩</button>`
+            : `<button class="row-btn del" title="删除" onclick="deleteRow(${r.id})">✕</button>`
+          }
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  updateBottomStats();
+}
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function updateBottomStats() {
+  const active = allRecords.filter(r => !r.deleted && r.selected);
+  const total = active.reduce((s, r) => s + (r.type === 'expense' ? -Math.abs(r.amount) : r.amount), 0);
+  document.getElementById('bottomStats').innerHTML = `
+    已选 <b>${active.length}</b> 条 · 净额 <b style="color:${total >= 0 ? 'var(--sage-d)' : 'var(--rose-d)'}">¥${total.toFixed(2)}</b>
+  `;
+  document.getElementById('importBtn').disabled = active.length === 0;
+}
+
+// ===== 操作 =====
+function deleteRow(id) {
+  const r = allRecords.find(x => x.id === id);
+  if (r) { r.deleted = true; r.selected = false; r.edited = true; renderTable(); renderSummary(); }
+}
+
+function restoreRow(id) {
+  const r = allRecords.find(x => x.id === id);
+  if (r) { r.deleted = false; r.selected = true; renderTable(); renderSummary(); }
+}
+
+function toggleRow(id, checked) {
+  const r = allRecords.find(x => x.id === id);
+  if (r) { r.selected = checked; updateBottomStats(); }
+}
+
+function toggleAll(cb) {
+  allRecords.forEach(r => { if (!r.deleted) r.selected = cb.checked; });
+  renderTable();
+}
+
+function changeCategory(id, catId) {
+  const r = allRecords.find(x => x.id === id);
+  const catList = r.type === 'income' ? CATEGORIES.income : CATEGORIES.expense;
+  const cat = catList.find(c => c.id === parseInt(catId));
+  if (r && cat) {
+    r.categoryId = cat.id;
+    r.categoryName = cat.name;
+    r.edited = true;
+    r._catChanged = true;
+    renderSummary();
+    // 不重新渲染整个表格以保持焦点，只更新当前行的样式
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    if (row) {
+      row.classList.add('edited');
+      const sel = row.querySelector('.cat-select');
+      if (sel) sel.classList.add('modified');
+      if (!row.querySelector('.edit-dot')) {
+        const dot = document.createElement('span');
+        dot.className = 'edit-dot';
+        sel.parentNode.appendChild(dot);
+      }
+    }
+  }
+}
+
+function changeNote(id, val) {
+  const r = allRecords.find(x => x.id === id);
+  if (r) {
+    r.note = val;
+    r.edited = true;
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    if (row) row.classList.add('edited');
+    const input = row?.querySelector('.note-input');
+    if (input && val) input.classList.add('has-note');
+    else if (input) input.classList.remove('has-note');
+  }
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.chip-btn[data-filter]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.filter === f);
+  });
+  renderTable();
+}
+
+function resetAll() {
+  allRecords.forEach(r => {
+    r.deleted = false;
+    r.edited = false;
+    r.selected = true;
+    r._catChanged = false;
+    // 恢复原始分类
+    const aliCat = ALI_CATEGORY_MAP[r.originalCategory];
+    const wxType = WX_TYPE_MAP[r.originalCategory];
+    const mapped = aliCat || wxType || '其他';
+    const catList = r.type === 'income' ? CATEGORIES.income : CATEGORIES.expense;
+    const cat = catList.find(c => c.name === mapped) || catList[catList.length - 1];
+    r.categoryId = cat.id;
+    r.categoryName = cat.name;
+  });
+  renderTable();
+  renderSummary();
+  showToast('已重置所有修改', 'info');
+}
+
+function backToUpload() {
+  document.getElementById('uploadSection').style.display = 'block';
+  document.getElementById('reviewSection').style.display = 'none';
+  allRecords = [];
+  fileInput.value = '';
+}
+
+function confirmImport() {
+  const active = allRecords.filter(r => !r.deleted && r.selected);
+  if (active.length === 0) { showToast('没有可导入的记录', 'error'); return; }
+
+  const payload = active.map(r => ({
+    time: r.time,
+    counterparty: r.counterparty,
+    description: r.description,
+    type: r.type,
+    amount: r.amount,
+    categoryId: r.categoryId,
+    categoryName: r.categoryName,
+    note: r.note,
+    source: r.source,
+  }));
+
+  console.log('待导入数据:', payload);
+  console.log('总计:', payload.length, '条');
+
+  showToast(`✅ ${payload.length} 条记录已准备好导入！`, 'success');
+
+  // 实际项目中这里调用后端 API：
+  // fetch('/api/transactions/import', { method: 'POST', body: JSON.stringify(payload) })
+  document.getElementById('importBtn').textContent = '✅ 已确认导入';
+  document.getElementById('importBtn').disabled = true;
+}
+
+// ===== 搜索 =====
+document.getElementById('searchInput').addEventListener('input', debounce(() => renderTable(), 250));
+
+function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+
+// ===== Toast =====
+function showToast(msg, type = 'info') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast ${type} show`;
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

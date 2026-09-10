@@ -10,7 +10,7 @@ module.exports = (sequelize) => {
     note: { type: DataTypes.STRING(500), comment: '备注' },
     transactionDate: { type: DataTypes.DATEONLY, allowNull: false, field: 'transaction_date', comment: '交易日期' },
     createdBy: { type: DataTypes.INTEGER, allowNull: false, field: 'created_by' },
-    source: { type: DataTypes.ENUM('manual', 'voice', 'ocr'), defaultValue: 'manual', comment: '录入方式' },
+    source: { type: DataTypes.ENUM('manual', 'voice', 'ocr', 'import'), defaultValue: 'manual', comment: '录入方式' },
     imageUrl: { type: DataTypes.STRING(500), field: 'image_url', comment: '小票/账单图片' },
     status: { type: DataTypes.ENUM('normal', 'deleted'), defaultValue: 'normal' }
   }, { tableName: 'transactions', underscored: true, indexes: [{ fields: ['book_id', 'transaction_date'] }, { fields: ['created_by'] }] });

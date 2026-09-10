@@ -6,16 +6,26 @@ const PDFDocument = require('pdfkit');
 const { calcNextRunDate } = require('../utils/recurring');
 
 // 验证用户是否有权访问该账本
+const NodeCache = require('node-cache');
+const bookAccessCache = new NodeCache({ stdTTL: 60, checkperiod: 30 });
+
 async function verifyBookAccess(bookId, userId) {
+  const cacheKey = `${bookId}:${userId}`;
+  const cached = bookAccessCache.get(cacheKey);
+  if (cached !== undefined) return cached;
+
   const book = await AccountBook.findByPk(bookId);
-  if (!book) return false;
+  if (!book) { bookAccessCache.set(cacheKey, false); return false; }
   // 个人账本：必须是创建者
-  if (book.type === 'personal') return book.userId === userId;
+  if (book.type === 'personal') { const ok = book.userId === userId; bookAccessCache.set(cacheKey, ok); return ok; }
   // 家庭账本：必须是家庭成员
   if (book.familyId) {
     const member = await FamilyMember.findOne({ where: { familyId: book.familyId, userId } });
-    return !!member;
+    const ok = !!member;
+    bookAccessCache.set(cacheKey, ok);
+    return ok;
   }
+  bookAccessCache.set(cacheKey, false);
   return false;
 }
 
@@ -439,8 +449,18 @@ exports.getMonthlyReport = async (req, res, next) => {
       return res.status(403).json({ code: 403, message: '无权访问该账本' });
     }
     const ym = year + '-' + String(month).padStart(2, '0');
-    const income = await Transaction.sum('amount', { where: { bookId, type: 'income', status: 'normal', transactionDate: { [Op.startsWith]: ym } } });
-    const expense = await Transaction.sum('amount', { where: { bookId, type: 'expense', status: 'normal', transactionDate: { [Op.startsWith]: ym } } });
+    // 合并收入/支出统计为单条 SQL
+    const [sumResults] = await sequelize.query(`
+      SELECT type, SUM(amount) AS total
+      FROM transactions
+      WHERE book_id = ${parseInt(bookId)} AND status = 'normal' AND transaction_date LIKE '${ym}%'
+      GROUP BY type
+    `);
+    let income = 0, expense = 0;
+    sumResults.forEach(r => {
+      if (r.type === 'income') income = parseFloat(r.total) || 0;
+      if (r.type === 'expense') expense = parseFloat(r.total) || 0;
+    });
     // 按一级分类聚合
     const txns = await Transaction.findAll({
       where: { bookId, type: 'expense', status: 'normal', transactionDate: { [Op.startsWith]: ym } },

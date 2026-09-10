@@ -630,8 +630,9 @@ watch(currentMonth, () => {
 onMounted(async () => {
   if (!await useFamilyGuard()) return
   if (route.query.month) currentMonth.value = route.query.month
+  // 并行加载，不互相阻塞
   if (accountingStore.currentBookId) loadTransactions()
-  await loadBooks()
+  loadBooks()
   observeReveal()
 })
 </script>

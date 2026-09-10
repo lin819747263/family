@@ -81,7 +81,7 @@ exports.getList = async (req, res, next) => {
       include: [{ model: User, as: 'creator', attributes: ['id', 'nickname', 'avatar'] }],
       order: [
         ['completed', 'ASC'],
-        [sequelize.literal('CASE WHEN `due_date` IS NULL THEN 1 ELSE 0 END'), 'ASC'],
+        [sequelize.literal('`Todo`.`due_date` IS NULL'), 'ASC'],
         ['due_date', 'ASC'],
         ['priority', 'DESC'],
         ['created_at', 'DESC']
@@ -379,14 +379,29 @@ exports.getStats = async (req, res, next) => {
     const { familyId } = req.query;
     const today = dayjs().format('YYYY-MM-DD');
 
-    const [total, completed, archived, overdue, dueToday] = await Promise.all([
-      Todo.count({ where: { familyId, status: 'active', archived: false } }),
-      Todo.count({ where: { familyId, status: 'active', archived: false, completed: true } }),
-      Todo.count({ where: { familyId, status: 'active', archived: true } }),
-      Todo.count({ where: { familyId, status: 'active', archived: false, completed: false, dueDate: { [Op.lt]: today } } }),
-      Todo.count({ where: { familyId, status: 'active', archived: false, completed: false, dueDate: today } })
-    ]);
+    // 单条 SQL 完成所有统计，替代 5 次 COUNT 查询
+    const [results] = await sequelize.query(`
+      SELECT
+        SUM(CASE WHEN archived = 0 THEN 1 ELSE 0 END) AS total,
+        SUM(CASE WHEN archived = 0 AND completed = 1 THEN 1 ELSE 0 END) AS completed,
+        SUM(CASE WHEN archived = 1 THEN 1 ELSE 0 END) AS archived,
+        SUM(CASE WHEN archived = 0 AND completed = 0 AND due_date < '${today}' THEN 1 ELSE 0 END) AS overdue,
+        SUM(CASE WHEN archived = 0 AND completed = 0 AND due_date = '${today}' THEN 1 ELSE 0 END) AS dueToday
+      FROM todos
+      WHERE family_id = ${parseInt(familyId)} AND status = 'active'
+    `);
 
-    res.json({ code: 0, data: { total, completed, pending: total - completed, archived, overdue, dueToday } });
+    const row = results[0] || {};
+    const total = parseInt(row.total) || 0;
+    const completed = parseInt(row.completed) || 0;
+
+    res.json({ code: 0, data: {
+      total,
+      completed,
+      pending: total - completed,
+      archived: parseInt(row.archived) || 0,
+      overdue: parseInt(row.overdue) || 0,
+      dueToday: parseInt(row.dueToday) || 0
+    }});
   } catch (err) { next(err); }
 };

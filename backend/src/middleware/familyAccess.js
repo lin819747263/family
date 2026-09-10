@@ -1,4 +1,8 @@
 const { FamilyMember } = require('../models');
+const NodeCache = require('node-cache');
+
+// 家庭成员身份缓存：TTL 5分钟，每60秒清理
+const memberCache = new NodeCache({ stdTTL: 300, checkperiod: 60 });
 
 /**
  * 验证当前用户是否属于目标家庭
@@ -29,14 +33,23 @@ const verifyFamilyAccess = async (req, res, next) => {
       return res.status(400).json({ code: 400, message: '缺少 familyId 参数' });
     }
 
-    const member = await FamilyMember.findOne({
-      where: { familyId: parseInt(familyId), userId: req.userId }
-    });
+    const fid = parseInt(familyId);
+    const cacheKey = `${req.userId}:${fid}`;
+
+    // 先查缓存
+    let member = memberCache.get(cacheKey);
+    if (!member) {
+      member = await FamilyMember.findOne({
+        where: { familyId: fid, userId: req.userId }
+      });
+      if (member) memberCache.set(cacheKey, member.toJSON ? member.toJSON() : member);
+    }
+
     if (!member) {
       return res.status(403).json({ code: 403, message: '无权访问该家庭' });
     }
     req.familyMember = member;
-    req.resourceFamilyId = parseInt(familyId);
+    req.resourceFamilyId = fid;
     next();
   } catch (err) {
     next(err);

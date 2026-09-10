@@ -21,32 +21,30 @@ exports.getDashboard = async (req, res, next) => {
 
     const bookIdFilter = { [Op.in]: bookIds };
 
-    // 并行执行所有独立查询
+    // 所有查询并行执行（单轮 Promise.all）
     const [
       monthlyIncome, monthlyExpense, todayExpense,
-      todayTransactions, budgets,
-      albums, spaces, notifications,
-      recentCategories
+      todayTransactions, budgets, spentByCategory,
+      albums, spaces, notifications, recentCategories
     ] = await Promise.all([
-      // 收支统计
       Transaction.sum('amount', { where: { bookId: bookIdFilter, type: 'income', status: 'normal', transactionDate: { [Op.startsWith]: month } } }),
       Transaction.sum('amount', { where: { bookId: bookIdFilter, type: 'expense', status: 'normal', transactionDate: { [Op.startsWith]: month } } }),
       Transaction.sum('amount', { where: { bookId: bookIdFilter, type: 'expense', status: 'normal', transactionDate: today } }),
-      // 今日明细
       Transaction.findAll({
         where: { bookId: bookIdFilter, status: 'normal', transactionDate: today },
         include: [{ model: Category, attributes: ['id', 'name', 'icon', 'type'] }],
         order: [['created_at', 'DESC']]
       }),
-      // 预算
       Budget.findAll({ where: { bookId: bookIdFilter, month } }),
-      // 相册
+      Transaction.findAll({
+        where: { bookId: bookIdFilter, type: 'expense', status: 'normal', transactionDate: { [Op.startsWith]: month } },
+        attributes: ['categoryId', [sequelize.fn('SUM', sequelize.col('amount')), 'total']],
+        group: ['categoryId'],
+        raw: true
+      }).catch(() => []),
       Album.findAll({ where: { familyId }, attributes: ['id'] }),
-      // 空间
       Space.findAll({ where: { familyId }, attributes: ['id'] }),
-      // 通知
       Notification.findAll({ where: { userId, isRead: false }, order: [['created_at', 'DESC']], limit: 5 }),
-      // 最近分类
       Transaction.findAll({
         where: { createdBy: userId, status: 'normal' },
         include: [{ model: Category, attributes: ['id', 'name', 'icon', 'type'] }],
@@ -57,16 +55,10 @@ exports.getDashboard = async (req, res, next) => {
       }).catch(() => [])
     ]);
 
-    // 预算执行 — 批量查询替代 N+1
+    // 预算计算
     let totalBudget = 0, totalSpent = 0, budgetPercent = 0;
     if (budgets.length > 0) {
       totalBudget = budgets.reduce((s, b) => s + parseFloat(b.amount), 0);
-      const spentByCategory = await Transaction.findAll({
-        where: { bookId: bookIdFilter, type: 'expense', status: 'normal', transactionDate: { [Op.startsWith]: month } },
-        attributes: ['categoryId', [sequelize.fn('SUM', sequelize.col('amount')), 'total']],
-        group: ['categoryId'],
-        raw: true
-      });
       const spentMap = Object.fromEntries(spentByCategory.map(r => [r.categoryId, parseFloat(r.total)]));
       for (const b of budgets) {
         totalSpent += spentMap[b.categoryId] || 0;

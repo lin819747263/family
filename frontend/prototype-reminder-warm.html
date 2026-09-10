@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>家庭提醒 · 暖色居家原型</title>
+<style>
+  :root{
+    --warm-white:#FBF6EF; --cream:#F3EADD; --apricot:#EDE0CE; --wood-light:#E2CDB2;
+    --terracotta:#C89F85; --terracotta-d:#B08466; --terra-deep:#96684A;
+    --sage:#A8B08A; --sage-d:#7E8862; --amber:#E8B36A; --amber-d:#C08A3E; --rose:#D99A9A; --rose-d:#B06A6A; --sky:#9FB8C9; --sky-d:#6E8CA0; --plum:#A98BB0;
+    --text-deep:#6B5744; --text-soft:#A08D7A; --card:#FFFDFA; --line:rgba(226,205,178,.7);
+    --r-lg:24px; --r-md:16px; --r-sm:12px;
+    --font:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);color:var(--text-deep);background:linear-gradient(135deg,var(--warm-white) 0%,var(--cream) 55%,#F0E2D0 100%);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;}
+  ::selection{background:var(--terracotta);color:#fff;}
+  button,input{font-family:var(--font);}
+
+  .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .ambient span{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:drift 16s ease-in-out infinite alternate;}
+  .a1{width:300px;height:300px;background:#F2D9B8;top:-80px;left:-60px;}
+  .a2{width:240px;height:240px;background:#E8C9AE;bottom:-60px;right:-40px;animation-delay:-6s;}
+  @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(34px,26px) scale(1.1);}}
+
+  .top-nav{position:sticky;top:0;z-index:50;background:rgba(255,252,247,.85);backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line);box-shadow:0 2px 20px rgba(160,120,90,.06);}
+  .nav-inner{max-width:1240px;margin:0 auto;height:62px;display:flex;align-items:center;gap:14px;padding:0 22px;}
+  .logo{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;}
+  .logo-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--terracotta),#D9B697);display:flex;align-items:center;justify-content:center;box-shadow:0 5px 14px rgba(200,159,133,.4);font-size:19px;transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+  .logo:hover .logo-mark{transform:rotate(-8deg) scale(1.06);}
+  .logo-text{font-size:17px;font-weight:700;letter-spacing:.06em;color:var(--terra-deep);}
+  .logo-text small{display:block;font-size:10px;font-weight:400;letter-spacing:.2em;color:var(--text-soft);margin-top:-2px;}
+  .crumb{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-soft);}
+  .crumb b{color:var(--terra-deep);}
+  .nav-actions{margin-left:auto;display:flex;align-items:center;gap:6px;}
+  .icon-btn{width:38px;height:38px;border-radius:11px;border:none;background:transparent;color:var(--text-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .25s;}
+  .icon-btn:hover{background:rgba(200,159,133,.12);color:var(--terra-deep);transform:translateY(-2px);}
+  .avatar{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));color:#fff;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(176,132,102,.3);}
+
+  .layout{max-width:1240px;margin:0 auto;padding:26px 22px 90px;display:flex;gap:18px;position:relative;z-index:1;}
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1);}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* ===== 侧栏 ===== */
+  .sidebar{width:236px;flex-shrink:0;background:rgba(255,253,250,.85);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:0 8px 28px rgba(160,120,90,.08);display:flex;flex-direction:column;overflow:hidden;align-self:flex-start;position:sticky;top:80px;}
+  .sb-head{padding:20px 20px 14px;border-bottom:1px dashed var(--line);}
+  .sb-title{font-size:17px;font-weight:800;color:var(--terra-deep);display:flex;align-items:center;gap:8px;}
+  .sb-nav{padding:10px;display:flex;flex-direction:column;gap:6px;}
+  .sb-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;cursor:pointer;transition:all .25s;position:relative;}
+  .sb-item:hover{background:rgba(200,159,133,.08);}
+  .sb-item.active{background:rgba(200,159,133,.14);}
+  .sb-item.active::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:22px;border-radius:0 3px 3px 0;background:linear-gradient(180deg,var(--terracotta),var(--amber));}
+  .sb-ico{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;flex-shrink:0;transition:transform .35s cubic-bezier(.34,1.56,.64,1);}
+  .sb-item:hover .sb-ico{transform:scale(1.1) rotate(-6deg);}
+  .sb-label{font-size:14px;font-weight:600;}
+  .sb-desc{font-size:11px;color:var(--text-soft);margin-top:2px;}
+  .sb-badge{margin-left:auto;background:var(--terracotta);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;min-width:22px;text-align:center;}
+  .sb-foot{margin-top:auto;padding:14px 20px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:8px;}
+  .foot-stat{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-soft);}
+  .fs-dot{width:7px;height:7px;border-radius:50%;}
+
+  .content{flex:1;min-width:0;}
+  .panel{display:none;}
+  .panel.active{display:block;animation:panel-in .45s cubic-bezier(.22,1,.36,1);}
+  @keyframes panel-in{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+  .panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px;}
+  .panel-title{font-size:22px;font-weight:800;color:var(--terra-deep);}
+  .panel-sub{font-size:13px;color:var(--text-soft);margin-top:4px;}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 17px;border-radius:13px;border:none;cursor:pointer;font-size:14px;font-weight:600;transition:transform .3s,box-shadow .3s;}
+  .btn.primary{background:linear-gradient(135deg,var(--terracotta),#D3A98B);color:#FFF9F2;box-shadow:0 8px 20px rgba(200,159,133,.4);}
+  .btn.ghost{background:rgba(255,253,250,.85);color:var(--terra-deep);border:1.5px solid var(--line);}
+  .btn:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(200,159,133,.3);}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:0 8px 28px rgba(160,120,90,.08);}
+
+  /* ===== 清单 ===== */
+  .time-tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+  .ttab{display:flex;align-items:center;gap:7px;padding:9px 16px;border-radius:999px;border:1.5px solid var(--line);background:rgba(255,253,250,.8);color:var(--text-soft);font-size:13.5px;font-weight:600;cursor:pointer;transition:all .25s;}
+  .ttab:hover{border-color:var(--terracotta);color:var(--terra-deep);}
+  .ttab.active{background:var(--terracotta);border-color:var(--terracotta);color:#fff;box-shadow:0 6px 16px rgba(200,159,133,.35);}
+  .ttab .cnt{background:rgba(255,255,255,.3);padding:1px 8px;border-radius:999px;font-size:11px;}
+  .ttab.active .cnt{background:rgba(255,255,255,.3);}
+  .ttab:not(.active) .cnt{background:var(--apricot);color:var(--terra-deep);}
+
+  .quick-add{display:flex;align-items:center;gap:10px;padding:6px 6px 6px 18px;margin-bottom:16px;}
+  .qa-input{flex:1;border:none;background:transparent;font-size:15px;color:var(--text-deep);outline:none;padding:12px 0;}
+  .qa-input::placeholder{color:var(--text-soft);}
+  .qa-btn{padding:10px 18px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--terracotta),#D3A98B);color:#fff;font-weight:600;font-size:14px;cursor:pointer;transition:transform .3s;}
+  .qa-btn:hover{transform:scale(1.04);}
+
+  .todo-list{display:flex;flex-direction:column;gap:12px;}
+  .todo{position:relative;display:flex;align-items:flex-start;gap:14px;padding:16px 18px 16px 24px;overflow:hidden;transition:transform .3s,box-shadow .3s;}
+  .todo:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(160,120,90,.14);}
+  .t-prio{position:absolute;left:0;top:0;bottom:0;width:5px;}
+  .t-prio.high{background:linear-gradient(180deg,var(--rose),var(--rose-d));}
+  .t-prio.medium{background:linear-gradient(180deg,var(--amber),var(--amber-d));}
+  .t-prio.low{background:linear-gradient(180deg,var(--sage),var(--sage-d));}
+  .t-check{width:24px;height:24px;border-radius:9px;border:2px solid var(--wood-light);background:#FFFDF9;cursor:pointer;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;transition:all .25s;}
+  .t-check:hover{border-color:var(--terracotta);transform:scale(1.1);}
+  .todo.done .t-check{background:var(--sage);border-color:var(--sage);color:#fff;}
+  .t-body{flex:1;min-width:0;}
+  .t-title{font-size:15px;font-weight:600;transition:all .3s;}
+  .todo.done .t-title{text-decoration:line-through;color:var(--text-soft);opacity:.6;}
+  .t-desc{font-size:12.5px;color:var(--text-soft);margin-top:3px;}
+  .t-meta{display:flex;align-items:center;gap:10px;margin-top:9px;flex-wrap:wrap;}
+  .t-tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:3px 10px;border-radius:999px;background:var(--apricot);color:var(--terra-deep);font-weight:600;}
+  .t-tag.over{background:rgba(217,154,154,.2);color:var(--rose-d);animation:pulse-soft 2s ease-in-out infinite;}
+  @keyframes pulse-soft{0%,100%{opacity:1;}50%{opacity:.6;}}
+  .t-tag.repeat{background:rgba(159,184,201,.2);color:var(--sky-d);}
+  .t-tag.p-high{background:rgba(217,154,154,.2);color:var(--rose-d);}
+  .t-tag.p-medium{background:rgba(232,179,106,.2);color:var(--amber-d);}
+  .t-tag.p-low{background:rgba(168,176,138,.2);color:var(--sage-d);}
+  .t-acts{display:flex;gap:6px;opacity:0;transition:opacity .25s;}
+  .todo:hover .t-acts{opacity:1;}
+  .act{width:30px;height:30px;border-radius:9px;border:none;background:rgba(200,159,133,.12);color:var(--terra-deep);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+  .act:hover{background:rgba(200,159,133,.28);}
+  .act.danger:hover{background:rgba(217,154,154,.3);color:var(--rose-d);}
+
+  /* ===== 日历 ===== */
+  .cal-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .view-toggle{display:flex;background:rgba(243,234,221,.6);border:1px solid var(--line);border-radius:12px;padding:4px;}
+  .vt-btn{padding:8px 16px;border-radius:9px;border:none;background:transparent;color:var(--text-soft);font-size:13.5px;font-weight:600;cursor:pointer;transition:all .25s;}
+  .vt-btn.active{background:var(--card);color:var(--terra-deep);box-shadow:0 3px 10px rgba(160,120,90,.14);}
+  .cal-nav{display:flex;align-items:center;gap:6px;margin-left:auto;}
+  .cn-btn{width:34px;height:34px;border-radius:10px;border:1.5px solid var(--line);background:rgba(255,253,250,.8);color:var(--text-soft);cursor:pointer;font-size:15px;transition:all .25s;}
+  .cn-btn:hover{border-color:var(--terracotta);color:var(--terra-deep);}
+  .cal-label{min-width:110px;text-align:center;font-size:15px;font-weight:700;color:var(--terra-deep);}
+
+  .month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:16px;}
+  .mg-weekday{text-align:center;font-size:12px;font-weight:700;color:var(--text-soft);padding:6px 0;}
+  .mg-day{min-height:86px;border-radius:12px;padding:8px;background:rgba(243,234,221,.35);border:1px solid transparent;cursor:pointer;transition:all .25s;display:flex;flex-direction:column;gap:5px;}
+  .mg-day:hover{background:rgba(243,234,221,.8);border-color:var(--wood-light);transform:translateY(-2px);}
+  .mg-day.other{opacity:.4;}
+  .mg-num{font-size:13px;font-weight:700;color:var(--text-deep);width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
+  .mg-day.today .mg-num{background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));color:#fff;box-shadow:0 0 0 4px rgba(200,159,133,.2);animation:ring 2.4s ease-in-out infinite;}
+  @keyframes ring{0%,100%{box-shadow:0 0 0 3px rgba(200,159,133,.2);}50%{box-shadow:0 0 0 6px rgba(200,159,133,.12);}}
+  .mg-evt{font-size:10.5px;font-weight:600;padding:2px 6px;border-radius:6px;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+  .week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;padding:16px;}
+  .wg-col{border-radius:14px;background:rgba(243,234,221,.35);padding:10px 8px;display:flex;flex-direction:column;gap:8px;min-height:240px;transition:background .25s;}
+  .wg-col:hover{background:rgba(243,234,221,.7);}
+  .wg-col.today{background:rgba(200,159,133,.12);box-shadow:inset 0 0 0 1.5px var(--terracotta);}
+  .wg-head{text-align:center;padding-bottom:8px;border-bottom:1px dashed var(--line);}
+  .wg-wd{font-size:11px;color:var(--text-soft);}
+  .wg-num{font-size:18px;font-weight:800;color:var(--terra-deep);margin-top:2px;}
+  .wg-col.today .wg-num{color:#fff;background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:2px auto 0;}
+  .wg-evt{border-radius:10px;padding:8px 9px;color:#fff;font-size:11.5px;line-height:1.4;box-shadow:0 4px 10px rgba(160,120,90,.18);transition:transform .25s;cursor:pointer;}
+  .wg-evt:hover{transform:scale(1.04);}
+  .wg-evt b{display:block;font-size:12px;}
+  .wg-evt .tm{opacity:.85;font-size:10.5px;}
+
+  /* ===== 纪念日 ===== */
+  .upcoming{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+  .up-card{position:relative;overflow:hidden;padding:22px;text-align:center;color:#fff;transition:transform .35s,box-shadow .35s;}
+  .up-card:hover{transform:translateY(-6px);box-shadow:0 18px 38px rgba(160,120,90,.22);}
+  .up-card::after{content:"";position:absolute;right:-40px;bottom:-40px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.14);}
+  .up-num{font-size:44px;font-weight:800;line-height:1;letter-spacing:-.03em;}
+  .up-unit{font-size:13px;opacity:.9;margin-left:4px;font-weight:600;}
+  .up-title{margin-top:10px;font-size:16px;font-weight:700;}
+  .up-date{margin-top:5px;font-size:12.5px;opacity:.9;}
+  .up-lunar{margin-top:3px;font-size:11.5px;opacity:.8;}
+  .uc-terra{background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));}
+  .uc-rose{background:linear-gradient(135deg,#E0A6A6,var(--rose-d));}
+  .uc-amber{background:linear-gradient(135deg,var(--amber),var(--amber-d));}
+
+  .anniv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .an-card{position:relative;overflow:hidden;padding:20px;transition:transform .35s,box-shadow .35s;}
+  .an-card:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(160,120,90,.16);}
+  .an-stripe{position:absolute;left:0;top:0;right:0;height:5px;}
+  .an-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .an-ico{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:21px;transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+  .an-card:hover .an-ico{transform:scale(1.12) rotate(-8deg);}
+  .an-type{font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:999px;}
+  .an-name{font-size:17px;font-weight:700;}
+  .an-date{font-size:13px;color:var(--text-soft);margin-top:5px;}
+  .an-foot{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);}
+  .an-days{font-size:13px;font-weight:700;}
+  .an-repeat{font-size:11.5px;color:var(--text-soft);}
+
+  .fab{position:fixed;bottom:32px;right:32px;z-index:60;height:56px;padding:0 22px;border-radius:18px;border:none;background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));color:#fff;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 10px 28px rgba(176,132,102,.42);transition:transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .35s;}
+  .fab:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(176,132,102,.5);}
+
+  @media(max-width:960px){
+    .layout{flex-direction:column;}
+    .sidebar{width:100%;position:static;flex-direction:column;}
+    .sb-nav{flex-direction:row;overflow-x:auto;}
+    .sb-item{flex-direction:column;text-align:center;min-width:90px;gap:6px;}
+    .sb-item.active::before{left:50%;top:0;transform:translateX(-50%);width:22px;height:3px;border-radius:0 0 3px 3px;}
+    .sb-desc,.sb-foot,.sb-head{display:none;}
+    .upcoming,.anniv-grid{grid-template-columns:repeat(2,1fr);}
+    .week-grid{overflow-x:auto;}
+  }
+  @media(max-width:600px){
+    .layout{padding:18px 14px 90px;}
+    .crumb{display:none;}
+    .upcoming,.anniv-grid{grid-template-columns:1fr;}
+    .month-grid{padding:10px;gap:4px;}
+    .mg-day{min-height:64px;}
+    .mg-evt{display:none;}
+    .mg-day.has::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--terracotta);margin:2px auto 0;}
+  }
+</style>
+</head>
+<body>
+<div class="ambient"><span class="a1"></span><span class="a2"></span></div>
+
+<header class="top-nav">
+  <div class="nav-inner">
+    <div class="logo"><div class="logo-mark">🏡</div><div class="logo-text">家庭管家<small>WARM HOME</small></div></div>
+    <div class="crumb">首页 / <b>家庭提醒</b></div>
+    <div class="nav-actions">
+      <button class="icon-btn">🔍</button>
+      <button class="icon-btn">🤖</button>
+      <button class="icon-btn">🌙</button>
+      <div class="avatar">林</div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- 侧栏 -->
+  <aside class="sidebar reveal">
+    <div class="sb-head"><div class="sb-title">🔔 家庭提醒</div></div>
+    <nav class="sb-nav" id="sbNav">
+      <div class="sb-item active" data-p="todo"><div class="sb-ico" style="background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));">📝</div><div><div class="sb-label">清单</div><div class="sb-desc">待办事项管理</div></div><span class="sb-badge">5</span></div>
+      <div class="sb-item" data-p="calendar"><div class="sb-ico" style="background:linear-gradient(135deg,var(--sage),var(--sage-d));">📅</div><div><div class="sb-label">日历视图</div><div class="sb-desc">日程一览</div></div></div>
+      <div class="sb-item" data-p="anniversary"><div class="sb-ico" style="background:linear-gradient(135deg,var(--amber),var(--amber-d));">⭐</div><div><div class="sb-label">纪念日</div><div class="sb-desc">重要日期提醒</div></div><span class="sb-badge">6</span></div>
+    </nav>
+    <div class="sb-foot">
+      <div class="foot-stat"><span class="fs-dot" style="background:var(--sage);"></span>5 待办</div>
+      <div class="foot-stat"><span class="fs-dot" style="background:var(--rose);"></span>1 过期</div>
+    </div>
+  </aside>
+
+  <!-- 内容 -->
+  <main class="content">
+
+    <!-- ===== 清单 ===== -->
+    <section class="panel active" id="p-todo">
+      <div class="panel-head reveal">
+        <div><div class="panel-title">📝 待办清单</div><div class="panel-sub">把家里的大小事，一件件安心放下</div></div>
+        <button class="btn primary">＋ 新建待办</button>
+      </div>
+      <div class="time-tabs reveal">
+        <button class="ttab active">今天 <span class="cnt">2</span></button>
+        <button class="ttab">本周 <span class="cnt">4</span></button>
+        <button class="ttab">全部 <span class="cnt">5</span></button>
+        <button class="ttab">已过期 <span class="cnt">1</span></button>
+        <button class="ttab">已归档</button>
+      </div>
+      <div class="card quick-add reveal"><span>＋</span><input class="qa-input" placeholder="快速添加待办，按回车确认..." /><button class="qa-btn">添加</button></div>
+      <div class="todo-list" id="todoList">
+        <div class="card todo reveal"><div class="t-prio high"></div><button class="t-check">✓</button><div class="t-body"><div class="t-title">给妈妈订生日蛋糕</div><div class="t-desc">要草莓奶油款，妈妈最爱</div><div class="t-meta"><span class="t-tag over">⚠ 已过期</span><span class="t-tag p-high">高优先</span></div></div><div class="t-acts"><button class="act">📦</button><button class="act danger">🗑</button></div></div>
+        <div class="card todo reveal"><div class="t-prio high"></div><button class="t-check">✓</button><div class="t-body"><div class="t-title">下午 3 点带宝宝体检</div><div class="t-meta"><span class="t-tag">📅 今天 15:00</span><span class="t-tag p-high">高优先</span><span class="t-tag repeat">🔔 提前1小时</span></div></div><div class="t-acts"><button class="act">📦</button><button class="act danger">🗑</button></div></div>
+        <div class="card todo reveal"><div class="t-prio medium"></div><button class="t-check">✓</button><div class="t-body"><div class="t-title">缴纳本月水电燃气费</div><div class="t-meta"><span class="t-tag">📅 9月8日</span><span class="t-tag p-medium">中优先</span><span class="t-tag repeat">🔁 每月</span></div></div><div class="t-acts"><button class="act">📦</button><button class="act danger">🗑</button></div></div>
+        <div class="card todo reveal"><div class="t-prio low"></div><button class="t-check">✓</button><div class="t-body"><div class="t-title">周末全家去公园野餐 🧺</div><div class="t-desc">记得带野餐垫和风筝</div><div class="t-meta"><span class="t-tag">📅 9月12日</span><span class="t-tag p-low">低优先</span></div></div><div class="t-acts"><button class="act">📦</button><button class="act danger">🗑</button></div></div>
+        <div class="card todo reveal"><div class="t-prio low"></div><button class="t-check">✓</button><div class="t-body"><div class="t-title">给阳台的绿萝换盆</div><div class="t-meta"><span class="t-tag">📅 9月13日</span><span class="t-tag p-low">低优先</span><span class="t-tag repeat">🔁 每周</span></div></div><div class="t-acts"><button class="act">📦</button><button class="act danger">🗑</button></div></div>
+      </div>
+    </section>
+
+    <!-- ===== 日历 ===== -->
+    <section class="panel" id="p-calendar">
+      <div class="panel-head reveal">
+        <div><div class="panel-title">📅 日历视图</div><div class="panel-sub">一家人的日程，摊开在同一张纸上</div></div>
+      </div>
+      <div class="cal-toolbar reveal">
+        <div class="view-toggle" id="viewToggle">
+          <button class="vt-btn" data-v="week">周</button>
+          <button class="vt-btn active" data-v="month">月</button>
+        </div>
+        <button class="btn ghost">今天</button>
+        <div class="cal-nav">
+          <button class="cn-btn">‹</button>
+          <span class="cal-label" id="calLabel">2026年9月</span>
+          <button class="cn-btn">›</button>
+        </div>
+      </div>
+
+      <!-- 月视图 -->
+      <div class="card reveal" id="monthView">
+        <div class="month-grid">
+          <div class="mg-weekday">一</div><div class="mg-weekday">二</div><div class="mg-weekday">三</div><div class="mg-weekday">四</div><div class="mg-weekday">五</div><div class="mg-weekday">六</div><div class="mg-weekday">日</div>
+          <div class="mg-day other"><span class="mg-num">31</span></div>
+          <div class="mg-day"><span class="mg-num">1</span></div>
+          <div class="mg-day"><span class="mg-num">2</span><span class="mg-evt" style="background:var(--sky);">家庭会议</span></div>
+          <div class="mg-day"><span class="mg-num">3</span></div>
+          <div class="mg-day"><span class="mg-num">4</span><span class="mg-evt" style="background:var(--sage);">超市采购</span></div>
+          <div class="mg-day"><span class="mg-num">5</span></div>
+          <div class="mg-day today has"><span class="mg-num">6</span><span class="mg-evt" style="background:var(--rose);">宝宝体检</span></div>
+          <div class="mg-day"><span class="mg-num">7</span></div>
+          <div class="mg-day has"><span class="mg-num">8</span><span class="mg-evt" style="background:var(--amber);">缴水电费</span></div>
+          <div class="mg-day has"><span class="mg-num">9</span><span class="mg-evt" style="background:var(--terracotta);">妈妈生日</span></div>
+          <div class="mg-day"><span class="mg-num">10</span></div>
+          <div class="mg-day"><span class="mg-num">11</span></div>
+          <div class="mg-day has"><span class="mg-num">12</span><span class="mg-evt" style="background:var(--sage);">公园野餐</span></div>
+          <div class="mg-day"><span class="mg-num">13</span></div>
+          <div class="mg-day"><span class="mg-num">14</span></div>
+          <div class="mg-day"><span class="mg-num">15</span></div>
+          <div class="mg-day"><span class="mg-num">16</span></div>
+          <div class="mg-day"><span class="mg-num">17</span></div>
+          <div class="mg-day has"><span class="mg-num">18</span><span class="mg-evt" style="background:var(--rose);">结婚纪念日</span></div>
+          <div class="mg-day"><span class="mg-num">19</span></div>
+          <div class="mg-day has"><span class="mg-num">20</span><span class="mg-evt" style="background:var(--plum);">宝宝演出</span></div>
+          <div class="mg-day"><span class="mg-num">21</span></div>
+          <div class="mg-day"><span class="mg-num">22</span></div>
+          <div class="mg-day"><span class="mg-num">23</span></div>
+          <div class="mg-day"><span class="mg-num">24</span></div>
+          <div class="mg-day"><span class="mg-num">25</span></div>
+          <div class="mg-day has"><span class="mg-num">26</span><span class="mg-evt" style="background:var(--sky);">中秋团圆</span></div>
+          <div class="mg-day"><span class="mg-num">27</span></div>
+          <div class="mg-day"><span class="mg-num">28</span></div>
+          <div class="mg-day"><span class="mg-num">29</span></div>
+          <div class="mg-day"><span class="mg-num">30</span></div>
+          <div class="mg-day other"><span class="mg-num">1</span></div>
+          <div class="mg-day other"><span class="mg-num">2</span></div>
+          <div class="mg-day other"><span class="mg-num">3</span></div>
+          <div class="mg-day other"><span class="mg-num">4</span></div>
+        </div>
+      </div>
+
+      <!-- 周视图 -->
+      <div class="card reveal" id="weekView" style="display:none;">
+        <div class="week-grid">
+          <div class="wg-col"><div class="wg-head"><div class="wg-wd">周一</div><div class="wg-num">31</div></div></div>
+          <div class="wg-col"><div class="wg-head"><div class="wg-wd">周二</div><div class="wg-num">1</div></div></div>
+          <div class="wg-col"><div class="wg-head"><div class="wg-wd">周三</div><div class="wg-num">2</div></div><div class="wg-evt" style="background:linear-gradient(135deg,var(--sky),var(--sky-d));"><span class="tm">19:00</span><b>家庭会议</b></div></div>
+          <div class="wg-col"><div class="wg-head"><div class="wg-wd">周四</div><div class="wg-num">3</div></div></div>
+          <div class="wg-col"><div class="wg-head"><div class="wg-wd">周五</div><div class="wg-num">4</div></div><div class="wg-evt" style="background:linear-gradient(135deg,var(--sage),var(--sage-d));"><span class="tm">18:30</span><b>超市采购</b></div></div>
+          <div class="wg-col"><div class="wg-head"><div class="wg-wd">周六</div><div class="wg-num">5</div></div></div>
+          <div class="wg-col today"><div class="wg-head"><div class="wg-wd">周日</div><div class="wg-num">6</div></div><div class="wg-evt" style="background:linear-gradient(135deg,var(--rose),var(--rose-d));"><span class="tm">15:00</span><b>宝宝体检</b></div><div class="wg-evt" style="background:linear-gradient(135deg,var(--amber),var(--amber-d));"><span class="tm">19:30</span><b>全家晚餐</b></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 纪念日 ===== -->
+    <section class="panel" id="p-anniversary">
+      <div class="panel-head reveal">
+        <div><div class="panel-title">⭐ 纪念日</div><div class="panel-sub">重要的日子，一个都不错过</div></div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn ghost">🔔 发送提醒</button>
+          <button class="btn primary">＋ 添加纪念日</button>
+        </div>
+      </div>
+
+      <div class="upcoming">
+        <div class="up-card uc-terra reveal"><div><span class="up-num" data-count="3">0</span><span class="up-unit">天后</span></div><div class="up-title">🎂 妈妈生日</div><div class="up-date">9月9日 · 周三</div><div class="up-lunar">农历 七月廿八</div></div>
+        <div class="up-card uc-rose reveal"><div><span class="up-num" data-count="12">0</span><span class="up-unit">天后</span></div><div class="up-title">💍 结婚纪念日</div><div class="up-date">9月18日 · 周五</div><div class="up-lunar">农历 八月初七</div></div>
+        <div class="up-card uc-amber reveal"><div><span class="up-num" data-count="20">0</span><span class="up-unit">天后</span></div><div class="up-title">🌕 中秋团圆</div><div class="up-date">9月26日 · 周六</div><div class="up-lunar">农历 八月十五</div></div>
+      </div>
+
+      <div class="anniv-grid">
+        <div class="card an-card reveal"><div class="an-stripe" style="background:linear-gradient(90deg,var(--terracotta),var(--terra-deep));"></div><div class="an-head"><div class="an-ico" style="background:rgba(200,159,133,.16);">🎂</div><span class="an-type" style="background:rgba(200,159,133,.16);color:var(--terra-deep);">生日</span></div><div class="an-name">妈妈生日</div><div class="an-date">1968年9月9日</div><div class="an-foot"><span class="an-days" style="color:var(--terra-deep);">3 天后</span><span class="an-repeat">🔁 每年</span></div></div>
+        <div class="card an-card reveal"><div class="an-stripe" style="background:linear-gradient(90deg,var(--rose),var(--rose-d));"></div><div class="an-head"><div class="an-ico" style="background:rgba(217,154,154,.16);">💍</div><span class="an-type" style="background:rgba(217,154,154,.16);color:var(--rose-d);">纪念日</span></div><div class="an-name">结婚纪念日</div><div class="an-date">2018年9月18日</div><div class="an-foot"><span class="an-days" style="color:var(--rose-d);">12 天后</span><span class="an-repeat">🔁 每年</span></div></div>
+        <div class="card an-card reveal"><div class="an-stripe" style="background:linear-gradient(90deg,var(--amber),var(--amber-d));"></div><div class="an-head"><div class="an-ico" style="background:rgba(232,179,106,.16);">🌕</div><span class="an-type" style="background:rgba(232,179,106,.16);color:var(--amber-d);">节日</span></div><div class="an-name">中秋团圆</div><div class="an-date">2026年9月26日</div><div class="an-foot"><span class="an-days" style="color:var(--amber-d);">20 天后</span><span class="an-repeat">🔁 每年</span></div></div>
+        <div class="card an-card reveal"><div class="an-stripe" style="background:linear-gradient(90deg,var(--sage),var(--sage-d));"></div><div class="an-head"><div class="an-ico" style="background:rgba(168,176,138,.16);">🎈</div><span class="an-type" style="background:rgba(168,176,138,.16);color:var(--sage-d);">生日</span></div><div class="an-name">宝宝生日</div><div class="an-date">2023年12月2日</div><div class="an-foot"><span class="an-days" style="color:var(--sage-d);">87 天后</span><span class="an-repeat">🔁 每年</span></div></div>
+        <div class="card an-card reveal"><div class="an-stripe" style="background:linear-gradient(90deg,var(--sky),var(--sky-d));"></div><div class="an-head"><div class="an-ico" style="background:rgba(159,184,201,.16);"></div><span class="an-type" style="background:rgba(159,184,201,.16);color:var(--sky-d);">倒数</span></div><div class="an-name">搬进新家一年</div><div class="an-date">2025年11月11日</div><div class="an-foot"><span class="an-days" style="color:var(--sky-d);">66 天后</span><span class="an-repeat">仅一次</span></div></div>
+        <div class="card an-card reveal"><div class="an-stripe" style="background:linear-gradient(90deg,var(--plum),#8A6C93);"></div><div class="an-head"><div class="an-ico" style="background:rgba(169,139,176,.16);">🎓</div><span class="an-type" style="background:rgba(169,139,176,.16);color:#8A6C93;">其他</span></div><div class="an-name">宝宝入园日</div><div class="an-date">2026年9月1日</div><div class="an-foot"><span class="an-days" style="color:#8A6C93;">已度过</span><span class="an-repeat">仅一次</span></div></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<button class="fab">＋ 新建</button>
+
+<script>
+  // 侧栏切换
+  document.getElementById('sbNav').addEventListener('click', e=>{
+    const it=e.target.closest('.sb-item'); if(!it) return;
+    document.querySelectorAll('.sb-item').forEach(x=>x.classList.remove('active'));
+    it.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    const panel=document.getElementById('p-'+it.dataset.p);
+    panel.classList.add('active');
+    animateScope(panel);
+  });
+
+  // 周/月切换
+  document.getElementById('viewToggle').addEventListener('click', e=>{
+    const b=e.target.closest('.vt-btn'); if(!b) return;
+    document.querySelectorAll('.vt-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    const isMonth=b.dataset.v==='month';
+    document.getElementById('monthView').style.display=isMonth?'':'none';
+    document.getElementById('weekView').style.display=isMonth?'none':'';
+  });
+
+  // 待办勾选
+  document.getElementById('todoList').addEventListener('click', e=>{
+    const c=e.target.closest('.t-check'); if(!c) return;
+    c.closest('.todo').classList.toggle('done');
+  });
+
+  function animateScope(scope){
+    scope.querySelectorAll('[data-count]').forEach(el=>{
+      const target=+el.dataset.count; let cur=0; const step=Math.max(1,Math.ceil(target/30));
+      const t=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(t);}el.textContent=cur;},25);
+    });
+  }
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); animateScope(e.target); io.unobserve(e.target); } });
+  },{threshold:.15});
+  document.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.transitionDelay=(i%6)*60+'ms'; io.observe(el); });
+</script>
+</body>
+</html>

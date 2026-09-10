@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>快速记账 · 右下角卡片原型</title>
+<style>
+  :root{
+    --warm-white:#FBF6EF; --cream:#F3EADD; --apricot:#EDE0CE; --wood-light:#E2CDB2;
+    --terracotta:#C89F85; --terracotta-d:#B08466; --terra-deep:#96684A;
+    --sage:#A8B08A; --sage-d:#7E8862; --amber:#E8B36A; --amber-d:#C08A3E; --rose:#D99A9A; --rose-d:#B06A6A; --sky:#9FB8C9;
+    --text-deep:#6B5744; --text-soft:#A08D7A; --card:#FFFDFA; --line:rgba(226,205,178,.7);
+    --r-lg:24px; --r-md:16px; --r-sm:12px;
+    --font:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+    --pop:0 24px 60px rgba(150,104,74,.28);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);color:var(--text-deep);background:linear-gradient(135deg,var(--warm-white) 0%,var(--cream) 55%,#F0E2D0 100%);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;}
+  ::selection{background:var(--terracotta);color:#fff;}
+  button,input{font-family:var(--font);}
+
+  .ambient{position:fixed;inset:0;pointer-events:none;overflow:hidden;}
+  .ambient span{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:drift 16s ease-in-out infinite alternate;}
+  .a1{width:300px;height:300px;background:#F2D9B8;top:-80px;left:-60px;}
+  .a2{width:240px;height:240px;background:#E8C9AE;bottom:-60px;right:-40px;animation-delay:-6s;}
+  @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(34px,26px) scale(1.1);}}
+
+  /* 背景示意内容（体现卡片悬浮于页面之上） */
+  .backdrop{max-width:1000px;margin:0 auto;padding:40px 22px 160px;}
+  .bd-title{font-size:24px;font-weight:800;color:var(--terra-deep);}
+  .bd-sub{font-size:13.5px;color:var(--text-soft);margin:6px 0 22px;}
+  .bd-hint{display:inline-flex;align-items:center;gap:8px;background:rgba(255,253,250,.8);border:1.5px dashed var(--wood-light);border-radius:14px;padding:12px 18px;font-size:14px;color:var(--terra-deep);font-weight:600;animation:nudge 2.6s ease-in-out infinite;}
+  @keyframes nudge{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+  .ghost-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px;}
+  .ghost{height:96px;border-radius:var(--r-md);background:rgba(255,253,250,.5);border:1px solid var(--line);}
+
+  /* ===== 右下角 FAB ===== */
+  .fab{
+    position:fixed;right:32px;bottom:32px;z-index:80;width:60px;height:60px;border-radius:20px;border:none;
+    background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));color:#fff;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(176,132,102,.45);
+    transition:transform .4s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;
+  }
+  .fab:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(176,132,102,.55);}
+  .fab .plus{font-size:28px;line-height:1;transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+  .fab.open .plus{transform:rotate(135deg);}
+  .fab::after{content:"";position:absolute;inset:0;border-radius:20px;box-shadow:0 0 0 0 rgba(200,159,133,.5);animation:fab-ring 2.8s ease-out infinite;}
+  @keyframes fab-ring{0%{box-shadow:0 0 0 0 rgba(200,159,133,.45);}70%{box-shadow:0 0 0 18px rgba(200,159,133,0);}100%{box-shadow:0 0 0 0 rgba(200,159,133,0);}}
+
+  /* ===== 右下角记账卡片 ===== */
+  .qa-card{
+    position:fixed;right:32px;bottom:104px;z-index:79;width:380px;max-height:min(72vh,640px);
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--pop);
+    display:flex;flex-direction:column;overflow:hidden;
+    transform-origin:bottom right;transform:scale(.6) translateY(30px);opacity:0;pointer-events:none;
+    transition:transform .45s cubic-bezier(.34,1.4,.5,1),opacity .3s ease;
+  }
+  .qa-card.open{transform:scale(1) translateY(0);opacity:1;pointer-events:auto;}
+  /* 小尾巴指向 FAB */
+  .qa-card::after{content:"";position:absolute;right:26px;bottom:-7px;width:14px;height:14px;background:var(--card);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg);}
+
+  .qa-head{display:flex;align-items:center;gap:10px;padding:16px 18px 12px;border-bottom:1px dashed var(--line);}
+  .qa-title{font-size:16px;font-weight:800;color:var(--terra-deep);display:flex;align-items:center;gap:8px;}
+  .mode-toggle{margin-left:auto;display:flex;background:var(--cream);border-radius:10px;padding:3px;}
+  .mode-btn{padding:6px 13px;border-radius:8px;border:none;background:transparent;color:var(--text-soft);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:5px;}
+  .mode-btn.active{background:var(--card);color:var(--terra-deep);box-shadow:0 2px 8px rgba(160,120,90,.16);}
+  .qa-close{width:30px;height:30px;border-radius:9px;border:none;background:transparent;color:var(--text-soft);cursor:pointer;font-size:15px;transition:all .25s;}
+  .qa-close:hover{background:var(--cream);color:var(--terra-deep);transform:rotate(90deg);}
+
+  .qa-body{padding:16px 18px 18px;overflow-y:auto;flex:1;}
+  .qa-body::-webkit-scrollbar{width:6px;}
+  .qa-body::-webkit-scrollbar-thumb{background:var(--wood-light);border-radius:3px;}
+  .qa-body::-webkit-scrollbar-thumb:hover{background:var(--terracotta);}
+  .qa-body::-webkit-scrollbar-track{background:transparent;}
+  .pane{display:none;}
+  .pane.active{display:block;animation:pane-in .35s cubic-bezier(.22,1,.36,1);}
+  @keyframes pane-in{from{opacity:0;transform:translateX(10px);}to{opacity:1;transform:none;}}
+
+  /* 类型切换（滑动指示） */
+  .type-bar{position:relative;display:grid;grid-template-columns:1fr 1fr;background:var(--cream);border-radius:13px;padding:4px;margin-bottom:16px;}
+  .type-tab{position:relative;z-index:2;padding:10px;border-radius:10px;border:none;background:transparent;color:var(--text-soft);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:color .3s;}
+  .type-tab.active{color:#fff;}
+  .type-ind{position:absolute;z-index:1;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:10px;background:linear-gradient(135deg,var(--rose),var(--rose-d));transition:transform .35s cubic-bezier(.34,1.4,.5,1),background .35s;box-shadow:0 4px 12px rgba(176,106,106,.3);}
+  .type-bar.income .type-ind{transform:translateX(100%);background:linear-gradient(135deg,var(--sage),var(--sage-d));box-shadow:0 4px 12px rgba(126,136,98,.3);}
+
+  /* 金额 */
+  .amount-box{display:flex;align-items:center;gap:8px;padding:6px 4px 12px;border-bottom:2px solid var(--wood-light);margin-bottom:6px;transition:border-color .3s;}
+  .amount-box:focus-within{border-color:var(--terracotta);}
+  .amount-cur{font-size:24px;font-weight:800;color:var(--terra-deep);}
+  .amount-field{flex:1;border:none;background:transparent;outline:none;font-size:34px;font-weight:800;color:var(--text-deep);letter-spacing:-.02em;min-width:0;}
+  .amount-field::placeholder{color:var(--wood-light);}
+  .voice-btn{width:40px;height:40px;border-radius:12px;border:none;background:var(--cream);color:var(--terra-deep);cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;transition:all .25s;flex-shrink:0;}
+  .voice-btn:hover{background:var(--apricot);}
+  .voice-btn.listening{background:var(--rose);color:#fff;animation:pulse 1.2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
+  .voice-hint{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--rose-d);margin:6px 0 2px;}
+  .voice-dot{width:8px;height:8px;border-radius:50%;background:var(--rose);animation:blink 1s ease-in-out infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+  .voice-result{display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px 12px;border-radius:10px;background:rgba(168,176,138,.16);color:var(--sage-d);font-size:12.5px;animation:pane-in .3s ease;}
+
+  /* 分类 chips */
+  .sec-label{font-size:12.5px;font-weight:700;color:var(--text-soft);margin:14px 0 9px;display:flex;align-items:center;gap:6px;}
+  .cat-chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .cat{padding:8px 13px;border-radius:999px;border:1.5px solid var(--line);background:rgba(255,253,250,.8);color:var(--text-deep);font-size:13px;font-weight:600;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:6px;}
+  .cat:hover{border-color:var(--terracotta);transform:translateY(-2px);}
+  .cat.sel{background:var(--terracotta);border-color:var(--terracotta);color:#fff;box-shadow:0 6px 14px rgba(200,159,133,.35);transform:scale(1.04);}
+
+  /* 明细行 */
+  .detail-row{display:flex;align-items:center;gap:10px;margin-top:12px;}
+  .d-label{font-size:13px;color:var(--text-soft);flex-shrink:0;white-space:nowrap;}
+  .d-field{flex:1;padding:9px 12px;border-radius:11px;border:1.5px solid var(--wood-light);background:#FFFDF9;font-size:13.5px;color:var(--text-deep);outline:none;transition:all .25s;min-width:0;}
+  .d-field:focus{border-color:var(--terracotta);box-shadow:0 0 0 3px rgba(200,159,133,.14);}
+  .d-chip{padding:9px 13px;border-radius:11px;background:var(--cream);font-size:13px;font-weight:600;color:var(--terra-deep);cursor:pointer;transition:all .25s;}
+  .d-chip:hover{background:var(--apricot);}
+
+  .submit-btn{width:100%;margin-top:18px;padding:14px;border-radius:14px;border:none;cursor:pointer;font-size:15px;font-weight:700;letter-spacing:.06em;color:#fff;background:linear-gradient(135deg,var(--rose),var(--rose-d));box-shadow:0 8px 20px rgba(176,106,106,.35);transition:transform .3s,box-shadow .3s,background .3s;}
+  .submit-btn.income{background:linear-gradient(135deg,var(--sage),var(--sage-d));box-shadow:0 8px 20px rgba(126,136,98,.35);}
+  .submit-btn:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(160,120,90,.4);}
+  .submit-btn:active{transform:translateY(-1px) scale(.99);}
+
+  /* ===== 批量 ===== */
+  .shared{display:flex;gap:8px;margin-bottom:14px;}
+  .shared .d-chip{flex:1;text-align:center;}
+  .entries{display:flex;flex-direction:column;gap:12px;}
+  .entry{border:1.5px solid var(--line);border-radius:var(--r-md);padding:12px;background:rgba(243,234,221,.35);animation:pane-in .3s ease;transition:border-color .25s;}
+  .entry:hover{border-color:var(--wood-light);}
+  .en-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+  .en-idx{font-size:12px;font-weight:800;color:var(--text-soft);}
+  .en-type{display:flex;background:var(--cream);border-radius:8px;padding:2px;margin-left:auto;}
+  .en-type button{padding:4px 11px;border-radius:6px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--text-soft);cursor:pointer;transition:all .25s;}
+  .en-type button.on-exp{background:var(--rose);color:#fff;}
+  .en-type button.on-inc{background:var(--sage);color:#fff;}
+  .en-rm{width:24px;height:24px;border-radius:7px;border:none;background:transparent;color:var(--text-soft);cursor:pointer;font-size:12px;transition:all .2s;}
+  .en-rm:hover{background:rgba(217,154,154,.25);color:var(--rose-d);}
+  .en-amt{display:flex;align-items:center;gap:6px;border-bottom:1.5px solid var(--wood-light);padding-bottom:6px;margin-bottom:9px;}
+  .en-amt span{font-size:16px;font-weight:800;color:var(--terra-deep);}
+  .en-amt input{flex:1;border:none;background:transparent;outline:none;font-size:20px;font-weight:700;color:var(--text-deep);min-width:0;}
+  .en-fields{display:flex;gap:8px;}
+  .en-fields .d-field{padding:8px 10px;font-size:12.5px;}
+  .add-entry{width:100%;margin-top:12px;padding:11px;border-radius:12px;border:2px dashed var(--wood-light);background:transparent;color:var(--text-soft);font-size:13.5px;font-weight:700;cursor:pointer;transition:all .25s;}
+  .add-entry:hover{border-color:var(--terracotta);color:var(--terra-deep);background:rgba(243,234,221,.6);}
+  .batch-total{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding:11px 14px;border-radius:12px;background:var(--cream);font-size:13.5px;color:var(--text-soft);}
+  .batch-total b{font-size:17px;color:var(--terra-deep);}
+
+  /* 成功态 */
+  .success{display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:40px 20px;text-align:center;}
+  .success.show{display:flex;animation:pane-in .3s ease;}
+  .ok-ring{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--sage),var(--sage-d));color:#fff;font-size:34px;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(126,136,98,.4);animation:ok-pop .5s cubic-bezier(.34,1.6,.5,1);}
+  @keyframes ok-pop{from{transform:scale(.4);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .ok-title{font-size:18px;font-weight:800;color:var(--terra-deep);}
+  .ok-amt{font-size:26px;font-weight:800;color:var(--sage-d);}
+  .ok-sub{font-size:12.5px;color:var(--text-soft);}
+
+  /* toast */
+  .toast{position:fixed;left:50%;bottom:36px;transform:translateX(-50%) translateY(80px);z-index:90;background:rgba(107,87,68,.92);color:#fff;font-size:14px;font-weight:600;padding:12px 22px;border-radius:999px;backdrop-filter:blur(8px);box-shadow:0 10px 26px rgba(107,87,68,.35);transition:transform .4s cubic-bezier(.34,1.4,.5,1);pointer-events:none;}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+
+  /* 移动端：底部抽屉 */
+  @media(max-width:600px){
+    .fab{right:20px;bottom:20px;width:56px;height:56px;}
+    .qa-card{right:0;left:0;bottom:0;width:100%;max-height:88vh;border-radius:24px 24px 0 0;transform:translateY(100%);opacity:1;}
+    .qa-card.open{transform:translateY(0);}
+    .qa-card::after{display:none;}
+    .qa-head::before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:40px;height:4px;border-radius:2px;background:var(--wood-light);}
+    .qa-head{padding-top:22px;}
+    .ghost-row{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="ambient"><span class="a1"></span><span class="a2"></span></div>
+
+<div class="backdrop">
+  <div class="bd-title">🪙 小家账本</div>
+  <div class="bd-sub">右下角的「＋」可以随时唤起快速记账卡片，桌面端悬浮于右下角，移动端自动变为底部抽屉</div>
+  <div class="bd-hint">👉 点右下角的 ＋ 试试快速记账</div>
+  <div class="ghost-row"><div class="ghost"></div><div class="ghost"></div><div class="ghost"></div></div>
+</div>
+
+<!-- ===== 快速记账卡片 ===== -->
+<div class="qa-card" id="qaCard">
+  <div class="qa-head">
+    <div class="qa-title">✏️ 快速记账</div>
+    <div class="mode-toggle" id="modeToggle">
+      <button class="mode-btn active" data-m="single">单笔</button>
+      <button class="mode-btn" data-m="batch">批量</button>
+    </div>
+    <button class="qa-close" id="qaClose">✕</button>
+  </div>
+
+  <div class="qa-body">
+    <!-- 单笔 -->
+    <div class="pane active" id="paneSingle">
+      <div class="type-bar" id="typeBar">
+        <button class="type-tab active" data-t="expense">📉 支出</button>
+        <button class="type-tab" data-t="income">📈 收入</button>
+        <div class="type-ind"></div>
+      </div>
+
+      <div class="amount-box">
+        <span class="amount-cur">¥</span>
+        <input class="amount-field" id="amount" inputmode="decimal" placeholder="0.00" />
+        <button class="voice-btn" id="voiceBtn" title="语音记账">🎤</button>
+      </div>
+      <div class="voice-hint" id="voiceHint" style="display:none;"><span class="voice-dot"></span>正在聆听… 试试说"午饭花了35"</div>
+      <div class="voice-result" id="voiceResult" style="display:none;">🎤 午饭花了35 <span style="margin-left:auto;cursor:pointer;" id="voiceClear">✕</span></div>
+
+      <div class="sec-label">📂 分类</div>
+      <div class="cat-chips" id="catExpense">
+        <button class="cat sel">🍚 餐饮</button><button class="cat">🚗 交通</button><button class="cat">🛍 购物</button><button class="cat">🏠 居住</button><button class="cat">🧸 宝宝</button><button class="cat">💊 医疗</button><button class="cat">📦 其他</button>
+      </div>
+      <div class="cat-chips" id="catIncome" style="display:none;">
+        <button class="cat sel">💼 工资</button><button class="cat">🎁 奖金</button><button class="cat">📈 理财</button><button class="cat">🧧 红包</button><button class="cat">📦 其他</button>
+      </div>
+
+      <div class="detail-row"><span class="d-label">💰 账本</span><button class="d-chip" style="flex:1;text-align:left;">家庭生活 ▾</button></div>
+      <div class="detail-row"><span class="d-label">📅 日期</span><button class="d-chip" style="flex:1;text-align:left;">今天 · 9月6日 ▾</button></div>
+      <div class="detail-row"><span class="d-label">✏️ 备注</span><input class="d-field" placeholder="添加备注..." /></div>
+
+      <button class="submit-btn" id="submitSingle">确认记账</button>
+    </div>
+
+    <!-- 批量 -->
+    <div class="pane" id="paneBatch">
+      <div class="shared">
+        <button class="d-chip">💰 家庭生活 ▾</button>
+        <button class="d-chip">📅 今天 ▾</button>
+      </div>
+      <div class="entries" id="entries">
+        <div class="entry">
+          <div class="en-head"><span class="en-idx">#1</span><div class="en-type"><button class="on-exp" data-et="expense">支</button><button data-et="income">收</button></div><button class="en-rm" title="删除">✕</button></div>
+          <div class="en-amt"><span>¥</span><input class="en-amt-input" inputmode="decimal" placeholder="0.00" value="35.00" /></div>
+          <div class="en-fields"><input class="d-field" value="🍚 餐饮" /><input class="d-field" placeholder="备注" value="午饭" /></div>
+        </div>
+        <div class="entry">
+          <div class="en-head"><span class="en-idx">#2</span><div class="en-type"><button data-et="expense">支</button><button class="on-inc" data-et="income">收</button></div><button class="en-rm" title="删除">✕</button></div>
+          <div class="en-amt"><span>¥</span><input class="en-amt-input" inputmode="decimal" placeholder="0.00" value="1200.00" /></div>
+          <div class="en-fields"><input class="d-field" value="💼 工资" /><input class="d-field" placeholder="备注" value="9月薪资" /></div>
+        </div>
+      </div>
+      <button class="add-entry" id="addEntry">＋ 添加一条</button>
+      <div class="batch-total"><span>合计 · 支 ¥35.00 / 收 ¥1,200.00</span><b id="batchNet">+¥1,165.00</b></div>
+      <button class="submit-btn income" id="submitBatch">确认记 2 笔</button>
+    </div>
+
+    <!-- 成功 -->
+    <div class="success" id="successPane">
+      <div class="ok-ring">✓</div>
+      <div class="ok-title">已记一笔</div>
+      <div class="ok-amt" id="okAmt">-¥35.00</div>
+      <div class="ok-sub">🍚 餐饮 · 今天 · 家庭生活</div>
+    </div>
+  </div>
+</div>
+
+<button class="fab" id="fab"><span class="plus">＋</span></button>
+<div class="toast" id="toast">已记一笔 🎉</div>
+
+<script>
+  const fab=document.getElementById('fab'), card=document.getElementById('qaCard');
+  fab.addEventListener('click', ()=>{ card.classList.toggle('open'); fab.classList.toggle('open'); });
+  document.getElementById('qaClose').addEventListener('click', ()=>{ card.classList.remove('open'); fab.classList.remove('open'); });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ card.classList.remove('open'); fab.classList.remove('open'); } });
+
+  // 单笔/批量
+  document.getElementById('modeToggle').addEventListener('click', e=>{
+    const b=e.target.closest('.mode-btn'); if(!b) return;
+    document.querySelectorAll('.mode-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById('paneSingle').classList.toggle('active', b.dataset.m==='single');
+    document.getElementById('paneBatch').classList.toggle('active', b.dataset.m==='batch');
+    document.getElementById('successPane').classList.remove('show');
+  });
+
+  // 支出/收入
+  const typeBar=document.getElementById('typeBar');
+  typeBar.addEventListener('click', e=>{
+    const t=e.target.closest('.type-tab'); if(!t) return;
+    typeBar.querySelectorAll('.type-tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    const inc=t.dataset.t==='income';
+    typeBar.classList.toggle('income', inc);
+    document.getElementById('catExpense').style.display=inc?'none':'flex';
+    document.getElementById('catIncome').style.display=inc?'flex':'none';
+    const sb=document.getElementById('submitSingle');
+    sb.classList.toggle('income', inc);
+  });
+
+  // 分类选择
+  document.querySelectorAll('.cat-chips').forEach(wrap=>{
+    wrap.addEventListener('click', e=>{
+      const c=e.target.closest('.cat'); if(!c) return;
+      wrap.querySelectorAll('.cat').forEach(x=>x.classList.remove('sel'));
+      c.classList.add('sel');
+    });
+  });
+
+  // 语音
+  const vb=document.getElementById('voiceBtn'), vh=document.getElementById('voiceHint'), vr=document.getElementById('voiceResult');
+  vb.addEventListener('click', ()=>{
+    if(vb.classList.contains('listening')){ vb.classList.remove('listening'); vh.style.display='none'; vr.style.display='flex'; document.getElementById('amount').value='35.00'; }
+    else { vb.classList.add('listening'); vh.style.display='flex'; vr.style.display='none'; }
+  });
+  document.getElementById('voiceClear').addEventListener('click', ()=>{ vr.style.display='none'; });
+
+  // 批量：类型/删除/新增/合计
+  const entries=document.getElementById('entries');
+  function reindex(){ entries.querySelectorAll('.entry').forEach((en,i)=>{ en.querySelector('.en-idx').textContent='#'+(i+1); }); updateTotal(); }
+  function updateTotal(){
+    let exp=0, inc=0;
+    entries.querySelectorAll('.entry').forEach(en=>{
+      const v=parseFloat(en.querySelector('.en-amt-input').value)||0;
+      const isInc=en.querySelector('.en-type .on-inc');
+      if(isInc) inc+=v; else exp+=v;
+    });
+    document.querySelector('.batch-total span').textContent='合计 · 支 ¥'+exp.toFixed(2)+' / 收 ¥'+inc.toFixed(2);
+    const net=inc-exp;
+    document.getElementById('batchNet').textContent=(net>=0?'+':'-')+'¥'+Math.abs(net).toFixed(2);
+    document.getElementById('submitBatch').textContent='确认记 '+entries.querySelectorAll('.entry').length+' 笔';
+  }
+  entries.addEventListener('click', e=>{
+    const tb=e.target.closest('.en-type button');
+    if(tb){ const wrap=tb.parentElement; wrap.querySelectorAll('button').forEach(b=>b.className=''); tb.className=tb.dataset.et==='income'?'on-inc':'on-exp'; updateTotal(); return; }
+    const rm=e.target.closest('.en-rm');
+    if(rm){ if(entries.querySelectorAll('.entry').length>1){ rm.closest('.entry').remove(); reindex(); } return; }
+  });
+  entries.addEventListener('input', updateTotal);
+  document.getElementById('addEntry').addEventListener('click', ()=>{
+    const n=entries.querySelectorAll('.entry').length+1;
+    const div=document.createElement('div'); div.className='entry';
+    div.innerHTML='<div class="en-head"><span class="en-idx">#'+n+'</span><div class="en-type"><button class="on-exp" data-et="expense">支</button><button data-et="income">收</button></div><button class="en-rm" title="删除">✕</button></div>'+
+      '<div class="en-amt"><span>¥</span><input class="en-amt-input" inputmode="decimal" placeholder="0.00" /></div>'+
+      '<div class="en-fields"><input class="d-field" placeholder="📂 分类" /><input class="d-field" placeholder="备注" /></div>';
+    entries.appendChild(div); reindex();
+  });
+  updateTotal();
+
+  // 提交 → 成功态
+  function showSuccess(text){
+    document.getElementById('paneSingle').classList.remove('active');
+    document.getElementById('paneBatch').classList.remove('active');
+    document.getElementById('okAmt').textContent=text;
+    document.getElementById('successPane').classList.add('show');
+    const toast=document.getElementById('toast'); toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'),1800);
+    setTimeout(()=>{
+      document.getElementById('successPane').classList.remove('show');
+      document.getElementById('paneSingle').classList.add('active');
+      card.classList.remove('open'); fab.classList.remove('open');
+    },1600);
+  }
+  document.getElementById('submitSingle').addEventListener('click', ()=>{
+    const v=parseFloat(document.getElementById('amount').value)||0;
+    const inc=typeBar.classList.contains('income');
+    showSuccess((inc?'+':'-')+'¥'+v.toFixed(2));
+  });
+  document.getElementById('submitBatch').addEventListener('click', ()=>{
+    showSuccess(document.getElementById('batchNet').textContent);
+  });
+</script>
+</body>
+</html>

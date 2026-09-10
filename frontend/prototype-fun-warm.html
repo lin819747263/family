@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>吃喝玩乐 · 暖色居家原型</title>
+<style>
+  :root{
+    --warm-white:#FBF6EF; --cream:#F3EADD; --apricot:#EDE0CE; --wood-light:#E2CDB2;
+    --terracotta:#C89F85; --terracotta-d:#B08466; --terra-deep:#96684A;
+    --sage:#A8B08A; --sage-d:#7E8862; --amber:#E8B36A; --amber-d:#C08A3E; --rose:#D99A9A; --rose-d:#B06A6A; --sky:#9FB8C9; --sky-d:#6E8CA0; --plum:#A98BB0;
+    --text-deep:#6B5744; --text-soft:#A08D7A; --card:#FFFDFA; --line:rgba(226,205,178,.7);
+    --r-lg:24px; --r-md:16px; --r-sm:12px;
+    --font:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);color:var(--text-deep);background:linear-gradient(135deg,var(--warm-white) 0%,var(--cream) 55%,#F0E2D0 100%);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;}
+  ::selection{background:var(--terracotta);color:#fff;}
+  button,input{font-family:var(--font);}
+
+  .ambient{position:fixed;inset:0;pointer-events:none;overflow:hidden;}
+  .ambient span{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:drift 16s ease-in-out infinite alternate;}
+  .a1{width:300px;height:300px;background:#F2D9B8;top:-80px;left:-60px;}
+  .a2{width:240px;height:240px;background:#E8C9AE;bottom:-60px;right:-40px;animation-delay:-6s;}
+  @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(34px,26px);scale:1.1;}}
+
+  .top-nav{position:sticky;top:0;z-index:50;background:rgba(255,252,247,.85);backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line);box-shadow:0 2px 20px rgba(160,120,90,.06);}
+  .nav-inner{max-width:1240px;margin:0 auto;height:62px;display:flex;align-items:center;gap:14px;padding:0 22px;}
+  .logo{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;}
+  .logo-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--terracotta),#D9B697);display:flex;align-items:center;justify-content:center;box-shadow:0 5px 14px rgba(200,159,133,.4);font-size:19px;transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+  .logo:hover .logo-mark{transform:rotate(-8deg) scale(1.06);}
+  .logo-text{font-size:17px;font-weight:700;letter-spacing:.06em;color:var(--terra-deep);}
+  .logo-text small{display:block;font-size:10px;font-weight:400;letter-spacing:.2em;color:var(--text-soft);margin-top:-2px;}
+  .crumb{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-soft);}
+  .crumb b{color:var(--terra-deep);}
+  .nav-actions{margin-left:auto;display:flex;align-items:center;gap:6px;}
+  .icon-btn{width:38px;height:38px;border-radius:11px;border:none;background:transparent;color:var(--text-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .25s;}
+  .icon-btn:hover{background:rgba(200,159,133,.12);color:var(--terra-deep);transform:translateY(-2px);}
+  .avatar{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));color:#fff;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(176,132,102,.3);}
+
+  .page{max-width:1240px;margin:0 auto;padding:26px 22px 90px;position:relative;z-index:1;}
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1);}
+  .reveal.in{opacity:1;transform:none;}
+
+  .page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px;}
+  .page-title{font-size:26px;font-weight:800;color:var(--terra-deep);}
+  .page-sub{margin-top:6px;font-size:13.5px;color:var(--text-soft);}
+  .head-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:11px 18px;border-radius:13px;border:none;cursor:pointer;font-size:14px;font-weight:600;transition:transform .3s,box-shadow .3s;}
+  .btn.primary{background:linear-gradient(135deg,var(--terracotta),#D3A98B);color:#FFF9F2;box-shadow:0 8px 20px rgba(200,159,133,.4);}
+  .btn.ghost{background:rgba(255,253,250,.85);color:var(--terra-deep);border:1.5px solid var(--line);}
+  .btn:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(200,159,133,.3);}
+
+  .subtabs{display:flex;gap:6px;background:rgba(243,234,221,.6);border:1px solid var(--line);padding:5px;border-radius:16px;margin-bottom:22px;overflow-x:auto;}
+  .subtab{padding:10px 18px;border-radius:12px;border:none;background:transparent;color:var(--text-soft);font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .3s;display:flex;align-items:center;gap:7px;}
+  .subtab:hover{color:var(--terra-deep);}
+  .subtab.active{background:var(--card);color:var(--terra-deep);box-shadow:0 4px 14px rgba(160,120,90,.14);}
+  .panel{display:none;}
+  .panel.active{display:block;animation:panel-in .45s cubic-bezier(.22,1,.36,1);}
+  @keyframes panel-in{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:0 8px 28px rgba(160,120,90,.08);}
+
+  .filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center;}
+  .fchip{padding:9px 15px;border-radius:999px;border:1.5px solid var(--line);background:rgba(255,253,250,.8);color:var(--text-soft);font-size:13px;font-weight:600;cursor:pointer;transition:all .25s;}
+  .fchip:hover{border-color:var(--terracotta);color:var(--terra-deep);transform:translateY(-2px);}
+  .fchip.active{background:var(--terracotta);border-color:var(--terracotta);color:#fff;}
+
+  /* ===== 吃 · 菜谱 ===== */
+  .recipes{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .recipe{padding:0;overflow:hidden;cursor:pointer;position:relative;transition:transform .35s,box-shadow .35s;}
+  .recipe:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(160,120,90,.16);}
+  .recipe.hide{display:none;}
+  .rcov{height:140px;display:flex;align-items:center;justify-content:center;font-size:46px;position:relative;overflow:hidden;}
+  .rcov .em{transition:transform .6s cubic-bezier(.22,1,.36,1);}
+  .recipe:hover .rcov .em{transform:scale(1.25) rotate(-8deg);}
+  .g1{background:linear-gradient(135deg,#F6DFC8,#EFC9A8);} .g2{background:linear-gradient(135deg,#EED3C0,#DCAE90);}
+  .g3{background:linear-gradient(135deg,#E4E6D3,#C4CBA8);} .g4{background:linear-gradient(135deg,#F3E3C2,#E5C68E);}
+  .g5{background:linear-gradient(135deg,#EBD2D2,#D5A8A8);} .g6{background:linear-gradient(135deg,#DFE3E6,#B9C6CE);}
+  .diff{position:absolute;top:10px;right:10px;font-size:11px;font-weight:700;padding:3px 11px;border-radius:999px;backdrop-filter:blur(6px);}
+  .diff.easy{background:rgba(168,176,138,.28);color:var(--sage-d);}
+  .diff.medium{background:rgba(232,179,106,.3);color:var(--amber-d);}
+  .diff.hard{background:rgba(217,154,154,.3);color:var(--rose-d);}
+  .rbody{padding:14px 16px 16px;}
+  .rname{font-size:15.5px;font-weight:700;}
+  .rdesc{font-size:12.5px;color:var(--text-soft);margin-top:5px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .rmeta{display:flex;gap:12px;margin-top:11px;padding-top:10px;border-top:1px dashed var(--line);font-size:12px;color:var(--text-soft);flex-wrap:wrap;}
+  .rview{position:absolute;inset:0;background:rgba(107,87,68,.42);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;}
+  .recipe:hover .rview{opacity:1;}
+  .rview span{background:var(--card);color:var(--terra-deep);font-size:13px;font-weight:700;padding:9px 18px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.18);transform:translateY(6px);transition:transform .3s;}
+  .recipe:hover .rview span{transform:none;}
+
+  /* ===== 喝 · 奶茶 ===== */
+  .drinks{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .drink{padding:16px;position:relative;transition:transform .35s,box-shadow .35s;}
+  .drink:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(160,120,90,.16);}
+  .dk-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;}
+  .cup{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:25px;transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+  .drink:hover .cup{transform:rotate(-8deg) scale(1.1);}
+  .heart{border:none;background:transparent;cursor:pointer;display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:var(--text-soft);padding:4px 6px;border-radius:999px;transition:all .25s;}
+  .heart .h{font-size:16px;transition:transform .2s;}
+  .heart.on{color:var(--rose-d);}
+  .heart.on .h{display:inline-block;animation:hpop .45s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes hpop{0%{transform:scale(.6);}55%{transform:scale(1.45);}100%{transform:scale(1);}}
+  .dk-name{font-size:15px;font-weight:700;}
+  .dk-brand{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--apricot);color:var(--terra-deep);margin-top:6px;}
+  .dk-tags{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap;}
+  .dk-tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;background:rgba(159,184,201,.18);color:var(--sky-d);}
+  .dk-tag.ice{background:rgba(168,176,138,.18);color:var(--sage-d);}
+  .dk-note{font-size:12px;color:var(--text-soft);margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);line-height:1.5;}
+  .drink-add{border:1.5px dashed var(--wood-light);background:rgba(243,234,221,.4);border-radius:var(--r-lg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:150px;color:var(--text-soft);font-size:13px;font-weight:600;cursor:pointer;transition:all .3s;}
+  .drink-add:hover{border-color:var(--terracotta);color:var(--terra-deep);background:rgba(243,234,221,.8);transform:translateY(-4px);}
+  .drink-add .plus{width:42px;height:42px;border-radius:14px;background:rgba(200,159,133,.16);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--terra-deep);}
+
+  /* ===== 打卡小店 ===== */
+  .ck-summary{display:flex;align-items:center;gap:16px;padding:18px;margin-bottom:18px;background:linear-gradient(120deg,rgba(232,179,106,.16),rgba(217,154,154,.14));border:1.5px solid rgba(232,179,106,.4);}
+  .ck-ico{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--amber),var(--amber-d));color:#fff;font-size:21px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .ck-info{flex:1;min-width:0;}
+  .ck-text{font-size:14px;font-weight:600;}
+  .ck-text b{color:var(--amber-d);}
+  .ck-bar{height:8px;border-radius:999px;background:rgba(255,253,250,.8);margin-top:9px;overflow:hidden;}
+  .ck-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--amber),var(--rose));width:0;transition:width 1s cubic-bezier(.22,1,.36,1);}
+  .shops{display:flex;flex-direction:column;gap:14px;}
+  .shop{display:flex;align-items:center;gap:14px;padding:16px 18px;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;}
+  .shop:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(160,120,90,.14);}
+  .sp-ico{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .sp-body{flex:1;min-width:0;}
+  .sp-name{font-size:15px;font-weight:700;}
+  .sp-cat{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--apricot);color:var(--terra-deep);margin-left:8px;vertical-align:2px;}
+  .sp-addr{font-size:12px;color:var(--text-soft);margin-top:5px;}
+  .sp-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;}
+  .stars{font-size:13px;letter-spacing:2px;color:var(--amber-d);}
+  .stars .off{color:var(--wood-light);}
+  .ck-btn{padding:7px 14px;border-radius:10px;border:1.5px solid var(--line);background:rgba(255,253,250,.8);color:var(--terra-deep);font-size:12px;font-weight:700;cursor:pointer;transition:all .25s;}
+  .ck-btn:hover{border-color:var(--amber);background:var(--amber);color:#fff;transform:translateY(-2px);}
+  .shop.done .ck-btn{background:rgba(168,176,138,.2);border-color:transparent;color:var(--sage-d);cursor:default;}
+  .shop.done .ck-btn:hover{transform:none;background:rgba(168,176,138,.2);color:var(--sage-d);}
+  .stamp{position:absolute;right:16px;top:12px;transform:rotate(-14deg) scale(1.8);opacity:0;border:2.5px solid var(--rose-d);color:var(--rose-d);font-weight:800;font-size:13px;letter-spacing:.25em;padding:4px 12px 4px 14px;border-radius:8px;pointer-events:none;transition:all .4s cubic-bezier(.34,1.56,.64,1);}
+  .shop.done .stamp{opacity:.8;transform:rotate(-14deg) scale(1);}
+
+  /* ===== 玩 · 出游 ===== */
+  .places{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .place{padding:0;overflow:hidden;position:relative;transition:transform .35s,box-shadow .35s;}
+  .place:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(160,120,90,.16);}
+  .place.hide{display:none;}
+  .scene{height:120px;display:flex;align-items:center;justify-content:center;font-size:42px;position:relative;overflow:hidden;}
+  .scene .em{transition:transform .6s cubic-bezier(.22,1,.36,1);}
+  .place:hover .scene .em{transform:scale(1.2);}
+  .season{position:absolute;top:10px;left:10px;font-size:11px;font-weight:700;padding:3px 11px;border-radius:999px;backdrop-filter:blur(6px);background:rgba(255,253,250,.75);color:var(--terra-deep);}
+  .wish{position:absolute;top:8px;right:8px;border:none;background:rgba(255,253,250,.8);backdrop-filter:blur(6px);width:32px;height:32px;border-radius:10px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .25s;}
+  .wish:hover{transform:scale(1.12);}
+  .wish.on{background:var(--rose);color:#fff;}
+  .wish.on .w{display:inline-block;animation:hpop .45s cubic-bezier(.34,1.56,.64,1);}
+  .pbody{padding:14px 16px 16px;}
+  .pname{font-size:15.5px;font-weight:700;}
+  .pwhy{font-size:12.5px;color:var(--text-soft);margin-top:5px;}
+  .pmeta{display:flex;flex-direction:column;gap:5px;margin-top:11px;padding-top:10px;border-top:1px dashed var(--line);font-size:12px;color:var(--text-soft);}
+  .ptag-row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+  .ptag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;background:rgba(159,184,201,.18);color:var(--sky-d);}
+  .ptag.fee{background:rgba(168,176,138,.18);color:var(--sage-d);}
+
+  /* ===== 时令水果 ===== */
+  .fruit-banner{display:flex;align-items:center;gap:14px;padding:18px;margin-bottom:18px;background:linear-gradient(120deg,rgba(168,176,138,.16),rgba(232,179,106,.16));border:1.5px solid rgba(168,176,138,.4);}
+  .fb-ico{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--sage),var(--sage-d));color:#fff;font-size:21px;display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:wobble 2.6s ease-in-out infinite;}
+  @keyframes wobble{0%,100%{transform:rotate(0);}25%{transform:rotate(-8deg);}75%{transform:rotate(8deg);}}
+  .fb-text{font-size:14px;line-height:1.6;}
+  .fb-text b{color:var(--sage-d);}
+  .fruits{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .fruit{padding:16px;text-align:center;transition:transform .35s,box-shadow .35s;position:relative;}
+  .fruit:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(160,120,90,.16);}
+  .f-tile{width:64px;height:64px;margin:0 auto;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:30px;transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+  .fruit:hover .f-tile{transform:scale(1.12) rotate(-6deg);}
+  .f-name{font-size:15px;font-weight:700;margin-top:10px;}
+  .f-months{display:flex;gap:3px;justify-content:center;margin-top:10px;}
+  .f-months i{width:8px;height:8px;border-radius:50%;background:var(--cream);border:1px solid var(--line);}
+  .f-months i.on{background:var(--sage);border-color:var(--sage);}
+  .f-months i.now{box-shadow:0 0 0 3px rgba(200,159,133,.3);background:var(--terracotta);border-color:var(--terracotta);}
+  .f-season{font-size:11px;color:var(--text-soft);margin-top:6px;}
+  .f-sweet{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:9px;font-size:11px;color:var(--text-soft);}
+  .f-sweet i{width:7px;height:7px;border-radius:50%;background:var(--cream);border:1px solid var(--line);}
+  .f-sweet i.on{background:var(--amber);border-color:var(--amber);}
+  .f-price{font-size:13px;font-weight:700;color:var(--terra-deep);margin-top:8px;}
+  .f-tip{font-size:11.5px;color:var(--text-soft);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);line-height:1.5;}
+
+  /* ===== 菜谱详情弹窗 ===== */
+  .modal-mask{position:fixed;inset:0;z-index:80;background:rgba(107,87,68,.38);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:flex-start;justify-content:center;padding:6vh 18px 40px;opacity:0;pointer-events:none;transition:opacity .3s ease;overflow-y:auto;}
+  .modal-mask.open{opacity:1;pointer-events:auto;}
+  .modal{width:760px;max-width:100%;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:0 30px 80px rgba(107,87,68,.35);transform:scale(.92) translateY(22px);opacity:0;transition:transform .45s cubic-bezier(.34,1.56,.64,1),opacity .3s ease;}
+  .modal-mask.open .modal{transform:none;opacity:1;}
+  .modal-head{display:flex;align-items:center;gap:12px;padding:20px 22px 16px;border-bottom:1px dashed var(--line);}
+  .mh-title{font-size:18px;font-weight:800;color:var(--terra-deep);}
+  .mh-sub{font-size:12px;color:var(--text-soft);margin-top:2px;}
+  .mh-close{margin-left:auto;width:32px;height:32px;border-radius:10px;border:none;background:rgba(243,234,221,.8);color:var(--text-soft);font-size:14px;cursor:pointer;transition:all .25s;flex-shrink:0;}
+  .mh-close:hover{background:var(--rose);color:#fff;transform:rotate(90deg);}
+  .rv-body{display:flex;gap:0;max-height:62vh;overflow:hidden;}
+  .rv-left{width:250px;flex-shrink:0;border-right:1px dashed var(--line);display:flex;flex-direction:column;overflow-y:auto;}
+  .rv-cover{height:170px;display:flex;align-items:center;justify-content:center;font-size:56px;}
+  .rv-tags{display:flex;gap:6px;flex-wrap:wrap;padding:14px 16px 0;}
+  .rv-tag{font-size:11.5px;font-weight:700;padding:3px 11px;border-radius:999px;background:var(--apricot);color:var(--terra-deep);}
+  .rv-tag.easy{background:rgba(168,176,138,.22);color:var(--sage-d);}
+  .rv-tag.medium{background:rgba(232,179,106,.26);color:var(--amber-d);}
+  .rv-tag.hard{background:rgba(217,154,154,.26);color:var(--rose-d);}
+  .rv-desc{padding:12px 16px 18px;font-size:12.5px;color:var(--text-soft);line-height:1.7;}
+  .rv-right{flex:1;min-width:0;overflow-y:auto;padding:16px 20px 22px;}
+  .rv-right::-webkit-scrollbar,.rv-left::-webkit-scrollbar{width:6px;}
+  .rv-right::-webkit-scrollbar-thumb,.rv-left::-webkit-scrollbar-thumb{background:var(--wood-light);border-radius:3px;}
+  .vs-title{font-size:15px;font-weight:800;color:var(--terra-deep);display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+  .vs-count{font-size:11px;font-weight:600;color:var(--text-soft);background:var(--cream);padding:2px 9px;border-radius:999px;}
+  .ing-row{display:flex;justify-content:space-between;align-items:center;padding:8px 2px;border-bottom:1px dashed var(--line);font-size:13px;}
+  .ing-row:last-child{border-bottom:none;}
+  .ing-amt{font-weight:700;color:var(--terra-deep);}
+  .vs-title.mt{margin-top:20px;}
+  .step-item{display:flex;gap:10px;margin-bottom:12px;}
+  .step-badge{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+  .step-text{flex:1;font-size:13px;line-height:1.65;color:var(--text-deep);}
+
+  .toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,80px);z-index:90;display:flex;align-items:center;gap:9px;padding:12px 20px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:0 14px 40px rgba(160,120,90,.25);font-size:13.5px;font-weight:600;color:var(--terra-deep);opacity:0;transition:all .45s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
+  .toast.show{transform:translate(-50%,0);opacity:1;}
+  .t-ico{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--sage),var(--sage-d));color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+
+  @media(max-width:960px){
+    .recipes,.drinks,.places{grid-template-columns:repeat(2,1fr);}
+    .fruits{grid-template-columns:repeat(2,1fr);}
+    .rv-body{flex-direction:column;overflow-y:auto;max-height:66vh;}
+    .rv-left{width:100%;border-right:none;border-bottom:1px dashed var(--line);}
+  }
+  @media(max-width:600px){
+    .page{padding:18px 14px 90px;}
+    .crumb{display:none;}
+    .recipes,.drinks,.places,.fruits{grid-template-columns:1fr;}
+    .shop{flex-direction:column;align-items:flex-start;}
+    .sp-right{flex-direction:row;width:100%;justify-content:space-between;align-items:center;}
+    .page-title{font-size:22px;}
+    .modal-mask{padding:3vh 12px 30px;}
+  }
+</style>
+</head>
+<body>
+<div class="ambient"><span class="a1"></span><span class="a2"></span></div>
+
+<header class="top-nav">
+  <div class="nav-inner">
+    <div class="logo"><div class="logo-mark">🏡</div><div class="logo-text">家庭管家<small>WARM HOME</small></div></div>
+    <div class="crumb">首页 / <b>吃喝玩乐</b></div>
+    <div class="nav-actions">
+      <button class="icon-btn">🔍</button>
+      <button class="icon-btn">🤖</button>
+      <button class="icon-btn">🌙</button>
+      <div class="avatar">林</div>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="page-head reveal">
+    <div><div class="page-title">🎡 吃喝玩乐</div><div class="page-sub">吃好喝好玩好，把每个普通日子都过得认真一点</div></div>
+    <div class="head-actions">
+      <button class="btn ghost" id="btnShuffle">🎲 今天吃啥</button>
+      <button class="btn primary" id="btnNewRecipe">＋ 记一道菜</button>
+    </div>
+  </div>
+
+  <div class="subtabs reveal" id="subtabs">
+    <button class="subtab active" data-p="eat">🍳 家常菜谱</button>
+    <button class="subtab" data-p="drink">🧋 奶茶收藏</button>
+    <button class="subtab" data-p="shop">📍 打卡小店</button>
+    <button class="subtab" data-p="play">🏞 出游景点</button>
+    <button class="subtab" data-p="fruit">🍑 时令水果</button>
+  </div>
+
+  <!-- ===== 吃 ===== -->
+  <section class="panel active" id="p-eat">
+    <div class="filter-bar reveal" id="diffFilter">
+      <button class="fchip active" data-f="all">全部</button>
+      <button class="fchip" data-f="easy">🥬 简单</button>
+      <button class="fchip" data-f="medium">🍲 中等</button>
+      <button class="fchip" data-f="hard">🔥 困难</button>
+      <span style="margin-left:auto;font-size:12.5px;color:var(--text-soft);">共 <b id="recipeCount">6</b> 道家常菜</span>
+    </div>
+    <div class="recipes">
+      <div class="card recipe reveal" data-id="r1" data-diff="easy"><div class="rcov g1"><span class="em">🍅</span><span class="diff easy">简单</span></div><div class="rbody"><div class="rname">番茄炒蛋</div><div class="rdesc">汤汁拌饭一绝，十分钟搞定的国民家常菜</div><div class="rmeta"><span>⏱ 15分钟</span><span>👥 2人份</span><span>🥘 4种材料</span></div></div><div class="rview"><span>查看做法</span></div></div>
+      <div class="card recipe reveal" data-id="r2" data-diff="medium"><div class="rcov g2"><span class="em">🍖</span><span class="diff medium">中等</span></div><div class="rbody"><div class="rname">红烧肉</div><div class="rdesc">肥而不腻、入口即化，周末才舍得做的硬菜</div><div class="rmeta"><span>⏱ 90分钟</span><span>👥 3人份</span><span>🥘 5种材料</span></div></div><div class="rview"><span>查看做法</span></div></div>
+      <div class="card recipe reveal" data-id="r3" data-diff="medium"><div class="rcov g6"><span class="em">🐟</span><span class="diff medium">中等</span></div><div class="rbody"><div class="rname">清蒸鲈鱼</div><div class="rdesc">火候到位就赢了一切，鲜嫩得眉毛掉下来</div><div class="rmeta"><span>⏱ 25分钟</span><span>👥 2人份</span><span>🥘 4种材料</span></div></div><div class="rview"><span>查看做法</span></div></div>
+      <div class="card recipe reveal" data-id="r4" data-diff="easy"><div class="rcov g4"><span class="em">🌽</span><span class="diff easy">简单</span></div><div class="rbody"><div class="rname">玉米排骨汤</div><div class="rdesc">清甜滋润，小朋友能喝满满一大碗</div><div class="rmeta"><span>⏱ 40分钟</span><span>👥 3人份</span><span>🥘 4种材料</span></div></div><div class="rview"><span>查看做法</span></div></div>
+      <div class="card recipe reveal" data-id="r5" data-diff="hard"><div class="rcov g5"><span class="em">🍬</span><span class="diff hard">困难</span></div><div class="rbody"><div class="rname">糖醋排骨</div><div class="rdesc">炒糖色是灵魂，酸甜比例全凭手感</div><div class="rmeta"><span>⏱ 60分钟</span><span>👥 3人份</span><span>🥘 4种材料</span></div></div><div class="rview"><span>查看做法</span></div></div>
+      <div class="card recipe reveal" data-id="r6" data-diff="easy"><div class="rcov g3"><span class="em">🍚</span><span class="diff easy">简单</span></div><div class="rbody"><div class="rname">扬州炒饭</div><div class="rdesc">隔夜饭的最佳归宿，冰箱清库存神器</div><div class="rmeta"><span>⏱ 20分钟</span><span>👥 2人份</span><span>🥘 4种材料</span></div></div><div class="rview"><span>查看做法</span></div></div>
+    </div>
+  </section>
+
+  <!-- ===== 喝 ===== -->
+  <section class="panel" id="p-drink">
+    <div class="filter-bar reveal">
+      <span style="font-size:13.5px;color:var(--text-soft);">🧋 收藏了 <b style="color:var(--terra-deep);">6</b> 杯好喝的 · 点 ❤ 标记想再喝</span>
+    </div>
+    <div class="drinks">
+      <div class="card drink reveal"><div class="dk-top"><div class="cup" style="background:rgba(232,179,106,.2);">🧋</div><button class="heart on"><span class="h">❤️</span><span class="n">15</span></button></div><div class="dk-name">鲜奶茶 · 自製</div><span class="dk-brand">在家自制</span><div class="dk-tags"><span class="dk-tag">三分糖</span><span class="dk-tag ice">去冰</span></div><div class="dk-note">红茶煮浓一点，牛奶要全脂，加一撮盐更香</div></div>
+      <div class="card drink reveal"><div class="dk-top"><div class="cup" style="background:rgba(217,154,154,.2);">🍓</div><button class="heart on"><span class="h">❤️</span><span class="n">12</span></button></div><div class="dk-name">伯牙绝弦</div><span class="dk-brand">霸王茶姬</span><div class="dk-tags"><span class="dk-tag">少糖</span><span class="dk-tag ice">少冰</span></div><div class="dk-note">茉莉雪芽打底，清爽不腻，太太的最爱</div></div>
+      <div class="card drink reveal"><div class="dk-top"><div class="cup" style="background:rgba(169,139,176,.2);">🍇</div><button class="heart"><span class="h">🤍</span><span class="n">9</span></button></div><div class="dk-name">芝芝多肉葡萄</div><span class="dk-brand">喜茶</span><div class="dk-tags"><span class="dk-tag">少糖</span><span class="dk-tag ice">少冰</span></div><div class="dk-note">芝士奶盖别搅开，先喝一口盖再喝茶</div></div>
+      <div class="card drink reveal"><div class="dk-top"><div class="cup" style="background:rgba(159,184,201,.2);">🥥</div><button class="heart on"><span class="h">❤️</span><span class="n">8</span></button></div><div class="dk-name">生椰拿铁</div><span class="dk-brand">瑞幸</span><div class="dk-tags"><span class="dk-tag">不另外加糖</span><span class="dk-tag ice">少冰</span></div><div class="dk-note">上班日的续命水，周一必点</div></div>
+      <div class="card drink reveal"><div class="dk-top"><div class="cup" style="background:rgba(232,179,106,.2);">🍋</div><button class="heart"><span class="h">🤍</span><span class="n">7</span></button></div><div class="dk-name">冰鲜柠檬水</div><span class="dk-brand">蜜雪冰城</span><div class="dk-tags"><span class="dk-tag">少糖</span><span class="dk-tag ice">标准冰</span></div><div class="dk-note">四块钱的快乐，接娃放学路上买</div></div>
+      <div class="card drink reveal"><div class="dk-top"><div class="cup" style="background:rgba(168,176,138,.2);">🍑</div><button class="heart"><span class="h">🤍</span><span class="n">6</span></button></div><div class="dk-name">芝芝桃桃</div><span class="dk-brand">喜茶</span><div class="dk-tags"><span class="dk-tag">少糖</span><span class="dk-tag ice">去冰</span></div><div class="dk-note">限定的季节味道，夏天结束前必喝一次</div></div>
+      <div class="drink-add reveal"><span class="plus">＋</span>收藏一杯新的</div>
+    </div>
+  </section>
+
+  <!-- ===== 打卡小店 ===== -->
+  <section class="panel" id="p-shop">
+    <div class="card ck-summary reveal">
+      <div class="ck-ico">📍</div>
+      <div class="ck-info">
+        <div class="ck-text">今年打卡计划 · 已完成 <b id="ckDone">2</b> / <span id="ckTotal">5</span> 家小店</div>
+        <div class="ck-bar"><i id="ckBar"></i></div>
+      </div>
+    </div>
+    <div class="shops">
+      <div class="card shop reveal done"><span class="stamp">已打卡</span><div class="sp-ico" style="background:rgba(232,179,106,.2);">🥐</div><div class="sp-body"><div class="sp-name">山丘面包屋<span class="sp-cat">烘焙</span></div><div class="sp-addr">📍 西湖区 · 文三路 · 出炉时间下午3点</div></div><div class="sp-right"><span class="stars">★★★★★</span><button class="ck-btn">✓ 已打卡</button></div></div>
+      <div class="card shop reveal done"><span class="stamp">已打卡</span><div class="sp-ico" style="background:rgba(217,154,154,.2);">🍧</div><div class="sp-body"><div class="sp-name">老街糖水铺<span class="sp-cat">糖水</span></div><div class="sp-addr">📍 上城区 · 河坊街 · 杨枝甘露是招牌</div></div><div class="sp-right"><span class="stars">★★★★★</span><button class="ck-btn">✓ 已打卡</button></div></div>
+      <div class="card shop reveal"><span class="stamp">已打卡</span><div class="sp-ico" style="background:rgba(168,176,138,.2);">☕</div><div class="sp-body"><div class="sp-name">转角咖啡<span class="sp-cat">咖啡</span></div><div class="sp-addr">📍 家楼下 · 手冲豆每周换</div></div><div class="sp-right"><span class="stars">★★★★<span class="off">★</span></span><button class="ck-btn">去打卡</button></div></div>
+      <div class="card shop reveal"><span class="stamp">已打卡</span><div class="sp-ico" style="background:rgba(200,159,133,.2);">🍲</div><div class="sp-body"><div class="sp-name">蜀香火锅<span class="sp-cat">火锅</span></div><div class="sp-addr">📍 拱墅区 · 大运河边 · 周末要排队</div></div><div class="sp-right"><span class="stars">★★★★★</span><button class="ck-btn">去打卡</button></div></div>
+      <div class="card shop reveal"><span class="stamp">已打卡</span><div class="sp-ico" style="background:rgba(159,184,201,.2);">🏮</div><div class="sp-body"><div class="sp-name">深夜居酒屋<span class="sp-cat">日料</span></div><div class="sp-addr">📍 滨江区 · 只有8个吧台位</div></div><div class="sp-right"><span class="stars">★★★★<span class="off">★</span></span><button class="ck-btn">去打卡</button></div></div>
+    </div>
+  </section>
+
+  <!-- ===== 玩 ===== -->
+  <section class="panel" id="p-play">
+    <div class="filter-bar reveal" id="seasonFilter">
+      <button class="fchip active" data-s="all">全部</button>
+      <button class="fchip" data-s="春">🌸 春</button>
+      <button class="fchip" data-s="夏">🍃 夏</button>
+      <button class="fchip" data-s="秋">🍁 秋</button>
+      <button class="fchip" data-s="冬">❄️ 冬</button>
+      <span style="margin-left:auto;font-size:12.5px;color:var(--text-soft);">❤ 标记想去的愿望清单</span>
+    </div>
+    <div class="places">
+      <div class="card place reveal" data-season="秋"><div class="scene g3"><span class="em">🍁</span><span class="season">🍁 秋 · 红叶</span><button class="wish on"><span class="w">❤</span></button></div><div class="pbody"><div class="pname">临安 · 指南村</div><div class="pwhy">梯田古村，十一月整片山都是红的</div><div class="pmeta"><span>🚗 80km · 车程约1.5小时</span><span>⏳ 游玩 1 天</span></div><div class="ptag-row"><span class="ptag fee">免门票</span><span class="ptag">适合拍照</span></div></div></div>
+      <div class="card place reveal" data-season="冬"><div class="scene g5"><span class="em">🏰</span><span class="season">❄️ 冬 · 灯会</span><button class="wish on"><span class="w">❤</span></button></div><div class="pbody"><div class="pname">上海迪士尼</div><div class="pwhy">冬天的烟花和圣诞灯会，娃念叨了一整年</div><div class="pmeta"><span>🚗 180km · 车程约2.5小时</span><span>⏳ 游玩 2 天</span></div><div class="ptag-row"><span class="ptag">门票 ¥475 起</span><span class="ptag">亲子</span></div></div></div>
+      <div class="card place reveal" data-season="夏"><div class="scene g6"><span class="em">🎋</span><span class="season">🍃 夏 · 避暑</span><button class="wish"><span class="w">🤍</span></button></div><div class="pbody"><div class="pname">莫干山</div><div class="pwhy">竹林民宿住一晚，山里比城里凉快6度</div><div class="pmeta"><span>🚗 60km · 车程约1小时</span><span>⏳ 游玩 1 天</span></div><div class="ptag-row"><span class="ptag">门票 ¥80</span><span class="ptag">民宿</span></div></div></div>
+      <div class="card place reveal" data-season="春"><div class="scene g1"><span class="em">🌸</span><span class="season">🌸 春 · 桃花</span><button class="wish"><span class="w">🤍</span></button></div><div class="pbody"><div class="pname">西湖 · 苏堤</div><div class="pwhy">三月底桃花配柳浪，骑车绕一圈刚好</div><div class="pmeta"><span>🚗 3km · 车程约15分钟</span><span>⏳ 游玩 半天</span></div><div class="ptag-row"><span class="ptag fee">免门票</span><span class="ptag">骑行</span></div></div></div>
+      <div class="card place reveal" data-season="夏"><div class="scene g4"><span class="em">🚤</span><span class="season">🍃 夏 · 湖景</span><button class="wish"><span class="w">🤍</span></button></div><div class="pbody"><div class="pname">千岛湖</div><div class="pwhy">坐船去岛上吃鱼头，湖水蓝得不像话</div><div class="pmeta"><span>🚗 150km · 车程约2小时</span><span>⏳ 游玩 2 天</span></div><div class="ptag-row"><span class="ptag">门票 ¥130</span><span class="ptag">游船</span></div></div></div>
+      <div class="card place reveal" data-season="春"><div class="scene g2"><span class="em">🏮</span><span class="season">🌸 春 · 梅花</span><button class="wish"><span class="w">🤍</span></button></div><div class="pbody"><div class="pname">塘栖古镇</div><div class="pwhy">二月梅花开满运河边，顺便买枇杷膏</div><div class="pmeta"><span>🚗 30km · 车程约40分钟</span><span>⏳ 游玩 半天</span></div><div class="ptag-row"><span class="ptag fee">免门票</span><span class="ptag">古镇</span></div></div></div>
+    </div>
+  </section>
+
+  <!-- ===== 时令水果 ===== -->
+  <section class="panel" id="p-fruit">
+    <div class="card fruit-banner reveal">
+      <div class="fb-ico">🍑</div>
+      <div class="fb-text">现在是 <b>9 月</b> · 夏秋交接的果篮子最丰盛：冬桃、葡萄、无花果正当季，错过又要等一年。</div>
+    </div>
+    <div class="fruits">
+      <div class="card fruit reveal"><div class="f-tile" style="background:rgba(217,154,154,.2);">🍑</div><div class="f-name">冬桃</div><div class="f-months" data-from="8" data-to="10"></div><div class="f-season">8 - 10 月当季</div><div class="f-sweet">甜度 <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div><div class="f-price">¥8 / 斤</div><div class="f-tip">挑颜色深、掂着沉的，放软更甜</div></div>
+      <div class="card fruit reveal"><div class="f-tile" style="background:rgba(169,139,176,.2);">🍇</div><div class="f-name">葡萄</div><div class="f-months" data-from="7" data-to="9"></div><div class="f-season">7 - 9 月当季</div><div class="f-sweet">甜度 <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div><div class="f-price">¥12 / 斤</div><div class="f-tip">果粉是天然保鲜层，吃前再洗</div></div>
+      <div class="card fruit reveal"><div class="f-tile" style="background:rgba(200,159,133,.2);">🫐</div><div class="f-name">无花果</div><div class="f-months" data-from="8" data-to="9"></div><div class="f-season">8 - 9 月当季</div><div class="f-sweet">甜度 <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div><div class="f-price">¥15 / 斤</div><div class="f-tip">不耐放，当天买当天吃最好</div></div>
+      <div class="card fruit reveal"><div class="f-tile" style="background:rgba(232,179,106,.2);">🍐</div><div class="f-name">秋月梨</div><div class="f-months" data-from="9" data-to="10"></div><div class="f-season">9 - 10 月当季</div><div class="f-sweet">甜度 <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div><div class="f-price">¥5 / 斤</div><div class="f-tip">秋燥炖冰糖雪梨最润</div></div>
+      <div class="card fruit reveal"><div class="f-tile" style="background:rgba(217,154,154,.2);">🍎</div><div class="f-name">石榴</div><div class="f-months" data-from="9" data-to="10"></div><div class="f-season">9 - 10 月当季</div><div class="f-sweet">甜度 <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div><div class="f-price">¥10 / 斤</div><div class="f-tip">同样大小挑重的，籽粒更饱满</div></div>
+      <div class="card fruit reveal"><div class="f-tile" style="background:rgba(168,176,138,.2);">🥝</div><div class="f-name">猕猴桃</div><div class="f-months" data-from="9" data-to="11"></div><div class="f-season">9 - 11 月当季</div><div class="f-sweet">甜度 <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div><div class="f-price">¥9 / 斤</div><div class="f-tip">常温放两天回软，甜度翻倍</div></div>
+      <div class="card fruit reveal"><div class="f-tile" style="background:rgba(232,179,106,.2);">🍊</div><div class="f-name">蜜橘</div><div class="f-months" data-from="9" data-to="11"></div><div class="f-season">9 - 11 月当季</div><div class="f-sweet">甜度 <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div><div class="f-price">¥6 / 斤</div><div class="f-tip">轻捏有弹性、皮薄的更甜</div></div>
+      <div class="card fruit reveal"><div class="f-tile" style="background:rgba(159,184,201,.2);">🍉</div><div class="f-name">西瓜</div><div class="f-months" data-from="6" data-to="9"></div><div class="f-season">6 - 9 月当季</div><div class="f-sweet">甜度 <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div><div class="f-price">¥3 / 斤</div><div class="f-tip">白露后的尾茬瓜，且吃且珍惜</div></div>
+    </div>
+  </section>
+</main>
+
+<!-- ===== 菜谱详情弹窗 ===== -->
+<div class="modal-mask" id="maskRecipe">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="菜谱详情">
+    <div class="modal-head">
+      <div><div class="mh-title" id="rvName">菜谱</div><div class="mh-sub">家的味道，照着做就不会翻车</div></div>
+      <button class="mh-close" id="rvClose">✕</button>
+    </div>
+    <div class="rv-body">
+      <div class="rv-left">
+        <div class="rv-cover g1" id="rvCover">🍅</div>
+        <div class="rv-tags" id="rvTags"></div>
+        <div class="rv-desc" id="rvDesc"></div>
+      </div>
+      <div class="rv-right">
+        <div class="vs-title">🥘 用料<span class="vs-count" id="rvIngCount"></span></div>
+        <div id="rvIng"></div>
+        <div class="vs-title mt">👩‍🍳 做法<span class="vs-count" id="rvStepCount"></span></div>
+        <div id="rvSteps"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="t-ico">✓</span><span id="toastText"></span></div>
+
+<script>
+  // ===== 页签切换 =====
+  document.getElementById('subtabs').addEventListener('click', e=>{
+    const t=e.target.closest('.subtab'); if(!t) return;
+    document.querySelectorAll('.subtab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('p-'+t.dataset.p).classList.add('active');
+  });
+
+  // ===== 进场动画 =====
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.transitionDelay=(i%6)*60+'ms'; io.observe(el); });
+
+  // ===== 水果月份点 =====
+  const NOW_M=9;
+  document.querySelectorAll('.f-months').forEach(box=>{
+    const from=+box.dataset.from, to=+box.dataset.to;
+    for(let m=1;m<=12;m++){
+      const i=document.createElement('i');
+      if(m>=from&&m<=to) i.classList.add('on');
+      if(m===NOW_M) i.classList.add('now');
+      i.title=m+'月';
+      box.appendChild(i);
+    }
+  });
+
+  // ===== 提示条 =====
+  let toastTimer;
+  function showToast(msg){
+    const t=document.getElementById('toast');
+    document.getElementById('toastText').textContent=msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>t.classList.remove('show'),2400);
+  }
+
+  // ===== 菜谱难度筛选 =====
+  document.getElementById('diffFilter').addEventListener('click', e=>{
+    const c=e.target.closest('.fchip'); if(!c) return;
+    document.querySelectorAll('#diffFilter .fchip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    const f=c.dataset.f; let n=0;
+    document.querySelectorAll('.recipe').forEach(r=>{
+      const show=f==='all'||r.dataset.diff===f;
+      r.classList.toggle('hide',!show);
+      if(show) n++;
+    });
+    document.getElementById('recipeCount').textContent=n;
+  });
+
+  // ===== 菜谱详情 =====
+  const RECIPES={
+    r1:{name:'番茄炒蛋',emoji:'🍅',g:'g1',diff:'easy',time:15,servings:2,desc:'汤汁拌饭一绝，十分钟搞定的国民家常菜。秘诀是番茄去皮、蛋液加一点点温水。',
+      ing:[['番茄','2个'],['鸡蛋','3个'],['小葱','1根'],['盐','适量']],
+      steps:['番茄划十字烫水去皮切块，鸡蛋加少许盐和水打散。','热锅多油，蛋液下锅炒到刚凝固就盛出。','余油煸番茄出沙，加一小撮糖，倒回鸡蛋翻匀撒葱花。']},
+    r2:{name:'红烧肉',emoji:'🍖',g:'g2',diff:'medium',time:90,servings:3,desc:'肥而不腻、入口即化。焯水、炒糖色、小火慢煨，三步都不能急。',
+      ing:[['五花肉','500g'],['冰糖','30g'],['料酒','2勺'],['生抽','3勺'],['八角','2颗']],
+      steps:['五花肉切麻将块，冷水下锅加料酒焯去血沫。','小火炒冰糖到琥珀色，下肉块裹匀糖色。','加热水没过肉，放生抽八角，小火煨60分钟。','大火收汁到浓稠挂勺，出锅。']},
+    r3:{name:'清蒸鲈鱼',emoji:'🐟',g:'g6',diff:'medium',time:25,servings:2,desc:'鲜嫩得眉毛掉下来。水开后再上锅，时间宁短勿长。',
+      ing:[['鲈鱼','1条'],['姜片','适量'],['葱丝','适量'],['蒸鱼豉油','2勺']],
+      steps:['鱼身两面划刀，塞姜片腌10分钟。','水开后上锅大火蒸8分钟，倒掉盘里腥水。','铺葱丝淋热油，沿盘边浇蒸鱼豉油。']},
+    r4:{name:'玉米排骨汤',emoji:'🌽',g:'g4',diff:'easy',time:40,servings:3,desc:'清甜滋润，小朋友能喝满满一大碗。',
+      ing:[['排骨','400g'],['玉米','1根'],['胡萝卜','1根'],['姜','3片']],
+      steps:['排骨焯水洗净，和姜片一起入锅加足水。','大火烧开转小火炖25分钟。','下玉米胡萝卜再炖15分钟，加盐调味。']},
+    r5:{name:'糖醋排骨',emoji:'🍬',g:'g5',diff:'hard',time:60,servings:3,desc:'炒糖色是灵魂，酸甜比例全凭手感。记住 1 酒 2 糖 3 醋 4 酱油。',
+      ing:[['排骨','500g'],['冰糖','40g'],['香醋','3勺'],['生抽','2勺']],
+      steps:['排骨焯水沥干，煎到表面微黄。','按 1 酒 2 糖 3 醋 4 酱油 下料翻匀。','加热水没过，中小火焖30分钟。','出锅前再淋半勺醋提香，收汁装盘。']},
+    r6:{name:'扬州炒饭',emoji:'🍚',g:'g3',diff:'easy',time:20,servings:2,desc:'隔夜饭的最佳归宿，冰箱清库存神器。',
+      ing:[['隔夜米饭','1碗'],['鸡蛋','2个'],['火腿丁','50g'],['豌豆玉米','适量']],
+      steps:['鸡蛋炒散盛出，豌豆玉米火腿丁炒香。','下米饭炒到粒粒分明。','倒回鸡蛋，加盐和白胡椒翻匀撒葱花。']}
+  };
+  const DIFF={easy:'简单',medium:'中等',hard:'困难'};
+  const mask=document.getElementById('maskRecipe');
+  document.querySelectorAll('.recipe').forEach(card=>card.addEventListener('click',()=>{
+    const d=RECIPES[card.dataset.id]; if(!d) return;
+    document.getElementById('rvName').textContent=d.name;
+    const cov=document.getElementById('rvCover');
+    cov.className='rv-cover '+d.g; cov.textContent=d.emoji;
+    document.getElementById('rvTags').innerHTML='';
+    const tags=document.getElementById('rvTags');
+    const mk=(txt,cls)=>{ const s=document.createElement('span'); s.className='rv-tag'+(cls?' '+cls:''); s.textContent=txt; tags.appendChild(s); };
+    mk(DIFF[d.diff],d.diff); mk('⏱ '+d.time+'分钟'); mk('👥 '+d.servings+'人份');
+    document.getElementById('rvDesc').textContent=d.desc;
+    document.getElementById('rvIngCount').textContent=d.ing.length+'种';
+    const ingBox=document.getElementById('rvIng'); ingBox.innerHTML='';
+    d.ing.forEach(([n,a])=>{ const row=document.createElement('div'); row.className='ing-row';
+      const s1=document.createElement('span'); s1.textContent=n;
+      const s2=document.createElement('span'); s2.className='ing-amt'; s2.textContent=a;
+      row.append(s1,s2); ingBox.appendChild(row); });
+    document.getElementById('rvStepCount').textContent=d.steps.length+'步';
+    const stBox=document.getElementById('rvSteps'); stBox.innerHTML='';
+    d.steps.forEach((t,i)=>{ const item=document.createElement('div'); item.className='step-item';
+      const b=document.createElement('div'); b.className='step-badge'; b.textContent=i+1;
+      const tx=document.createElement('div'); tx.className='step-text'; tx.textContent=t;
+      item.append(b,tx); stBox.appendChild(item); });
+    mask.classList.add('open');
+    document.body.style.overflow='hidden';
+  }));
+  function closeRecipe(){ mask.classList.remove('open'); document.body.style.overflow=''; }
+  document.getElementById('rvClose').addEventListener('click',closeRecipe);
+  mask.addEventListener('mousedown',e=>{ if(e.target===mask) closeRecipe(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&mask.classList.contains('open')) closeRecipe(); });
+
+  // ===== 今天吃啥 =====
+  document.getElementById('btnShuffle').addEventListener('click',()=>{
+    const ids=Object.keys(RECIPES);
+    const d=RECIPES[ids[Math.floor(Math.random()*ids.length)]];
+    showToast('🎲 就吃「'+d.name+'」吧！'+d.emoji);
+  });
+  document.getElementById('btnNewRecipe').addEventListener('click',()=>showToast('📝 原型演示：新建菜谱表单敬请期待'));
+
+  // ===== 奶茶收藏 ❤ =====
+  document.querySelectorAll('.heart').forEach(h=>h.addEventListener('click',()=>{
+    const on=h.classList.toggle('on');
+    const n=h.querySelector('.n');
+    n.textContent=+n.textContent+(on?1:-1);
+    h.querySelector('.h').textContent=on?'❤️':'🤍';
+    if(on){ const em=h.querySelector('.h'); em.style.animation='none'; void em.offsetWidth; em.style.animation=''; }
+    showToast(on?'已加入想再喝清单':'已从想再喝清单移除');
+  }));
+
+  // ===== 打卡 =====
+  function refreshCk(){
+    const shops=document.querySelectorAll('.shop');
+    const done=document.querySelectorAll('.shop.done').length;
+    document.getElementById('ckDone').textContent=done;
+    document.getElementById('ckTotal').textContent=shops.length;
+    document.getElementById('ckBar').style.width=(done/shops.length*100)+'%';
+  }
+  document.querySelectorAll('.ck-btn').forEach(b=>b.addEventListener('click',()=>{
+    const shop=b.closest('.shop');
+    if(shop.classList.contains('done')) return;
+    shop.classList.add('done');
+    b.textContent='✓ 已打卡';
+    refreshCk();
+    showToast('📍 打卡成功：'+shop.querySelector('.sp-name').childNodes[0].textContent);
+  }));
+  refreshCk();
+
+  // ===== 出游 =====
+  document.querySelectorAll('.wish').forEach(w=>w.addEventListener('click',()=>{
+    const on=w.classList.toggle('on');
+    w.querySelector('.w').textContent=on?'❤':'🤍';
+    if(on){ const em=w.querySelector('.w'); em.style.animation='none'; void em.offsetWidth; em.style.animation=''; }
+    showToast(on?'已加入出游愿望清单':'已从愿望清单移除');
+  }));
+  document.getElementById('seasonFilter').addEventListener('click', e=>{
+    const c=e.target.closest('.fchip'); if(!c) return;
+    document.querySelectorAll('#seasonFilter .fchip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    const s=c.dataset.s;
+    document.querySelectorAll('.place').forEach(p=>p.classList.toggle('hide',!(s==='all'||p.dataset.season===s)));
+  });
+</script>
+</body>
+</html>

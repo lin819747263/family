@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>家 · 私享空间 — 暖色居家原型</title>
+<style>
+  /* ============ 设计令牌（沿用登录页 LoginWarm 暖色调） ============ */
+  :root{
+    --warm-white:#FBF6EF;
+    --cream:#F3EADD;
+    --apricot:#EDE0CE;
+    --wood-light:#E2CDB2;
+    --terracotta:#C89F85;
+    --terracotta-d:#B08466;
+    --terra-deep:#96684A;
+    --sage:#A8B08A;
+    --amber:#E8B36A;
+    --rose:#D99A9A;
+    --sky:#9FB8C9;
+    --text-deep:#6B5744;
+    --text-soft:#A08D7A;
+    --glow:rgba(230,190,150,.45);
+    --card:#FFFDFA;
+    --card-shadow:0 16px 48px rgba(160,120,90,.14);
+    --line:rgba(226,205,178,.7);
+    --r-lg:24px; --r-md:16px; --r-sm:12px;
+    --font:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:var(--font);
+    color:var(--text-deep);
+    background:linear-gradient(135deg,var(--warm-white) 0%,var(--cream) 55%,#F0E2D0 100%);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--terracotta);color:#fff;}
+
+  /* ============ 背景漂浮柔光 ============ */
+  .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .ambient span{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:drift 16s ease-in-out infinite alternate;}
+  .a1{width:300px;height:300px;background:#F2D9B8;top:-80px;left:-60px;}
+  .a2{width:240px;height:240px;background:#E8C9AE;bottom:-60px;right:-40px;animation-delay:-6s;}
+  .a3{width:200px;height:200px;background:#DCE6D2;top:40%;right:20%;animation-delay:-10s;}
+  @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(34px,26px) scale(1.1);}}
+
+  /* ============ 顶部导航 ============ */
+  .top-nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,252,247,.82);
+    backdrop-filter:blur(18px) saturate(1.4);
+    border-bottom:1px solid var(--line);
+    box-shadow:0 2px 20px rgba(160,120,90,.06);
+  }
+  .nav-inner{
+    max-width:1240px;margin:0 auto;height:64px;
+    display:flex;align-items:center;gap:14px;padding:0 22px;
+  }
+  .logo{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;}
+  .logo-mark{
+    width:38px;height:38px;border-radius:12px;
+    background:linear-gradient(135deg,var(--terracotta),#D9B697);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 5px 14px rgba(200,159,133,.4);font-size:19px;
+    transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .logo:hover .logo-mark{transform:rotate(-8deg) scale(1.06);}
+  .logo-text{font-size:17px;font-weight:700;letter-spacing:.06em;color:var(--terra-deep);}
+  .logo-text small{display:block;font-size:10px;font-weight:400;letter-spacing:.2em;color:var(--text-soft);margin-top:-2px;}
+
+  .nav-menu{display:flex;align-items:center;gap:2px;margin-left:10px;flex:1;min-width:0;}
+  .nav-item{
+    position:relative;padding:9px 14px;border-radius:10px;font-size:14px;font-weight:500;
+    color:var(--text-soft);cursor:pointer;white-space:nowrap;transition:all .25s;
+    display:flex;align-items:center;gap:6px;
+  }
+  .nav-item:hover{background:rgba(200,159,133,.1);color:var(--terra-deep);}
+  .nav-item.active{color:var(--terra-deep);font-weight:600;background:rgba(200,159,133,.12);}
+  .nav-item.active::after{
+    content:"";position:absolute;bottom:-1px;left:14px;right:14px;height:2.5px;
+    background:linear-gradient(90deg,var(--terracotta),var(--amber));border-radius:2px;
+    animation:grow .35s ease;
+  }
+  @keyframes grow{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+
+  .nav-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+  .icon-btn{
+    width:38px;height:38px;border-radius:11px;border:none;background:transparent;
+    color:var(--text-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;
+    font-size:17px;transition:all .25s;position:relative;
+  }
+  .icon-btn:hover{background:rgba(200,159,133,.12);color:var(--terra-deep);transform:translateY(-2px);}
+  .dot-badge{position:absolute;top:7px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--rose);box-shadow:0 0 0 2px var(--card);}
+  .avatar{
+    width:38px;height:38px;border-radius:12px;cursor:pointer;
+    background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));
+    color:#fff;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 12px rgba(176,132,102,.3);transition:transform .3s;
+  }
+  .avatar:hover{transform:scale(1.07);}
+
+  /* ============ 主区域 ============ */
+  .page{max-width:1240px;margin:0 auto;padding:26px 22px 80px;position:relative;z-index:1;}
+
+  /* 通用入场动画 */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1);}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* ============ Hero 欢迎卡 ============ */
+  .hero{
+    position:relative;overflow:hidden;border-radius:var(--r-lg);
+    background:linear-gradient(120deg,#F6E7D3 0%,#EEDCC4 60%,#F0E3D2 100%);
+    border:1px solid var(--line);box-shadow:var(--card-shadow);
+    padding:30px 34px;display:flex;align-items:center;justify-content:space-between;gap:24px;
+  }
+  .hero-glow{position:absolute;width:280px;height:280px;border-radius:50%;background:var(--glow);filter:blur(60px);top:-120px;right:-40px;animation:breathe 5s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{opacity:.5;transform:scale(1);}50%{opacity:.85;transform:scale(1.12);}}
+  .hero-left{position:relative;z-index:2;}
+  .hero-greet{font-size:27px;font-weight:700;letter-spacing:.02em;color:var(--terra-deep);}
+  .hero-date{margin-top:6px;font-size:14px;color:var(--text-soft);letter-spacing:.04em;}
+  .hero-events{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+  .pill{
+    display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:999px;
+    background:rgba(255,253,250,.75);border:1px solid var(--line);font-size:13px;color:var(--text-deep);
+    backdrop-filter:blur(6px);transition:transform .3s,box-shadow .3s;cursor:default;
+  }
+  .pill:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(176,132,102,.16);}
+  .pill b{color:var(--terra-deep);font-weight:600;}
+  .hero-actions{position:relative;z-index:2;display:flex;gap:10px;flex-shrink:0;}
+  .hbtn{
+    display:flex;align-items:center;gap:7px;padding:12px 20px;border-radius:14px;border:none;cursor:pointer;
+    font-size:14px;font-weight:600;font-family:var(--font);transition:transform .3s,box-shadow .3s;
+  }
+  .hbtn.primary{background:linear-gradient(135deg,var(--terracotta),#D3A98B);color:#FFF9F2;box-shadow:0 8px 20px rgba(200,159,133,.4);}
+  .hbtn.ghost{background:rgba(255,253,250,.8);color:var(--terra-deep);border:1.5px solid var(--line);}
+  .hbtn:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(200,159,133,.34);}
+  .hbtn:active{transform:translateY(-1px) scale(.98);}
+
+  /* hero 右侧小屋插画 */
+  .hero-art{position:relative;z-index:2;flex-shrink:0;}
+  .hero-art svg{width:150px;height:auto;display:block;}
+  .lamp{animation:breathe 3.6s ease-in-out infinite;transform-origin:center;}
+  .leaf{animation:sway 5s ease-in-out infinite;transform-origin:bottom center;}
+  @keyframes sway{0%,100%{transform:rotate(-2.5deg);}50%{transform:rotate(2.5deg);}}
+  .smoke{animation:rise-smoke 4s ease-in-out infinite;}
+  @keyframes rise-smoke{0%{opacity:0;transform:translateY(6px) scale(.9);}40%{opacity:.7;}100%{opacity:0;transform:translateY(-14px) scale(1.15);}}
+
+  /* ============ 快捷入口 ============ */
+  .shortcuts{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:24px;}
+  .sc{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+    padding:18px 8px;text-align:center;cursor:pointer;transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s,border-color .35s;
+    box-shadow:0 4px 16px rgba(160,120,90,.06);
+  }
+  .sc:hover{transform:translateY(-6px);box-shadow:0 16px 34px rgba(160,120,90,.16);border-color:var(--terracotta);}
+  .sc-ico{
+    width:48px;height:48px;margin:0 auto 10px;border-radius:15px;display:flex;align-items:center;justify-content:center;
+    font-size:23px;color:#fff;transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .sc:hover .sc-ico{transform:scale(1.12) rotate(-6deg);}
+  .sc span{font-size:13px;font-weight:600;color:var(--text-deep);}
+  .g-terra{background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));}
+  .g-rose{background:linear-gradient(135deg,#E0A6A6,var(--rose));}
+  .g-sage{background:linear-gradient(135deg,#B7C097,var(--sage));}
+  .g-amber{background:linear-gradient(135deg,#F0C684,var(--amber));}
+  .g-sky{background:linear-gradient(135deg,#B3C8D6,var(--sky));}
+  .g-plum{background:linear-gradient(135deg,#C3A6C9,#A98BB0);}
+
+  /* ============ 卡片通用 ============ */
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+    box-shadow:0 8px 28px rgba(160,120,90,.08);transition:box-shadow .35s,transform .35s;
+  }
+  .card:hover{box-shadow:0 16px 40px rgba(160,120,90,.14);}
+  .card-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 12px;}
+  .card-title{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:700;color:var(--text-deep);}
+  .cdot{width:9px;height:9px;border-radius:50%;}
+  .card-link{font-size:13px;color:var(--terracotta-d);cursor:pointer;display:flex;align-items:center;gap:3px;transition:gap .25s,color .25s;}
+  .card-link:hover{gap:7px;color:var(--terra-deep);}
+
+  .grid-2{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;margin-top:20px;}
+
+  /* ============ 待办 ============ */
+  .todo-list{padding:4px 22px 10px;}
+  .todo{
+    display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px dashed rgba(226,205,178,.6);
+    transition:opacity .3s,transform .3s;
+  }
+  .todo:last-child{border-bottom:none;}
+  .check{
+    width:22px;height:22px;border-radius:8px;border:2px solid var(--wood-light);background:#FFFDF9;
+    cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    font-size:12px;color:transparent;transition:all .25s;
+  }
+  .check:hover{border-color:var(--terracotta);transform:scale(1.08);}
+  .todo.done .check{background:var(--sage);border-color:var(--sage);color:#fff;}
+  .todo-txt{flex:1;font-size:14.5px;color:var(--text-deep);transition:all .3s;}
+  .todo.done .todo-txt{text-decoration:line-through;color:var(--text-soft);opacity:.6;}
+  .todo-tag{font-size:12px;padding:3px 10px;border-radius:999px;background:rgba(232,179,106,.16);color:var(--terra-deep);font-weight:600;flex-shrink:0;}
+  .todo-tag.over{background:rgba(217,154,154,.18);color:#B06A6A;}
+  .prio-high{border-color:var(--rose);}
+
+  /* ============ 今日吃什么 ============ */
+  .recipe{padding:4px 22px 22px;display:flex;gap:16px;align-items:center;}
+  .recipe-thumb{
+    width:96px;height:96px;border-radius:var(--r-md);flex-shrink:0;
+    background:linear-gradient(135deg,#F0DCC0,#E4CBA8);display:flex;align-items:center;justify-content:center;font-size:40px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.4);transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .recipe:hover .recipe-thumb{transform:rotate(-4deg) scale(1.05);}
+  .recipe-name{font-size:18px;font-weight:700;color:var(--text-deep);}
+  .recipe-desc{font-size:13px;color:var(--text-soft);margin:5px 0 9px;line-height:1.5;}
+  .recipe-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--terra-deep);}
+  .chip{padding:3px 10px;border-radius:999px;background:rgba(168,176,138,.16);}
+  .shuffle{
+    margin-left:auto;background:rgba(200,159,133,.12);border:none;color:var(--terra-deep);
+    padding:7px 13px;border-radius:10px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:var(--font);
+    display:flex;align-items:center;gap:5px;transition:all .3s;flex-shrink:0;
+  }
+  .shuffle:hover{background:rgba(200,159,133,.24);}
+  .shuffle .ic{display:inline-block;transition:transform .6s cubic-bezier(.34,1.56,.64,1);}
+  .shuffle.spin .ic{transform:rotate(360deg);}
+
+  /* ============ 概览区 ============ */
+  .section-head{display:flex;align-items:center;justify-content:space-between;margin:34px 0 14px;}
+  .section-title{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:700;color:var(--text-deep);}
+  .st-dot{width:10px;height:10px;border-radius:50%;}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .stat{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:20px;
+    display:flex;flex-direction:column;gap:6px;cursor:pointer;transition:transform .35s,box-shadow .35s;box-shadow:0 6px 20px rgba(160,120,90,.06);
+  }
+  .stat:hover{transform:translateY(-5px);box-shadow:0 16px 34px rgba(160,120,90,.15);}
+  .stat-num{font-size:30px;font-weight:800;color:var(--terra-deep);letter-spacing:-.02em;}
+  .stat-num.warn{color:#C88A6A;}
+  .stat-lbl{font-size:13px;color:var(--text-soft);}
+  .stat-bar{height:6px;border-radius:3px;background:var(--apricot);margin-top:8px;overflow:hidden;}
+  .stat-bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--terracotta),var(--amber));width:0;transition:width 1.2s cubic-bezier(.22,1,.36,1);}
+
+  /* ============ 记账流水 ============ */
+  .txn{padding:6px 22px 16px;}
+  .txn-item{display:flex;align-items:center;gap:13px;padding:13px 0;border-bottom:1px dashed rgba(226,205,178,.6);transition:background .3s;}
+  .txn-item:last-child{border-bottom:none;}
+  .txn-ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+  .txn-body{flex:1;min-width:0;}
+  .txn-cat{font-size:14.5px;font-weight:600;color:var(--text-deep);}
+  .txn-note{font-size:12px;color:var(--text-soft);margin-top:2px;}
+  .txn-amt{font-size:16px;font-weight:700;}
+  .txn-amt.out{color:#C8836A;}
+  .txn-amt.in{color:var(--sage);}
+  .summary{display:flex;gap:20px;padding:14px 22px;background:rgba(243,234,221,.5);border-radius:var(--r-md) var(--r-md) 0 0;border-bottom:1px solid var(--line);}
+  .sum-item{font-size:13px;color:var(--text-soft);}
+  .sum-item b{display:block;font-size:19px;margin-top:3px;}
+  .sum-item b.in{color:var(--sage);} .sum-item b.out{color:#C8836A;}
+
+  /* ============ 精彩瞬间 ============ */
+  .moments{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .moment{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;cursor:pointer;
+    transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s;box-shadow:0 6px 20px rgba(160,120,90,.06);
+  }
+  .moment:hover{transform:translateY(-6px) rotate(-.6deg);box-shadow:0 20px 40px rgba(160,120,90,.18);}
+  .moment-img{height:130px;display:flex;align-items:center;justify-content:center;font-size:44px;}
+  .m1{background:linear-gradient(135deg,#F2DCC0,#E7C9A6);}
+  .m2{background:linear-gradient(135deg,#DDE6D2,#C6D2B6);}
+  .m3{background:linear-gradient(135deg,#F3DCDC,#E7C3C3);}
+  .moment-body{padding:14px 16px;}
+  .moment-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+  .m-av{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600;}
+  .m-name{font-size:13px;font-weight:600;color:var(--text-deep);}
+  .m-time{margin-left:auto;font-size:11px;color:var(--text-soft);}
+  .moment-text{font-size:13.5px;line-height:1.6;color:var(--text-deep);}
+  .moment-foot{display:flex;gap:14px;margin-top:11px;font-size:12px;color:var(--text-soft);}
+  .moment-foot span{transition:transform .25s;cursor:pointer;}
+  .moment-foot span:hover{transform:scale(1.18);}
+
+  /* ============ 页脚 ============ */
+  .footer{text-align:center;margin-top:48px;font-size:12px;color:#BCAB97;letter-spacing:.08em;line-height:1.9;}
+
+  /* ============ 浮动记账按钮 ============ */
+  .fab{
+    position:fixed;bottom:32px;right:32px;z-index:60;width:58px;height:58px;border-radius:18px;border:none;
+    background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));color:#fff;font-size:26px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 10px 28px rgba(176,132,102,.42);
+    transition:transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .35s;
+  }
+  .fab:hover{transform:translateY(-4px) rotate(90deg);box-shadow:0 16px 36px rgba(176,132,102,.5);}
+
+  /* ============ 响应式 ============ */
+  @media(max-width:960px){
+    .shortcuts{grid-template-columns:repeat(3,1fr);}
+    .grid-2{grid-template-columns:1fr;}
+    .moments{grid-template-columns:repeat(2,1fr);}
+    .hero-art{display:none;}
+    .nav-menu{display:none;}
+  }
+  @media(max-width:600px){
+    .page{padding:18px 14px 80px;}
+    .nav-inner{padding:0 14px;gap:8px;}
+    .logo-text{display:none;}
+    .hero{padding:22px;flex-direction:column;align-items:flex-start;}
+    .hero-greet{font-size:22px;}
+    .hero-actions{width:100%;flex-wrap:wrap;}
+    .hbtn{flex:1;justify-content:center;}
+    .shortcuts{grid-template-columns:repeat(3,1fr);gap:10px;}
+    .stats,.moments{grid-template-columns:1fr;}
+    .recipe{flex-direction:column;text-align:center;}
+    .shuffle{margin:0 auto;}
+    .fab{bottom:20px;right:20px;width:52px;height:52px;}
+  }
+</style>
+</head>
+<body>
+  <!-- 背景柔光 -->
+  <div class="ambient"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+
+  <!-- ============ 顶部导航 ============ -->
+  <header class="top-nav">
+    <div class="nav-inner">
+      <div class="logo">
+        <div class="logo-mark">🏡</div>
+        <div class="logo-text">家庭管家<small>WARM HOME</small></div>
+      </div>
+      <nav class="nav-menu">
+        <div class="nav-item active">🏠 首页</div>
+        <div class="nav-item">🪙 小家账本</div>
+        <div class="nav-item">📷 点滴日常</div>
+        <div class="nav-item">📦 物品管理</div>
+        <div class="nav-item">🔔 家庭提醒</div>
+        <div class="nav-item">🎯 小目标</div>
+        <div class="nav-item">🍲 吃喝玩乐</div>
+      </nav>
+      <div class="nav-actions">
+        <button class="icon-btn" title="搜索">🔍</button>
+        <button class="icon-btn" title="AI 小助手">🤖</button>
+        <button class="icon-btn" title="通知">🔔<span class="dot-badge"></span></button>
+        <button class="icon-btn" title="夜间模式">🌙</button>
+        <div class="avatar" title="我">林</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ 主内容 ============ -->
+  <main class="page">
+
+    <!-- Hero -->
+    <section class="hero reveal">
+      <div class="hero-glow"></div>
+      <div class="hero-left">
+        <div class="hero-greet">晚上好，小林 🌙</div>
+        <div class="hero-date">2026年9月6日 · 星期日 · 家的第 1287 天</div>
+        <div class="hero-events">
+          <span class="pill">🎂 <b>妈妈生日</b> · 3天后</span>
+          <span class="pill">💍 <b>结婚纪念日</b> · 12天后</span>
+          <span class="pill">🏥 体检预约 · 今天</span>
+        </div>
+      </div>
+      <div class="hero-art">
+        <svg viewBox="0 0 400 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle class="lamp" cx="115" cy="185" r="72" fill="#F5D3A0" opacity="0.5"/>
+          <circle class="lamp" cx="115" cy="185" r="46" fill="#F8DFB4" opacity="0.6"/>
+          <rect x="230" y="52" width="120" height="150" rx="16" fill="#FBF3E4" stroke="#D9BE9C" stroke-width="4"/>
+          <line x1="290" y1="56" x2="290" y2="198" stroke="#D9BE9C" stroke-width="4"/>
+          <line x1="234" y1="127" x2="346" y2="127" stroke="#D9BE9C" stroke-width="4"/>
+          <circle cx="263" cy="95" r="15" fill="#F3CE8F"/>
+          <g class="leaf"><path d="M258 200 q-3 -26 -16 -34 q14 2 19 20 q2 -22 -6 -34 q12 8 12 34 q6 -16 16 -19 q-6 14 -11 33 Z" fill="#A8B08A" opacity="0.9"/></g>
+          <path d="M247 198 h26 l-4 24 h-18 Z" fill="#C89F85"/>
+          <rect x="60" y="228" width="200" height="10" rx="5" fill="#D9BE9C"/>
+          <rect x="78" y="238" width="8" height="52" rx="4" fill="#CBA97F"/>
+          <rect x="234" y="238" width="8" height="52" rx="4" fill="#CBA97F"/>
+          <rect x="112" y="180" width="7" height="48" rx="3.5" fill="#A08D7A"/>
+          <path d="M92 182 q23 -26 47 0 Z" fill="#C89F85"/>
+          <ellipse cx="115.5" cy="228" rx="20" ry="5" fill="#A08D7A"/>
+          <path d="M178 214 h30 v10 q0 8 -15 8 q-15 0 -15 -8 Z" fill="#E8D5C4" stroke="#C9A983" stroke-width="2.5"/>
+          <path class="smoke" d="M186 206 q3 -6 0 -11 M196 206 q3 -6 0 -11" stroke="#D9BE9C" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <ellipse cx="160" cy="298" rx="130" ry="16" fill="#EBD9C0"/>
+          <path d="M30 292 v-40 l26 -20 26 20 v40 Z" fill="#DFC7A8"/>
+          <rect x="48" y="268" width="14" height="24" rx="3" fill="#B08466"/>
+          <circle cx="39" cy="266" r="4.5" fill="#F3CE8F"/>
+        </svg>
+      </div>
+      <div class="hero-actions">
+        <button class="hbtn primary">✏️ 记一笔</button>
+        <button class="hbtn ghost">✅ 待办</button>
+        <button class="hbtn ghost">💬 瞬间</button>
+      </div>
+    </section>
+
+    <!-- 快捷入口 -->
+    <section class="shortcuts">
+      <div class="sc reveal"><div class="sc-ico g-terra">🪙</div><span>记账</span></div>
+      <div class="sc reveal"><div class="sc-ico g-rose">📷</div><span>相册</span></div>
+      <div class="sc reveal"><div class="sc-ico g-sage">📦</div><span>物品</span></div>
+      <div class="sc reveal"><div class="sc-ico g-amber">📅</div><span>纪念日</span></div>
+      <div class="sc reveal"><div class="sc-ico g-sky">🍲</div><span>菜谱</span></div>
+      <div class="sc reveal"><div class="sc-ico g-plum">👨‍👩‍👧</div><span>成员档案</span></div>
+    </section>
+
+    <!-- 待办 + 今日吃什么 -->
+    <section class="grid-2">
+      <div class="card reveal">
+        <div class="card-head">
+          <div class="card-title"><span class="cdot" style="background:var(--terracotta);"></span>今日待办</div>
+          <div class="card-link">查看全部 →</div>
+        </div>
+        <div class="todo-list" id="todoList">
+          <div class="todo"><button class="check prio-high">✓</button><span class="todo-txt">给妈妈订生日蛋糕</span><span class="todo-tag over">已过期</span></div>
+          <div class="todo"><button class="check">✓</button><span class="todo-txt">下午 3 点带宝宝体检</span><span class="todo-tag">今天</span></div>
+          <div class="todo"><button class="check">✓</button><span class="todo-txt">缴纳本月水电燃气费</span><span class="todo-tag">2天后</span></div>
+          <div class="todo"><button class="check">✓</button><span class="todo-txt">周末全家去公园野餐 🧺</span><span class="todo-tag">5天后</span></div>
+          <div class="todo"><button class="check">✓</button><span class="todo-txt">给阳台的绿萝换盆</span><span class="todo-tag">6天后</span></div>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <div class="card-head">
+          <div class="card-title"><span class="cdot" style="background:var(--amber);"></span>今日吃什么</div>
+          <button class="shuffle" id="shuffleBtn"><span class="ic">🔄</span>换一换</button>
+        </div>
+        <div class="recipe">
+          <div class="recipe-thumb" id="rEmoji">🍜</div>
+          <div style="flex:1;min-width:0;">
+            <div class="recipe-name" id="rName">番茄牛腩面</div>
+            <div class="recipe-desc" id="rDesc">暖胃又下饭，全家都爱的周末味道</div>
+            <div class="recipe-meta">
+              <span class="chip" id="rDiff">中等</span>
+              <span class="chip" id="rTime">⏱ 45分钟</span>
+              <span class="chip" id="rServ">👥 3人份</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 物品概览 -->
+    <div class="section-head reveal">
+      <div class="section-title"><span class="st-dot" style="background:var(--sage);"></span>物品概览</div>
+      <div class="card-link">管理物品 →</div>
+    </div>
+    <section class="stats">
+      <div class="stat reveal"><span class="stat-num" data-count="328">0</span><span class="stat-lbl">物品总数</span><div class="stat-bar"><i data-w="82%"></i></div></div>
+      <div class="stat reveal"><span class="stat-num warn" data-count="6">0</span><span class="stat-lbl">即将过期</span><div class="stat-bar"><i data-w="24%" style="background:linear-gradient(90deg,#E0A6A6,#C8836A);"></i></div></div>
+      <div class="stat reveal"><span class="stat-num" data-count="3">0</span><span class="stat-lbl">借出中</span><div class="stat-bar"><i data-w="14%" style="background:linear-gradient(90deg,#B3C8D6,#9FB8C9);"></i></div></div>
+    </section>
+
+    <!-- 记账概览 -->
+    <div class="section-head reveal">
+      <div class="section-title"><span class="st-dot" style="background:var(--terracotta);"></span>记账概览 · 今日</div>
+      <div class="card-link">查看账单 →</div>
+    </div>
+    <section class="card reveal">
+      <div class="summary">
+        <div class="sum-item">今日收入<b class="in">+¥ 1,200.00</b></div>
+        <div class="sum-item">今日支出<b class="out">-¥ 386.50</b></div>
+        <div class="sum-item">本月结余<b style="color:var(--terra-deep);">¥ 4,820.00</b></div>
+      </div>
+      <div class="txn">
+        <div class="txn-item"><div class="txn-ico g-sage">🛒</div><div class="txn-body"><div class="txn-cat">超市采购</div><div class="txn-note">周末食材 · 盒马</div></div><div class="txn-amt out">-¥286.50</div></div>
+        <div class="txn-item"><div class="txn-ico g-amber">💼</div><div class="txn-body"><div class="txn-cat">工资到账</div><div class="txn-note">9月薪资</div></div><div class="txn-amt in">+¥1,200.00</div></div>
+        <div class="txn-item"><div class="txn-ico g-rose">☕</div><div class="txn-body"><div class="txn-cat">下午茶</div><div class="txn-note">拿铁 × 2</div></div><div class="txn-amt out">-¥68.00</div></div>
+        <div class="txn-item"><div class="txn-ico g-sky">⛽</div><div class="txn-body"><div class="txn-cat">加油</div><div class="txn-note">92# 30L</div></div><div class="txn-amt out">-¥32.00</div></div>
+      </div>
+    </section>
+
+    <!-- 精彩瞬间 -->
+    <div class="section-head reveal">
+      <div class="section-title"><span class="st-dot" style="background:var(--rose);"></span>精彩瞬间</div>
+      <div class="card-link">全部瞬间 →</div>
+    </div>
+    <section class="moments">
+      <div class="moment reveal">
+        <div class="moment-img m1">🌅</div>
+        <div class="moment-body">
+          <div class="moment-top"><div class="m-av g-terra">林</div><span class="m-name">小林</span><span class="m-time">2小时前</span></div>
+          <div class="moment-text">今天带娃去看海，日落美得不像话，一家人在一起就是最好的风景 🌊</div>
+          <div class="moment-foot"><span>❤️ 5</span><span>💬 2</span><span>📍 海边公园</span></div>
+        </div>
+      </div>
+      <div class="moment reveal">
+        <div class="moment-img m2">🪴</div>
+        <div class="moment-body">
+          <div class="moment-top"><div class="m-av g-sage">妻</div><span class="m-name">太太</span><span class="m-time">昨天</span></div>
+          <div class="moment-text">阳台的绿萝终于爆盆啦，家里的每个角落都在慢慢变绿 🌿</div>
+          <div class="moment-foot"><span>❤️ 8</span><span>💬 3</span><span>📍 家</span></div>
+        </div>
+      </div>
+      <div class="moment reveal">
+        <div class="moment-img m3">🎂</div>
+        <div class="moment-body">
+          <div class="moment-top"><div class="m-av g-rose">宝</div><span class="m-name">宝宝</span><span class="m-time">3天前</span></div>
+          <div class="moment-text">第一次自己烤的小饼干，虽然有点糊，但是超好吃！</div>
+          <div class="moment-foot"><span>❤️ 12</span><span>💬 4</span><span>📍 厨房</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">🔒 这个空间只属于你们 · 所有回忆都被温柔守护<br>家 · 私享空间 — 暖色居家风格原型</div>
+  </main>
+
+  <button class="fab" title="快速记账">+</button>
+
+<script>
+  /* 滚动渐入 */
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach((e,i)=>{
+      if(e.isIntersecting){
+        e.target.style.transitionDelay = (e.target.dataset.d||0)+'ms';
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach((el,idx)=>{
+    el.dataset.d = (idx%6)*70;   // 轻微交错
+    io.observe(el);
+  });
+
+  /* 数字滚动 + 进度条 */
+  const numIO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting) return;
+      const el=e.target, target=+el.dataset.count; let cur=0;
+      const step=Math.max(1,Math.ceil(target/40));
+      const t=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(t);}el.textContent=cur;},22);
+      numIO.unobserve(el);
+    });
+  },{threshold:.5});
+  document.querySelectorAll('[data-count]').forEach(el=>numIO.observe(el));
+
+  const barIO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.style.width=e.target.dataset.w;barIO.unobserve(e.target);}});
+  },{threshold:.5});
+  document.querySelectorAll('.stat-bar i').forEach(el=>barIO.observe(el));
+
+  /* 待办勾选 */
+  document.getElementById('todoList').addEventListener('click',e=>{
+    const btn=e.target.closest('.check'); if(!btn) return;
+    btn.closest('.todo').classList.toggle('done');
+  });
+
+  /* 菜谱换一换 */
+  const recipes=[
+    {e:'🍜',n:'番茄牛腩面',d:'暖胃又下饭，全家都爱的周末味道',diff:'中等',t:'⏱ 45分钟',s:'👥 3人份'},
+    {e:'🥘',n:'家常红烧肉',d:'肥而不腻，配一碗白米饭刚刚好',diff:'简单',t:'⏱ 60分钟',s:'👥 4人份'},
+    {e:'🥗',n:'鸡胸肉沙拉',d:'低卡清爽，减脂期也能吃得开心',diff:'简单',t:'⏱ 20分钟',s:'👥 2人份'},
+    {e:'🍲',n:'菌菇豆腐煲',d:'鲜掉眉毛的素汤，孩子也爱喝',diff:'简单',t:'⏱ 30分钟',s:'👥 3人份'},
+    {e:'🐟',n:'清蒸鲈鱼',d:'原汁原味，节日餐桌上的一道硬菜',diff:'中等',t:'⏱ 25分钟',s:'👥 4人份'},
+  ];
+  let ri=0;
+  const sb=document.getElementById('shuffleBtn');
+  sb.addEventListener('click',()=>{
+    sb.classList.add('spin');
+    const r=recipes[ri=(ri+1)%recipes.length];
+    const thumb=document.getElementById('rEmoji');
+    thumb.style.transform='scale(.8) rotate(8deg)'; thumb.style.opacity='.3';
+    setTimeout(()=>{
+      document.getElementById('rEmoji').textContent=r.e;
+      document.getElementById('rName').textContent=r.n;
+      document.getElementById('rDesc').textContent=r.d;
+      document.getElementById('rDiff').textContent=r.diff;
+      document.getElementById('rTime').textContent=r.t;
+      document.getElementById('rServ').textContent=r.s;
+      thumb.style.transform=''; thumb.style.opacity='';
+    },180);
+    setTimeout(()=>sb.classList.remove('spin'),600);
+  });
+</script>
+</body>
+</html>

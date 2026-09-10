@@ -168,31 +168,6 @@
       </div>
     </section>
 
-    <!-- ========== 物品概览 ========== -->
-    <template v-if="inventoryStats.totalItems > 0">
-      <div class="section-head reveal">
-        <div class="section-title"><span class="st-dot" style="background:var(--sage);"></span>物品概览</div>
-        <div class="card-link" @click="router.push('/inventory')">管理物品 →</div>
-      </div>
-      <section class="stats">
-        <div class="stat reveal" @click="router.push('/inventory')">
-          <span class="stat-num" :data-count="inventoryStats.totalItems">{{ inventoryStats.totalItems }}</span>
-          <span class="stat-lbl">物品总数</span>
-          <div class="stat-bar"><i :data-w="Math.min(100, inventoryStats.totalItems / 4) + '%'"></i></div>
-        </div>
-        <div class="stat reveal" @click="router.push('/inventory')">
-          <span class="stat-num warn" :data-count="inventoryStats.expiringItems || 0">{{ inventoryStats.expiringItems || 0 }}</span>
-          <span class="stat-lbl">即将过期</span>
-          <div class="stat-bar"><i data-w="24%" style="background:linear-gradient(90deg,#E0A6A6,#C8836A);"></i></div>
-        </div>
-        <div class="stat reveal" @click="router.push('/inventory/borrows')">
-          <span class="stat-num" :data-count="inventoryStats.borrowedItems || 0">{{ inventoryStats.borrowedItems || 0 }}</span>
-          <span class="stat-lbl">借出中</span>
-          <div class="stat-bar"><i data-w="14%" style="background:linear-gradient(90deg,#B3C8D6,#9FB8C9);"></i></div>
-        </div>
-      </section>
-    </template>
-
     <!-- ========== 记账概览 ========== -->
     <div class="section-head reveal">
       <div class="section-title"><span class="st-dot" style="background:var(--terracotta);"></span>记账概览 · 今日</div>
@@ -318,7 +293,6 @@ const greetingEmoji = computed(() => {
 })
 
 const upcomingEvents = computed(() => getUpcomingEvents(60).slice(0, 3))
-const inventoryStats = computed(() => data.value.inventory || {})
 
 // 记账数据
 const todayTxns = computed(() => data.value.accounting?.todayTransactions || [])

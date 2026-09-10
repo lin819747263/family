@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>物品管理 · 暖色居家原型</title>
+<style>
+  :root{
+    --warm-white:#FBF6EF; --cream:#F3EADD; --apricot:#EDE0CE; --wood-light:#E2CDB2;
+    --terracotta:#C89F85; --terracotta-d:#B08466; --terra-deep:#96684A;
+    --sage:#A8B08A; --sage-d:#7E8862; --amber:#E8B36A; --amber-d:#C08A3E; --rose:#D99A9A; --rose-d:#B06A6A; --sky:#9FB8C9; --sky-d:#6E8CA0; --plum:#A98BB0;
+    --text-deep:#6B5744; --text-soft:#A08D7A; --card:#FFFDFA; --line:rgba(226,205,178,.7);
+    --r-lg:24px; --r-md:16px; --r-sm:12px;
+    --font:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);color:var(--text-deep);background:linear-gradient(135deg,var(--warm-white) 0%,var(--cream) 55%,#F0E2D0 100%);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;}
+  ::selection{background:var(--terracotta);color:#fff;}
+  button,input{font-family:var(--font);}
+
+  .ambient{position:fixed;inset:0;pointer-events:none;overflow:hidden;}
+  .ambient span{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:drift 16s ease-in-out infinite alternate;}
+  .a1{width:300px;height:300px;background:#F2D9B8;top:-80px;left:-60px;}
+  .a2{width:240px;height:240px;background:#E8C9AE;bottom:-60px;right:-40px;animation-delay:-6s;}
+  @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(34px,26px) scale(1.1);}}
+
+  .top-nav{position:sticky;top:0;z-index:50;background:rgba(255,252,247,.85);backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line);box-shadow:0 2px 20px rgba(160,120,90,.06);}
+  .nav-inner{max-width:1240px;margin:0 auto;height:62px;display:flex;align-items:center;gap:14px;padding:0 22px;}
+  .logo{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;}
+  .logo-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--terracotta),#D9B697);display:flex;align-items:center;justify-content:center;box-shadow:0 5px 14px rgba(200,159,133,.4);font-size:19px;transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+  .logo:hover .logo-mark{transform:rotate(-8deg) scale(1.06);}
+  .logo-text{font-size:17px;font-weight:700;letter-spacing:.06em;color:var(--terra-deep);}
+  .logo-text small{display:block;font-size:10px;font-weight:400;letter-spacing:.2em;color:var(--text-soft);margin-top:-2px;}
+  .crumb{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-soft);}
+  .crumb b{color:var(--terra-deep);}
+  .nav-actions{margin-left:auto;display:flex;align-items:center;gap:6px;}
+  .icon-btn{width:38px;height:38px;border-radius:11px;border:none;background:transparent;color:var(--text-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .25s;}
+  .icon-btn:hover{background:rgba(200,159,133,.12);color:var(--terra-deep);transform:translateY(-2px);}
+  .avatar{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));color:#fff;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(176,132,102,.3);}
+
+  .page{max-width:1240px;margin:0 auto;padding:26px 22px 90px;position:relative;z-index:1;}
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1);}
+  .reveal.in{opacity:1;transform:none;}
+
+  .page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px;}
+  .page-title{font-size:26px;font-weight:800;color:var(--terra-deep);}
+  .page-sub{margin-top:6px;font-size:13.5px;color:var(--text-soft);}
+  .head-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:11px 18px;border-radius:13px;border:none;cursor:pointer;font-size:14px;font-weight:600;transition:transform .3s,box-shadow .3s;}
+  .btn.primary{background:linear-gradient(135deg,var(--terracotta),#D3A98B);color:#FFF9F2;box-shadow:0 8px 20px rgba(200,159,133,.4);}
+  .btn.ghost{background:rgba(255,253,250,.85);color:var(--terra-deep);border:1.5px solid var(--line);}
+  .btn:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(200,159,133,.3);}
+
+  .subtabs{display:flex;gap:6px;background:rgba(243,234,221,.6);border:1px solid var(--line);padding:5px;border-radius:16px;margin-bottom:22px;overflow-x:auto;}
+  .subtab{padding:10px 18px;border-radius:12px;border:none;background:transparent;color:var(--text-soft);font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .3s;display:flex;align-items:center;gap:7px;}
+  .subtab:hover{color:var(--terra-deep);}
+  .subtab.active{background:var(--card);color:var(--terra-deep);box-shadow:0 4px 14px rgba(160,120,90,.14);}
+  .panel{display:none;}
+  .panel.active{display:block;animation:panel-in .45s cubic-bezier(.22,1,.36,1);}
+  @keyframes panel-in{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:0 8px 28px rgba(160,120,90,.08);}
+
+  /* ===== 总览 ===== */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px;}
+  .stat{padding:20px;position:relative;overflow:hidden;transition:transform .35s,box-shadow .35s;}
+  .stat:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(160,120,90,.15);}
+  .stat::after{content:"";position:absolute;right:-28px;top:-28px;width:100px;height:100px;border-radius:50%;opacity:.14;}
+  .stat.s1::after{background:var(--sky);} .stat.s2::after{background:var(--amber);} .stat.s3::after{background:var(--rose);}
+  .stat-ico{width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:19px;color:#fff;margin-bottom:12px;}
+  .stat-num{font-size:30px;font-weight:800;letter-spacing:-.02em;}
+  .stat-lbl{font-size:13px;color:var(--text-soft);margin-top:4px;}
+
+  .alert{display:flex;align-items:flex-start;gap:12px;padding:16px 18px;margin-bottom:18px;border-radius:var(--r-md);border:1.5px solid rgba(232,179,106,.5);background:rgba(232,179,106,.12);}
+  .alert .ai{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--amber),var(--amber-d));color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;animation:wobble 2.6s ease-in-out infinite;}
+  @keyframes wobble{0%,100%{transform:rotate(0);}25%{transform:rotate(-8deg);}75%{transform:rotate(8deg);}}
+  .alert-title{font-size:14.5px;font-weight:700;color:var(--amber-d);}
+  .alert-list{margin-top:8px;display:flex;flex-direction:column;gap:6px;}
+  .alert-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;color:var(--text-deep);}
+  .alert-date{font-size:11.5px;font-weight:700;padding:2px 10px;border-radius:999px;background:rgba(217,154,154,.2);color:var(--rose-d);}
+  .alert-date.warn{background:rgba(232,179,106,.25);color:var(--amber-d);}
+
+  .filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center;}
+  .search-wrap{position:relative;flex:1;min-width:180px;max-width:300px;}
+  .search-wrap .mag{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.6;font-size:14px;}
+  .search-input{width:100%;padding:11px 14px 11px 38px;border-radius:12px;border:1.5px solid var(--wood-light);background:#FFFDF9;font-size:13.5px;outline:none;transition:all .3s;color:var(--text-deep);}
+  .search-input:focus{border-color:var(--terracotta);box-shadow:0 0 0 4px rgba(200,159,133,.14);}
+  .fchip{padding:10px 15px;border-radius:12px;border:1.5px solid var(--line);background:rgba(255,253,250,.8);color:var(--text-soft);font-size:13px;font-weight:600;cursor:pointer;transition:all .25s;}
+  .fchip:hover{border-color:var(--terracotta);color:var(--terra-deep);}
+
+  .items{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .item{padding:16px;position:relative;transition:transform .35s,box-shadow .35s;cursor:pointer;}
+  .item:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(160,120,90,.16);}
+  .it-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;}
+  .it-ico{width:48px;height:48px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:23px;transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+  .item:hover .it-ico{transform:scale(1.12) rotate(-6deg);}
+  .it-status{font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;}
+  .st-active{background:rgba(168,176,138,.2);color:var(--sage-d);}
+  .st-exp{background:rgba(217,154,154,.2);color:var(--rose-d);animation:pulse-soft 2s infinite;}
+  @keyframes pulse-soft{0%,100%{opacity:1;}50%{opacity:.55;}}
+  .it-name{font-size:15px;font-weight:700;}
+  .it-cat{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--apricot);color:var(--terra-deep);margin-top:6px;}
+  .it-meta{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:11px;border-top:1px dashed var(--line);font-size:12px;color:var(--text-soft);}
+  .it-price{font-weight:700;color:var(--terra-deep);font-size:13px;}
+  .it-space{display:flex;align-items:center;gap:4px;}
+  .it-acts{position:absolute;top:12px;right:12px;display:flex;gap:5px;opacity:0;transition:opacity .25s;}
+  .item:hover .it-acts{opacity:1;}
+  .act{width:28px;height:28px;border-radius:8px;border:none;background:rgba(255,253,250,.9);color:var(--terra-deep);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(160,120,90,.15);transition:all .2s;}
+  .act:hover{background:var(--terracotta);color:#fff;}
+  .act.danger:hover{background:var(--rose-d);}
+
+  /* ===== 空间树 ===== */
+  .tree-hint{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-soft);margin-bottom:14px;}
+  .tree{padding:18px;}
+  .node{position:relative;}
+  .node-row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:13px;transition:background .25s;cursor:pointer;}
+  .node-row:hover{background:rgba(243,234,221,.7);}
+  .node-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;flex-shrink:0;}
+  .node-name{font-size:14.5px;font-weight:700;}
+  .node-lvl{font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--apricot);color:var(--terra-deep);}
+  .node-count{margin-left:auto;font-size:12px;color:var(--text-soft);}
+  .node-acts{display:flex;gap:5px;opacity:0;transition:opacity .25s;}
+  .node-row:hover .node-acts{opacity:1;}
+  .children{margin-left:26px;padding-left:16px;border-left:2px dashed var(--wood-light);}
+  .lv-home{background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));}
+  .lv-room{background:linear-gradient(135deg,var(--amber),var(--amber-d));}
+  .lv-cab{background:linear-gradient(135deg,var(--sage),var(--sage-d));}
+  .lv-draw{background:linear-gradient(135deg,var(--sky),var(--sky-d));}
+
+  /* ===== 借物 ===== */
+  .borrows{display:flex;flex-direction:column;gap:14px;}
+  .borrow{display:flex;align-items:center;gap:14px;padding:16px 18px;transition:transform .3s,box-shadow .3s;}
+  .borrow:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(160,120,90,.14);}
+  .bw-ico{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;}
+  .bw-body{flex:1;min-width:0;}
+  .bw-name{font-size:15px;font-weight:700;}
+  .bw-people{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12.5px;color:var(--text-soft);flex-wrap:wrap;}
+  .bw-av{width:22px;height:22px;border-radius:7px;color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;}
+  .bw-arrow{color:var(--terracotta);}
+  .bw-dates{font-size:12px;color:var(--text-soft);margin-top:5px;}
+  .bw-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;}
+  .bw-status{font-size:12px;font-weight:700;padding:4px 12px;border-radius:999px;}
+  .bs-borrowed{background:rgba(232,179,106,.2);color:var(--amber-d);}
+  .bs-overdue{background:rgba(217,154,154,.2);color:var(--rose-d);animation:pulse-soft 2s infinite;}
+  .bs-returned{background:rgba(168,176,138,.2);color:var(--sage-d);}
+  .bw-btns{display:flex;gap:6px;}
+  .mini-btn{padding:6px 12px;border-radius:9px;border:1.5px solid var(--line);background:rgba(255,253,250,.8);color:var(--terra-deep);font-size:12px;font-weight:600;cursor:pointer;transition:all .25s;}
+  .mini-btn:hover{border-color:var(--terracotta);background:var(--terracotta);color:#fff;}
+  .mini-btn.warn:hover{border-color:var(--amber);background:var(--amber);}
+
+  /* ===== 断舍离 ===== */
+  .months{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-soft);}
+  .m-chip{padding:8px 15px;border-radius:999px;border:1.5px solid var(--line);background:rgba(255,253,250,.8);color:var(--text-soft);font-size:13px;font-weight:600;cursor:pointer;transition:all .25s;}
+  .m-chip.active{background:var(--terracotta);border-color:var(--terracotta);color:#fff;}
+  .declutter-summary{display:flex;align-items:center;gap:14px;padding:18px;margin-bottom:18px;background:linear-gradient(120deg,rgba(168,176,138,.16),rgba(232,179,106,.14));border:1.5px solid rgba(168,176,138,.4);}
+  .ds-ico{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--sage),var(--sage-d));color:#fff;font-size:21px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .ds-text{font-size:14px;color:var(--text-deep);line-height:1.6;}
+  .ds-text b{color:var(--sage-d);}
+  .unused{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .un-card{padding:18px;position:relative;overflow:hidden;transition:transform .35s,box-shadow .35s;}
+  .un-card:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(160,120,90,.16);}
+  .un-badge{position:absolute;top:0;right:0;background:linear-gradient(135deg,var(--amber),var(--amber-d));color:#fff;font-size:11px;font-weight:700;padding:5px 14px;border-radius:0 0 0 14px;}
+  .un-ico{width:50px;height:50px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:12px;opacity:.85;filter:grayscale(.25);}
+  .un-name{font-size:15px;font-weight:700;}
+  .un-meta{font-size:12px;color:var(--text-soft);margin-top:6px;line-height:1.6;}
+  .un-last{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:11.5px;font-weight:700;color:var(--rose-d);background:rgba(217,154,154,.16);padding:3px 10px;border-radius:999px;}
+  .un-acts{display:flex;gap:7px;margin-top:14px;padding-top:13px;border-top:1px dashed var(--line);}
+  .un-btn{flex:1;padding:8px 4px;border-radius:10px;border:1.5px solid var(--line);background:rgba(255,253,250,.8);font-size:12px;font-weight:600;cursor:pointer;transition:all .25s;color:var(--text-deep);}
+  .un-btn:hover{transform:translateY(-2px);}
+  .un-btn.drop:hover{background:var(--rose);border-color:var(--rose);color:#fff;}
+  .un-btn.donate:hover{background:var(--amber);border-color:var(--amber);color:#fff;}
+  .un-btn.sell:hover{background:var(--sage);border-color:var(--sage);color:#fff;}
+
+  /* ===== 弹窗卡片 ===== */
+  .modal-mask{position:fixed;inset:0;z-index:80;background:rgba(107,87,68,.38);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:flex-start;justify-content:center;padding:6vh 18px 40px;opacity:0;pointer-events:none;transition:opacity .3s ease;overflow-y:auto;}
+  .modal-mask.open{opacity:1;pointer-events:auto;}
+  .modal{width:560px;max-width:100%;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:0 30px 80px rgba(107,87,68,.35);transform:scale(.92) translateY(22px);opacity:0;transition:transform .45s cubic-bezier(.34,1.56,.64,1),opacity .3s ease;}
+  .modal-mask.open .modal{transform:none;opacity:1;}
+  .modal.narrow{width:440px;}
+  .modal-head{display:flex;align-items:center;gap:12px;padding:20px 22px 16px;border-bottom:1px dashed var(--line);}
+  .mh-ico{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;flex-shrink:0;}
+  .mh-title{font-size:17px;font-weight:800;color:var(--terra-deep);}
+  .mh-sub{font-size:12px;color:var(--text-soft);margin-top:2px;}
+  .mh-close{margin-left:auto;width:32px;height:32px;border-radius:10px;border:none;background:rgba(243,234,221,.8);color:var(--text-soft);font-size:14px;cursor:pointer;transition:all .25s;flex-shrink:0;}
+  .mh-close:hover{background:var(--rose);color:#fff;transform:rotate(90deg);}
+  .modal-body{padding:18px 22px 6px;max-height:62vh;overflow-y:auto;}
+  .modal-body::-webkit-scrollbar{width:6px;}
+  .modal-body::-webkit-scrollbar-thumb{background:var(--wood-light);border-radius:3px;}
+  .modal-body::-webkit-scrollbar-thumb:hover{background:var(--terracotta);}
+  .modal-body::-webkit-scrollbar-track{background:transparent;}
+  .modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:16px 22px 20px;border-top:1px dashed var(--line);}
+  .f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .f-item{margin-bottom:14px;}
+  .f-label{display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:var(--text-soft);margin-bottom:7px;}
+  .f-label .req{color:var(--rose-d);}
+  .f-input,.f-area{width:100%;padding:10px 13px;border-radius:12px;border:1.5px solid var(--wood-light);background:#FFFDF9;font-size:13.5px;color:var(--text-deep);outline:none;transition:all .3s;}
+  .f-input:focus,.f-area:focus{border-color:var(--terracotta);box-shadow:0 0 0 4px rgba(200,159,133,.14);background:#fff;}
+  .f-input::placeholder,.f-area::placeholder{color:#C9B8A5;}
+  .f-area{resize:vertical;min-height:64px;}
+  .f-input.err,.tsel-field.err{border-color:var(--rose-d);box-shadow:0 0 0 4px rgba(217,154,154,.18);animation:shake .4s;}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
+  .f-input:disabled{background:var(--cream);color:var(--text-soft);cursor:not-allowed;}
+  .f-hint{font-size:11.5px;color:var(--text-soft);margin-top:6px;display:none;}
+  .money-wrap{position:relative;}
+  .money-wrap .yen{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:700;color:var(--terra-deep);font-size:13px;}
+  .money-wrap .f-input{padding-left:28px;}
+  .stepper{display:flex;align-items:center;border:1.5px solid var(--wood-light);border-radius:12px;background:#FFFDF9;overflow:hidden;transition:all .3s;}
+  .stepper:hover{border-color:var(--terracotta);}
+  .step-btn{width:38px;height:38px;border:none;background:transparent;color:var(--terra-deep);font-size:16px;font-weight:700;cursor:pointer;transition:background .2s;}
+  .step-btn:hover{background:var(--cream);}
+  .step-val{flex:1;text-align:center;font-size:14px;font-weight:700;color:var(--text-deep);}
+  .tsel{position:relative;}
+  .tsel-field{width:100%;display:flex;align-items:center;gap:8px;padding:10px 13px;border-radius:12px;border:1.5px solid var(--wood-light);background:#FFFDF9;font-size:13.5px;color:var(--text-deep);cursor:pointer;transition:all .3s;text-align:left;}
+  .tsel-field:hover{border-color:var(--terracotta);}
+  .tsel.open .tsel-field{border-color:var(--terracotta);box-shadow:0 0 0 4px rgba(200,159,133,.14);}
+  .tsel-field .ph{color:#C9B8A5;}
+  .tsel-field .caret{margin-left:auto;transition:transform .3s;font-size:11px;color:var(--text-soft);}
+  .tsel.open .caret{transform:rotate(180deg);}
+  .tsel-drop{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:5;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 40px rgba(160,120,90,.2);padding:8px;max-height:230px;overflow-y:auto;display:none;animation:drop-in .25s cubic-bezier(.22,1,.36,1);}
+  .tsel.open .tsel-drop{display:block;}
+  @keyframes drop-in{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
+  .tsel-drop::-webkit-scrollbar{width:6px;}
+  .tsel-drop::-webkit-scrollbar-thumb{background:var(--wood-light);border-radius:3px;}
+  .tsel-search{width:100%;padding:8px 11px;border-radius:10px;border:1.5px solid var(--line);background:var(--warm-white);font-size:12.5px;outline:none;margin-bottom:6px;color:var(--text-deep);}
+  .tsel-search:focus{border-color:var(--terracotta);}
+  .opt{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;font-size:13px;cursor:pointer;transition:background .2s;color:var(--text-deep);}
+  .opt:hover{background:var(--cream);}
+  .opt.sel{background:rgba(200,159,133,.14);font-weight:700;color:var(--terra-deep);}
+  .o-ico{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;flex-shrink:0;}
+  .opt.lv2{margin-left:16px;} .opt.lv3{margin-left:32px;} .opt.lv4{margin-left:48px;}
+  .o-lvl{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--terra-deep);background:var(--apricot);padding:1px 8px;border-radius:999px;flex-shrink:0;}
+  .shelf-chips{display:flex;flex-wrap:wrap;gap:7px;}
+  .sh-chip{padding:7px 12px;border-radius:10px;border:1.5px solid var(--line);background:rgba(255,253,250,.8);font-size:12.5px;font-weight:600;color:var(--text-soft);cursor:pointer;transition:all .25s;}
+  .sh-chip:hover{border-color:var(--terracotta);color:var(--terra-deep);transform:translateY(-2px);}
+  .sh-chip.active{background:var(--terracotta);border-color:var(--terracotta);color:#fff;}
+  .tag-preview{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;}
+  .tag-preview:empty{display:none;}
+  .tag-pv{font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--apricot);color:var(--terra-deep);animation:drop-in .3s;}
+  .toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,80px);z-index:90;display:flex;align-items:center;gap:9px;padding:12px 20px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:0 14px 40px rgba(160,120,90,.25);font-size:13.5px;font-weight:600;color:var(--terra-deep);opacity:0;transition:all .45s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
+  .toast.show{transform:translate(-50%,0);opacity:1;}
+  .t-ico{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--sage),var(--sage-d));color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+
+  @media(max-width:960px){
+    .items{grid-template-columns:repeat(2,1fr);}
+    .unused{grid-template-columns:repeat(2,1fr);}
+  }
+  @media(max-width:600px){
+    .page{padding:18px 14px 90px;}
+    .crumb{display:none;}
+    .items,.unused{grid-template-columns:1fr;}
+    .stats{grid-template-columns:1fr;}
+    .borrow{flex-direction:column;align-items:flex-start;}
+    .bw-right{flex-direction:row;width:100%;justify-content:space-between;}
+    .page-title{font-size:22px;}
+    .f-row{grid-template-columns:1fr;}
+    .modal-mask{padding:3vh 12px 30px;}
+    .modal-body{max-height:70vh;}
+  }
+</style>
+</head>
+<body>
+<div class="ambient"><span class="a1"></span><span class="a2"></span></div>
+
+<header class="top-nav">
+  <div class="nav-inner">
+    <div class="logo"><div class="logo-mark">🏡</div><div class="logo-text">家庭管家<small>WARM HOME</small></div></div>
+    <div class="crumb">首页 / <b>物品管理</b></div>
+    <div class="nav-actions">
+      <button class="icon-btn">🔍</button>
+      <button class="icon-btn">🤖</button>
+      <button class="icon-btn">🌙</button>
+      <div class="avatar">林</div>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="page-head reveal">
+    <div><div class="page-title">📦 物品管理</div><div class="page-sub">家里的每件东西，都有属于自己的位置</div></div>
+    <div class="head-actions">
+      <button class="btn ghost">🪄 AI 录入</button>
+      <button class="btn primary" id="btnAddItem">＋ 添加物品</button>
+    </div>
+  </div>
+
+  <div class="subtabs reveal" id="subtabs">
+    <button class="subtab active" data-p="overview">🗃 物品总览</button>
+    <button class="subtab" data-p="spaces">🏠 空间管理</button>
+    <button class="subtab" data-p="borrows">🤝 借物追踪</button>
+    <button class="subtab" data-p="unused">🍃 断舍离</button>
+  </div>
+
+  <!-- ===== 物品总览 ===== -->
+  <section class="panel active" id="p-overview">
+    <div class="stats">
+      <div class="card stat s1 reveal"><div class="stat-ico" style="background:linear-gradient(135deg,var(--sky),var(--sky-d));">🗃</div><div class="stat-num" style="color:var(--sky-d);" data-count="328">0</div><div class="stat-lbl">物品总数</div></div>
+      <div class="card stat s2 reveal"><div class="stat-ico" style="background:linear-gradient(135deg,var(--amber),var(--amber-d));">⏰</div><div class="stat-num" style="color:var(--amber-d);" data-count="6">0</div><div class="stat-lbl">临期物品</div></div>
+      <div class="card stat s3 reveal"><div class="stat-ico" style="background:linear-gradient(135deg,var(--rose),var(--rose-d));">🤝</div><div class="stat-num" style="color:var(--rose-d);" data-count="3">0</div><div class="stat-lbl">借出中</div></div>
+    </div>
+
+    <div class="alert reveal">
+      <div class="ai">⚠️</div>
+      <div style="flex:1;">
+        <div class="alert-title">临期提醒 · 别忘了先用完它们</div>
+        <div class="alert-list">
+          <div class="alert-row"><span>🥛 鲜牛奶（冰箱 / 冷藏抽屉）</span><span class="alert-date">明天到期</span></div>
+          <div class="alert-row"><span>🍞 全麦面包（厨房 / 储物柜）</span><span class="alert-date">3天后</span></div>
+          <div class="alert-row"><span>💊 儿童感冒药（主卧 / 药箱）</span><span class="alert-date warn">12天后</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-bar reveal">
+      <div class="search-wrap"><span class="mag">🔍</span><input class="search-input" placeholder="搜索物品..." /></div>
+      <button class="fchip">📍 按位置 ▾</button>
+      <button class="fchip">🏷 按分类 ▾</button>
+    </div>
+
+    <div class="items">
+      <div class="card item reveal"><div class="it-acts"><button class="act">✎</button><button class="act danger">🗑</button></div><div class="it-top"><div class="it-ico" style="background:rgba(159,184,201,.2);">💻</div><span class="it-status st-active">在用</span></div><div class="it-name">MacBook 笔记本</div><span class="it-cat">电子产品</span><div class="it-meta"><span class="it-space">📍 书房/书桌</span><span class="it-price">¥9,999</span></div></div>
+      <div class="card item reveal"><div class="it-acts"><button class="act">✎</button><button class="act danger">🗑</button></div><div class="it-top"><div class="it-ico" style="background:rgba(232,179,106,.2);">🥛</div><span class="it-status st-exp">临期</span></div><div class="it-name">鲜牛奶 ×2</div><span class="it-cat">食品</span><div class="it-meta"><span class="it-space">📍 厨房/冷藏</span><span class="it-price">¥25</span></div></div>
+      <div class="card item reveal"><div class="it-acts"><button class="act">✎</button><button class="act danger">🗑</button></div><div class="it-top"><div class="it-ico" style="background:rgba(168,176,138,.2);">🪴</div><span class="it-status st-active">在用</span></div><div class="it-name">绿萝盆栽</div><span class="it-cat">绿植</span><div class="it-meta"><span class="it-space">📍 阳台/花架</span><span class="it-price">¥39</span></div></div>
+      <div class="card item reveal"><div class="it-acts"><button class="act">✎</button><button class="act danger">🗑</button></div><div class="it-top"><div class="it-ico" style="background:rgba(217,154,154,.2);">🧸</div><span class="it-status st-active">在用</span></div><div class="it-name">宝宝绘本套装</div><span class="it-cat">玩具</span><div class="it-meta"><span class="it-space">📍 儿童房/书架</span><span class="it-price">¥168</span></div></div>
+      <div class="card item reveal"><div class="it-acts"><button class="act">✎</button><button class="act danger">🗑</button></div><div class="it-top"><div class="it-ico" style="background:rgba(169,139,176,.2);">📷</div><span class="it-status st-active">借出</span></div><div class="it-name">单反相机</div><span class="it-cat">电子产品</span><div class="it-meta"><span class="it-space">📍 主卧/衣柜</span><span class="it-price">¥4,580</span></div></div>
+      <div class="card item reveal"><div class="it-acts"><button class="act">✎</button><button class="act danger">🗑</button></div><div class="it-top"><div class="it-ico" style="background:rgba(200,159,133,.2);">🍳</div><span class="it-status st-active">在用</span></div><div class="it-name">不粘炒锅</div><span class="it-cat">厨具</span><div class="it-meta"><span class="it-space">📍 厨房/吊柜</span><span class="it-price">¥199</span></div></div>
+      <div class="card item reveal"><div class="it-acts"><button class="act">✎</button><button class="act danger">🗑</button></div><div class="it-top"><div class="it-ico" style="background:rgba(159,184,201,.2);">💊</div><span class="it-status st-exp">临期</span></div><div class="it-name">儿童感冒药</div><span class="it-cat">药品</span><div class="it-meta"><span class="it-space">📍 主卧/药箱</span><span class="it-price">¥45</span></div></div>
+      <div class="card item reveal"><div class="it-acts"><button class="act">✎</button><button class="act danger">🗑</button></div><div class="it-top"><div class="it-ico" style="background:rgba(232,179,106,.2);">🧺</div><span class="it-status st-active">在用</span></div><div class="it-name">野餐垫 + 风筝</div><span class="it-cat">户外</span><div class="it-meta"><span class="it-space">📍 储物间/上层</span><span class="it-price">¥120</span></div></div>
+    </div>
+  </section>
+
+  <!-- ===== 空间管理 ===== -->
+  <section class="panel" id="p-spaces">
+    <div class="tree-hint reveal"> 以「家 → 房间 → 柜子 → 抽屉」层级管理空间 · 拖拽可调整排序</div>
+    <div class="card tree reveal">
+      <div class="node">
+        <div class="node-row"><div class="node-ico lv-home">🏡</div><span class="node-name">温馨小家</span><span class="node-lvl">家</span><span class="node-count">328 件</span><div class="node-acts"><button class="act">＋</button><button class="act">✎</button></div></div>
+        <div class="children">
+          <div class="node">
+            <div class="node-row"><div class="node-ico lv-room">🛋</div><span class="node-name">客厅</span><span class="node-lvl">房间</span><span class="node-count">56 件</span><div class="node-acts"><button class="act">＋</button><button class="act">✎</button></div></div>
+            <div class="children">
+              <div class="node"><div class="node-row"><div class="node-ico lv-cab">🗄</div><span class="node-name">电视柜</span><span class="node-lvl">柜子</span><span class="node-count">18 件</span><div class="node-acts"><button class="act">＋</button><button class="act">✎</button></div></div>
+                <div class="children">
+                  <div class="node"><div class="node-row"><div class="node-ico lv-draw">🗃</div><span class="node-name">遥控器抽屉</span><span class="node-lvl">抽屉</span><span class="node-count">6 件</span><div class="node-acts"><button class="act">✎</button><button class="act danger">🗑</button></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="node">
+            <div class="node-row"><div class="node-ico lv-room">🍳</div><span class="node-name">厨房</span><span class="node-lvl">房间</span><span class="node-count">92 件</span><div class="node-acts"><button class="act">＋</button><button class="act">✎</button></div></div>
+            <div class="children">
+              <div class="node"><div class="node-row"><div class="node-ico lv-cab">🧊</div><span class="node-name">冰箱</span><span class="node-lvl">柜子</span><span class="node-count">24 件</span><div class="node-acts"><button class="act">＋</button><button class="act">✎</button></div></div>
+                <div class="children">
+                  <div class="node"><div class="node-row"><div class="node-ico lv-draw">❄️</div><span class="node-name">冷藏抽屉</span><span class="node-lvl">抽屉</span><span class="node-count">9 件</span><div class="node-acts"><button class="act">✎</button><button class="act danger">🗑</button></div></div></div>
+                </div>
+              </div>
+              <div class="node"><div class="node-row"><div class="node-ico lv-cab">🚪</div><span class="node-name">吊柜</span><span class="node-lvl">柜子</span><span class="node-count">31 件</span><div class="node-acts"><button class="act">＋</button><button class="act">✎</button></div></div></div>
+            </div>
+          </div>
+          <div class="node">
+            <div class="node-row"><div class="node-ico lv-room">🛏</div><span class="node-name">主卧</span><span class="node-lvl">房间</span><span class="node-count">74 件</span><div class="node-acts"><button class="act">＋</button><button class="act">✎</button></div></div>
+            <div class="children">
+              <div class="node"><div class="node-row"><div class="node-ico lv-cab">🚪</div><span class="node-name">衣柜</span><span class="node-lvl">柜子</span><span class="node-count">48 件</span><div class="node-acts"><button class="act">＋</button><button class="act">✎</button></div></div></div>
+              <div class="node"><div class="node-row"><div class="node-ico lv-cab">💊</div><span class="node-name">药箱</span><span class="node-lvl">柜子</span><span class="node-count">12 件</span><div class="node-acts"><button class="act">＋</button><button class="act">✎</button></div></div></div>
+            </div>
+          </div>
+          <div class="node">
+            <div class="node-row"><div class="node-ico lv-room">🧒</div><span class="node-name">儿童房</span><span class="node-lvl">房间</span><span class="node-count">63 件</span><div class="node-acts"><button class="act">＋</button><button class="act">✎</button></div></div>
+            <div class="children">
+              <div class="node"><div class="node-row"><div class="node-ico lv-cab">📚</div><span class="node-name">玩具书架</span><span class="node-lvl">柜子</span><span class="node-count">40 件</span><div class="node-acts"><button class="act">＋</button><button class="act">✎</button></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 借物追踪 ===== -->
+  <section class="panel" id="p-borrows">
+    <div class="filter-bar reveal">
+      <button class="fchip active" style="background:var(--terracotta);border-color:var(--terracotta);color:#fff;">全部</button>
+      <button class="fchip">借出中</button>
+      <button class="fchip">已归还</button>
+      <button class="fchip">逾期</button>
+      <button class="btn primary" style="margin-left:auto;" id="btnBorrow">＋ 登记借出</button>
+    </div>
+    <div class="borrows">
+      <div class="card borrow reveal"><div class="bw-ico" style="background:rgba(169,139,176,.2);">📷</div><div class="bw-body"><div class="bw-name">单反相机</div><div class="bw-people"><span class="bw-av" style="background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));">林</span>借出<span class="bw-arrow">→</span><span class="bw-av" style="background:linear-gradient(135deg,var(--sky),var(--sky-d));">王</span>老王</div><div class="bw-dates">📅 8月20日 借出 · 预计 9月10日 归还</div></div><div class="bw-right"><span class="bw-status bs-overdue">已逾期</span><div class="bw-btns"><button class="mini-btn">确认归还</button><button class="mini-btn warn">催还</button></div></div></div>
+      <div class="card borrow reveal"><div class="bw-ico" style="background:rgba(232,179,106,.2);">⛺</div><div class="bw-body"><div class="bw-name">露营帐篷</div><div class="bw-people"><span class="bw-av" style="background:linear-gradient(135deg,var(--sage),var(--sage-d));">妻</span>太太<span class="bw-arrow">→</span><span class="bw-av" style="background:linear-gradient(135deg,var(--rose),var(--rose-d));">李</span>小李</div><div class="bw-dates">📅 9月1日 借出 · 预计 9月20日 归还</div></div><div class="bw-right"><span class="bw-status bs-borrowed">借出中</span><div class="bw-btns"><button class="mini-btn">确认归还</button><button class="mini-btn warn">催还</button></div></div></div>
+      <div class="card borrow reveal"><div class="bw-ico" style="background:rgba(159,184,201,.2);">🔧</div><div class="bw-body"><div class="bw-name">电动螺丝刀</div><div class="bw-people"><span class="bw-av" style="background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));">林</span>借出<span class="bw-arrow">→</span><span class="bw-av" style="background:linear-gradient(135deg,var(--amber),var(--amber-d));">张</span>张叔</div><div class="bw-dates">📅 8月28日 借出 · 预计 9月5日 归还</div></div><div class="bw-right"><span class="bw-status bs-returned">已归还</span><div class="bw-btns"><button class="mini-btn" disabled style="opacity:.5;">已完成</button></div></div></div>
+    </div>
+  </section>
+
+  <!-- ===== 断舍离 ===== -->
+  <section class="panel" id="p-unused">
+    <div class="filter-bar reveal">
+      <span class="months">超过
+        <button class="m-chip">6个月</button>
+        <button class="m-chip active">12个月</button>
+        <button class="m-chip">24个月</button>
+      未使用</span>
+    </div>
+    <div class="card declutter-summary reveal">
+      <div class="ds-ico">🍃</div>
+      <div class="ds-text">发现 <b>4 件</b> 长期闲置物品，合计价值约 <b>¥1,240</b>。让它们去需要的地方，给家一点呼吸的空间。</div>
+    </div>
+    <div class="unused">
+      <div class="card un-card reveal"><span class="un-badge">闲置 14 个月</span><div class="un-ico" style="background:rgba(159,184,201,.2);">🏃</div><div class="un-name">跑步机</div><div class="un-meta">📍 储物间 / 角落<br>💰 购入 ¥899 · 2024-07</div><span class="un-last">🕰 最后使用 2025-07</span><div class="un-acts"><button class="un-btn drop">丢弃</button><button class="un-btn donate">捐赠</button><button class="un-btn sell">二手出售</button></div></div>
+      <div class="card un-card reveal"><span class="un-badge">闲置 13 个月</span><div class="un-ico" style="background:rgba(217,154,154,.2);">🎸</div><div class="un-name">民谣吉他</div><div class="un-meta">📍 主卧 / 衣柜顶<br>💰 购入 ¥320 · 2024-08</div><span class="un-last">🕰 最后使用 2025-08</span><div class="un-acts"><button class="un-btn drop">丢弃</button><button class="un-btn donate">捐赠</button><button class="un-btn sell">二手出售</button></div></div>
+      <div class="card un-card reveal"><span class="un-badge">闲置 18 个月</span><div class="un-ico" style="background:rgba(232,179,106,.2);">🍲</div><div class="un-name">酸奶机</div><div class="un-meta">📍 厨房 / 吊柜<br>💰 购入 ¥159 · 2024-03</div><span class="un-last">🕰 最后使用 2025-03</span><div class="un-acts"><button class="un-btn drop">丢弃</button><button class="un-btn donate">捐赠</button><button class="un-btn sell">二手出售</button></div></div>
+      <div class="card un-card reveal"><span class="un-badge">闲置 20 个月</span><div class="un-ico" style="background:rgba(168,176,138,.2);">🧩</div><div class="un-name">旧积木套装</div><div class="un-meta">📍 儿童房 / 玩具箱<br>💰 购入 ¥89 · 2024-01</div><span class="un-last">🕰 最后使用 2025-01</span><div class="un-acts"><button class="un-btn drop">丢弃</button><button class="un-btn donate">捐赠</button><button class="un-btn sell">二手出售</button></div></div>
+    </div>
+  </section>
+</main>
+
+<!-- ===== 添加物品弹窗 ===== -->
+<div class="modal-mask" id="maskAdd">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="添加物品">
+    <div class="modal-head">
+      <div class="mh-ico" style="background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));">📦</div>
+      <div><div class="mh-title">添加物品</div><div class="mh-sub">给新物件在这家里安个位置</div></div>
+      <button class="mh-close" data-close>✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="f-row">
+        <div class="f-item"><div class="f-label"><span class="req">*</span>物品名称</div><input class="f-input" id="addName" placeholder="如：保温杯" /></div>
+        <div class="f-item"><div class="f-label">数量</div>
+          <div class="stepper"><button class="step-btn" type="button" data-step="addQty:-1">−</button><span class="step-val" id="addQty">1</span><button class="step-btn" type="button" data-step="addQty:1">＋</button></div>
+        </div>
+      </div>
+      <div class="f-row">
+        <div class="f-item"><div class="f-label">分类</div><input class="f-input" id="addCat" placeholder="如：电子产品" /></div>
+        <div class="f-item"><div class="f-label">价格</div><div class="money-wrap"><span class="yen">¥</span><input class="f-input" id="addPrice" type="number" min="0" step="0.01" placeholder="0.00" /></div></div>
+      </div>
+      <div class="f-item tsel" id="tselSpace">
+        <div class="f-label">存放位置</div>
+        <button class="tsel-field" type="button"><span class="ph">搜索或选择位置</span><span class="caret">▾</span></button>
+        <div class="tsel-drop">
+          <input class="tsel-search" placeholder="搜索空间..." />
+          <div class="opt" data-val="温馨小家"><span class="o-ico lv-home">🏡</span>温馨小家<span class="o-lvl">家</span></div>
+          <div class="opt lv2" data-val="客厅"><span class="o-ico lv-room">🛋</span>客厅<span class="o-lvl">房间</span></div>
+          <div class="opt lv3" data-val="客厅 / 电视柜"><span class="o-ico lv-cab">🗄</span>电视柜<span class="o-lvl">柜子</span></div>
+          <div class="opt lv4" data-val="客厅 / 电视柜 / 遥控器抽屉"><span class="o-ico lv-draw">🗃</span>遥控器抽屉<span class="o-lvl">抽屉</span></div>
+          <div class="opt lv2" data-val="厨房"><span class="o-ico lv-room">🍳</span>厨房<span class="o-lvl">房间</span></div>
+          <div class="opt lv3" data-val="厨房 / 冰箱"><span class="o-ico lv-cab">🧊</span>冰箱<span class="o-lvl">柜子</span></div>
+          <div class="opt lv4" data-val="厨房 / 冰箱 / 冷藏抽屉"><span class="o-ico lv-draw">❄️</span>冷藏抽屉<span class="o-lvl">抽屉</span></div>
+          <div class="opt lv3" data-val="厨房 / 吊柜"><span class="o-ico lv-cab">🚪</span>吊柜<span class="o-lvl">柜子</span></div>
+          <div class="opt lv2" data-val="主卧"><span class="o-ico lv-room">🛏</span>主卧<span class="o-lvl">房间</span></div>
+          <div class="opt lv3" data-val="主卧 / 衣柜"><span class="o-ico lv-cab">🚪</span>衣柜<span class="o-lvl">柜子</span></div>
+          <div class="opt lv3" data-val="主卧 / 药箱"><span class="o-ico lv-cab">💊</span>药箱<span class="o-lvl">柜子</span></div>
+          <div class="opt lv2" data-val="儿童房"><span class="o-ico lv-room">🧒</span>儿童房<span class="o-lvl">房间</span></div>
+          <div class="opt lv3" data-val="儿童房 / 玩具书架"><span class="o-ico lv-cab">📚</span>玩具书架<span class="o-lvl">柜子</span></div>
+        </div>
+      </div>
+      <div class="f-row">
+        <div class="f-item"><div class="f-label">购买日期</div><input class="f-input" id="addPurchase" type="date" /></div>
+        <div class="f-item"><div class="f-label">保修期(月)</div>
+          <div class="stepper"><button class="step-btn" type="button" data-step="addWarranty:-1">−</button><span class="step-val" id="addWarranty">0</span><button class="step-btn" type="button" data-step="addWarranty:1">＋</button></div>
+        </div>
+      </div>
+      <div class="f-row">
+        <div class="f-item"><div class="f-label">生产日期</div><input class="f-input" id="addProd" type="date" /></div>
+        <div class="f-item"><div class="f-label">保质期(月)</div>
+          <div class="shelf-chips" id="shelfChips">
+            <button class="sh-chip" type="button" data-m="3">3个月</button>
+            <button class="sh-chip" type="button" data-m="6">6个月</button>
+            <button class="sh-chip" type="button" data-m="12">12个月</button>
+            <button class="sh-chip" type="button" data-m="18">18个月</button>
+            <button class="sh-chip" type="button" data-m="24">24个月</button>
+          </div>
+        </div>
+      </div>
+      <div class="f-item"><div class="f-label">过期日期</div><input class="f-input" id="addExpiry" type="date" /><div class="f-hint" id="expiryHint">🧮 根据生产日期和保质期自动推算</div></div>
+      <div class="f-item"><div class="f-label">标签</div><input class="f-input" id="addTags" placeholder="用逗号分隔，如：常用, 易碎" /><div class="tag-preview" id="tagPreview"></div></div>
+      <div class="f-item"><div class="f-label">描述</div><textarea class="f-area" id="addDesc" placeholder="补充说明，如品牌、尺寸、使用注意事项..."></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" data-close>取消</button>
+      <button class="btn primary" id="addSubmit">✓ 添加</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 登记借出弹窗 ===== -->
+<div class="modal-mask" id="maskBorrow">
+  <div class="modal narrow" role="dialog" aria-modal="true" aria-label="登记借出">
+    <div class="modal-head">
+      <div class="mh-ico" style="background:linear-gradient(135deg,var(--amber),var(--amber-d));">🤝</div>
+      <div><div class="mh-title">登记借出</div><div class="mh-sub">记一笔，就不怕忘记收回啦</div></div>
+      <button class="mh-close" data-close>✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="f-item tsel" id="tselItem">
+        <div class="f-label"><span class="req">*</span>物品</div>
+        <button class="tsel-field" type="button"><span class="ph">搜索物品</span><span class="caret">▾</span></button>
+        <div class="tsel-drop">
+          <input class="tsel-search" placeholder="搜索物品..." />
+          <div class="opt" data-val="MacBook 笔记本" data-ico="💻" data-bg="rgba(159,184,201,.2)">💻 MacBook 笔记本</div>
+          <div class="opt" data-val="单反相机" data-ico="📷" data-bg="rgba(169,139,176,.2)">📷 单反相机</div>
+          <div class="opt" data-val="露营帐篷" data-ico="⛺" data-bg="rgba(232,179,106,.2)">⛺ 露营帐篷</div>
+          <div class="opt" data-val="电动螺丝刀" data-ico="🔧" data-bg="rgba(159,184,201,.2)">🔧 电动螺丝刀</div>
+          <div class="opt" data-val="不粘炒锅" data-ico="🍳" data-bg="rgba(200,159,133,.2)">🍳 不粘炒锅</div>
+          <div class="opt" data-val="野餐垫 + 风筝" data-ico="🧺" data-bg="rgba(232,179,106,.2)">🧺 野餐垫 + 风筝</div>
+          <div class="opt" data-val="民谣吉他" data-ico="🎸" data-bg="rgba(217,154,154,.2)">🎸 民谣吉他</div>
+          <div class="opt" data-val="酸奶机" data-ico="🍲" data-bg="rgba(232,179,106,.2)">🍲 酸奶机</div>
+        </div>
+      </div>
+      <div class="f-item tsel" id="tselMember">
+        <div class="f-label"><span class="req">*</span>借用人</div>
+        <button class="tsel-field" type="button"><span class="ph">选择家庭成员</span><span class="caret">▾</span></button>
+        <div class="tsel-drop">
+          <div class="opt" data-val="林" data-av="林" data-color="linear-gradient(135deg,var(--terracotta),var(--terra-deep))"><span class="o-ico" style="background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));">林</span>林（我）</div>
+          <div class="opt" data-val="太太" data-av="妻" data-color="linear-gradient(135deg,var(--sage),var(--sage-d))"><span class="o-ico" style="background:linear-gradient(135deg,var(--sage),var(--sage-d));">妻</span>太太</div>
+          <div class="opt" data-val="老王" data-av="王" data-color="linear-gradient(135deg,var(--sky),var(--sky-d))"><span class="o-ico" style="background:linear-gradient(135deg,var(--sky),var(--sky-d));">王</span>老王</div>
+          <div class="opt" data-val="小李" data-av="李" data-color="linear-gradient(135deg,var(--rose),var(--rose-d))"><span class="o-ico" style="background:linear-gradient(135deg,var(--rose),var(--rose-d));">李</span>小李</div>
+          <div class="opt" data-val="张叔" data-av="张" data-color="linear-gradient(135deg,var(--amber),var(--amber-d))"><span class="o-ico" style="background:linear-gradient(135deg,var(--amber),var(--amber-d));">张</span>张叔</div>
+        </div>
+      </div>
+      <div class="f-item"><div class="f-label">预计归还</div><input class="f-input" id="bwDate" type="date" /></div>
+      <div class="f-item"><div class="f-label">备注</div><textarea class="f-area" id="bwNote" placeholder="如：露营结束就带回来"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" data-close>取消</button>
+      <button class="btn primary" id="bwSubmit">✓ 登记</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="t-ico">✓</span><span id="toastText"></span></div>
+
+<script>
+  document.getElementById('subtabs').addEventListener('click', e=>{
+    const t=e.target.closest('.subtab'); if(!t) return;
+    document.querySelectorAll('.subtab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    const panel=document.getElementById('p-'+t.dataset.p);
+    panel.classList.add('active');
+    panel.querySelectorAll('[data-count]').forEach(countUp);
+  });
+  function countUp(el){
+    const target=+el.dataset.count; let cur=0; const step=Math.max(1,Math.ceil(target/35));
+    const t=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(t);}el.textContent=cur;},22);
+  }
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); e.target.querySelectorAll('[data-count]').forEach(countUp); if(e.target.hasAttribute('data-count')) countUp(e.target); io.unobserve(e.target); } });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.transitionDelay=(i%6)*60+'ms'; io.observe(el); });
+
+  // ===== 弹窗 =====
+  const maskAdd=document.getElementById('maskAdd'), maskBorrow=document.getElementById('maskBorrow');
+  function openMask(m){ m.classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeMask(m){ m.classList.remove('open'); document.body.style.overflow=''; m.querySelectorAll('.tsel.open').forEach(t=>t.classList.remove('open')); }
+  [maskAdd,maskBorrow].forEach(m=>{
+    m.addEventListener('mousedown',e=>{ if(e.target===m) closeMask(m); });
+    m.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeMask(m)));
+  });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape')[maskAdd,maskBorrow].forEach(m=>{ if(m.classList.contains('open')) closeMask(m); }); });
+  document.getElementById('btnAddItem').addEventListener('click',()=>openMask(maskAdd));
+  document.getElementById('btnBorrow').addEventListener('click',()=>{ openMask(maskBorrow); const d=document.getElementById('bwDate'); if(!d.value) d.value=fmt(addDays(new Date(),14)); });
+
+  function addDays(d,n){ const r=new Date(d); r.setDate(r.getDate()+n); return r; }
+  function fmt(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  function fmtCN(s){ const[,m,d]=s.split('-'); return (+m)+'月'+(+d)+'日'; }
+
+  // 步进器
+  document.querySelectorAll('.step-btn').forEach(b=>b.addEventListener('click',()=>{
+    const[id,dir]=b.dataset.step.split(':'); const el=document.getElementById(id);
+    const min=id==='addQty'?1:0;
+    el.textContent=Math.max(min,+el.textContent+ +dir);
+  }));
+
+  // 树选择 / 可搜索下拉
+  document.querySelectorAll('.tsel').forEach(ts=>{
+    const field=ts.querySelector('.tsel-field'), label=field.querySelector('span:first-child');
+    const search=ts.querySelector('.tsel-search');
+    field.addEventListener('click',e=>{
+      e.stopPropagation();
+      document.querySelectorAll('.tsel.open').forEach(o=>{ if(o!==ts) o.classList.remove('open'); });
+      ts.classList.toggle('open');
+      if(ts.classList.contains('open')){
+        setTimeout(()=>field.scrollIntoView({block:'center',behavior:'smooth'}),60);
+        if(search){ search.value=''; filterOpts(ts,''); search.focus(); }
+      }
+    });
+    if(search){
+      search.addEventListener('click',e=>e.stopPropagation());
+      search.addEventListener('input',()=>filterOpts(ts,search.value.trim()));
+    }
+    ts.querySelectorAll('.opt').forEach(o=>o.addEventListener('click',()=>{
+      ts.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+      o.classList.add('sel');
+      ts.dataset.value=o.dataset.val;
+      if(o.dataset.av) ts.dataset.av=o.dataset.av;
+      if(o.dataset.color) ts.dataset.color=o.dataset.color;
+      if(o.dataset.ico) ts.dataset.ico=o.dataset.ico;
+      if(o.dataset.bg) ts.dataset.bg=o.dataset.bg;
+      label.className=''; label.textContent=o.dataset.val;
+      ts.classList.remove('open');
+    }));
+  });
+  function filterOpts(ts,q){ ts.querySelectorAll('.opt').forEach(o=>{ o.style.display=o.dataset.val.includes(q)?'':'none'; }); }
+  document.addEventListener('click',()=>document.querySelectorAll('.tsel.open').forEach(t=>t.classList.remove('open')));
+
+  // 保质期 → 自动推算过期日期
+  let shelfMonths=0;
+  const prodEl=document.getElementById('addProd'), expEl=document.getElementById('addExpiry'), expHint=document.getElementById('expiryHint');
+  document.getElementById('shelfChips').addEventListener('click',e=>{
+    const c=e.target.closest('.sh-chip'); if(!c) return;
+    const was=c.classList.contains('active');
+    document.querySelectorAll('#shelfChips .sh-chip').forEach(x=>x.classList.remove('active'));
+    shelfMonths=was?0:+c.dataset.m;
+    if(!was) c.classList.add('active');
+    syncExpiry();
+  });
+  prodEl.addEventListener('change',syncExpiry);
+  function syncExpiry(){
+    if(prodEl.value&&shelfMonths){
+      const d=new Date(prodEl.value+'T00:00:00'); d.setMonth(d.getMonth()+shelfMonths);
+      expEl.value=fmt(d); expEl.disabled=true; expHint.style.display='block';
+    }else{
+      expEl.disabled=false; expHint.style.display='none';
+    }
+  }
+
+  // 标签实时预览
+  const tagsEl=document.getElementById('addTags'), tagPv=document.getElementById('tagPreview');
+  tagsEl.addEventListener('input',()=>{
+    tagPv.innerHTML='';
+    tagsEl.value.split(/[,，]/).map(s=>s.trim()).filter(Boolean).slice(0,6)
+      .forEach(t=>{ const s=document.createElement('span'); s.className='tag-pv'; s.textContent='# '+t; tagPv.appendChild(s); });
+  });
+
+  // 提示条
+  let toastTimer;
+  function showToast(msg){
+    const t=document.getElementById('toast');
+    document.getElementById('toastText').textContent=msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
+  }
+  function bumpStat(sel){ const el=document.querySelector(sel); el.dataset.count=+el.dataset.count+1; el.textContent=el.dataset.count; }
+  function flash(el){ el.classList.add('err'); setTimeout(()=>el.classList.remove('err'),600); }
+
+  // 添加物品提交
+  document.getElementById('addSubmit').addEventListener('click',()=>{
+    const nameEl=document.getElementById('addName');
+    if(!nameEl.value.trim()){ flash(nameEl); nameEl.focus(); return; }
+    const name=nameEl.value.trim();
+    const qty=+document.getElementById('addQty').textContent;
+    const cat=document.getElementById('addCat').value.trim()||'未分类';
+    const price=document.getElementById('addPrice').value;
+    const spaceTs=document.getElementById('tselSpace');
+    const card=document.createElement('div');
+    card.className='card item reveal in';
+    card.innerHTML='<div class="it-acts"><button class="act">✎</button><button class="act danger">🗑</button></div><div class="it-top"><div class="it-ico" style="background:rgba(200,159,133,.2);"></div><span class="it-status st-active">在用</span></div><div class="it-name"></div><span class="it-cat"></span><div class="it-meta"><span class="it-space"></span><span class="it-price"></span></div>';
+    card.querySelector('.it-name').textContent=name+(qty>1?' ×'+qty:'');
+    card.querySelector('.it-cat').textContent=cat;
+    card.querySelector('.it-space').textContent='📍 '+(spaceTs.dataset.value||'待安置');
+    card.querySelector('.it-price').textContent=price?'¥'+(+price).toLocaleString('zh-CN'): '—';
+    document.querySelector('.items').prepend(card);
+    bumpStat('.stat.s1 .stat-num');
+    closeMask(maskAdd);
+    showToast('「'+name+'」已加入物品清单');
+    nameEl.value=''; document.getElementById('addCat').value=''; document.getElementById('addPrice').value='';
+    document.getElementById('addQty').textContent='1'; tagsEl.value=''; tagPv.innerHTML='';
+    document.getElementById('addDesc').value=''; prodEl.value=''; expEl.value='';
+    document.querySelectorAll('#shelfChips .sh-chip').forEach(x=>x.classList.remove('active'));
+    shelfMonths=0; syncExpiry();
+    spaceTs.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+    delete spaceTs.dataset.value;
+    const sl=spaceTs.querySelector('.tsel-field span:first-child'); sl.className='ph'; sl.textContent='搜索或选择位置';
+  });
+
+  // 登记借出提交
+  document.getElementById('bwSubmit').addEventListener('click',()=>{
+    const itemTs=document.getElementById('tselItem'), memberTs=document.getElementById('tselMember');
+    if(!itemTs.dataset.value){ flash(itemTs.querySelector('.tsel-field')); return; }
+    if(!memberTs.dataset.value){ flash(memberTs.querySelector('.tsel-field')); return; }
+    const item=itemTs.dataset.value, member=memberTs.dataset.value;
+    const dateVal=document.getElementById('bwDate').value||fmt(addDays(new Date(),14));
+    const card=document.createElement('div');
+    card.className='card borrow reveal in';
+    card.innerHTML='<div class="bw-ico"></div><div class="bw-body"><div class="bw-name"></div><div class="bw-people"></div><div class="bw-dates"></div></div><div class="bw-right"><span class="bw-status bs-borrowed">借出中</span><div class="bw-btns"><button class="mini-btn">确认归还</button><button class="mini-btn warn">催还</button></div></div>';
+    const ico=card.querySelector('.bw-ico'); ico.style.background=itemTs.dataset.bg||'rgba(200,159,133,.2)'; ico.textContent=itemTs.dataset.ico||'📦';
+    card.querySelector('.bw-name').textContent=item;
+    const people=card.querySelector('.bw-people');
+    const av1=document.createElement('span'); av1.className='bw-av'; av1.style.background='linear-gradient(135deg,var(--terracotta),var(--terra-deep))'; av1.textContent='林';
+    const arrow=document.createElement('span'); arrow.className='bw-arrow'; arrow.textContent='→';
+    const av2=document.createElement('span'); av2.className='bw-av'; av2.style.background=memberTs.dataset.color; av2.textContent=memberTs.dataset.av||member[0];
+    people.append(av1,document.createTextNode('借出 '),arrow,av2,document.createTextNode(member));
+    card.querySelector('.bw-dates').textContent='📅 '+fmtCN(fmt(new Date()))+' 借出 · 预计 '+fmtCN(dateVal)+' 归还';
+    document.querySelector('.borrows').prepend(card);
+    bumpStat('.stat.s3 .stat-num');
+    closeMask(maskBorrow);
+    showToast('已登记：'+item+' 借给 '+member);
+    itemTs.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel')); delete itemTs.dataset.value;
+    memberTs.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel')); delete memberTs.dataset.color; delete memberTs.dataset.av;
+    const f1=itemTs.querySelector('.tsel-field span:first-child'); f1.className='ph'; f1.textContent='搜索物品';
+    const f2=memberTs.querySelector('.tsel-field span:first-child'); f2.className='ph'; f2.textContent='选择家庭成员';
+    document.getElementById('bwNote').value='';
+  });
+</script>
+</body>
+</html>

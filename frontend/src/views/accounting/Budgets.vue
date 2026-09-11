@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
       <div class="page-title" style="margin-bottom:0;">预算管理</div>
-      <div style="display:flex;gap:8px;">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <el-date-picker v-model="month" type="month" placeholder="选择月份" value-format="YYYY-MM" style="width:140px;" @change="loadBudgets" />
         <el-button type="primary" @click="openCreate"><el-icon><Plus /></el-icon>设置预算</el-button>
       </div>
@@ -48,7 +48,22 @@
       <el-form :model="budgetForm" label-width="80px" class="warm-form">
         <el-form-item label="分类">
           <el-select v-model="budgetForm.categoryId" placeholder="选择分类(不选为总预算)" style="width:100%" clearable filterable :disabled="isEdit">
-            <el-option v-for="c in categories" :key="c.id" :label="c.name" :value="c.id" />
+            <template v-for="group in categories" :key="group.id">
+              <el-option-group v-if="group.children?.length" :label="group.name">
+                <el-option
+                  v-for="child in group.children"
+                  :key="child.id"
+                  :label="`${group.name} / ${child.name}`"
+                  :value="child.id"
+                >
+                  <span style="display:flex;align-items:center;gap:6px;">
+                    <span style="color:#94a3b8;font-size:12px;">{{ group.name }}</span>
+                    <span>{{ child.name }}</span>
+                  </span>
+                </el-option>
+              </el-option-group>
+              <el-option v-else :key="group.id" :label="group.name" :value="group.id" />
+            </template>
           </el-select>
         </el-form-item>
         <el-form-item label="预算金额">
@@ -74,6 +89,7 @@ import { accountingApi } from '@/api'
 import { useAccountingStore } from '@/store/accounting'
 import { useAuthStore } from '@/store/auth'
 import { formatMoney } from '@/utils/format'
+import { buildCategoryTree } from '@/utils/categoryTree'
 import { ElMessage } from 'element-plus'
 import dayjs from 'dayjs'
 
@@ -95,19 +111,7 @@ const totalPercent = computed(() => totalBudget.value > 0 ? Math.round((totalSpe
 
 onMounted(async () => {
   const res = await accountingApi.getCategories({ type: 'expense', familyId: authStore.currentFamily?.id })
-  const allCategories = res.data || []
-  // 构建树形结构：一级分类 + 缩进的二级分类
-  const parentCategories = allCategories.filter(c => !c.parentId)
-  const childCategories = allCategories.filter(c => c.parentId)
-  const treeCategories = []
-  for (const parent of parentCategories) {
-    treeCategories.push(parent)
-    const children = childCategories.filter(c => c.parentId === parent.id)
-    for (const child of children) {
-      treeCategories.push({ ...child, name: `  └ ${child.name}` })
-    }
-  }
-  categories.value = treeCategories
+  categories.value = buildCategoryTree(res.data || [], 'expense')
   if (accountingStore.currentBookId) loadBudgets()
 })
 
@@ -211,6 +215,10 @@ async function handleDelete(id) {
   }
   .budget-actions {
     opacity: 1;
+  }
+  .ba-btn {
+    width: 36px;
+    height: 36px;
   }
   :deep(.el-form-item__label) {
     font-size: 13px;

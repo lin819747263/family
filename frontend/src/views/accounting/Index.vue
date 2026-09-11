@@ -225,7 +225,22 @@
       <el-form :model="budgetForm" label-width="80px">
         <el-form-item label="分类">
           <el-select v-model="budgetForm.categoryId" placeholder="选择分类(不选为总预算)" style="width:100%" clearable filterable :disabled="isBudgetEdit">
-            <el-option v-for="c in budgetCategories" :key="c.id" :label="c.name" :value="c.id" />
+            <template v-for="group in budgetCategories" :key="group.id">
+              <el-option-group v-if="group.children?.length" :label="group.name">
+                <el-option
+                  v-for="child in group.children"
+                  :key="child.id"
+                  :label="`${group.name} / ${child.name}`"
+                  :value="child.id"
+                >
+                  <span style="display:flex;align-items:center;gap:6px;">
+                    <span style="color:#94a3b8;font-size:12px;">{{ group.name }}</span>
+                    <span>{{ child.name }}</span>
+                  </span>
+                </el-option>
+              </el-option-group>
+              <el-option v-else :key="group.id" :label="group.name" :value="group.id" />
+            </template>
           </el-select>
         </el-form-item>
         <el-form-item label="预算金额">
@@ -285,6 +300,7 @@ import BatchTransactionForm from '@/components/accounting/BatchTransactionForm.v
 import BillImport from '@/components/accounting/BillImport.vue'
 import { ElMessage } from 'element-plus'
 import { formatMoney } from '@/utils/format'
+import { buildCategoryTree } from '@/utils/categoryTree'
 import dayjs from 'dayjs'
 
 const route = useRoute()
@@ -469,20 +485,10 @@ async function loadBudgets() {
   try {
     const res = await accountingApi.getBudgets({ bookId: accountingStore.currentBookId, month: currentMonth.value })
     budgets.value = res.data || []
-    // 加载分类
+    // 加载分类（树形）
     if (budgetCategories.value.length === 0) {
       const catRes = await accountingApi.getCategories({ type: 'expense', familyId: authStore.currentFamily?.id })
-      const all = catRes.data || []
-      const parents = all.filter(c => !c.parentId)
-      const children = all.filter(c => c.parentId)
-      const tree = []
-      for (const p of parents) {
-        tree.push(p)
-        for (const c of children.filter(c => c.parentId === p.id)) {
-          tree.push({ ...c, name: `  └ ${c.name}` })
-        }
-      }
-      budgetCategories.value = tree
+      budgetCategories.value = buildCategoryTree(catRes.data || [], 'expense')
     }
   } catch (e) { console.error(e) }
   finally { budgetLoading.value = false }

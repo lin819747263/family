@@ -131,7 +131,22 @@
         </el-form-item>
         <el-form-item label="分类">
           <el-select v-model="form.categoryId" placeholder="选择分类" style="width:100%;" filterable clearable>
-            <el-option v-for="c in filteredCategories" :key="c.id" :label="c.name" :value="c.id" />
+            <template v-for="group in filteredCategories" :key="group.id">
+              <el-option-group v-if="group.children?.length" :label="group.name">
+                <el-option
+                  v-for="child in group.children"
+                  :key="child.id"
+                  :label="`${group.name} / ${child.name}`"
+                  :value="child.id"
+                >
+                  <span style="display:flex;align-items:center;gap:6px;">
+                    <span style="color:#94a3b8;font-size:12px;">{{ group.name }}</span>
+                    <span>{{ child.name }}</span>
+                  </span>
+                </el-option>
+              </el-option-group>
+              <el-option v-else :key="group.id" :label="group.name" :value="group.id" />
+            </template>
           </el-select>
         </el-form-item>
         <el-form-item label="执行频率">
@@ -195,6 +210,7 @@ import { accountingApi } from '@/api'
 import { useAccountingStore } from '@/store/accounting'
 import { useAuthStore } from '@/store/auth'
 import { ElMessage } from 'element-plus'
+import { buildCategoryTree } from '@/utils/categoryTree'
 
 const accountingStore = useAccountingStore()
 const authStore = useAuthStore()
@@ -222,7 +238,7 @@ const weekDays = [
 
 const activeCount = computed(() => bills.value.filter(b => b.active).length)
 const totalRuns = computed(() => bills.value.reduce((sum, b) => sum + (b.totalRuns || 0), 0))
-const filteredCategories = computed(() => categories.value.filter(c => c.type === form.value.type))
+const filteredCategories = computed(() => buildCategoryTree(categories.value, form.value.type))
 
 function freqLabel(f) {
   return { daily: '每天', weekly: '每周', monthly: '每月', quarterly: '每季度', yearly: '每年' }[f] || f
@@ -526,11 +542,31 @@ async function handleDelete(id) {
     flex-direction: column;
     gap: 12px;
   }
+  .header-actions {
+    flex-wrap: wrap;
+  }
+  .stats-row {
+    flex-wrap: wrap;
+  }
+  .mini-stat {
+    flex: 1 1 calc(50% - 6px);
+    min-width: 120px;
+  }
   .bill-card {
     flex-wrap: wrap;
+    gap: 10px;
   }
   .bill-center {
     text-align: left;
+    width: 100%;
+  }
+  .bill-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .act-btn {
+    width: 40px;
+    height: 40px;
   }
 }
 </style>

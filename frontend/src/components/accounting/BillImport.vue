@@ -25,7 +25,7 @@
     <!-- Step 2: 审核区 -->
     <div v-if="step === 'review'" class="review-section">
       <!-- 解析信息 -->
-      <div class="parse-info reveal">
+      <div class="parse-info">
         <span class="src-tag" :class="fileSource">{{ fileSource === 'wx' ? '💚 微信账单' : '💙 支付宝账单' }}</span>
         <div class="info-item"><span class="info-label">文件：</span><span class="info-val">{{ fileName }}</span></div>
         <div class="info-item"><span class="info-label">共</span><span class="info-val">{{ allRecords.length }}</span><span class="info-label">条记录</span></div>
@@ -34,7 +34,7 @@
       </div>
 
       <!-- 汇总 -->
-      <div class="review-summary reveal">
+      <div class="review-summary">
         <div class="rev-card"><div class="rev-label">待导入</div><div class="rev-val cnt">{{ activeRecords.length }} 笔</div></div>
         <div class="rev-card"><div class="rev-label">支出合计</div><div class="rev-val exp">¥{{ summaryExpense.toFixed(2) }}</div></div>
         <div class="rev-card"><div class="rev-label">收入合计</div><div class="rev-val inc">¥{{ summaryIncome.toFixed(2) }}</div></div>
@@ -42,7 +42,7 @@
       </div>
 
       <!-- 筛选 -->
-      <div class="filter-bar reveal">
+      <div class="filter-bar">
         <div class="search-wrap">
           <span class="mag">🔍</span>
           <input v-model="searchKeyword" class="search-input" placeholder="搜索交易对方、商品说明..." />
@@ -59,7 +59,7 @@
       </div>
 
       <!-- 表格 -->
-      <div class="review-table-wrap reveal">
+      <div class="review-table-wrap">
         <table class="review-table">
           <thead>
             <tr>
@@ -92,14 +92,31 @@
               <td><span class="badge" :class="r.type">{{ typeLabel(r.type) }}</span></td>
               <td class="td-amount" :class="r.type">{{ amountDisplay(r) }}</td>
               <td>
-                <select
-                  class="cat-select"
+                <el-select
+                  :model-value="r.categoryId"
                   :class="{ modified: r._catChanged }"
-                  :value="r.categoryId"
-                  @change="changeCategory(r, $event.target.value)"
+                  size="small"
+                  filterable
+                  style="width:140px;"
+                  @update:model-value="changeCategory(r, $event)"
                 >
-                  <option v-for="c in getCategoryList(r.type)" :key="c.id" :value="c.id">{{ c.name }}</option>
-                </select>
+                  <template v-for="group in getCategoryList(r.type)" :key="group.id">
+                    <el-option-group v-if="group.children?.length" :label="group.name">
+                      <el-option
+                        v-for="child in group.children"
+                        :key="child.id"
+                        :label="`${group.name} / ${child.name}`"
+                        :value="child.id"
+                      >
+                        <span style="display:flex;align-items:center;gap:6px;">
+                          <span style="color:#94a3b8;font-size:12px;">{{ group.name }}</span>
+                          <span>{{ child.name }}</span>
+                        </span>
+                      </el-option>
+                    </el-option-group>
+                    <el-option v-else :key="group.id" :label="group.name" :value="group.id" />
+                  </template>
+                </el-select>
                 <span v-if="r._catChanged" class="edit-dot"></span>
               </td>
               <td>
@@ -123,7 +140,7 @@
       </div>
 
       <!-- 底部操作栏 -->
-      <div class="bottom-bar reveal">
+      <div class="bottom-bar">
         <div class="stats">
           已选 <b>{{ selectedCount }}</b> 条 · 净额 <b :style="{ color: netAmount >= 0 ? 'var(--sage-d,#7E8862)' : 'var(--rose-d,#B06A6A)' }">¥{{ netAmount.toFixed(2) }}</b>
         </div>
@@ -139,10 +156,11 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { accountingApi } from '@/api'
 import { ElMessage } from 'element-plus'
 import { useAuthStore } from '@/store/auth'
+import { buildCategoryTree } from '@/utils/categoryTree'
 
 const props = defineProps({
   bookId: { type: [String, Number], default: null }
@@ -177,29 +195,9 @@ const currentFilter = ref('all')
 const searchKeyword = ref('')
 const importing = ref(false)
 
-// ===== 渐入动画 =====
-let revealIO = null
-function observeReveal() {
-  if (!revealIO) {
-    revealIO = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('in'); revealIO.unobserve(e.target) }
-      })
-    }, { threshold: 0.12 })
-  }
-  nextTick(() => {
-    document.querySelectorAll('.bill-import .reveal:not(.in)').forEach((el, i) => {
-      if (!el.dataset.d) el.dataset.d = (i % 6) * 60
-      el.style.transitionDelay = el.dataset.d + 'ms'
-      revealIO.observe(el)
-    })
-  })
-}
-
-watch(step, () => { nextTick(() => observeReveal()) })
-
-// ===== 加载分类 =====
+// ===== 加载分类（树形） =====
 const authStore = useAuthStore()
+
 async function loadCategories() {
   try {
     const familyId = authStore.currentFamily?.id
@@ -207,8 +205,8 @@ async function loadCategories() {
       accountingApi.getCategories({ type: 'expense', familyId }),
       accountingApi.getCategories({ type: 'income', familyId }),
     ])
-    expenseCategories.value = (expRes.data || []).filter(c => !c.parentId)
-    incomeCategories.value = (incRes.data || []).filter(c => !c.parentId)
+    expenseCategories.value = buildCategoryTree(expRes.data || [], 'expense')
+    incomeCategories.value = buildCategoryTree(incRes.data || [], 'income')
   } catch (e) { console.error('加载分类失败', e) }
 }
 onMounted(loadCategories)
@@ -251,12 +249,31 @@ function amountDisplay(r) { return r.type === 'expense' ? `-¥${Math.abs(r.amoun
 function getCategoryList(type) { return type === 'income' ? incomeCategories.value : expenseCategories.value }
 
 function matchCategory(name, type) {
-  const list = getCategoryList(type)
-  const found = list.find(c => c.name === name)
-  if (found) return found
+  const tree = getCategoryList(type)
+  // 在树形中查找：先匹配父分类，再匹配子分类
+  for (const group of tree) {
+    if (group.name === name) return group
+    for (const child of (group.children || [])) {
+      if (child.name === name) return child
+    }
+  }
+  // 模糊匹配
+  for (const group of tree) {
+    if (group.name.includes(name) || name.includes(group.name)) return group
+    for (const child of (group.children || [])) {
+      if (child.name.includes(name) || name.includes(child.name)) return child
+    }
+  }
   // 回退：找"其他"类
-  const fallback = list.find(c => c.name.includes('其他'))
-  return fallback || (list.length > 0 ? list[list.length - 1] : { id: null, name: '其他' })
+  for (const group of tree) {
+    if (group.name.includes('其他')) return group
+    for (const child of (group.children || [])) {
+      if (child.name.includes('其他')) return child
+    }
+  }
+  // 最终回退
+  const first = tree[0]
+  return first?.children?.[0] || first || { id: null, name: '其他' }
 }
 
 // ===== 文件上传 =====
@@ -549,8 +566,17 @@ function restoreRow(r) { r.deleted = false; r.selected = true }
 function toggleAll(e) { allRecords.value.forEach(r => { if (!r.deleted) r.selected = e.target.checked }) }
 
 function changeCategory(r, catId) {
-  const catList = getCategoryList(r.type)
-  const cat = catList.find(c => c.id === parseInt(catId))
+  const tree = getCategoryList(r.type)
+  const id = parseInt(catId)
+  // 在树形中查找
+  let cat = null
+  for (const group of tree) {
+    if (group.id === id) { cat = group; break }
+    for (const child of (group.children || [])) {
+      if (child.id === id) { cat = child; break }
+    }
+    if (cat) break
+  }
   if (cat) {
     r.categoryId = cat.id
     r.categoryName = cat.name
@@ -573,8 +599,7 @@ function resetAll() {
     const aliCat = ALI_CATEGORY_MAP[r.originalCategory]
     const wxType = WX_TYPE_MAP[r.originalCategory]
     const mapped = aliCat || wxType || '其他'
-    const catList = getCategoryList(r.type)
-    const cat = catList.find(c => c.name === mapped) || catList[catList.length - 1]
+    const cat = matchCategory(mapped, r.type)
     r.categoryId = cat.id
     r.categoryName = cat.name
   })
@@ -745,21 +770,10 @@ async function confirmImport() {
 .td-desc { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-secondary, #A08D7A); font-size: 12.5px; }
 
 /* 分类选择 */
-.cat-select {
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1.5px solid var(--border, rgba(226, 205, 178, 0.7));
-  background: #FFFDF9;
-  font-size: 12.5px;
-  color: var(--text-primary, #6B5744);
-  font-family: inherit;
-  cursor: pointer;
-  outline: none;
-  transition: all 0.25s;
-  min-width: 90px;
+.modified :deep(.el-input__wrapper) {
+  border-color: var(--amber, #E8B36A) !important;
+  box-shadow: 0 0 0 1px var(--amber, #E8B36A) inset !important;
 }
-.cat-select:focus { border-color: var(--terracotta, #C89F85); box-shadow: 0 0 0 3px rgba(200, 159, 133, 0.12); }
-.cat-select.modified { border-color: var(--amber, #E8B36A); background: rgba(232, 179, 106, 0.08); }
 
 /* 备注输入 */
 .note-input {

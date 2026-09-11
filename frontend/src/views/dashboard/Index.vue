@@ -379,18 +379,19 @@ function loadDashboard() {
   dashboardApi.getData(params)
     .then(res => {
       data.value = res.data
-      nextTick(() => observeRevealElements())
     })
     .catch(e => {
       loadError.value = true
       console.error(e)
     })
-    .finally(() => { dashboardLoading.value = false })
+    .finally(() => {
+      dashboardLoading.value = false
+      nextTick(() => observeRevealElements())
+    })
 }
 
 async function loadTodos() {
   if (!authStore.currentFamily) return
-  loadError.value = false
   try {
     const res = await todoApi.getList({ familyId: authStore.currentFamily.id, filter: 'pending' })
     const today = dayjs().format('YYYY-MM-DD')
@@ -399,7 +400,7 @@ async function loadTodos() {
       overdue: !t.completed && t.dueDate && t.dueDate < today,
       daysLeft: t.dueDate ? dayjs(t.dueDate).diff(dayjs(), 'day') : null
     }))
-  } catch (e) { loadError.value = true; console.error(e) }
+  } catch (e) { console.error('加载待办失败', e) }
 }
 
 async function handleToggleTodo(t) {
@@ -412,11 +413,10 @@ async function handleToggleTodo(t) {
 
 async function loadRecipe() {
   if (!authStore.currentFamily) return
-  loadError.value = false
   try {
     const res = await recipeApi.random({ familyId: authStore.currentFamily.id, count: 1 })
     todayRecipe.value = res.data[0] || null
-  } catch (e) { loadError.value = true; console.error(e) }
+  } catch (e) { console.error('加载菜谱失败', e) }
 }
 
 async function shuffleRecipe() {
@@ -427,7 +427,6 @@ async function shuffleRecipe() {
 
 async function loadMoments() {
   if (!authStore.currentFamily) return
-  loadError.value = false
   try {
     const res = await momentApi.getList({ familyId: authStore.currentFamily.id, page: 1, pageSize: 5 })
     recentMoments.value = (res.data.list || []).map(m => {
@@ -435,9 +434,8 @@ async function loadMoments() {
       if (!Array.isArray(m.images)) m.images = []
       return m
     })
-    // 数据加载后重新观察新渲染的 .reveal 元素
     nextTick(() => observeRevealElements())
-  } catch (e) { loadError.value = true; console.error(e) }
+  } catch (e) { console.error('加载瞬间失败', e) }
 }
 
 function retryAll() {
@@ -660,11 +658,11 @@ onUnmounted(() => {
 .shuffle .spin { transform: rotate(360deg); }
 
 /* ========== 概览区 ========== */
-.section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
 .section-title { display: flex; align-items: center; gap: 9px; font-size: 17px; font-weight: 700; color: var(--text-primary); }
 .st-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
-.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
 .stat {
   background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px;
   display: flex; flex-direction: column; gap: 6px; cursor: pointer;
@@ -709,7 +707,7 @@ onUnmounted(() => {
 .moment-empty { text-align: center; padding: 40px; }
 .moment-empty span { font-size: 32px; display: block; }
 .moment-empty p { margin-top: 8px; color: var(--text-secondary); font-size: 13px; }
-.moments { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+.moments { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
 .moment {
   background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
   overflow: hidden; cursor: pointer;

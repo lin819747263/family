@@ -52,6 +52,7 @@ const Wishlist = require('./Wishlist')(sequelize);
 const Diary = require('./Diary')(sequelize);
 const SystemSetting = require('./SystemSetting')(sequelize);
 const AnnualGoal = require('./AnnualGoal')(sequelize);
+const GoalMilestone = require('./GoalMilestone')(sequelize);
 const Drink = require('./Drink')(sequelize);
 const FunShop = require('./FunShop')(sequelize);
 const FunPlace = require('./FunPlace')(sequelize);
@@ -187,6 +188,8 @@ Diary.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
 // 年度目标
 AnnualGoal.belongsTo(Family, { foreignKey: 'family_id' });
 AnnualGoal.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+AnnualGoal.hasMany(GoalMilestone, { foreignKey: 'annual_goal_id', as: 'milestones' });
+GoalMilestone.belongsTo(AnnualGoal, { foreignKey: 'annual_goal_id' });
 
 // 奶茶收藏
 Drink.belongsTo(Family, { foreignKey: 'family_id' });
@@ -239,7 +242,7 @@ module.exports = {
   Todo,
   MemberProfile, WeightRecord, HeightRecord,
   Wishlist, Diary, SystemSetting,
-  AnnualGoal,
+  AnnualGoal, GoalMilestone,
   Drink, FunShop, FunPlace, FunFruit,
   Pet, Achievement, MoodRecord, TimelineEvent, Manual
 };

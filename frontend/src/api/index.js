@@ -211,7 +211,11 @@ export const annualGoalApi = {
   create: data => request.post('/annual-goals', data),
   update: (id, data) => request.put(`/annual-goals/${id}`, data),
   remove: id => request.delete(`/annual-goals/${id}`),
-  getStats: params => request.get('/annual-goals/stats', { params })
+  getStats: params => request.get('/annual-goals/stats', { params }),
+  addMilestone: (goalId, data) => request.post(`/annual-goals/${goalId}/milestones`, data),
+  updateMilestone: (goalId, id, data) => request.put(`/annual-goals/${goalId}/milestones/${id}`, data),
+  toggleMilestone: (goalId, id) => request.put(`/annual-goals/${goalId}/milestones/${id}/toggle`),
+  deleteMilestone: (goalId, id) => request.delete(`/annual-goals/${goalId}/milestones/${id}`)
 }
 
 // ===== 奶茶收藏 =====

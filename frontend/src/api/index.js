@@ -218,6 +218,17 @@ export const annualGoalApi = {
   deleteMilestone: (goalId, id) => request.delete(`/annual-goals/${goalId}/milestones/${id}`)
 }
 
+// ===== 习惯打卡 =====
+export const habitApi = {
+  getList: params => request.get('/habits', { params }),
+  create: data => request.post('/habits', data),
+  update: (id, data) => request.put(`/habits/${id}`, data),
+  remove: id => request.delete(`/habits/${id}`),
+  check: (id, date) => request.post(`/habits/${id}/check`, { date }),
+  getStats: params => request.get('/habits/stats', { params }),
+  getRecords: (id, params) => request.get(`/habits/${id}/records`, { params })
+}
+
 // ===== 奶茶收藏 =====
 export const drinkApi = {
   getList: params => request.get('/drink', { params }),

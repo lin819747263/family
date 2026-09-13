@@ -23,6 +23,10 @@
             <div class="sb-ico g-sky">🎯</div>
             <div class="sb-info"><div class="sb-label">年度目标</div><div class="sb-desc">一年的小目标</div></div>
           </div>
+          <div class="sb-item" :class="{ active: activeView === 'habits' }" @click="switchView('habits')">
+            <div class="sb-ico g-sage">✅</div>
+            <div class="sb-info"><div class="sb-label">习惯打卡</div><div class="sb-desc">每天一点点</div></div>
+          </div>
           <div class="sb-item" :class="{ active: activeView === 'wishlist' }" @click="switchView('wishlist')">
             <div class="sb-ico g-plum">💝</div>
             <div class="sb-info"><div class="sb-label">家庭心愿</div><div class="sb-desc">想做的事想买的东西</div></div>
@@ -69,6 +73,14 @@
           <GoalsPage />
         </section>
 
+        <!-- ===== 习惯打卡 ===== -->
+        <section v-if="activeView === 'habits'" class="panel">
+          <div class="panel-head">
+            <div><div class="panel-title">✅ 习惯打卡</div><div class="panel-sub">每天一点点，坚持就是胜利</div></div>
+          </div>
+          <HabitPage />
+        </section>
+
         <!-- ===== 家庭心愿 ===== -->
         <section v-if="activeView === 'wishlist'" class="panel">
           <div class="panel-head">
@@ -90,6 +102,7 @@ import TodoPage from '@/views/todo/Index.vue'
 import CalendarPage from '@/views/anniversary/Calendar.vue'
 import AnniversaryPage from '@/views/anniversary/Index.vue'
 import GoalsPage from '@/views/annual-goals/Index.vue'
+import HabitPage from '@/views/habit/Index.vue'
 import WishlistPage from '@/views/wishlist/Index.vue'
 
 const route = useRoute()
@@ -112,6 +125,7 @@ function updateActiveView() {
   else if (path.includes('/anniversary')) activeView.value = 'anniversary'
   else if (path.includes('/goals')) activeView.value = 'goals'
   else if (path.includes('/wishlist')) activeView.value = 'wishlist'
+  else if (path.includes('/habits')) activeView.value = 'habits'
   else activeView.value = 'todo'
 }
 
@@ -205,8 +219,8 @@ onMounted(async () => {
 @media (max-width: 960px) {
   .layout { flex-direction: column; }
   .sidebar { width: 100%; position: static; }
-  .sb-nav { flex-direction: row; overflow-x: auto; }
-  .sb-item { flex-direction: column; text-align: center; min-width: 90px; gap: 6px; }
+  .sb-nav { flex-direction: row; overflow-x: auto; scrollbar-width: thin; }
+  .sb-item { flex-direction: column; text-align: center; min-width: 70px; gap: 6px; }
   .sb-item.active::before { left: 50%; top: 0; transform: translateX(-50%); width: 22px; height: 3px; border-radius: 0 0 3px 3px; }
   .sb-desc, .sb-foot, .sb-head { display: none; }
 }

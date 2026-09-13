@@ -62,6 +62,8 @@ const Achievement = require('./Achievement')(sequelize);
 const MoodRecord = require('./MoodRecord')(sequelize);
 const TimelineEvent = require('./TimelineEvent')(sequelize);
 const Manual = require('./Manual')(sequelize);
+const Habit = require('./Habit')(sequelize);
+const HabitRecord = require('./HabitRecord')(sequelize);
 
 // 关联关系定义
 // 家庭 - 用户
@@ -230,6 +232,13 @@ TimelineEvent.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
 Manual.belongsTo(Family, { foreignKey: 'family_id' });
 Manual.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
 
+// 习惯打卡
+Habit.belongsTo(Family, { foreignKey: 'family_id' });
+Habit.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+Habit.hasMany(HabitRecord, { foreignKey: 'habit_id', as: 'records' });
+HabitRecord.belongsTo(Habit, { foreignKey: 'habit_id' });
+HabitRecord.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
 module.exports = {
   sequelize,
   User, Family, FamilyMember,
@@ -244,5 +253,6 @@ module.exports = {
   Wishlist, Diary, SystemSetting,
   AnnualGoal, GoalMilestone,
   Drink, FunShop, FunPlace, FunFruit,
-  Pet, Achievement, MoodRecord, TimelineEvent, Manual
+  Pet, Achievement, MoodRecord, TimelineEvent, Manual,
+  Habit, HabitRecord
 };

@@ -44,7 +44,8 @@ const routes = [
           { path: 'calendar', name: 'Calendar', component: () => import('@/views/anniversary/Calendar.vue') },
           { path: 'anniversary', name: 'Anniversary', component: () => import('@/views/anniversary/Index.vue') },
           { path: 'goals', name: 'ReminderGoals', component: () => import('@/views/annual-goals/Index.vue') },
-          { path: 'wishlist', name: 'ReminderWishlist', component: () => import('@/views/wishlist/Index.vue') }
+          { path: 'wishlist', name: 'ReminderWishlist', component: () => import('@/views/wishlist/Index.vue') },
+          { path: 'habits', name: 'ReminderHabits', component: () => import('@/views/habit/Index.vue') }
         ]
       },
       { path: 'fun', name: 'Fun', component: () => import('@/views/fun/Index.vue') },

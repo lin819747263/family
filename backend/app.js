@@ -64,6 +64,7 @@ app.use('/api/achievement', require('./src/routes/achievement'));
 app.use('/api/mood-record', require('./src/routes/moodRecord'));
 app.use('/api/timeline-event', require('./src/routes/timelineEvent'));
 app.use('/api/manual', require('./src/routes/manual'));
+app.use('/api/habits', require('./src/routes/habit'));
 app.use('/api/upload', require('./src/routes/upload'));
 
 // 健康检查

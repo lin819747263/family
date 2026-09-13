@@ -139,6 +139,36 @@
         <el-form-item>
           <el-button type="primary" :loading="savingSettings" @click="handleSaveSettings">保存设置</el-button>
         </el-form-item>
+
+        <el-divider content-position="left">OSS 云存储配置</el-divider>
+        <el-form-item label="启用 OSS">
+          <el-switch v-model="settings.oss_enabled" active-value="true" inactive-value="false" />
+          <div class="form-tip">启用后图片将上传到阿里云 OSS，而非本地存储</div>
+        </el-form-item>
+        <el-form-item label="Endpoint">
+          <el-input v-model="settings.oss_endpoint" placeholder="https://oss-cn-hangzhou.aliyuncs.com" style="max-width:400px;" />
+          <div class="form-tip">OSS 服务的 Endpoint，如 https://oss-cn-hangzhou.aliyuncs.com</div>
+        </el-form-item>
+        <el-form-item label="Bucket">
+          <el-input v-model="settings.oss_bucket" placeholder="my-bucket" style="max-width:400px;" />
+        </el-form-item>
+        <el-form-item label="Region">
+          <el-input v-model="settings.oss_region" placeholder="oss-cn-hangzhou" style="max-width:400px;" />
+          <div class="form-tip">如 oss-cn-hangzhou、oss-cn-shanghai 等</div>
+        </el-form-item>
+        <el-form-item label="AccessKey ID">
+          <el-input v-model="settings.oss_access_key_id" placeholder="LTAI..." style="max-width:400px;" />
+        </el-form-item>
+        <el-form-item label="AccessKey Secret">
+          <el-input v-model="settings.oss_access_key_secret" type="password" show-password placeholder="输入 AccessKey Secret" style="max-width:400px;" />
+        </el-form-item>
+        <el-form-item label="自定义域名">
+          <el-input v-model="settings.oss_custom_domain" placeholder="https://cdn.example.com" style="max-width:400px;" />
+          <div class="form-tip">可选，绑定 CDN 域名加速访问</div>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" :loading="savingSettings" @click="handleSaveSettings">保存设置</el-button>
+        </el-form-item>
       </el-form>
     </div>
 
@@ -209,7 +239,11 @@ const resetting = ref(false)
 const pwdForm = reactive({ newPassword: '', confirmPassword: '' })
 
 // 系统设置
-const settings = reactive({ ai_api_key: '', ai_base_url: '', ai_model: '', ai_system_prompt: '' })
+const settings = reactive({
+  ai_api_key: '', ai_base_url: '', ai_model: '', ai_system_prompt: '',
+  oss_enabled: 'false', oss_endpoint: '', oss_bucket: '', oss_region: '',
+  oss_access_key_id: '', oss_access_key_secret: '', oss_custom_domain: ''
+})
 const savingSettings = ref(false)
 
 const statCards = computed(() => [
@@ -294,8 +328,12 @@ async function handleSaveSettings() {
     if (toSave.ai_api_key && toSave.ai_api_key.startsWith('sk-...')) {
       delete toSave.ai_api_key
     }
+    if (toSave.oss_access_key_secret && toSave.oss_access_key_secret.includes('***')) {
+      delete toSave.oss_access_key_secret
+    }
     await adminApi.updateSettings(toSave)
     ElMessage.success('设置已保存')
+    await loadSettings()
   } catch (e) { console.error(e) }
   finally { savingSettings.value = false }
 }

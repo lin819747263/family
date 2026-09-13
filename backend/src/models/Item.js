@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
     name: { type: DataTypes.STRING(100), allowNull: false, comment: '物品名称' },
     description: { type: DataTypes.STRING(1000), comment: '物品描述' },
     quantity: { type: DataTypes.INTEGER, defaultValue: 1, comment: '数量' },
-    price: { type: DataTypes.DECIMAL(10, 2), defaultValue: 9.9, comment: '购买价格' },
+    price: { type: DataTypes.DECIMAL(10, 2), allowNull: true, defaultValue: null, comment: '购买价格' },
     purchaseDate: { type: DataTypes.DATEONLY, field: 'purchase_date', comment: '购买日期' },
     warrantyMonths: { type: DataTypes.INTEGER, field: 'warranty_months', comment: '保修月数' },
     productionDate: { type: DataTypes.DATEONLY, field: 'production_date', comment: '生产日期' },

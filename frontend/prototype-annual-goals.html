@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>年度目标 · 暖色居家原型</title>
+<style>
+  :root{
+    --warm-white:#FBF6EF; --cream:#F3EADD; --apricot:#EDE0CE; --wood-light:#E2CDB2;
+    --terracotta:#C89F85; --terracotta-d:#B08466; --terra-deep:#96684A;
+    --sage:#A8B08A; --sage-d:#7E8862; --amber:#E8B36A; --amber-d:#C08A3E;
+    --rose:#D99A9A; --rose-d:#B06A6A; --sky:#9FB8C9; --sky-d:#6E8CA0; --plum:#A98BB0;
+    --text-deep:#6B5744; --text-soft:#A08D7A; --card:#FFFDFA; --line:rgba(226,205,178,.7);
+    --r-lg:24px; --r-md:16px; --r-sm:12px;
+    --font:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);color:var(--text-deep);background:linear-gradient(135deg,var(--warm-white) 0%,var(--cream) 55%,#F0E2D0 100%);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;}
+  ::selection{background:var(--terracotta);color:#fff;}
+  button,input,textarea,select{font-family:var(--font);}
+
+  .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .ambient span{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:drift 16s ease-in-out infinite alternate;}
+  .a1{width:300px;height:300px;background:#F2D9B8;top:-80px;left:-60px;}
+  .a2{width:240px;height:240px;background:#E8C9AE;bottom:-60px;right:-40px;animation-delay:-6s;}
+  @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(34px,26px) scale(1.1);}}
+
+  .top-nav{position:sticky;top:0;z-index:50;background:rgba(255,252,247,.85);backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line);box-shadow:0 2px 20px rgba(160,120,90,.06);}
+  .nav-inner{max-width:1240px;margin:0 auto;height:62px;display:flex;align-items:center;gap:14px;padding:0 22px;}
+  .logo{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;}
+  .logo-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--terracotta),#D9B697);display:flex;align-items:center;justify-content:center;box-shadow:0 5px 14px rgba(200,159,133,.4);font-size:19px;transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+  .logo:hover .logo-mark{transform:rotate(-8deg) scale(1.06);}
+  .logo-text{font-size:17px;font-weight:700;letter-spacing:.06em;color:var(--terra-deep);}
+  .logo-text small{display:block;font-size:10px;font-weight:400;letter-spacing:.2em;color:var(--text-soft);margin-top:-2px;}
+  .crumb{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-soft);}
+  .crumb b{color:var(--terra-deep);}
+  .nav-actions{margin-left:auto;display:flex;align-items:center;gap:6px;}
+  .icon-btn{width:38px;height:38px;border-radius:11px;border:none;background:transparent;color:var(--text-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .25s;}
+  .icon-btn:hover{background:rgba(200,159,133,.12);color:var(--terra-deep);transform:translateY(-2px);}
+  .avatar{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));color:#fff;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(176,132,102,.3);}
+
+  .layout{max-width:1240px;margin:0 auto;padding:26px 22px 90px;position:relative;z-index:1;}
+
+  /* ===== 页头 ===== */
+  .page-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:22px;}
+  .page-title{font-size:24px;font-weight:800;color:var(--terra-deep);}
+  .page-sub{font-size:13px;color:var(--text-soft);margin-top:4px;}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 17px;border-radius:13px;border:none;cursor:pointer;font-size:14px;font-weight:600;transition:transform .3s,box-shadow .3s;}
+  .btn.primary{background:linear-gradient(135deg,var(--terracotta),#D3A98B);color:#FFF9F2;box-shadow:0 8px 20px rgba(200,159,133,.4);}
+  .btn.ghost{background:rgba(255,253,250,.85);color:var(--terra-deep);border:1.5px solid var(--line);}
+  .btn.sm{padding:7px 13px;font-size:13px;border-radius:10px;}
+  .btn:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(200,159,133,.3);}
+  .btn.danger{background:linear-gradient(135deg,var(--rose),var(--rose-d));color:#fff;box-shadow:0 8px 20px rgba(217,154,154,.3);}
+  .btn.sage{background:linear-gradient(135deg,var(--sage),var(--sage-d));color:#fff;box-shadow:0 8px 20px rgba(168,176,138,.3);}
+
+  /* ===== 统计行 ===== */
+  .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:22px;}
+  .stat-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:18px;text-align:center;box-shadow:0 4px 16px rgba(160,120,90,.06);}
+  .stat-num{font-size:28px;font-weight:800;color:var(--terra-deep);}
+  .stat-num.accent{color:var(--amber-d);}
+  .stat-num.green{color:var(--sage-d);}
+  .stat-num.rose{color:var(--rose-d);}
+  .stat-lbl{font-size:12px;color:var(--text-soft);margin-top:4px;}
+
+  /* ===== 筛选 ===== */
+  .filter-bar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .filter-chip{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:rgba(255,253,250,.8);color:var(--text-soft);font-size:13px;font-weight:600;cursor:pointer;transition:all .25s;}
+  .filter-chip:hover{border-color:var(--terracotta);color:var(--terra-deep);}
+  .filter-chip.active{background:rgba(200,159,133,.14);border-color:var(--terracotta);color:var(--terra-deep);}
+
+  /* ===== 目标卡片网格 ===== */
+  .goal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;}
+  .goal-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:0 8px 28px rgba(160,120,90,.08);overflow:hidden;transition:all .3s;cursor:pointer;}
+  .goal-card:hover{box-shadow:0 12px 36px rgba(160,120,90,.14);transform:translateY(-3px);}
+  .goal-card.cat-health{border-left:4px solid var(--sage);}
+  .goal-card.cat-study{border-left:4px solid var(--terracotta);}
+  .goal-card.cat-finance{border-left:4px solid var(--amber);}
+  .goal-card.cat-life{border-left:4px solid var(--sky);}
+  .goal-card.cat-other{border-left:4px solid var(--plum);}
+  .goal-card.status-completed{opacity:.7;}
+  .goal-card.status-cancelled{opacity:.45;}
+
+  .gc-header{padding:16px 16px 0;display:flex;justify-content:space-between;align-items:flex-start;}
+  .gc-tags{display:flex;gap:6px;flex-wrap:wrap;}
+  .tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:8px;font-size:11px;font-weight:600;}
+  .tag.cat{background:rgba(200,159,133,.12);color:var(--terra-deep);}
+  .tag.type{background:rgba(168,176,138,.15);color:var(--sage-d);}
+  .tag.status-done{background:rgba(168,176,138,.2);color:var(--sage-d);}
+  .tag.status-cancel{background:rgba(217,154,154,.15);color:var(--rose-d);}
+  .gc-more{width:28px;height:28px;border:none;background:transparent;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-soft);font-size:16px;transition:all .2s;}
+  .gc-more:hover{background:var(--cream);color:var(--terra-deep);}
+
+  .gc-body{padding:12px 16px;}
+  .gc-title{font-size:16px;font-weight:700;color:var(--terra-deep);line-height:1.4;}
+  .gc-desc{font-size:13px;color:var(--text-soft);margin-top:6px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .gc-dates{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-soft);margin-top:8px;}
+  .gc-dates svg{flex-shrink:0;}
+
+  .gc-progress{padding:0 16px 12px;}
+  .prog-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .prog-label{font-size:12px;color:var(--text-soft);}
+  .prog-value{font-size:14px;font-weight:700;color:var(--terra-deep);}
+  .prog-bar{height:8px;border-radius:4px;background:var(--cream);overflow:hidden;}
+  .prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--terracotta),var(--amber));transition:width .6s cubic-bezier(.22,1,.36,1);}
+
+  .gc-footer{padding:10px 16px;border-top:1px dashed var(--line);display:flex;justify-content:space-between;align-items:center;}
+  .gc-milestones{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-soft);}
+  .gc-milestones b{color:var(--terra-deep);font-weight:700;}
+  .gc-creator{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-soft);}
+  .gc-creator-avatar{width:20px;height:20px;border-radius:6px;background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;}
+
+  /* ===== 空状态 ===== */
+  .empty-state{text-align:center;padding:60px 20px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:0 8px 28px rgba(160,120,90,.08);}
+  .empty-icon{font-size:56px;margin-bottom:16px;}
+  .empty-title{font-size:18px;font-weight:700;color:var(--terra-deep);margin-bottom:8px;}
+  .empty-desc{font-size:14px;color:var(--text-soft);margin-bottom:20px;}
+
+  /* ===== 弹窗 ===== */
+  .overlay{position:fixed;inset:0;z-index:100;background:rgba(107,87,68,.35);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+  .overlay.open{opacity:1;pointer-events:auto;}
+  .modal{background:var(--card);border-radius:var(--r-lg);box-shadow:0 24px 80px rgba(107,87,68,.2);width:560px;max-width:92vw;max-height:88vh;overflow-y:auto;transform:translateY(20px) scale(.97);transition:transform .35s cubic-bezier(.22,1,.36,1);padding:0;}
+  .overlay.open .modal{transform:none;}
+  .modal-head{padding:22px 24px 16px;border-bottom:1px dashed var(--line);display:flex;align-items:center;justify-content:space-between;}
+  .modal-title{font-size:18px;font-weight:800;color:var(--terra-deep);}
+  .modal-close{width:32px;height:32px;border:none;background:transparent;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-soft);font-size:18px;transition:all .2s;}
+  .modal-close:hover{background:var(--cream);color:var(--terra-deep);}
+  .modal-body{padding:20px 24px;}
+  .modal-foot{padding:16px 24px;border-top:1px dashed var(--line);display:flex;justify-content:flex-end;gap:10px;}
+
+  .form-group{margin-bottom:16px;}
+  .form-label{display:block;font-size:13px;font-weight:600;color:var(--terra-deep);margin-bottom:6px;}
+  .form-input{width:100%;padding:10px 14px;border-radius:var(--r-sm);border:1.5px solid var(--line);background:var(--warm-white);font-size:14px;color:var(--text-deep);outline:none;transition:border-color .25s,box-shadow .25s;}
+  .form-input:focus{border-color:var(--terracotta);box-shadow:0 0 0 3px rgba(200,159,133,.15);}
+  .form-input::placeholder{color:var(--wood-light);}
+  textarea.form-input{resize:vertical;min-height:72px;}
+  select.form-input{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23A08D7A' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .form-hint{font-size:11px;color:var(--text-soft);margin-top:4px;}
+
+  .radio-group{display:flex;gap:8px;}
+  .radio-opt{flex:1;padding:10px;border-radius:var(--r-sm);border:1.5px solid var(--line);background:var(--warm-white);cursor:pointer;text-align:center;font-size:13px;font-weight:600;color:var(--text-soft);transition:all .25s;}
+  .radio-opt:hover{border-color:var(--terracotta);}
+  .radio-opt.active{background:rgba(200,159,133,.14);border-color:var(--terracotta);color:var(--terra-deep);}
+
+  /* ===== 目标详情弹窗 ===== */
+  .detail-modal{width:680px;}
+  .detail-head-info{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .detail-dates{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-soft);margin-top:10px;}
+  .detail-desc{font-size:14px;color:var(--text-soft);line-height:1.6;margin-top:12px;}
+  .detail-progress{margin-top:18px;}
+  .detail-progress .prog-bar{height:10px;border-radius:5px;}
+
+  /* ===== 里程碑 ===== */
+  .ms-section{margin-top:24px;}
+  .ms-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .ms-title{font-size:15px;font-weight:700;color:var(--terra-deep);display:flex;align-items:center;gap:8px;}
+  .ms-list{display:flex;flex-direction:column;gap:10px;}
+  .ms-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r-sm);background:var(--warm-white);border:1px solid var(--line);transition:all .25s;}
+  .ms-item:hover{border-color:var(--terracotta);box-shadow:0 4px 12px rgba(160,120,90,.08);}
+  .ms-item.completed{opacity:.65;}
+  .ms-item.completed .ms-name{text-decoration:line-through;}
+  .ms-check{width:22px;height:22px;border-radius:7px;border:2px solid var(--line);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .25s;font-size:12px;color:transparent;}
+  .ms-check:hover{border-color:var(--terracotta);}
+  .ms-check.done{background:var(--sage);border-color:var(--sage);color:#fff;}
+  .ms-info{flex:1;min-width:0;}
+  .ms-name{font-size:14px;font-weight:600;color:var(--text-deep);}
+  .ms-date{font-size:12px;color:var(--text-soft);margin-top:2px;display:flex;align-items:center;gap:4px;}
+  .ms-date.overdue{color:var(--rose-d);}
+  .ms-date.upcoming{color:var(--amber-d);}
+  .ms-actions{display:flex;gap:4px;}
+  .ms-action-btn{width:26px;height:26px;border:none;background:transparent;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-soft);font-size:13px;transition:all .2s;}
+  .ms-action-btn:hover{background:var(--cream);color:var(--terra-deep);}
+  .ms-action-btn.del:hover{background:rgba(217,154,154,.15);color:var(--rose-d);}
+
+  .ms-empty{text-align:center;padding:24px;color:var(--text-soft);font-size:13px;}
+
+  /* 添加里程碑内联表单 */
+  .ms-add{display:flex;gap:8px;margin-top:10px;align-items:center;}
+  .ms-add input{flex:1;padding:8px 12px;border-radius:var(--r-sm);border:1.5px solid var(--line);background:var(--warm-white);font-size:13px;color:var(--text-deep);outline:none;}
+  .ms-add input:focus{border-color:var(--terracotta);}
+  .ms-add input[type="date"]{width:150px;flex:none;}
+
+  /* ===== 响应式 ===== */
+  @media(max-width:600px){
+    .goal-grid{grid-template-columns:1fr;}
+    .form-row{grid-template-columns:1fr;}
+    .stats-row{grid-template-columns:repeat(2,1fr);}
+    .page-title{font-size:20px;}
+    .detail-modal{width:95vw;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient"><span class="a1"></span><span class="a2"></span></div>
+
+<!-- 顶部导航 -->
+<nav class="top-nav">
+  <div class="nav-inner">
+    <div class="logo"><div class="logo-mark">🎯</div><div class="logo-text">年度目标<small>ANNUAL GOALS</small></div></div>
+    <div class="crumb">家庭提醒 <span>/</span> <b>年度目标</b></div>
+    <div class="nav-actions">
+      <button class="icon-btn" title="通知">🔔</button>
+      <div class="avatar">林</div>
+    </div>
+  </div>
+</nav>
+
+<div class="layout">
+  <!-- 页头 -->
+  <div class="page-head">
+    <div>
+      <div class="page-title">🎯 年度目标</div>
+      <div class="page-sub">设定目标，拆解里程碑，一步步走过去</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <select id="yearSelect" class="form-input" style="width:110px;padding:8px 30px 8px 12px;" onchange="render()"></select>
+      <button class="btn primary" onclick="openCreate()">＋ 新建目标</button>
+    </div>
+  </div>
+
+  <!-- 统计 -->
+  <div class="stats-row" id="statsRow"></div>
+
+  <!-- 筛选 -->
+  <div class="filter-bar" id="filterBar"></div>
+
+  <!-- 目标列表 -->
+  <div id="goalList"></div>
+</div>
+
+<!-- 创建/编辑弹窗 -->
+<div class="overlay" id="createOverlay" onclick="if(event.target===this)closeCreate()">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="createTitle">新建年度目标</div>
+      <button class="modal-close" onclick="closeCreate()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">目标标题</label>
+        <input class="form-input" id="f_title" placeholder="写下你的目标，比如「跑完 100 公里」" maxlength="100" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">详细描述</label>
+        <textarea class="form-input" id="f_desc" placeholder="详细描述（可选）" maxlength="500"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">分类</label>
+        <select class="form-input" id="f_cat">
+          <option value="health">🏃 健康</option>
+          <option value="study">📚 学习</option>
+          <option value="finance">💰 财务</option>
+          <option value="life">🏠 生活</option>
+          <option value="other" selected>📌 其他</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">开始时间</label>
+          <input type="date" class="form-input" id="f_start" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">结束时间</label>
+          <input type="date" class="form-input" id="f_end" />
+        </div>
+      </div>
+      <div class="form-hint" id="f_hint"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeCreate()">取消</button>
+      <button class="btn primary" onclick="saveGoal()">创建目标</button>
+    </div>
+  </div>
+</div>
+
+<!-- 目标详情弹窗 -->
+<div class="overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
+  <div class="modal detail-modal">
+    <div class="modal-head">
+      <div class="modal-title" id="detailTitle">目标详情</div>
+      <button class="modal-close" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+  </div>
+</div>
+
+<!-- 添加里程碑弹窗 -->
+<div class="overlay" id="msOverlay" onclick="if(event.target===this)closeMsForm()">
+  <div class="modal" style="width:440px;">
+    <div class="modal-head">
+      <div class="modal-title" id="msFormTitle">添加里程碑</div>
+      <button class="modal-close" onclick="closeMsForm()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">里程碑名称</label>
+        <input class="form-input" id="ms_name" placeholder="比如「完成第一章」" maxlength="100" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">目标日期</label>
+        <input type="date" class="form-input" id="ms_date" />
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeMsForm()">取消</button>
+      <button class="btn primary" onclick="saveMilestone()">添加</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATS = {health:'🏃 健康',study:'📚 学习',finance:'💰 财务',life:'🏠 生活',other:'📌 其他'};
+const CAT_COLORS = {health:'var(--sage)',study:'var(--terracotta)',finance:'var(--amber)',life:'var(--sky)',other:'var(--plum)'};
+const NOW = new Date();
+const YEAR = NOW.getFullYear();
+
+let goals = [
+  {id:1,title:'读完 24 本书',desc:'每月两本，涵盖技术、文学和心理学',category:'study',status:'active',progress:42,startDate:`${YEAR}-01-01`,endDate:`${YEAR}-12-31`,creator:'林',milestones:[
+    {id:1,name:'完成 6 本',date:`${YEAR}-03-31`,done:true},
+    {id:2,name:'完成 12 本',date:`${YEAR}-06-30`,done:true},
+    {id:3,name:'完成 18 本',date:`${YEAR}-09-30`,done:false},
+    {id:4,name:'完成 24 本',date:`${YEAR}-12-31`,done:false},
+  ]},
+  {id:2,title:'全家跑步 200 公里',desc:'每周至少跑三次，累计 200 公里',category:'health',status:'active',progress:28,startDate:`${YEAR}-01-01`,endDate:`${YEAR}-12-31`,creator:'林',milestones:[
+    {id:1,name:'50 公里',date:`${YEAR}-03-31`,done:true},
+    {id:2,name:'100 公里',date:`${YEAR}-06-30`,done:false},
+    {id:3,name:'150 公里',date:`${YEAR}-09-30`,done:false},
+    {id:4,name:'200 公里',date:`${YEAR}-12-31`,done:false},
+  ]},
+  {id:3,title:'存下 5 万元',desc:'每月定存 4000+，年底目标 5 万',category:'finance',status:'active',progress:55,startDate:`${YEAR}-01-01`,endDate:`${YEAR}-12-31`,creator:'林',milestones:[
+    {id:1,name:'存到 1 万',date:`${YEAR}-02-28`,done:true},
+    {id:2,name:'存到 2.5 万',date:`${YEAR}-06-30`,done:true},
+    {id:3,name:'存到 4 万',date:`${YEAR}-09-30`,done:false},
+    {id:4,name:'存到 5 万',date:`${YEAR}-12-31`,done:false},
+  ]},
+  {id:4,title:'学会做 12 道新菜',desc:'每月一道新菜，记录食谱',category:'life',status:'active',progress:15,startDate:`${YEAR}-01-01`,endDate:`${YEAR}-12-31`,creator:'林',milestones:[
+    {id:1,name:'学会 3 道',date:`${YEAR}-03-31`,done:true},
+    {id:2,name:'学会 6 道',date:`${YEAR}-06-30`,done:false},
+  ]},
+];
+
+let nextId = 10;
+let nextMsId = 100;
+let editingId = null;
+let currentFilter = 'all';
+let detailGoalId = null;
+let editingMsId = null;
+
+// 初始化年份选择
+(function(){
+  const sel = document.getElementById('yearSelect');
+  for(let y=YEAR-2;y<=YEAR+2;y++){
+    const o = document.createElement('option');
+    o.value=y; o.textContent=y+'年';
+    if(y===YEAR) o.selected=true;
+    sel.appendChild(o);
+  }
+})();
+
+function render(){
+  renderStats();
+  renderFilters();
+  renderGoals();
+}
+
+function renderStats(){
+  const total = goals.length;
+  const active = goals.filter(g=>g.status==='active').length;
+  const done = goals.filter(g=>g.status==='completed').length;
+  const avgProg = total? Math.round(goals.reduce((s,g)=>s+g.progress,0)/total) : 0;
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-lbl">全部目标</div></div>
+    <div class="stat-card"><div class="stat-num accent">${active}</div><div class="stat-lbl">进行中</div></div>
+    <div class="stat-card"><div class="stat-num green">${done}</div><div class="stat-lbl">已完成</div></div>
+    <div class="stat-card"><div class="stat-num rose">${avgProg}%</div><div class="stat-lbl">平均进度</div></div>
+  `;
+}
+
+function renderFilters(){
+  const filters = [
+    {key:'all',label:'全部'},
+    {key:'health',label:'🏃 健康'},
+    {key:'study',label:'📚 学习'},
+    {key:'finance',label:'💰 财务'},
+    {key:'life',label:'🏠 生活'},
+    {key:'other',label:'📌 其他'},
+  ];
+  document.getElementById('filterBar').innerHTML = filters.map(f =>
+    `<div class="filter-chip ${currentFilter===f.key?'active':''}" onclick="setFilter('${f.key}')">${f.label}</div>`
+  ).join('');
+}
+
+function setFilter(key){ currentFilter=key; render(); }
+
+function renderGoals(){
+  const filtered = currentFilter==='all' ? goals : goals.filter(g=>g.category===currentFilter);
+  if(!filtered.length){
+    document.getElementById('goalList').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🎯</div>
+        <div class="empty-title">还没有年度目标</div>
+        <div class="empty-desc">设定目标，让这一年更有意义</div>
+        <button class="btn primary" onclick="openCreate()">＋ 创建第一个目标</button>
+      </div>`;
+    return;
+  }
+  document.getElementById('goalList').innerHTML = `<div class="goal-grid">${filtered.map(g=>goalCard(g)).join('')}</div>`;
+}
+
+function goalCard(g){
+  const doneMs = g.milestones.filter(m=>m.done).length;
+  const totalMs = g.milestones.length;
+  const statusClass = g.status!=='active' ? ` status-${g.status}` : '';
+  const statusTag = g.status==='completed' ? '<span class="tag status-done">✅ 已完成</span>' : g.status==='cancelled' ? '<span class="tag status-cancel">已取消</span>' : '';
+  return `
+  <div class="goal-card cat-${g.category}${statusClass}" onclick="openDetail(${g.id})">
+    <div class="gc-header">
+      <div class="gc-tags">
+        <span class="tag cat">${CATS[g.category]}</span>
+        ${statusTag}
+      </div>
+      <button class="gc-more" onclick="event.stopPropagation();toggleMenu(${g.id},this)">⋯</button>
+    </div>
+    <div class="gc-body">
+      <div class="gc-title">${esc(g.title)}</div>
+      ${g.desc?`<div class="gc-desc">${esc(g.desc)}</div>`:''}
+      <div class="gc-dates">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        ${fmtDate(g.startDate)} → ${fmtDate(g.endDate)}
+      </div>
+    </div>
+    <div class="gc-progress">
+      <div class="prog-header"><span class="prog-label">年度进度</span><span class="prog-value">${g.progress}%</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${g.progress}%"></div></div>
+    </div>
+    <div class="gc-footer">
+      <div class="gc-milestones">🏁 里程碑 <b>${doneMs}/${totalMs}</b></div>
+      <div class="gc-creator"><div class="gc-creator-avatar">${(g.creator||'?')[0]}</div>${g.creator||'未知'}</div>
+    </div>
+  </div>`;
+}
+
+function openCreate(){
+  editingId = null;
+  document.getElementById('createTitle').textContent = '新建年度目标';
+  document.getElementById('f_title').value = '';
+  document.getElementById('f_desc').value = '';
+  document.getElementById('f_cat').value = 'other';
+  const today = NOW.toISOString().slice(0,10);
+  const yearEnd = `${YEAR}-12-31`;
+  document.getElementById('f_start').value = today;
+  document.getElementById('f_end').value = yearEnd;
+  document.querySelector('#createOverlay .btn.primary').textContent = '创建目标';
+  document.getElementById('f_hint').textContent = '';
+  document.getElementById('createOverlay').classList.add('open');
+}
+
+function openEdit(g){
+  editingId = g.id;
+  document.getElementById('createTitle').textContent = '编辑目标';
+  document.getElementById('f_title').value = g.title;
+  document.getElementById('f_desc').value = g.desc||'';
+  document.getElementById('f_cat').value = g.category;
+  document.getElementById('f_start').value = g.startDate;
+  document.getElementById('f_end').value = g.endDate;
+  document.querySelector('#createOverlay .btn.primary').textContent = '保存修改';
+  document.getElementById('createOverlay').classList.add('open');
+}
+
+function closeCreate(){ document.getElementById('createOverlay').classList.remove('open'); }
+
+function saveGoal(){
+  const title = document.getElementById('f_title').value.trim();
+  if(!title) return alert('请输入目标标题');
+  const desc = document.getElementById('f_desc').value.trim();
+  const category = document.getElementById('f_cat').value;
+  const startDate = document.getElementById('f_start').value;
+  const endDate = document.getElementById('f_end').value;
+  if(!startDate || !endDate) return alert('请设置开始和结束时间');
+  if(startDate > endDate) return alert('结束时间不能早于开始时间');
+
+  if(editingId){
+    const g = goals.find(x=>x.id===editingId);
+    Object.assign(g,{title,desc,category,startDate,endDate});
+  } else {
+    goals.push({id:nextId++,title,desc,category,status:'active',progress:0,startDate,endDate,creator:'林',milestones:[]});
+  }
+  closeCreate();
+  render();
+}
+
+function openDetail(id){
+  detailGoalId = id;
+  const g = goals.find(x=>x.id===id);
+  if(!g) return;
+  document.getElementById('detailTitle').textContent = g.title;
+  const doneMs = g.milestones.filter(m=>m.done).length;
+  const totalMs = g.milestones.length;
+  const today = NOW.toISOString().slice(0,10);
+
+  let msHtml = '';
+  if(g.milestones.length){
+    const sorted = [...g.milestones].sort((a,b)=>a.date.localeCompare(b.date));
+    msHtml = sorted.map(m=>{
+      const overdue = !m.done && m.date < today;
+      const upcoming = !m.done && !overdue && (new Date(m.date) - NOW)/(86400000) <= 14;
+      const dateClass = overdue ? 'overdue' : upcoming ? 'upcoming' : '';
+      const dateIcon = overdue ? '⚠️' : upcoming ? '⏰' : '📅';
+      return `
+      <div class="ms-item ${m.done?'completed':''}">
+        <div class="ms-check ${m.done?'done':''}" onclick="toggleMs(${g.id},${m.id})">✓</div>
+        <div class="ms-info">
+          <div class="ms-name">${esc(m.name)}</div>
+          <div class="ms-date ${dateClass}">${dateIcon} ${fmtDate(m.date)}${overdue?' 已过期':''}</div>
+        </div>
+        <div class="ms-actions">
+          <button class="ms-action-btn" onclick="editMs(${g.id},${m.id})" title="编辑">✏️</button>
+          <button class="ms-action-btn del" onclick="deleteMs(${g.id},${m.id})" title="删除">🗑</button>
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    msHtml = '<div class="ms-empty">还没有里程碑，添加几个小目标吧</div>';
+  }
+
+  document.getElementById('detailBody').innerHTML = `
+    <div class="detail-head-info">
+      <span class="tag cat">${CATS[g.category]}</span>
+      ${g.status==='completed'?'<span class="tag status-done">✅ 已完成</span>':''}
+      ${g.status==='cancelled'?'<span class="tag status-cancel">已取消</span>':''}
+    </div>
+    <div class="detail-dates">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      ${fmtDate(g.startDate)} → ${fmtDate(g.endDate)}
+    </div>
+    ${g.desc?`<div class="detail-desc">${esc(g.desc)}</div>`:''}
+    <div class="detail-progress">
+      <div class="prog-header"><span class="prog-label">年度进度</span><span class="prog-value">${g.progress}%</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${g.progress}%"></div></div>
+    </div>
+
+    <div class="ms-section">
+      <div class="ms-header">
+        <div class="ms-title">🏁 里程碑 <span style="font-weight:400;font-size:13px;color:var(--text-soft)">(${doneMs}/${totalMs})</span></div>
+        <button class="btn sm primary" onclick="openMsForm(${g.id})">＋ 添加里程碑</button>
+      </div>
+      <div class="ms-list">${msHtml}</div>
+    </div>
+
+    <div style="margin-top:24px;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;">
+      <button class="btn sm ghost" onclick="openEdit(goals.find(x=>x.id===${g.id}));closeDetail()">✏️ 编辑目标</button>
+      ${g.status==='active'?`
+        <button class="btn sm sage" onclick="markComplete(${g.id})">✅ 标记完成</button>
+        <button class="btn sm danger" onclick="cancelGoal(${g.id})">取消目标</button>
+      `:''}
+      ${g.status!=='active'?`<button class="btn sm ghost" onclick="restoreGoal(${g.id})">恢复进行</button>`:''}
+      <button class="btn sm danger" onclick="deleteGoal(${g.id})">🗑 删除</button>
+    </div>
+  `;
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function closeDetail(){ document.getElementById('detailOverlay').classList.remove('open'); detailGoalId=null; }
+
+function toggleMs(gid,mid){
+  const g = goals.find(x=>x.id===gid);
+  const m = g.milestones.find(x=>x.id===mid);
+  m.done = !m.done;
+  recalcProgress(g);
+  openDetail(gid);
+  render();
+}
+
+function recalcProgress(g){
+  if(!g.milestones.length) return;
+  const done = g.milestones.filter(m=>m.done).length;
+  g.progress = Math.round(done / g.milestones.length * 100);
+}
+
+function openMsForm(gid, msId){
+  detailGoalId = gid;
+  editingMsId = msId || null;
+  document.getElementById('msFormTitle').textContent = msId ? '编辑里程碑' : '添加里程碑';
+  document.getElementById('ms_name').value = '';
+  document.getElementById('ms_date').value = '';
+  if(msId){
+    const g = goals.find(x=>x.id===gid);
+    const m = g.milestones.find(x=>x.id===msId);
+    document.getElementById('ms_name').value = m.name;
+    document.getElementById('ms_date').value = m.date;
+  }
+  document.querySelector('#msOverlay .btn.primary').textContent = msId ? '保存' : '添加';
+  document.getElementById('msOverlay').classList.add('open');
+}
+
+function closeMsForm(){ document.getElementById('msOverlay').classList.remove('open'); editingMsId=null; }
+
+function saveMilestone(){
+  const name = document.getElementById('ms_name').value.trim();
+  const date = document.getElementById('ms_date').value;
+  if(!name) return alert('请输入里程碑名称');
+  if(!date) return alert('请选择目标日期');
+  const g = goals.find(x=>x.id===detailGoalId);
+  if(editingMsId){
+    const m = g.milestones.find(x=>x.id===editingMsId);
+    m.name = name; m.date = date;
+  } else {
+    g.milestones.push({id:nextMsId++,name,date,done:false});
+  }
+  recalcProgress(g);
+  closeMsForm();
+  openDetail(detailGoalId);
+  render();
+}
+
+function editMs(gid,mid){ openMsForm(gid,mid); }
+
+function deleteMs(gid,mid){
+  if(!confirm('确定删除这个里程碑？')) return;
+  const g = goals.find(x=>x.id===gid);
+  g.milestones = g.milestones.filter(m=>m.id!==mid);
+  recalcProgress(g);
+  openDetail(gid);
+  render();
+}
+
+function markComplete(id){
+  const g = goals.find(x=>x.id===id);
+  g.status='completed'; g.progress=100;
+  g.milestones.forEach(m=>m.done=true);
+  closeDetail(); render();
+}
+function cancelGoal(id){
+  if(!confirm('确定取消这个目标？')) return;
+  goals.find(x=>x.id===id).status='cancelled';
+  closeDetail(); render();
+}
+function restoreGoal(id){
+  goals.find(x=>x.id===id).status='active';
+  closeDetail(); render();
+}
+function deleteGoal(id){
+  if(!confirm('确定删除这个目标？此操作不可恢复。')) return;
+  goals = goals.filter(x=>x.id!==id);
+  closeDetail(); render();
+}
+
+function toggleMenu(id,btn){
+  // Simple inline menu — for prototype just open edit
+  const g = goals.find(x=>x.id===id);
+  if(g.status==='active') openEdit(g);
+}
+
+function fmtDate(s){
+  if(!s) return '—';
+  const [y,m,d] = s.split('-');
+  return `${y}年${+m}月${+d}日`;
+}
+function esc(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+render();
+</script>
+</body>
+</html>

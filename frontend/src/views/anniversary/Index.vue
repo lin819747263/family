@@ -812,11 +812,25 @@ async function handleDelete(id) {
     flex-direction: column;
     gap: 12px;
   }
+  .header-actions {
+    flex-wrap: wrap;
+  }
+  .upcoming-row {
+    grid-template-columns: 1fr;
+  }
   .card-grid {
     grid-template-columns: 1fr;
   }
-  .upcoming-card {
-    width: 120px;
+  .act-btn {
+    width: 36px;
+    height: 36px;
+  }
+  .type-picker {
+    flex-wrap: wrap;
+  }
+  .tp-item {
+    flex: 1 1 calc(33% - 8px);
+    min-width: 70px;
   }
 }
 </style>

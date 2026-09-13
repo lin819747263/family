@@ -787,6 +787,18 @@ async function handleDelete(id) {
   }
   .header-actions {
     flex-wrap: wrap;
+    flex-shrink: 1;
+  }
+  .header-actions :deep(.el-select) {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 0;
+  }
+  .ti-actions {
+    opacity: 1;
+  }
+  .act-btn {
+    width: 40px;
+    height: 40px;
   }
 }
 </style>

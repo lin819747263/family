@@ -823,7 +823,7 @@ function showReview(fileName, records) {
   const incomeCount = records.filter(r => r.type === 'income').length;
   document.getElementById('parseInfo').innerHTML = `
     ${srcTag}
-    <div class="info-item"><span class="info-label">文件：</span><span class="info-val">${fileName}</span></div>
+    <div class="info-item"><span class="info-label">文件：</span><span class="info-val">${esc(fileName)}</span></div>
     <div class="info-item"><span class="info-label">共</span><span class="info-val">${records.length}</span><span class="info-label">条记录</span></div>
     <div class="info-item"><span class="info-label">支出</span><span class="info-val">${expenseCount}</span><span class="info-label">笔</span></div>
     <div class="info-item"><span class="info-label">收入</span><span class="info-val">${incomeCount}</span><span class="info-label">笔</span></div>

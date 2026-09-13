@@ -72,4 +72,22 @@ import { House, Back } from '@element-plus/icons-vue'
   display: flex;
   gap: 12px;
 }
+
+@media (max-width: 768px) {
+  .nf-illustration {
+    width: 150px;
+    height: 120px;
+  }
+  .nf-title {
+    font-size: 20px;
+  }
+  .nf-desc {
+    font-size: 13px;
+  }
+  .nf-actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 260px;
+  }
+}
 </style>

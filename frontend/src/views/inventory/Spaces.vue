@@ -463,6 +463,16 @@ async function handleDelete(id) {
 }
 
 /* ===== 响应式 ===== */
+@media (max-width: 768px) {
+  .node-acts {
+    opacity: 1;
+  }
+  .act-btn {
+    width: 36px;
+    height: 36px;
+  }
+}
+
 @media (max-width: 600px) {
   .page-head {
     gap: 12px;

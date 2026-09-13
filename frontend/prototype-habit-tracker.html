@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>习惯打卡 · 暖色居家原型</title>
+<style>
+  :root{
+    --warm-white:#FBF6EF; --cream:#F3EADD; --apricot:#EDE0CE; --wood-light:#E2CDB2;
+    --terracotta:#C89F85; --terracotta-d:#B08466; --terra-deep:#96684A;
+    --sage:#A8B08A; --sage-d:#7E8862; --amber:#E8B36A; --amber-d:#C08A3E;
+    --rose:#D99A9A; --rose-d:#B06A6A; --sky:#9FB8C9; --sky-d:#6E8CA0; --plum:#A98BB0;
+    --text-deep:#6B5744; --text-soft:#A08D7A; --card:#FFFDFA; --line:rgba(226,205,178,.7);
+    --r-lg:24px; --r-md:16px; --r-sm:12px;
+    --font:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);color:var(--text-deep);background:linear-gradient(135deg,var(--warm-white) 0%,var(--cream) 55%,#F0E2D0 100%);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;}
+  ::selection{background:var(--terracotta);color:#fff;}
+  button,input,textarea,select{font-family:var(--font);}
+
+  .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .ambient span{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:drift 16s ease-in-out infinite alternate;}
+  .a1{width:300px;height:300px;background:#F2D9B8;top:-80px;left:-60px;}
+  .a2{width:240px;height:240px;background:#E8C9AE;bottom:-60px;right:-40px;animation-delay:-6s;}
+  @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(34px,26px) scale(1.1);}}
+
+  .top-nav{position:sticky;top:0;z-index:50;background:rgba(255,252,247,.85);backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line);box-shadow:0 2px 20px rgba(160,120,90,.06);}
+  .nav-inner{max-width:1240px;margin:0 auto;height:62px;display:flex;align-items:center;gap:14px;padding:0 22px;}
+  .logo{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;}
+  .logo-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--terracotta),#D9B697);display:flex;align-items:center;justify-content:center;box-shadow:0 5px 14px rgba(200,159,133,.4);font-size:19px;transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+  .logo:hover .logo-mark{transform:rotate(-8deg) scale(1.06);}
+  .logo-text{font-size:17px;font-weight:700;letter-spacing:.06em;color:var(--terra-deep);}
+  .logo-text small{display:block;font-size:10px;font-weight:400;letter-spacing:.2em;color:var(--text-soft);margin-top:-2px;}
+  .crumb{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-soft);}
+  .crumb b{color:var(--terra-deep);}
+  .nav-actions{margin-left:auto;display:flex;align-items:center;gap:6px;}
+  .icon-btn{width:38px;height:38px;border-radius:11px;border:none;background:transparent;color:var(--text-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .25s;}
+  .icon-btn:hover{background:rgba(200,159,133,.12);color:var(--terra-deep);transform:translateY(-2px);}
+  .avatar{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));color:#fff;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(176,132,102,.3);}
+
+  .layout{max-width:1240px;margin:0 auto;padding:26px 22px 90px;position:relative;z-index:1;}
+
+  .page-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:22px;}
+  .page-title{font-size:24px;font-weight:800;color:var(--terra-deep);}
+  .page-sub{font-size:13px;color:var(--text-soft);margin-top:4px;}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 17px;border-radius:13px;border:none;cursor:pointer;font-size:14px;font-weight:600;transition:transform .3s,box-shadow .3s;}
+  .btn.primary{background:linear-gradient(135deg,var(--terracotta),#D3A98B);color:#FFF9F2;box-shadow:0 8px 20px rgba(200,159,133,.4);}
+  .btn.ghost{background:rgba(255,253,250,.85);color:var(--terra-deep);border:1.5px solid var(--line);}
+  .btn.sm{padding:7px 13px;font-size:13px;border-radius:10px;}
+  .btn:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(200,159,133,.3);}
+  .btn.danger{background:linear-gradient(135deg,var(--rose),var(--rose-d));color:#fff;}
+
+  /* ===== 今日概览 ===== */
+  .today-banner{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 24px;margin-bottom:22px;box-shadow:0 8px 28px rgba(160,120,90,.08);display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .today-date{text-align:center;min-width:70px;}
+  .today-date .day{font-size:36px;font-weight:800;color:var(--terra-deep);line-height:1;}
+  .today-date .month{font-size:13px;color:var(--text-soft);margin-top:4px;}
+  .today-ring{position:relative;width:80px;height:80px;flex-shrink:0;}
+  .today-ring svg{transform:rotate(-90deg);}
+  .today-ring .ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ring-num{font-size:20px;font-weight:800;color:var(--terra-deep);}
+  .ring-label{font-size:10px;color:var(--text-soft);}
+  .today-summary{flex:1;min-width:200px;}
+  .today-summary h3{font-size:16px;font-weight:700;color:var(--terra-deep);margin-bottom:6px;}
+  .today-summary p{font-size:13px;color:var(--text-soft);line-height:1.5;}
+  .today-streaks{display:flex;gap:12px;flex-wrap:wrap;}
+  .streak-badge{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:12px;background:var(--warm-white);border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--terra-deep);}
+  .streak-badge .fire{font-size:18px;}
+
+  /* ===== 周视图导航 ===== */
+  .week-nav{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+  .week-nav .week-label{font-size:15px;font-weight:700;color:var(--terra-deep);min-width:180px;text-align:center;}
+  .week-dots{display:flex;gap:6px;justify-content:center;margin-bottom:18px;}
+  .week-dot{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 10px;border-radius:14px;cursor:pointer;transition:all .25s;min-width:52px;}
+  .week-dot:hover{background:rgba(200,159,133,.08);}
+  .week-dot.active{background:rgba(200,159,133,.14);}
+  .week-dot.today{position:relative;}
+  .week-dot.today::after{content:"";position:absolute;bottom:2px;width:6px;height:6px;border-radius:50%;background:var(--terracotta);}
+  .wd-name{font-size:11px;color:var(--text-soft);font-weight:600;}
+  .wd-num{font-size:18px;font-weight:800;color:var(--terra-deep);}
+  .week-dot.active .wd-num{color:var(--terra-deep);}
+  .wd-status{width:8px;height:8px;border-radius:50%;background:var(--cream);border:1.5px solid var(--line);}
+  .wd-status.done{background:var(--sage);border-color:var(--sage);}
+  .wd-status.partial{background:var(--amber);border-color:var(--amber);}
+
+  /* ===== 习惯卡片 ===== */
+  .habit-list{display:flex;flex-direction:column;gap:12px;}
+  .habit-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:0 6px 20px rgba(160,120,90,.06);padding:16px 18px;display:flex;align-items:center;gap:14px;transition:all .3s;}
+  .habit-card:hover{box-shadow:0 10px 30px rgba(160,120,90,.12);transform:translateY(-2px);}
+  .habit-card.checked{border-color:var(--sage);background:rgba(168,176,138,.04);}
+
+  .habit-icon{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;transition:transform .35s cubic-bezier(.34,1.56,.64,1);}
+  .habit-card:hover .habit-icon{transform:scale(1.08) rotate(-5deg);}
+  .hi-sage{background:linear-gradient(135deg,var(--sage),var(--sage-d));}
+  .hi-terra{background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));}
+  .hi-amber{background:linear-gradient(135deg,var(--amber),var(--amber-d));}
+  .hi-sky{background:linear-gradient(135deg,var(--sky),var(--sky-d));}
+  .hi-rose{background:linear-gradient(135deg,var(--rose),var(--rose-d));}
+  .hi-plum{background:linear-gradient(135deg,var(--plum),#8A6B92);}
+
+  .habit-info{flex:1;min-width:0;}
+  .habit-name{font-size:15px;font-weight:700;color:var(--terra-deep);}
+  .habit-meta{display:flex;align-items:center;gap:10px;margin-top:4px;font-size:12px;color:var(--text-soft);}
+  .habit-streak{display:inline-flex;align-items:center;gap:3px;color:var(--amber-d);font-weight:700;}
+
+  .habit-week{display:flex;gap:4px;align-items:center;}
+  .hw-dot{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:1.5px solid var(--line);color:var(--text-soft);background:var(--warm-white);cursor:pointer;transition:all .2s;}
+  .hw-dot:hover{border-color:var(--terracotta);}
+  .hw-dot.done{background:var(--sage);border-color:var(--sage);color:#fff;}
+  .hw-dot.today-dot{border-color:var(--terracotta);border-width:2px;}
+  .hw-dot.future{opacity:.4;cursor:default;}
+
+  .habit-check{width:42px;height:42px;border-radius:13px;border:2.5px solid var(--line);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;color:transparent;transition:all .3s cubic-bezier(.34,1.56,.64,1);flex-shrink:0;}
+  .habit-check:hover{border-color:var(--sage);transform:scale(1.1);}
+  .habit-check.checked{background:var(--sage);border-color:var(--sage);color:#fff;transform:scale(1);}
+
+  .habit-actions{display:flex;gap:2px;flex-shrink:0;}
+  .ha-btn{width:30px;height:30px;border:none;background:transparent;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-soft);font-size:14px;transition:all .2s;}
+  .ha-btn:hover{background:var(--cream);color:var(--terra-deep);}
+
+  /* ===== 统计区 ===== */
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:22px;}
+  .stat-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:16px;text-align:center;box-shadow:0 4px 16px rgba(160,120,90,.06);}
+  .stat-num{font-size:28px;font-weight:800;color:var(--terra-deep);}
+  .stat-num.sage{color:var(--sage-d);}
+  .stat-num.amber{color:var(--amber-d);}
+  .stat-num.rose{color:var(--rose-d);}
+  .stat-lbl{font-size:12px;color:var(--text-soft);margin-top:4px;}
+
+  /* ===== 热力图 ===== */
+  .heatmap-section{margin-bottom:22px;}
+  .heatmap-title{font-size:15px;font-weight:700;color:var(--terra-deep);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .heatmap-wrap{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;box-shadow:0 6px 20px rgba(160,120,90,.06);overflow-x:auto;}
+  .heatmap{display:flex;gap:3px;}
+  .heatmap-col{display:flex;flex-direction:column;gap:3px;}
+  .hm-cell{width:14px;height:14px;border-radius:4px;background:var(--cream);transition:all .2s;}
+  .hm-cell.l1{background:rgba(168,176,138,.3);}
+  .hm-cell.l2{background:rgba(168,176,138,.5);}
+  .hm-cell.l3{background:rgba(168,176,138,.75);}
+  .hm-cell.l4{background:var(--sage-d);}
+  .heatmap-legend{display:flex;align-items:center;gap:6px;margin-top:10px;justify-content:flex-end;font-size:11px;color:var(--text-soft);}
+  .hm-legend-cell{width:12px;height:12px;border-radius:3px;}
+
+  /* ===== 成员排行 ===== */
+  .member-board{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;box-shadow:0 6px 20px rgba(160,120,90,.06);margin-bottom:22px;}
+  .mb-title{font-size:15px;font-weight:700;color:var(--terra-deep);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .mb-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line);}
+  .mb-row:last-child{border-bottom:none;}
+  .mb-rank{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;}
+  .mb-rank.r1{background:linear-gradient(135deg,#FFD700,#FFA500);color:#fff;}
+  .mb-rank.r2{background:linear-gradient(135deg,#C0C0C0,#A0A0A0);color:#fff;}
+  .mb-rank.r3{background:linear-gradient(135deg,#CD7F32,#A0522D);color:#fff;}
+  .mb-rank.rn{background:var(--cream);color:var(--text-soft);}
+  .mb-avatar{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--terracotta),var(--terra-deep));color:#fff;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .mb-name{font-size:14px;font-weight:600;color:var(--text-deep);flex:1;}
+  .mb-bar-wrap{flex:1;max-width:200px;}
+  .mb-bar{height:8px;border-radius:4px;background:var(--cream);overflow:hidden;}
+  .mb-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--sage),var(--sage-d));transition:width .6s cubic-bezier(.22,1,.36,1);}
+  .mb-rate{font-size:13px;font-weight:700;color:var(--terra-deep);min-width:44px;text-align:right;}
+
+  /* ===== 弹窗 ===== */
+  .overlay{position:fixed;inset:0;z-index:100;background:rgba(107,87,68,.35);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+  .overlay.open{opacity:1;pointer-events:auto;}
+  .modal{background:var(--card);border-radius:var(--r-lg);box-shadow:0 24px 80px rgba(107,87,68,.2);width:520px;max-width:92vw;max-height:88vh;overflow-y:auto;transform:translateY(20px) scale(.97);transition:transform .35s cubic-bezier(.22,1,.36,1);}
+  .overlay.open .modal{transform:none;}
+  .modal-head{padding:22px 24px 16px;border-bottom:1px dashed var(--line);display:flex;align-items:center;justify-content:space-between;}
+  .modal-title{font-size:18px;font-weight:800;color:var(--terra-deep);}
+  .modal-close{width:32px;height:32px;border:none;background:transparent;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-soft);font-size:18px;transition:all .2s;}
+  .modal-close:hover{background:var(--cream);color:var(--terra-deep);}
+  .modal-body{padding:20px 24px;}
+  .modal-foot{padding:16px 24px;border-top:1px dashed var(--line);display:flex;justify-content:flex-end;gap:10px;}
+
+  .form-group{margin-bottom:16px;}
+  .form-label{display:block;font-size:13px;font-weight:600;color:var(--terra-deep);margin-bottom:6px;}
+  .form-input{width:100%;padding:10px 14px;border-radius:var(--r-sm);border:1.5px solid var(--line);background:var(--warm-white);font-size:14px;color:var(--text-deep);outline:none;transition:border-color .25s,box-shadow .25s;}
+  .form-input:focus{border-color:var(--terracotta);box-shadow:0 0 0 3px rgba(200,159,133,.15);}
+  .form-input::placeholder{color:var(--wood-light);}
+  select.form-input{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23A08D7A' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+
+  .icon-picker{display:flex;gap:8px;flex-wrap:wrap;}
+  .icon-opt{width:42px;height:42px;border-radius:12px;border:1.5px solid var(--line);background:var(--warm-white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;transition:all .2s;}
+  .icon-opt:hover{border-color:var(--terracotta);transform:scale(1.08);}
+  .icon-opt.active{border-color:var(--terracotta);background:rgba(200,159,133,.12);box-shadow:0 2px 8px rgba(200,159,133,.2);}
+
+  .color-picker{display:flex;gap:8px;}
+  .color-opt{width:32px;height:32px;border-radius:10px;cursor:pointer;border:2.5px solid transparent;transition:all .2s;}
+  .color-opt:hover{transform:scale(1.1);}
+  .color-opt.active{border-color:var(--terra-deep);box-shadow:0 2px 8px rgba(0,0,0,.15);}
+
+  .freq-options{display:flex;gap:8px;flex-wrap:wrap;}
+  .freq-opt{padding:8px 16px;border-radius:10px;border:1.5px solid var(--line);background:var(--warm-white);cursor:pointer;font-size:13px;font-weight:600;color:var(--text-soft);transition:all .25s;}
+  .freq-opt:hover{border-color:var(--terracotta);}
+  .freq-opt.active{background:rgba(200,159,133,.14);border-color:var(--terracotta);color:var(--terra-deep);}
+
+  .weekday-picker{display:flex;gap:6px;margin-top:8px;}
+  .wd-opt{width:36px;height:36px;border-radius:10px;border:1.5px solid var(--line);background:var(--warm-white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text-soft);transition:all .2s;}
+  .wd-opt:hover{border-color:var(--terracotta);}
+  .wd-opt.active{background:var(--terracotta);border-color:var(--terracotta);color:#fff;}
+
+  /* ===== 空状态 ===== */
+  .empty-state{text-align:center;padding:50px 20px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);}
+  .empty-icon{font-size:52px;margin-bottom:14px;}
+  .empty-title{font-size:17px;font-weight:700;color:var(--terra-deep);margin-bottom:6px;}
+  .empty-desc{font-size:13px;color:var(--text-soft);margin-bottom:18px;}
+
+  /* ===== 视图切换 ===== */
+  .view-tabs{display:flex;gap:6px;margin-bottom:18px;}
+  .vtab{padding:8px 16px;border-radius:10px;border:1.5px solid var(--line);background:rgba(255,253,250,.8);color:var(--text-soft);font-size:13px;font-weight:600;cursor:pointer;transition:all .25s;}
+  .vtab:hover{border-color:var(--terracotta);color:var(--terra-deep);}
+  .vtab.active{background:rgba(200,159,133,.14);border-color:var(--terracotta);color:var(--terra-deep);}
+
+  .section-title{font-size:15px;font-weight:700;color:var(--terra-deep);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+
+  @media(max-width:700px){
+    .today-banner{flex-direction:column;align-items:flex-start;}
+    .habit-card{flex-wrap:wrap;}
+    .habit-week{order:5;width:100%;margin-top:8px;}
+    .stats-grid{grid-template-columns:repeat(2,1fr);}
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient"><span class="a1"></span><span class="a2"></span></div>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <div class="logo"><div class="logo-mark">✅</div><div class="logo-text">习惯打卡<small>HABIT TRACKER</small></div></div>
+    <div class="crumb">家庭提醒 <span>/</span> <b>习惯打卡</b></div>
+    <div class="nav-actions">
+      <button class="icon-btn" title="通知">🔔</button>
+      <div class="avatar">林</div>
+    </div>
+  </div>
+</nav>
+
+<div class="layout">
+  <div class="page-head">
+    <div>
+      <div class="page-title">✅ 习惯打卡</div>
+      <div class="page-sub">每天一点点，坚持就是胜利</div>
+    </div>
+    <button class="btn primary" onclick="openCreate()">＋ 新建习惯</button>
+  </div>
+
+  <!-- 今日概览 -->
+  <div class="today-banner" id="todayBanner"></div>
+
+  <!-- 统计 -->
+  <div class="stats-grid" id="statsGrid"></div>
+
+  <!-- 视图切换 -->
+  <div class="view-tabs">
+    <div class="vtab active" onclick="switchView('today',this)">今日打卡</div>
+    <div class="vtab" onclick="switchView('heatmap',this)">热力图</div>
+    <div class="vtab" onclick="switchView('board',this)">家庭排行</div>
+  </div>
+
+  <!-- 今日视图 -->
+  <div id="viewToday">
+    <div class="week-nav">
+      <button class="btn sm ghost" onclick="changeWeek(-1)">←</button>
+      <div class="week-label" id="weekLabel"></div>
+      <button class="btn sm ghost" onclick="changeWeek(1)">→</button>
+    </div>
+    <div class="week-dots" id="weekDots"></div>
+    <div class="habit-list" id="habitList"></div>
+  </div>
+
+  <!-- 热力图视图 -->
+  <div id="viewHeatmap" style="display:none;">
+    <div id="heatmapContainer"></div>
+  </div>
+
+  <!-- 家庭排行视图 -->
+  <div id="viewBoard" style="display:none;">
+    <div id="boardContainer"></div>
+  </div>
+</div>
+
+<!-- 创建习惯弹窗 -->
+<div class="overlay" id="createOverlay" onclick="if(event.target===this)closeCreate()">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="formTitle">新建习惯</div>
+      <button class="modal-close" onclick="closeCreate()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">习惯名称</label>
+        <input class="form-input" id="f_name" placeholder="比如「早起」「读书」「冥想」" maxlength="30" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">选择图标</label>
+        <div class="icon-picker" id="iconPicker"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">颜色</label>
+        <div class="color-picker" id="colorPicker"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">打卡频率</label>
+        <div class="freq-options" id="freqOptions">
+          <div class="freq-opt active" data-val="daily" onclick="pickFreq(this)">每天</div>
+          <div class="freq-opt" data-val="weekday" onclick="pickFreq(this)">工作日</div>
+          <div class="freq-opt" data-val="custom" onclick="pickFreq(this)">自定义</div>
+        </div>
+        <div class="weekday-picker" id="weekdayPicker" style="display:none;"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">提醒时间（可选）</label>
+        <input type="time" class="form-input" id="f_remind" style="max-width:200px;" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">目标（连续天数）</label>
+        <input type="number" class="form-input" id="f_goal" placeholder="比如 30 天" min="1" max="365" style="max-width:200px;" />
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeCreate()">取消</button>
+      <button class="btn primary" onclick="saveHabit()">创建</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ICONS = ['🏃','📚','🧘','💧','🥗','😴','✍️','🎸','🌅','💪','🧹','💊','🍎','🚶','🎯','📝'];
+const COLORS = [
+  {key:'sage',bg:'linear-gradient(135deg,var(--sage),var(--sage-d))'},
+  {key:'terra',bg:'linear-gradient(135deg,var(--terracotta),var(--terra-deep))'},
+  {key:'amber',bg:'linear-gradient(135deg,var(--amber),var(--amber-d))'},
+  {key:'sky',bg:'linear-gradient(135deg,var(--sky),var(--sky-d))'},
+  {key:'rose',bg:'linear-gradient(135deg,var(--rose),var(--rose-d))'},
+  {key:'plum',bg:'linear-gradient(135deg,var(--plum),#8A6B92)'},
+];
+const DAYS = ['一','二','三','四','五','六','日'];
+const NOW = new Date();
+const TODAY = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate());
+
+let weekOffset = 0;
+let selectedDate = new Date(TODAY);
+let editingId = null;
+let formIcon = '🏃';
+let formColor = 'sage';
+let formFreq = 'daily';
+let formWeekdays = [1,2,3,4,5];
+
+let habits = [
+  {id:1,name:'早起 7:00 前',icon:'🌅',color:'amber',freq:'daily',remind:'06:50',goal:60,records:genRecords(45,0.85)},
+  {id:2,name:'读书 30 分钟',icon:'📚',color:'terra',freq:'daily',remind:'21:00',goal:30,records:genRecords(30,0.7)},
+  {id:3,name:'冥想 10 分钟',icon:'🧘',color:'sage',freq:'daily',remind:'07:00',goal:21,records:genRecords(18,0.6)},
+  {id:4,name:'喝 8 杯水',icon:'💧',color:'sky',freq:'daily',remind:'',goal:30,records:genRecords(25,0.75)},
+  {id:5,name:'运动 30 分钟',icon:'🏃',color:'rose',freq:'weekday',remind:'18:00',goal:30,records:genRecords(20,0.65)},
+  {id:6,name:'写日记',icon:'✍️',color:'plum',freq:'daily',remind:'22:00',goal:60,records:genRecords(12,0.5)},
+];
+let nextId = 10;
+
+function genRecords(days, rate){
+  const r = {};
+  for(let i=0; i<days; i++){
+    const d = new Date(TODAY);
+    d.setDate(d.getDate() - i);
+    const key = dateKey(d);
+    if(Math.random() < rate) r[key] = true;
+  }
+  return r;
+}
+
+function dateKey(d){ return d.toISOString().slice(0,10); }
+
+function getWeekDates(offset){
+  const today = new Date(TODAY);
+  const day = today.getDay() || 7;
+  const mon = new Date(today);
+  mon.setDate(today.getDate() - (day-1) + offset*7);
+  const dates = [];
+  for(let i=0;i<7;i++){
+    const d = new Date(mon);
+    d.setDate(mon.getDate()+i);
+    dates.push(d);
+  }
+  return dates;
+}
+
+function getStreak(habit){
+  let streak = 0;
+  const d = new Date(TODAY);
+  while(true){
+    const key = dateKey(d);
+    if(habit.records[key]){streak++;d.setDate(d.getDate()-1);}
+    else break;
+  }
+  return streak;
+}
+
+function getLongestStreak(habit){
+  const keys = Object.keys(habit.records).sort();
+  if(!keys.length) return 0;
+  let max=1,cur=1;
+  for(let i=1;i<keys.length;i++){
+    const prev = new Date(keys[i-1]);
+    const curr = new Date(keys[i]);
+    const diff = (curr-prev)/(86400000);
+    if(diff===1){cur++;max=Math.max(max,cur);}
+    else cur=1;
+  }
+  return Math.max(max,cur);
+}
+
+function render(){
+  renderBanner();
+  renderStats();
+  renderWeek();
+  renderHabits();
+  renderHeatmap();
+  renderBoard();
+}
+
+function renderBanner(){
+  const todayKey = dateKey(TODAY);
+  const total = habits.length;
+  const done = habits.filter(h=>h.records[todayKey]).length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  const circ = 2*Math.PI*32;
+  const dash = circ * pct/100;
+  const maxStreak = habits.reduce((m,h)=>Math.max(m,getStreak(h)),0);
+
+  const m = NOW.getMonth()+1;
+  const d = NOW.getDate();
+  const weekDay = ['日','一','二','三','四','五','六'][NOW.getDay()];
+
+  document.getElementById('todayBanner').innerHTML = `
+    <div class="today-date"><div class="day">${d}</div><div class="month">${NOW.getFullYear()}年${m}月 · 周${weekDay}</div></div>
+    <div class="today-ring">
+      <svg width="80" height="80" viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r="32" fill="none" stroke="var(--cream)" stroke-width="6"/>
+        <circle cx="40" cy="40" r="32" fill="none" stroke="var(--sage)" stroke-width="6" stroke-linecap="round"
+          stroke-dasharray="${dash} ${circ}" />
+      </svg>
+      <div class="ring-text"><span class="ring-num">${done}/${total}</span><span class="ring-label">今日完成</span></div>
+    </div>
+    <div class="today-summary">
+      <h3>${pct===100?'🎉 全部完成！太棒了！':pct>=60?'加油，快完成了！':pct>0?'今天也要努力哦':'新的一天，开始打卡吧'}</h3>
+      <p>今天已完成 ${done} 个习惯${total-done>0?`，还有 ${total-done} 个等你完成`:''}</p>
+    </div>
+    <div class="today-streaks">
+      <div class="streak-badge"><span class="fire">🔥</span> 最长连续 ${maxStreak} 天</div>
+      <div class="streak-badge"><span class="fire">📊</span> 完成率 ${pct}%</div>
+    </div>
+  `;
+}
+
+function renderStats(){
+  const todayKey = dateKey(TODAY);
+  const total = habits.length;
+  const doneToday = habits.filter(h=>h.records[todayKey]).length;
+  const totalRecords = habits.reduce((s,h)=>s+Object.keys(h.records).length,0);
+  const avgRate = total ? Math.round(totalRecords / (total * 30) * 100) : 0;
+
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-lbl">习惯总数</div></div>
+    <div class="stat-card"><div class="stat-num sage">${doneToday}</div><div class="stat-lbl">今日已完成</div></div>
+    <div class="stat-card"><div class="stat-num amber">${totalRecords}</div><div class="stat-lbl">累计打卡</div></div>
+    <div class="stat-card"><div class="stat-num rose">${Math.min(avgRate,100)}%</div><div class="stat-lbl">近30天完成率</div></div>
+  `;
+}
+
+function renderWeek(){
+  const dates = getWeekDates(weekOffset);
+  const m1 = dates[0].getMonth()+1, d1 = dates[0].getDate();
+  const m2 = dates[6].getMonth()+1, d2 = dates[6].getDate();
+  document.getElementById('weekLabel').textContent = `${m1}月${d1}日 — ${m2}月${d2}日`;
+
+  const todayKey = dateKey(TODAY);
+  document.getElementById('weekDots').innerHTML = dates.map((d,i)=>{
+    const key = dateKey(d);
+    const isToday = key === todayKey;
+    const isSelected = dateKey(d) === dateKey(selectedDate);
+    const doneCount = habits.filter(h=>h.records[key]).length;
+    const statusClass = doneCount===habits.length && habits.length>0 ? 'done' : doneCount>0 ? 'partial' : '';
+    return `
+    <div class="week-dot ${isSelected?'active':''} ${isToday?'today':''}" onclick="selectDate('${key}')">
+      <span class="wd-name">周${DAYS[i]}</span>
+      <span class="wd-num">${d.getDate()}</span>
+      <span class="wd-status ${statusClass}"></span>
+    </div>`;
+  }).join('');
+}
+
+function renderHabits(){
+  const dates = getWeekDates(weekOffset);
+  const selKey = dateKey(selectedDate);
+  const todayKey = dateKey(TODAY);
+
+  if(!habits.length){
+    document.getElementById('habitList').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">✅</div>
+        <div class="empty-title">还没有习惯</div>
+        <div class="empty-desc">创建第一个习惯，开始你的打卡之旅</div>
+        <button class="btn primary" onclick="openCreate()">＋ 新建习惯</button>
+      </div>`;
+    return;
+  }
+
+  document.getElementById('habitList').innerHTML = habits.map(h=>{
+    const checked = !!h.records[selKey];
+    const streak = getStreak(h);
+    const colorCls = 'hi-'+h.color;
+    const weekDots = dates.map((d,i)=>{
+      const key = dateKey(d);
+      const isDone = !!h.records[key];
+      const isToday = key === todayKey;
+      const isFuture = d > TODAY;
+      return `<div class="hw-dot ${isDone?'done':''} ${isToday?'today-dot':''} ${isFuture?'future':''}"
+        title="${key}" ${!isFuture?`onclick="toggleDay(${h.id},'${key}')"`:''}
+        >${DAYS[i]}</div>`;
+    }).join('');
+
+    return `
+    <div class="habit-card ${checked?'checked':''}">
+      <div class="habit-icon ${colorCls}">${h.icon}</div>
+      <div class="habit-info">
+        <div class="habit-name">${esc(h.name)}</div>
+        <div class="habit-meta">
+          ${streak>0?`<span class="habit-streak">🔥 ${streak}天</span>`:''}
+          <span>${h.freq==='daily'?'每天':h.freq==='weekday'?'工作日':'自定义'}</span>
+          ${h.remind?`<span>⏰ ${h.remind}</span>`:''}
+        </div>
+      </div>
+      <div class="habit-week">${weekDots}</div>
+      <button class="habit-check ${checked?'checked':''}" onclick="toggleCheck(${h.id})">✓</button>
+      <div class="habit-actions">
+        <button class="ha-btn" onclick="editHabit(${h.id})" title="编辑">✏️</button>
+        <button class="ha-btn" onclick="deleteHabit(${h.id})" title="删除">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderHeatmap(){
+  const weeks = 26;
+  let html = '<div class="section-title">📊 打卡热力图（近半年）</div>';
+  html += '<div class="heatmap-wrap"><div class="heatmap">';
+
+  const endDate = new Date(TODAY);
+  const startDate = new Date(TODAY);
+  startDate.setDate(startDate.getDate() - weeks*7 + 1);
+  const startDay = startDate.getDay() || 7;
+  startDate.setDate(startDate.getDate() - (startDay-1));
+
+  for(let w=0; w<weeks+1; w++){
+    html += '<div class="heatmap-col">';
+    for(let d=0; d<7; d++){
+      const dt = new Date(startDate);
+      dt.setDate(startDate.getDate() + w*7 + d);
+      if(dt > TODAY){ html += '<div class="hm-cell" style="visibility:hidden;"></div>'; continue; }
+      const key = dateKey(dt);
+      const count = habits.filter(h=>h.records[key]).length;
+      const total = habits.length || 1;
+      const ratio = count/total;
+      let lvl = '';
+      if(ratio>0 && ratio<=.25) lvl='l1';
+      else if(ratio>.25 && ratio<=.5) lvl='l2';
+      else if(ratio>.5 && ratio<=.75) lvl='l3';
+      else if(ratio>.75) lvl='l4';
+      html += `<div class="hm-cell ${lvl}" title="${key}: ${count}/${habits.length}"></div>`;
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+  html += `<div class="heatmap-legend"><span>少</span>
+    <div class="hm-legend-cell" style="background:var(--cream)"></div>
+    <div class="hm-legend-cell" style="background:rgba(168,176,138,.3)"></div>
+    <div class="hm-legend-cell" style="background:rgba(168,176,138,.5)"></div>
+    <div class="hm-legend-cell" style="background:rgba(168,176,138,.75)"></div>
+    <div class="hm-legend-cell" style="background:var(--sage-d)"></div>
+    <span>多</span></div>`;
+  html += '</div>';
+
+  // per-habit heatmap
+  html += '<div style="margin-top:22px;">';
+  habits.forEach(h=>{
+    html += `<div style="margin-bottom:16px;"><div class="section-title">${h.icon} ${esc(h.name)}</div>`;
+    html += '<div class="heatmap-wrap"><div class="heatmap">';
+    for(let w=0; w<weeks+1; w++){
+      html += '<div class="heatmap-col">';
+      for(let d=0; d<7; d++){
+        const dt = new Date(startDate);
+        dt.setDate(startDate.getDate() + w*7 + d);
+        if(dt > TODAY){ html += '<div class="hm-cell" style="visibility:hidden;"></div>'; continue; }
+        const key = dateKey(dt);
+        const done = !!h.records[key];
+        html += `<div class="hm-cell ${done?'l4':''}" title="${key}"></div>`;
+      }
+      html += '</div>';
+    }
+    html += '</div></div></div>';
+  });
+  html += '</div>';
+
+  document.getElementById('heatmapContainer').innerHTML = html;
+}
+
+function renderBoard(){
+  const members = [
+    {name:'林',avatar:'林',rate:82},
+    {name:'小明',avatar:'明',rate:75},
+    {name:'小花',avatar:'花',rate:68},
+    {name:'爸爸',avatar:'爸',rate:55},
+  ];
+  members.sort((a,b)=>b.rate-a.rate);
+
+  let html = '<div class="member-board"><div class="mb-title">🏆 本周家庭打卡排行</div>';
+  members.forEach((m,i)=>{
+    const rankCls = i===0?'r1':i===1?'r2':i===2?'r3':'rn';
+    html += `
+    <div class="mb-row">
+      <div class="mb-rank ${rankCls}">${i+1}</div>
+      <div class="mb-avatar">${m.avatar}</div>
+      <div class="mb-name">${m.name}</div>
+      <div class="mb-bar-wrap"><div class="mb-bar"><div class="mb-bar-fill" style="width:${m.rate}%"></div></div></div>
+      <div class="mb-rate">${m.rate}%</div>
+    </div>`;
+  });
+  html += '</div>';
+  document.getElementById('boardContainer').innerHTML = html;
+}
+
+function switchView(view, el){
+  document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('viewToday').style.display = view==='today'?'':'none';
+  document.getElementById('viewHeatmap').style.display = view==='heatmap'?'':'none';
+  document.getElementById('viewBoard').style.display = view==='board'?'':'none';
+}
+
+function selectDate(key){
+  selectedDate = new Date(key+'T00:00:00');
+  renderWeek();
+  renderHabits();
+}
+
+function changeWeek(dir){
+  weekOffset += dir;
+  const dates = getWeekDates(weekOffset);
+  selectedDate = new Date(dates[0]);
+  renderWeek();
+  renderHabits();
+}
+
+function toggleCheck(id){
+  const h = habits.find(x=>x.id===id);
+  const key = dateKey(selectedDate);
+  if(h.records[key]) delete h.records[key];
+  else h.records[key] = true;
+  render();
+}
+
+function toggleDay(id, key){
+  const h = habits.find(x=>x.id===id);
+  if(h.records[key]) delete h.records[key];
+  else h.records[key] = true;
+  render();
+}
+
+// ===== 创建/编辑 =====
+function openCreate(){
+  editingId = null;
+  document.getElementById('formTitle').textContent = '新建习惯';
+  document.getElementById('f_name').value = '';
+  document.getElementById('f_remind').value = '';
+  document.getElementById('f_goal').value = '';
+  formIcon = '🏃'; formColor = 'sage'; formFreq = 'daily'; formWeekdays = [1,2,3,4,5];
+  renderFormPickers();
+  document.querySelector('#createOverlay .btn.primary').textContent = '创建';
+  document.getElementById('createOverlay').classList.add('open');
+}
+
+function editHabit(id){
+  const h = habits.find(x=>x.id===id);
+  editingId = id;
+  document.getElementById('formTitle').textContent = '编辑习惯';
+  document.getElementById('f_name').value = h.name;
+  document.getElementById('f_remind').value = h.remind||'';
+  document.getElementById('f_goal').value = h.goal||'';
+  formIcon = h.icon; formColor = h.color; formFreq = h.freq;
+  renderFormPickers();
+  document.querySelector('#createOverlay .btn.primary').textContent = '保存';
+  document.getElementById('createOverlay').classList.add('open');
+}
+
+function closeCreate(){ document.getElementById('createOverlay').classList.remove('open'); }
+
+function renderFormPickers(){
+  document.getElementById('iconPicker').innerHTML = ICONS.map(ic=>
+    `<div class="icon-opt ${ic===formIcon?'active':''}" onclick="pickIcon('${ic}',this)">${ic}</div>`
+  ).join('');
+  document.getElementById('colorPicker').innerHTML = COLORS.map(c=>
+    `<div class="color-opt ${c.key===formColor?'active':''}" style="background:${c.bg}" onclick="pickColor('${c.key}',this)"></div>`
+  ).join('');
+  document.querySelectorAll('#freqOptions .freq-opt').forEach(el=>{
+    el.classList.toggle('active', el.dataset.val===formFreq);
+  });
+  document.getElementById('weekdayPicker').style.display = formFreq==='custom'?'flex':'none';
+  if(formFreq==='custom'){
+    document.getElementById('weekdayPicker').innerHTML = DAYS.map((d,i)=>
+      `<div class="wd-opt ${formWeekdays.includes(i+1)?'active':''}" onclick="toggleWeekday(${i+1},this)">${d}</div>`
+    ).join('');
+  }
+}
+
+function pickIcon(ic,el){ formIcon=ic; document.querySelectorAll('.icon-opt').forEach(e=>e.classList.remove('active')); el.classList.add('active'); }
+function pickColor(c,el){ formColor=c; document.querySelectorAll('.color-opt').forEach(e=>e.classList.remove('active')); el.classList.add('active'); }
+function pickFreq(el){
+  formFreq = el.dataset.val;
+  document.querySelectorAll('#freqOptions .freq-opt').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('weekdayPicker').style.display = formFreq==='custom'?'flex':'none';
+  if(formFreq==='custom') renderFormPickers();
+}
+function toggleWeekday(d,el){
+  const idx = formWeekdays.indexOf(d);
+  if(idx>=0) formWeekdays.splice(idx,1); else formWeekdays.push(d);
+  el.classList.toggle('active');
+}
+
+function saveHabit(){
+  const name = document.getElementById('f_name').value.trim();
+  if(!name) return alert('请输入习惯名称');
+  const remind = document.getElementById('f_remind').value;
+  const goal = parseInt(document.getElementById('f_goal').value) || 30;
+
+  if(editingId){
+    const h = habits.find(x=>x.id===editingId);
+    Object.assign(h,{name,icon:formIcon,color:formColor,freq:formFreq,remind,goal});
+  } else {
+    habits.push({id:nextId++,name,icon:formIcon,color:formColor,freq:formFreq,remind,goal,records:{}});
+  }
+  closeCreate();
+  render();
+}
+
+function deleteHabit(id){
+  if(!confirm('确定删除这个习惯？所有打卡记录将丢失。')) return;
+  habits = habits.filter(h=>h.id!==id);
+  render();
+}
+
+function esc(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+render();
+</script>
+</body>
+</html>

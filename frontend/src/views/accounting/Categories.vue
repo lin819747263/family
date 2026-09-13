@@ -488,5 +488,15 @@ async function handleDelete(id) {
     flex-direction: column;
     gap: 12px;
   }
+  .cat-child {
+    padding-left: 36px;
+  }
+  .act-btn {
+    width: 40px;
+    height: 40px;
+  }
+  .cat-actions {
+    gap: 2px;
+  }
 }
 </style>

@@ -966,11 +966,16 @@ onMounted(async () => {
   .id-layout, .pet-grid, .mood-grid { grid-template-columns: 1fr; }
   .mn-grid, .aw-grid, .aw-stats { grid-template-columns: repeat(2, 1fr); }
 }
+@media (max-width: 768px) {
+  .mn-grid, .aw-grid, .aw-stats { grid-template-columns: 1fr; }
+  .search-wrap { min-width: 120px; }
+  .tl-del { display: inline-block; padding: 6px 0; min-height: 36px; line-height: 24px; }
+  .subtab { padding: 8px 12px; font-size: 13px; }
+}
 @media (max-width: 600px) {
   .page-title { font-size: 22px; }
-  .mn-grid, .aw-grid, .aw-stats { grid-template-columns: 1fr; }
-  .subtab { padding: 8px 12px; font-size: 13px; }
   .mood-btn { min-width: 60px; }
+  .search-wrap { min-width: 0; max-width: none; }
 }
 </style>
 

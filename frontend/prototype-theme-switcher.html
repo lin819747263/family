@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>主题切换原型 — 5 套配色方案</title>
+<style>
+  /* ================================================================
+     设计令牌 — 所有颜色通过 CSS 变量控制，切换 data-theme 即可换肤
+     ================================================================ */
+
+  /* ---------- 1. 暖居 (默认) ---------- */
+  :root, [data-theme="warm"]{
+    --bg-page:#FBF6EF;  --bg-card:#FFFDFA;  --bg-card-alt:#F3EADD;
+    --bg-nav:rgba(255,252,247,.82);
+    --primary:#C89F85;  --primary-light:#D9B697;  --primary-dark:#96684A;
+    --accent:#B08466;
+    --success:#A8B08A;  --warning:#E8B36A;  --danger:#D99A9A;  --info:#9FB8C9;
+    --text-1:#6B5744;  --text-2:#A08D7A;  --text-3:#BCAB97;
+    --border:rgba(226,205,178,.7);  --border-light:rgba(226,205,178,.4);
+    --shadow-color:160,120,90;
+    --glow:rgba(230,190,150,.45);
+    --gradient-page:linear-gradient(135deg,#FBF6EF 0%,#F3EADD 55%,#F0E2D0 100%);
+    --gradient-primary:linear-gradient(135deg,#C89F85,#D9B697);
+    --gradient-hero:linear-gradient(135deg,#C89F85,#96684A);
+    --ambient-1:#F2D9B8;  --ambient-2:#E8C9AE;  --ambient-3:#DCE6D2;
+    --tag-bg:rgba(200,159,133,.12);  --tag-text:#96684A;
+    --selection-bg:#C89F85;
+  }
+
+  /* ---------- 2. 海风 ---------- */
+  [data-theme="ocean"]{
+    --bg-page:#F0F7FA;  --bg-card:#FFFFFF;  --bg-card-alt:#E8F1F5;
+    --bg-nav:rgba(240,247,250,.88);
+    --primary:#4A9BB5;  --primary-light:#72B8CC;  --primary-dark:#2E7A91;
+    --accent:#3A8CA8;
+    --success:#6DBF9E;  --warning:#F0C264;  --danger:#E08080;  --info:#7AAFCF;
+    --text-1:#2C4A55;  --text-2:#6A8E9B;  --text-3:#9BB8C3;
+    --border:rgba(160,200,215,.6);  --border-light:rgba(160,200,215,.3);
+    --shadow-color:80,140,170;
+    --glow:rgba(120,190,210,.4);
+    --gradient-page:linear-gradient(135deg,#F0F7FA 0%,#E3EFF5 55%,#D8EAF0 100%);
+    --gradient-primary:linear-gradient(135deg,#4A9BB5,#72B8CC);
+    --gradient-hero:linear-gradient(135deg,#4A9BB5,#2E7A91);
+    --ambient-1:#B8DAE8;  --ambient-2:#A0CCD8;  --ambient-3:#C8E0D0;
+    --tag-bg:rgba(74,155,181,.1);  --tag-text:#2E7A91;
+    --selection-bg:#4A9BB5;
+  }
+
+  /* ---------- 3. 森林 ---------- */
+  [data-theme="forest"]{
+    --bg-page:#F2F5EE;  --bg-card:#FAFCF7;  --bg-card-alt:#E6ECDF;
+    --bg-nav:rgba(242,245,238,.88);
+    --primary:#6E9B5A;  --primary-light:#92B87E;  --primary-dark:#4A7340;
+    --accent:#5C8A4C;
+    --success:#7DAF68;  --warning:#D4B050;  --danger:#CF7A7A;  --info:#7AA8BF;
+    --text-1:#3A4A34;  --text-2:#6E8060;  --text-3:#9AAA8C;
+    --border:rgba(160,190,140,.6);  --border-light:rgba(160,190,140,.3);
+    --shadow-color:100,140,80;
+    --glow:rgba(140,180,120,.4);
+    --gradient-page:linear-gradient(135deg,#F2F5EE 0%,#E6ECDF 55%,#DDE5D4 100%);
+    --gradient-primary:linear-gradient(135deg,#6E9B5A,#92B87E);
+    --gradient-hero:linear-gradient(135deg,#6E9B5A,#4A7340);
+    --ambient-1:#C8DDB8;  --ambient-2:#B0CCA0;  --ambient-3:#D8E0C8;
+    --tag-bg:rgba(110,155,90,.1);  --tag-text:#4A7340;
+    --selection-bg:#6E9B5A;
+  }
+
+  /* ---------- 4. 暮光 ---------- */
+  [data-theme="twilight"]{
+    --bg-page:#F4F0F7;  --bg-card:#FDFBFF;  --bg-card-alt:#EBE4F0;
+    --bg-nav:rgba(244,240,247,.88);
+    --primary:#9478B0;  --primary-light:#B098C8;  --primary-dark:#6E5288;
+    --accent:#8668A2;
+    --success:#88B08A;  --warning:#E0B860;  --danger:#D08888;  --info:#88A8C8;
+    --text-1:#44364E;  --text-2:#8878A0;  --text-3:#AEA0C0;
+    --border:rgba(180,160,200,.6);  --border-light:rgba(180,160,200,.3);
+    --shadow-color:130,100,160;
+    --glow:rgba(170,140,200,.4);
+    --gradient-page:linear-gradient(135deg,#F4F0F7 0%,#EBE4F0 55%,#E4DAE8 100%);
+    --gradient-primary:linear-gradient(135deg,#9478B0,#B098C8);
+    --gradient-hero:linear-gradient(135deg,#9478B0,#6E5288);
+    --ambient-1:#D8C8E8;  --ambient-2:#C8B8D8;  --ambient-3:#D0D8E0;
+    --tag-bg:rgba(148,120,176,.1);  --tag-text:#6E5288;
+    --selection-bg:#9478B0;
+  }
+
+  /* ---------- 5. 墨韵 (暗色) ---------- */
+  [data-theme="ink"]{
+    --bg-page:#1A1A2E;  --bg-card:#242440;  --bg-card-alt:#2E2E4A;
+    --bg-nav:rgba(26,26,46,.92);
+    --primary:#E0A87C;  --primary-light:#ECC0A0;  --primary-dark:#C08050;
+    --accent:#D89868;
+    --success:#88C090;  --warning:#E8C870;  --danger:#E08888;  --info:#80B0D0;
+    --text-1:#E8E0D8;  --text-2:#A89888;  --text-3:#787068;
+    --border:rgba(80,70,100,.6);  --border-light:rgba(80,70,100,.35);
+    --shadow-color:0,0,0;
+    --glow:rgba(224,168,124,.25);
+    --gradient-page:linear-gradient(135deg,#1A1A2E 0%,#20203A 55%,#1E1E36 100%);
+    --gradient-primary:linear-gradient(135deg,#E0A87C,#ECC0A0);
+    --gradient-hero:linear-gradient(135deg,#E0A87C,#C08050);
+    --ambient-1:rgba(224,168,124,.15);  --ambient-2:rgba(180,140,200,.12);  --ambient-3:rgba(120,180,160,.1);
+    --tag-bg:rgba(224,168,124,.15);  --tag-text:#E0A87C;
+    --selection-bg:#E0A87C;
+  }
+
+  /* ============ 基础重置 ============ */
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+    color:var(--text-1);
+    background:var(--gradient-page);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    transition:background .5s,color .3s;
+  }
+  ::selection{background:var(--selection-bg);color:#fff;}
+
+  /* ============ 环境光 ============ */
+  .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;transition:opacity .5s;}
+  .ambient span{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:drift 16s ease-in-out infinite alternate;}
+  .a1{width:300px;height:300px;background:var(--ambient-1);top:-80px;left:-60px;}
+  .a2{width:240px;height:240px;background:var(--ambient-2);bottom:-60px;right:-40px;animation-delay:-6s;}
+  .a3{width:200px;height:200px;background:var(--ambient-3);top:40%;right:20%;animation-delay:-10s;}
+  @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(34px,26px) scale(1.1)}}
+
+  /* ============ 导航 ============ */
+  .top-nav{
+    position:sticky;top:0;z-index:50;
+    background:var(--bg-nav);
+    backdrop-filter:blur(18px) saturate(1.4);
+    border-bottom:1px solid var(--border);
+    box-shadow:0 2px 20px rgba(var(--shadow-color),.06);
+    transition:background .4s,border-color .3s;
+  }
+  .nav-inner{
+    max-width:1240px;margin:0 auto;height:64px;
+    display:flex;align-items:center;gap:14px;padding:0 22px;
+  }
+  .logo{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;}
+  .logo-mark{
+    width:38px;height:38px;border-radius:12px;
+    background:var(--gradient-primary);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 5px 14px rgba(var(--shadow-color),.2);font-size:19px;
+    transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .logo:hover .logo-mark{transform:rotate(-8deg) scale(1.06);}
+  .logo-text{font-size:17px;font-weight:700;letter-spacing:.06em;color:var(--text-1);}
+  .logo-text small{display:block;font-size:10px;font-weight:400;letter-spacing:.2em;color:var(--text-2);margin-top:-2px;}
+
+  .nav-menu{display:flex;align-items:center;gap:2px;margin-left:10px;flex:1;min-width:0;}
+  .nav-item{
+    position:relative;padding:9px 14px;border-radius:10px;font-size:14px;font-weight:500;
+    color:var(--text-2);cursor:pointer;white-space:nowrap;transition:all .25s;
+    display:flex;align-items:center;gap:6px;
+  }
+  .nav-item:hover{background:rgba(var(--shadow-color),.06);color:var(--text-1);}
+  .nav-item.active{color:var(--primary-dark);font-weight:600;}
+  .nav-item.active::after{
+    content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);
+    width:20px;height:3px;border-radius:2px;background:var(--gradient-primary);
+  }
+
+  /* ============ 主题切换器 ============ */
+  .theme-switcher{
+    display:flex;align-items:center;gap:8px;
+    padding:6px 10px;border-radius:14px;
+    background:var(--bg-card-alt);
+    border:1px solid var(--border-light);
+    transition:background .3s;
+  }
+  .theme-dot{
+    width:24px;height:24px;border-radius:50%;cursor:pointer;
+    border:2.5px solid transparent;
+    transition:all .3s cubic-bezier(.34,1.56,.64,1);
+    position:relative;
+  }
+  .theme-dot:hover{transform:scale(1.2);}
+  .theme-dot.active{border-color:var(--text-1);transform:scale(1.15);}
+  .theme-dot.active::after{
+    content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.3);
+  }
+  .dot-warm{background:linear-gradient(135deg,#C89F85,#96684A);}
+  .dot-ocean{background:linear-gradient(135deg,#4A9BB5,#2E7A91);}
+  .dot-forest{background:linear-gradient(135deg,#6E9B5A,#4A7340);}
+  .dot-twilight{background:linear-gradient(135deg,#9478B0,#6E5288);}
+  .dot-ink{background:linear-gradient(135deg,#2E2E4A,#1A1A2E);}
+
+  /* ============ 主内容 ============ */
+  .main{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:28px 22px 60px;}
+
+  /* ============ 主题预览面板 ============ */
+  .theme-showcase{
+    background:var(--bg-card);border-radius:24px;
+    border:1px solid var(--border);
+    box-shadow:0 16px 48px rgba(var(--shadow-color),.1);
+    padding:36px;margin-bottom:32px;
+    transition:background .4s,border-color .3s,box-shadow .3s;
+  }
+  .showcase-title{
+    font-size:22px;font-weight:700;color:var(--text-1);margin-bottom:6px;
+    transition:color .3s;
+  }
+  .showcase-sub{font-size:14px;color:var(--text-2);margin-bottom:28px;transition:color .3s;}
+
+  /* 色板展示 */
+  .palette-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin-bottom:32px;}
+  .swatch{
+    border-radius:16px;overflow:hidden;
+    border:1px solid var(--border-light);
+    transition:transform .3s,box-shadow .3s;
+  }
+  .swatch:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(var(--shadow-color),.12);}
+  .swatch-color{height:72px;transition:background .4s;}
+  .swatch-info{padding:10px 12px;background:var(--bg-card);transition:background .3s;}
+  .swatch-name{font-size:12px;font-weight:600;color:var(--text-1);transition:color .3s;}
+  .swatch-var{font-size:10px;color:var(--text-3);font-family:monospace;margin-top:2px;transition:color .3s;}
+
+  /* 组件示例 */
+  .component-row{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:28px;}
+  .component-row:last-child{margin-bottom:0;}
+
+  .section-label{
+    font-size:13px;font-weight:600;color:var(--text-2);letter-spacing:.08em;
+    text-transform:uppercase;margin-bottom:14px;
+    transition:color .3s;
+  }
+
+  /* 按钮 */
+  .btn{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:10px 22px;border-radius:12px;font-size:14px;font-weight:600;
+    border:none;cursor:pointer;transition:all .3s;
+    font-family:inherit;
+  }
+  .btn-primary{
+    background:var(--gradient-primary);color:#fff;
+    box-shadow:0 4px 14px rgba(var(--shadow-color),.18);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(var(--shadow-color),.25);}
+  .btn-outline{
+    background:transparent;color:var(--primary);
+    border:1.5px solid var(--primary);
+  }
+  .btn-outline:hover{background:var(--tag-bg);}
+  .btn-ghost{background:var(--tag-bg);color:var(--tag-text);}
+  .btn-ghost:hover{opacity:.8;}
+  .btn-danger{background:var(--danger);color:#fff;}
+  .btn-danger:hover{opacity:.85;}
+  .btn-success{background:var(--success);color:#fff;}
+  .btn-success:hover{opacity:.85;}
+
+  /* 标签 */
+  .tag{
+    display:inline-flex;align-items:center;gap:4px;
+    padding:4px 12px;border-radius:8px;font-size:12px;font-weight:500;
+    transition:all .3s;
+  }
+  .tag-primary{background:var(--tag-bg);color:var(--tag-text);}
+  .tag-success{background:rgba(110,175,100,.12);color:#4A7340;}
+  .tag-warning{background:rgba(232,179,106,.15);color:#9A7020;}
+  .tag-danger{background:rgba(217,154,154,.15);color:#8A4040;}
+  .tag-info{background:rgba(159,184,201,.15);color:#4A7090;}
+  [data-theme="ink"] .tag-success{background:rgba(136,192,144,.15);color:#88C090;}
+  [data-theme="ink"] .tag-warning{background:rgba(232,200,112,.15);color:#E8C870;}
+  [data-theme="ink"] .tag-danger{background:rgba(224,136,136,.15);color:#E08888;}
+  [data-theme="ink"] .tag-info{background:rgba(128,176,208,.15);color:#80B0D0;}
+
+  /* 卡片 */
+  .demo-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+  .demo-card{
+    background:var(--bg-card);border-radius:16px;padding:20px;
+    border:1px solid var(--border-light);
+    box-shadow:0 4px 16px rgba(var(--shadow-color),.06);
+    transition:all .3s;
+  }
+  .demo-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(var(--shadow-color),.12);}
+  .demo-card-icon{
+    width:44px;height:44px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;margin-bottom:12px;
+    transition:background .4s;
+  }
+  .demo-card-title{font-size:15px;font-weight:600;color:var(--text-1);margin-bottom:4px;transition:color .3s;}
+  .demo-card-desc{font-size:13px;color:var(--text-2);line-height:1.5;transition:color .3s;}
+
+  /* 输入框 */
+  .input-demo{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 16px;border-radius:12px;
+    background:var(--bg-card-alt);border:1.5px solid var(--border);
+    transition:all .3s;max-width:320px;width:100%;
+  }
+  .input-demo:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px var(--tag-bg);}
+  .input-demo input{
+    flex:1;border:none;background:transparent;outline:none;
+    font-size:14px;color:var(--text-1);font-family:inherit;
+  }
+  .input-demo input::placeholder{color:var(--text-3);}
+
+  /* 进度条 */
+  .progress-bar{
+    height:8px;border-radius:4px;background:var(--bg-card-alt);
+    overflow:hidden;max-width:320px;transition:background .3s;
+  }
+  .progress-fill{
+    height:100%;border-radius:4px;
+    background:var(--gradient-primary);
+    transition:background .4s;
+  }
+
+  /* 分割线 */
+  .divider{height:1px;background:var(--border-light);margin:24px 0;transition:background .3s;}
+
+  /* 统计卡 */
+  .stat-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:28px;}
+  .stat-item{flex:1;min-width:120px;}
+  .stat-value{font-size:28px;font-weight:700;color:var(--primary-dark);transition:color .3s;}
+  .stat-label{font-size:12px;color:var(--text-2);margin-top:2px;transition:color .3s;}
+
+  /* ============ 主题详情卡 ============ */
+  .theme-detail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;margin-top:20px;}
+  .theme-detail-card{
+    background:var(--bg-card);border-radius:20px;padding:24px;
+    border:1px solid var(--border);
+    box-shadow:0 4px 16px rgba(var(--shadow-color),.06);
+    transition:all .4s;
+  }
+  .theme-detail-card h3{
+    font-size:16px;font-weight:700;margin-bottom:4px;
+    display:flex;align-items:center;gap:8px;
+    transition:color .3s;
+  }
+  .theme-detail-card p{font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:16px;transition:color .3s;}
+  .mini-palette{display:flex;gap:6px;margin-bottom:12px;}
+  .mini-dot{width:28px;height:28px;border-radius:8px;transition:transform .3s;}
+  .mini-dot:hover{transform:scale(1.15);}
+
+  /* ============ 底部 ============ */
+  .footer{
+    text-align:center;padding:32px 0 24px;
+    font-size:12px;color:var(--text-3);
+    transition:color .3s;
+  }
+
+  /* ============ 动画 ============ */
+  .fade-in{animation:fadeIn .5s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- 环境光 -->
+<div class="ambient"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+
+<!-- 导航 -->
+<nav class="top-nav">
+  <div class="nav-inner">
+    <div class="logo">
+      <div class="logo-mark">🏠</div>
+      <div class="logo-text">家 · 私享空间<small>FAMILY HOME</small></div>
+    </div>
+    <div class="nav-menu">
+      <div class="nav-item active">📊 首页</div>
+      <div class="nav-item">📝 待办</div>
+      <div class="nav-item">📒 记账</div>
+      <div class="nav-item">📦 收纳</div>
+      <div class="nav-item">🍳 食谱</div>
+      <div class="nav-item">📸 相册</div>
+    </div>
+    <div class="theme-switcher">
+      <div class="theme-dot dot-warm active" data-theme="warm" title="暖居"></div>
+      <div class="theme-dot dot-ocean" data-theme="ocean" title="海风"></div>
+      <div class="theme-dot dot-forest" data-theme="forest" title="森林"></div>
+      <div class="theme-dot dot-twilight" data-theme="twilight" title="暮光"></div>
+      <div class="theme-dot dot-ink" data-theme="ink" title="墨韵"></div>
+    </div>
+  </div>
+</nav>
+
+<!-- 主内容 -->
+<div class="main fade-in">
+
+  <!-- 主题预览面板 -->
+  <div class="theme-showcase">
+    <div class="showcase-title" id="themeName">🏡 暖居</div>
+    <div class="showcase-sub" id="themeDesc">温暖的陶土色调，营造温馨居家氛围</div>
+
+    <!-- 色板 -->
+    <div class="section-label">色彩系统</div>
+    <div class="palette-grid" id="paletteGrid">
+      <!-- JS 动态填充 -->
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 统计 -->
+    <div class="section-label">数据展示</div>
+    <div class="stat-row">
+      <div class="stat-item"><div class="stat-value">128</div><div class="stat-label">本月待办</div></div>
+      <div class="stat-item"><div class="stat-value">¥3.2k</div><div class="stat-label">本月支出</div></div>
+      <div class="stat-item"><div class="stat-value">56</div><div class="stat-label">收纳物品</div></div>
+      <div class="stat-item"><div class="stat-value">89%</div><div class="stat-label">目标完成</div></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 按钮 -->
+    <div class="section-label">按钮</div>
+    <div class="component-row">
+      <button class="btn btn-primary">✨ 主要操作</button>
+      <button class="btn btn-outline">📋 次要操作</button>
+      <button class="btn btn-ghost">🏷️ 标签按钮</button>
+      <button class="btn btn-success">✅ 成功</button>
+      <button class="btn btn-danger">🗑️ 危险</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 标签 -->
+    <div class="section-label">标签</div>
+    <div class="component-row">
+      <span class="tag tag-primary">🏷️ 主要</span>
+      <span class="tag tag-success">✅ 已完成</span>
+      <span class="tag tag-warning">⏳ 进行中</span>
+      <span class="tag tag-danger">❌ 已逾期</span>
+      <span class="tag tag-info">ℹ️ 信息</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 输入框 + 进度 -->
+    <div class="section-label">表单 & 进度</div>
+    <div class="component-row" style="align-items:center;">
+      <div class="input-demo">
+        <span>🔍</span>
+        <input type="text" placeholder="搜索家庭成员、物品、食谱..." />
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:13px;color:var(--text-2);">年度目标进度</span>
+          <span style="font-size:13px;font-weight:600;color:var(--primary-dark);">72%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 卡片 -->
+    <div class="section-label">卡片组件</div>
+    <div class="demo-cards">
+      <div class="demo-card">
+        <div class="demo-card-icon" style="background:var(--gradient-primary);">📝</div>
+        <div class="demo-card-title">待办事项</div>
+        <div class="demo-card-desc">今日 5 项待完成，本周还剩 12 项</div>
+      </div>
+      <div class="demo-card">
+        <div class="demo-card-icon" style="background:linear-gradient(135deg,var(--success),#7DAF68);">💰</div>
+        <div class="demo-card-title">本月账单</div>
+        <div class="demo-card-desc">总支出 ¥3,240 较上月减少 8%</div>
+      </div>
+      <div class="demo-card">
+        <div class="demo-card-icon" style="background:linear-gradient(135deg,var(--warning),#D4A040);">🎯</div>
+        <div class="demo-card-title">年度目标</div>
+        <div class="demo-card-desc">已完成 72%，继续保持！</div>
+      </div>
+      <div class="demo-card">
+        <div class="demo-card-icon" style="background:linear-gradient(135deg,var(--info),#6090B0);">📸</div>
+        <div class="demo-card-title">家庭相册</div>
+        <div class="demo-card-desc">本月新增 23 张温馨照片</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 五套主题详情 -->
+  <div class="section-label" style="margin-top:12px;">全部主题方案</div>
+  <div class="theme-detail-grid">
+
+    <div class="theme-detail-card" onclick="switchTheme('warm')">
+      <h3><span style="display:inline-flex;width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#C89F85,#96684A);"></span> 暖居 · Warm</h3>
+      <p>温暖的陶土色系，灵感来自大地与壁炉。适合喜欢温馨居家感的家庭。</p>
+      <div class="mini-palette">
+        <div class="mini-dot" style="background:#FBF6EF;border:1px solid #E2CDB2;"></div>
+        <div class="mini-dot" style="background:#C89F85;"></div>
+        <div class="mini-dot" style="background:#96684A;"></div>
+        <div class="mini-dot" style="background:#A8B08A;"></div>
+        <div class="mini-dot" style="background:#E8B36A;"></div>
+        <div class="mini-dot" style="background:#D99A9A;"></div>
+        <div class="mini-dot" style="background:#6B5744;"></div>
+      </div>
+      <span class="tag tag-primary">当前主题</span>
+    </div>
+
+    <div class="theme-detail-card" onclick="switchTheme('ocean')">
+      <h3><span style="display:inline-flex;width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#4A9BB5,#2E7A91);"></span> 海风 · Ocean</h3>
+      <p>清爽的海蓝色系，灵感来自海岸与微风。适合喜欢清新明亮感的家庭。</p>
+      <div class="mini-palette">
+        <div class="mini-dot" style="background:#F0F7FA;border:1px solid #B8DAE8;"></div>
+        <div class="mini-dot" style="background:#4A9BB5;"></div>
+        <div class="mini-dot" style="background:#2E7A91;"></div>
+        <div class="mini-dot" style="background:#6DBF9E;"></div>
+        <div class="mini-dot" style="background:#F0C264;"></div>
+        <div class="mini-dot" style="background:#E08080;"></div>
+        <div class="mini-dot" style="background:#2C4A55;"></div>
+      </div>
+      <span class="tag tag-info">清爽</span>
+    </div>
+
+    <div class="theme-detail-card" onclick="switchTheme('forest')">
+      <h3><span style="display:inline-flex;width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#6E9B5A,#4A7340);"></span> 森林 · Forest</h3>
+      <p>自然的绿色系，灵感来自林间与草地。适合喜欢自然清新感的家庭。</p>
+      <div class="mini-palette">
+        <div class="mini-dot" style="background:#F2F5EE;border:1px solid #C8DDB8;"></div>
+        <div class="mini-dot" style="background:#6E9B5A;"></div>
+        <div class="mini-dot" style="background:#4A7340;"></div>
+        <div class="mini-dot" style="background:#7DAF68;"></div>
+        <div class="mini-dot" style="background:#D4B050;"></div>
+        <div class="mini-dot" style="background:#CF7A7A;"></div>
+        <div class="mini-dot" style="background:#3A4A34;"></div>
+      </div>
+      <span class="tag tag-success">自然</span>
+    </div>
+
+    <div class="theme-detail-card" onclick="switchTheme('twilight')">
+      <h3><span style="display:inline-flex;width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#9478B0,#6E5288);"></span> 暮光 · Twilight</h3>
+      <p>优雅的紫色系，灵感来自黄昏与晚霞。适合喜欢浪漫精致感的家庭。</p>
+      <div class="mini-palette">
+        <div class="mini-dot" style="background:#F4F0F7;border:1px solid #D8C8E8;"></div>
+        <div class="mini-dot" style="background:#9478B0;"></div>
+        <div class="mini-dot" style="background:#6E5288;"></div>
+        <div class="mini-dot" style="background:#88B08A;"></div>
+        <div class="mini-dot" style="background:#E0B860;"></div>
+        <div class="mini-dot" style="background:#D08888;"></div>
+        <div class="mini-dot" style="background:#44364E;"></div>
+      </div>
+      <span class="tag tag-primary">优雅</span>
+    </div>
+
+    <div class="theme-detail-card" onclick="switchTheme('ink')">
+      <h3><span style="display:inline-flex;width:24px;height:24px;border-radius:8px;background:linear-gradient(135deg,#2E2E4A,#1A1A2E);"></span> 墨韵 · Ink</h3>
+      <p>深色模式，以暖橘点缀冷暗底色。护眼且有质感，适合夜间使用。</p>
+      <div class="mini-palette">
+        <div class="mini-dot" style="background:#1A1A2E;border:1px solid #3A3A5A;"></div>
+        <div class="mini-dot" style="background:#E0A87C;"></div>
+        <div class="mini-dot" style="background:#C08050;"></div>
+        <div class="mini-dot" style="background:#88C090;"></div>
+        <div class="mini-dot" style="background:#E8C870;"></div>
+        <div class="mini-dot" style="background:#E08888;"></div>
+        <div class="mini-dot" style="background:#E8E0D8;"></div>
+      </div>
+      <span class="tag tag-warning">暗色</span>
+    </div>
+
+  </div>
+
+  <div class="footer">主题切换原型 · 点击右上角色点切换配色 · 2026-09-13</div>
+</div>
+
+<script>
+const themes = {
+  warm: {
+    name: '🏡 暖居',
+    desc: '温暖的陶土色调，营造温馨居家氛围',
+    colors: [
+      { name: 'Warm White', var: '--bg-page', css: '#FBF6EF' },
+      { name: 'Cream', var: '--bg-card-alt', css: '#F3EADD' },
+      { name: 'Terracotta', var: '--primary', css: '#C89F85' },
+      { name: 'Terra Deep', var: '--primary-dark', css: '#96684A' },
+      { name: 'Sage', var: '--success', css: '#A8B08A' },
+      { name: 'Amber', var: '--warning', css: '#E8B36A' },
+      { name: 'Rose', var: '--danger', css: '#D99A9A' },
+      { name: 'Sky', var: '--info', css: '#9FB8C9' },
+    ]
+  },
+  ocean: {
+    name: '🌊 海风',
+    desc: '清爽的海蓝色系，如沐海风般的清凉体验',
+    colors: [
+      { name: 'Sea Mist', var: '--bg-page', css: '#F0F7FA' },
+      { name: 'Foam', var: '--bg-card-alt', css: '#E8F1F5' },
+      { name: 'Ocean', var: '--primary', css: '#4A9BB5' },
+      { name: 'Deep Sea', var: '--primary-dark', css: '#2E7A91' },
+      { name: 'Coral', var: '--success', css: '#6DBF9E' },
+      { name: 'Sand', var: '--warning', css: '#F0C264' },
+      { name: 'Sunset', var: '--danger', css: '#E08080' },
+      { name: 'Horizon', var: '--info', css: '#7AAFCF' },
+    ]
+  },
+  forest: {
+    name: '🌿 森林',
+    desc: '自然的绿色系，仿佛置身林间的宁静感',
+    colors: [
+      { name: 'Mist', var: '--bg-page', css: '#F2F5EE' },
+      { name: 'Moss', var: '--bg-card-alt', css: '#E6ECDF' },
+      { name: 'Leaf', var: '--primary', css: '#6E9B5A' },
+      { name: 'Pine', var: '--primary-dark', css: '#4A7340' },
+      { name: 'Sprout', var: '--success', css: '#7DAF68' },
+      { name: 'Honey', var: '--warning', css: '#D4B050' },
+      { name: 'Berry', var: '--danger', css: '#CF7A7A' },
+      { name: 'Stream', var: '--info', css: '#7AA8BF' },
+    ]
+  },
+  twilight: {
+    name: '🌙 暮光',
+    desc: '优雅的紫色系，黄昏时分的浪漫与精致',
+    colors: [
+      { name: 'Dusk', var: '--bg-page', css: '#F4F0F7' },
+      { name: 'Lavender', var: '--bg-card-alt', css: '#EBE4F0' },
+      { name: 'Violet', var: '--primary', css: '#9478B0' },
+      { name: 'Plum', var: '--primary-dark', css: '#6E5288' },
+      { name: 'Fern', var: '--success', css: '#88B08A' },
+      { name: 'Gold', var: '--warning', css: '#E0B860' },
+      { name: 'Blush', var: '--danger', css: '#D08888' },
+      { name: 'Slate', var: '--info', css: '#88A8C8' },
+    ]
+  },
+  ink: {
+    name: '🖤 墨韵',
+    desc: '深色模式，暖橘点缀冷暗底色，护眼且有质感',
+    colors: [
+      { name: 'Night', var: '--bg-page', css: '#1A1A2E' },
+      { name: 'Shadow', var: '--bg-card-alt', css: '#2E2E4A' },
+      { name: 'Amber', var: '--primary', css: '#E0A87C' },
+      { name: 'Ember', var: '--primary-dark', css: '#C08050' },
+      { name: 'Jade', var: '--success', css: '#88C090' },
+      { name: 'Glow', var: '--warning', css: '#E8C870' },
+      { name: 'Coral', var: '--danger', css: '#E08888' },
+      { name: 'Ice', var: '--info', css: '#80B0D0' },
+    ]
+  }
+};
+
+let currentTheme = 'warm';
+
+function switchTheme(name) {
+  currentTheme = name;
+  document.documentElement.setAttribute('data-theme', name);
+  document.getElementById('themeName').textContent = themes[name].name;
+  document.getElementById('themeDesc').textContent = themes[name].desc;
+
+  document.querySelectorAll('.theme-dot').forEach(dot => {
+    dot.classList.toggle('active', dot.dataset.theme === name);
+  });
+
+  renderPalette(name);
+  try { localStorage.setItem('family-home-theme', name); } catch(e) {}
+}
+
+function renderPalette(name) {
+  const grid = document.getElementById('paletteGrid');
+  grid.innerHTML = themes[name].colors.map(c => `
+    <div class="swatch">
+      <div class="swatch-color" style="background:${c.css}"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">${c.name}</div>
+        <div class="swatch-var">${c.var}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+document.querySelectorAll('.theme-dot').forEach(dot => {
+  dot.addEventListener('click', () => switchTheme(dot.dataset.theme));
+});
+
+const saved = (() => { try { return localStorage.getItem('family-home-theme'); } catch(e) { return null; } })();
+switchTheme(saved && themes[saved] ? saved : 'warm');
+</script>
+</body>
+</html>

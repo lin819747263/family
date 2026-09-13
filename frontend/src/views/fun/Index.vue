@@ -774,6 +774,10 @@ onMounted(async () => {
   .sp-right { flex-direction: row; width: 100%; justify-content: space-between; align-items: center; }
   .page-title { font-size: 22px; }
   .subtab { padding: 8px 12px; font-size: 13px; }
+  .card-del { opacity: 1; width: 34px; height: 34px; }
+  .place-add { min-height: 120px; }
+  .rcov { height: 110px; }
+  .scene { height: 100px; }
 }
 </style>
 

@@ -222,9 +222,35 @@ function openPreview(photo) {
   border-radius: 8px;
 }
 
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+  }
+  .header-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .header-actions :deep(.el-select) {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 0;
+  }
+}
+
 @media (max-width: 640px) {
   .photo-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+  .photo-item {
+    height: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .photo-item {
+    height: 90px;
   }
 }
 </style>

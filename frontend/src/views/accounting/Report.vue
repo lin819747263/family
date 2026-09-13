@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
       <div class="page-title" style="margin-bottom:0;">报表分析</div>
-      <div style="display:flex;gap:8px;">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <el-button @click="$router.push('/accounting/annual-report')"><el-icon><DataBoard /></el-icon>年度报告</el-button>
         <el-button @click="exportReport('xlsx')"><el-icon><Download /></el-icon>导出Excel</el-button>
         <el-button @click="exportReport('pdf')"><el-icon><Document /></el-icon>导出PDF</el-button>

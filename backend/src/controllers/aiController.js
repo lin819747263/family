@@ -16,30 +16,17 @@ async function getAIConfig() {
   };
 }
 
-// 标准化 Base URL，兼容 OpenAI / DeepSeek / 其他兼容 API
-// 支持格式：
-//   https://api.openai.com        → https://api.openai.com/v1
-//   https://api.openai.com/v1     → https://api.openai.com/v1
-//   https://api.openai.com/v1/    → https://api.openai.com/v1
-//   https://api.deepseek.com      → https://api.deepseek.com
+// 标准化 Base URL，统一去掉末尾斜杠和尾部 /v1，得到纯净的 origin
 function normalizeBaseUrl(url) {
   if (!url) return 'https://api.deepseek.com';
-  url = url.replace(/\/+$/, ''); // 去掉末尾斜杠
-  // 如果已经以 /v1 结尾，直接返回
-  if (url.endsWith('/v1')) return url;
-  // 如果是 OpenAI 官方 API，自动加 /v1
-  if (url.includes('api.openai.com') && !url.endsWith('/v1')) return url + '/v1';
-  // 其他兼容 API（DeepSeek、Moonshot 等）不加 /v1，它们的 baseUrl 已包含完整路径
+  url = url.replace(/\/+$/, '');       // 去末尾斜杠
+  url = url.replace(/\/v1$/, '');       // 去尾部 /v1，统一在 buildChatUrl 中追加
   return url;
 }
 
-// 构建完整的 chat completions URL
+// 构建 chat completions URL：origin + /v1/chat/completions
 function buildChatUrl(baseUrl) {
-  // 如果 baseUrl 已经包含 /chat/completions，直接使用
   if (baseUrl.includes('/chat/completions')) return baseUrl;
-  // 如果 baseUrl 以 /v1 结尾，拼接 /chat/completions
-  if (baseUrl.endsWith('/v1')) return baseUrl + '/chat/completions';
-  // 其他情况拼接 /v1/chat/completions
   return baseUrl + '/v1/chat/completions';
 }
 
@@ -158,6 +145,14 @@ const TOOLS = [
             type: 'string',
             description: '物品名称，简短描述物品'
           },
+          quantity: {
+            type: 'number',
+            description: '物品数量。如果用户没说，默认为1。'
+          },
+          price: {
+            type: 'number',
+            description: '物品单价/价格。如果用户没说价格，留空不要填。不要编造价格。'
+          },
           expiryDate: {
             type: 'string',
             description: '过期日期，格式 YYYY-MM-DD。根据用户描述推算，如"保质期6个月"则从今天推算。如果用户没说，留空。'
@@ -257,10 +252,10 @@ async function executeTool(toolName, args, userId, familyId) {
   if (toolName === 'create_inventory_item') {
     const item = await Item.create({
       name: args.name,
-      quantity: 1,
+      quantity: args.quantity || 1,
       category: '',
       spaceId: null,
-      price: 9.9,
+      price: args.price != null ? parseFloat(args.price) : null,
       purchaseDate: dayjs().format('YYYY-MM-DD'),
       expiryDate: args.expiryDate || null,
       description: '',
@@ -275,6 +270,8 @@ async function executeTool(toolName, args, userId, familyId) {
       item: {
         id: item.id,
         name: item.name,
+        quantity: item.quantity,
+        price: item.price,
         expiryDate: item.expiryDate
       }
     };

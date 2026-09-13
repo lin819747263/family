@@ -448,5 +448,9 @@ function priorityType(p) {
   .wish-grid {
     grid-template-columns: 1fr;
   }
+  .wish-more {
+    width: 36px;
+    height: 36px;
+  }
 }
 </style>

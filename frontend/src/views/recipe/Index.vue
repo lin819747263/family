@@ -791,6 +791,23 @@ async function handleUpload(e) {
   padding-top: 2px;
 }
 
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .header-actions {
+    flex-wrap: wrap;
+    flex-shrink: 1;
+    width: 100%;
+  }
+  .header-actions :deep(.el-input),
+  .header-actions :deep(.el-select) {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 0;
+  }
+}
+
 @media (max-width: 640px) {
   .view-body {
     flex-direction: column;

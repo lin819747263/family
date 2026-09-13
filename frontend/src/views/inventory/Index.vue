@@ -1062,6 +1062,24 @@ async function handleDelete(id) {
   }
 }
 
+@media (max-width: 768px) {
+  .filter-select,
+  .filter-input {
+    width: 100%;
+  }
+  .search-wrap {
+    min-width: 0;
+    flex-basis: 100%;
+  }
+  .item-actions {
+    opacity: 1;
+  }
+  .act-btn {
+    width: 36px;
+    height: 36px;
+  }
+}
+
 @media (max-width: 600px) {
   .page-head {
     gap: 12px;

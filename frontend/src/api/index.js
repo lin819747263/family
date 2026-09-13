@@ -288,3 +288,11 @@ export const manualApi = {
   update: (id, data) => request.put(`/manual/${id}`, data),
   remove: id => request.delete(`/manual/${id}`)
 }
+
+// ===== 通用上传 =====
+export const uploadApi = {
+  upload: (formData) => request.post('/upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  getConfig: () => request.get('/upload/config')
+}

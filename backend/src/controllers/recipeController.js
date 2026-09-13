@@ -1,5 +1,9 @@
 const { Recipe, User } = require('../models');
 const { Op } = require('sequelize');
+const fs = require('fs');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+const oss = require('../utils/oss');
 
 // ===== 菜谱 CRUD =====
 
@@ -76,6 +80,18 @@ exports.remove = async (req, res, next) => {
 exports.uploadImage = async (req, res, next) => {
   try {
     if (!req.file) return res.status(400).json({ code: 400, message: '请上传文件' });
+
+    const config = await oss.getOSSConfig();
+
+    if (config.oss_enabled === 'true') {
+      const ext = path.extname(req.file.originalname);
+      const filename = `${uuidv4()}${ext}`;
+      const buffer = fs.readFileSync(req.file.path);
+      const result = await oss.uploadBuffer(buffer, filename, { dir: 'recipes' });
+      fs.unlink(req.file.path, () => {});
+      return res.json({ code: 0, data: { url: result.url } });
+    }
+
     res.json({ code: 0, data: { url: `/uploads/recipes/${req.file.filename}` } });
   } catch (err) { next(err); }
 };

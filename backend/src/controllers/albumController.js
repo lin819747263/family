@@ -8,6 +8,8 @@ const { encrypt, decrypt } = require('../utils/encrypt');
 const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs');
+const oss = require('../utils/oss');
+const { v4: uuidv4 } = require('uuid');
 
 dayjs.extend(utc);
 
@@ -93,19 +95,51 @@ exports.uploadPhoto = async (req, res, next) => {
     if (!album) return res.status(404).json({ code: 404, message: '相册不存在' });
     const filePath = req.file.path;
     const metadata = await sharp(filePath).metadata();
-    const thumbName = `thumb_${req.file.filename}`;
-    const thumbPath = path.join(path.dirname(filePath), thumbName);
-    await sharp(filePath).resize(400, 400, { fit: 'inside', withoutEnlargement: true }).jpeg({ quality: 80 }).toFile(thumbPath);
+
+    const config = await oss.getOSSConfig();
+    const useOSS = config.oss_enabled === 'true';
+
     let isEncrypted = album.type === 'encrypted';
-    let finalUrl = `/uploads/photos/${req.file.filename}`;
-    if (isEncrypted) {
-      const buf = fs.readFileSync(filePath);
-      const encBuf = Buffer.from(encrypt(buf.toString('base64')), 'base64');
-      fs.writeFileSync(filePath, encBuf);
+    let finalUrl, thumbUrl;
+
+    if (useOSS) {
+      const ext = path.extname(req.file.originalname);
+      const origName = `${uuidv4()}${ext}`;
+      const thumbName = `thumb_${uuidv4()}.jpg`;
+
+      let origBuffer = fs.readFileSync(filePath);
+      if (isEncrypted) {
+        origBuffer = Buffer.from(encrypt(origBuffer.toString('base64')), 'base64');
+      }
+      const thumbBuffer = await sharp(filePath).resize(400, 400, { fit: 'inside', withoutEnlargement: true }).jpeg({ quality: 80 }).toBuffer();
+
+      const [origResult, thumbResult] = await Promise.all([
+        oss.uploadBuffer(origBuffer, origName, { dir: 'photos' }),
+        oss.uploadBuffer(thumbBuffer, thumbName, { dir: 'photos' })
+      ]);
+
+      finalUrl = origResult.url;
+      thumbUrl = thumbResult.url;
+
+      fs.unlink(filePath, () => {});
+    } else {
+      const thumbName = `thumb_${req.file.filename}`;
+      const thumbPath = path.join(path.dirname(filePath), thumbName);
+      await sharp(filePath).resize(400, 400, { fit: 'inside', withoutEnlargement: true }).jpeg({ quality: 80 }).toFile(thumbPath);
+
+      finalUrl = `/uploads/photos/${req.file.filename}`;
+      thumbUrl = `/uploads/photos/${thumbName}`;
+
+      if (isEncrypted) {
+        const buf = fs.readFileSync(filePath);
+        const encBuf = Buffer.from(encrypt(buf.toString('base64')), 'base64');
+        fs.writeFileSync(filePath, encBuf);
+      }
     }
+
     const photo = await Photo.create({
       albumId, originalName: req.file.originalname, url: finalUrl,
-      thumbnailUrl: `/uploads/photos/${thumbName}`,
+      thumbnailUrl: thumbUrl,
       width: metadata.width, height: metadata.height, size: req.file.size,
       mimeType: req.file.mimetype, uploadedBy: req.userId,
       isEncrypted

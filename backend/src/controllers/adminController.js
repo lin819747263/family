@@ -103,6 +103,9 @@ exports.getSettings = async (req, res, next) => {
     if (map.ai_api_key && map.ai_api_key.length > 8) {
       map.ai_api_key = 'sk-...' + map.ai_api_key.slice(-4);
     }
+    if (map.oss_access_key_secret && map.oss_access_key_secret.length > 6) {
+      map.oss_access_key_secret = map.oss_access_key_secret.slice(0, 3) + '***' + map.oss_access_key_secret.slice(-3);
+    }
     res.json({ code: 0, data: map });
   } catch (err) { next(err); }
 };
@@ -111,8 +114,19 @@ exports.getSettings = async (req, res, next) => {
 exports.updateSettings = async (req, res, next) => {
   try {
     const updates = req.body;
+    const ossKeys = ['oss_enabled', 'oss_endpoint', 'oss_bucket', 'oss_region',
+                     'oss_access_key_id', 'oss_access_key_secret', 'oss_custom_domain'];
+    let ossChanged = false;
     for (const [key, value] of Object.entries(updates)) {
-      await SystemSetting.upsert({ key, value });
+      // 跳过掩码后的密钥
+      if (key === 'oss_access_key_secret' && value && value.includes('***')) continue;
+      const trimmedValue = typeof value === 'string' ? value.trim() : value;
+      await SystemSetting.upsert({ key, value: trimmedValue });
+      if (ossKeys.includes(key)) ossChanged = true;
+    }
+    if (ossChanged) {
+      const oss = require('../utils/oss');
+      oss.clearCache();
     }
     res.json({ code: 0, message: '设置已保存' });
   } catch (err) { next(err); }

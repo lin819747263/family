@@ -5,6 +5,10 @@ const { authenticate } = require('../middleware/auth');
 const { verifyFamilyAccess } = require('../middleware/familyAccess');
 const { createUploader } = require('../middleware/upload');
 const { accountingValidators, idParam } = require('../middleware/validators');
+const fs = require('fs');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+const oss = require('../utils/oss');
 
 router.use(authenticate);
 
@@ -50,9 +54,23 @@ router.get('/report/export', ctrl.exportReport);
 
 // 语音/图片上传
 const upload = createUploader('receipts');
-router.post('/upload-receipt', upload.single('file'), (req, res) => {
-  if (!req.file) return res.status(400).json({ code: 400, message: '请上传文件' });
-  res.json({ code: 0, data: { url: `/uploads/receipts/${req.file.filename}` } });
+router.post('/upload-receipt', upload.single('file'), async (req, res, next) => {
+  try {
+    if (!req.file) return res.status(400).json({ code: 400, message: '请上传文件' });
+
+    const config = await oss.getOSSConfig();
+
+    if (config.oss_enabled === 'true') {
+      const ext = path.extname(req.file.originalname);
+      const filename = `${uuidv4()}${ext}`;
+      const buffer = fs.readFileSync(req.file.path);
+      const result = await oss.uploadBuffer(buffer, filename, { dir: 'receipts' });
+      fs.unlink(req.file.path, () => {});
+      return res.json({ code: 0, data: { url: result.url } });
+    }
+
+    res.json({ code: 0, data: { url: `/uploads/receipts/${req.file.filename}` } });
+  } catch (err) { next(err); }
 });
 
 module.exports = router;

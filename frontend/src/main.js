@@ -6,6 +6,7 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import App from './App.vue'
 import router from './router'
 import './styles/global.css'
+import { useThemeStore } from './store/theme'
 
 // 按需注册图标（只注册实际使用的 ~60 个，而非全部 600+）
 import * as Icons from './utils/icons'
@@ -20,6 +21,10 @@ for (const [key, component] of Object.entries(Icons)) {
 app.use(pinia)
 app.use(router)
 app.use(ElementPlus, { locale: zhCn })
+
+// 初始化主题（在挂载前设置 data-theme，避免闪烁）
+useThemeStore().init()
+
 app.mount('#app')
 
 // 注册 Service Worker（PWA）

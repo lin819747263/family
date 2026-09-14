@@ -26,8 +26,6 @@
             mode="horizontal"
             router
             background-color="transparent"
-            text-color="#A08D7A"
-            active-text-color="#96684A"
           >
             <el-menu-item index="/">
               <el-icon><DataBoard /></el-icon>
@@ -69,6 +67,9 @@
 
         <!-- 右侧操作区 -->
         <div class="nav-actions">
+          <!-- 主题切换 -->
+          <ThemeSwitcher />
+
           <!-- 账本切换 -->
           <el-popover
             v-if="showBookSelector && accountingStore.books.length"
@@ -215,6 +216,7 @@ const ChatPanel = defineAsyncComponent(() => import('@/views/ai/ChatPanel.vue'))
 const GlobalSearch = defineAsyncComponent(() => import('@/components/search/GlobalSearch.vue'))
 const MobileMenu = defineAsyncComponent(() => import('@/components/common/MobileMenu.vue'))
 const NotificationPanel = defineAsyncComponent(() => import('@/components/common/NotificationPanel.vue'))
+const ThemeSwitcher = defineAsyncComponent(() => import('@/components/common/ThemeSwitcher.vue'))
 import {
   DataBoard, Coin, PictureFilled, Box, Bell, Expand, Aim, Food,
   Search, ArrowDown, Download, User, UserFilled,
@@ -345,11 +347,12 @@ function handleUserCmd(cmd) {
   right: 0;
   z-index: 100;
   height: 64px;
-  background: rgba(255, 252, 247, 0.82);
+  background: var(--nav-bg);
   backdrop-filter: blur(18px) saturate(1.4);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
   border-bottom: 1px solid var(--border);
-  box-shadow: 0 2px 20px rgba(160, 120, 90, 0.06);
+  box-shadow: var(--nav-shadow);
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
 .nav-inner {
@@ -378,11 +381,11 @@ function handleUserCmd(cmd) {
   width: 38px;
   height: 38px;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--terracotta), #D9B697);
+  background: var(--gradient-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 5px 14px rgba(200, 159, 133, 0.4);
+  box-shadow: 0 5px 14px rgba(var(--shadow-rgb), 0.25);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .nav-logo:hover .logo-mark {
@@ -425,14 +428,14 @@ function handleUserCmd(cmd) {
 
 .nav-menu :deep(.el-menu-item:hover),
 .nav-menu :deep(.el-sub-menu__title:hover) {
-  background: rgba(200, 159, 133, 0.1) !important;
+  background: var(--hover-overlay) !important;
   color: var(--terra-deep) !important;
 }
 
 .nav-menu :deep(.el-menu-item.is-active) {
   color: var(--terra-deep) !important;
   font-weight: 600;
-  background: rgba(200, 159, 133, 0.12) !important;
+  background: var(--hover-overlay-strong) !important;
   position: relative;
 }
 .nav-menu :deep(.el-menu-item.is-active)::after {
@@ -442,7 +445,7 @@ function handleUserCmd(cmd) {
   left: 16px;
   right: 16px;
   height: 2.5px;
-  background: linear-gradient(90deg, var(--terracotta), var(--amber));
+  background: var(--gradient-primary);
   border-radius: 2px 2px 0 0;
   animation: navGrow 0.35s ease;
 }
@@ -459,12 +462,12 @@ function handleUserCmd(cmd) {
 }
 
 .nav-menu :deep(.el-sub-menu .el-menu-item:hover) {
-  background: rgba(200, 159, 133, 0.08) !important;
+  background: var(--hover-overlay) !important;
   color: var(--terra-deep) !important;
 }
 
 .nav-menu :deep(.el-sub-menu .el-menu-item.is-active) {
-  background: rgba(200, 159, 133, 0.12) !important;
+  background: var(--hover-overlay-strong) !important;
   color: var(--terra-deep) !important;
 }
 
@@ -516,7 +519,7 @@ function handleUserCmd(cmd) {
   transition: all 0.25s;
 }
 .action-btn:hover {
-  background: rgba(200, 159, 133, 0.12);
+  background: var(--hover-overlay);
   color: var(--terra-deep);
 }
 
@@ -524,9 +527,9 @@ function handleUserCmd(cmd) {
 .book-popover-title {
   font-size: 13px;
   font-weight: 600;
-  color: #94a3b8;
+  color: var(--text-muted);
   padding: 0 0 8px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--border-light);
   margin-bottom: 6px;
 }
 .book-popover-item {
@@ -538,10 +541,10 @@ function handleUserCmd(cmd) {
   cursor: pointer;
   transition: all 0.2s;
   font-size: 14px;
-  color: #475569;
+  color: var(--text-primary);
 }
 .book-popover-item:hover {
-  background: rgba(200, 159, 133, 0.08);
+  background: var(--hover-overlay);
 }
 .book-popover-item.active {
   color: var(--terra-deep);
@@ -570,21 +573,21 @@ function handleUserCmd(cmd) {
   transition: background 0.25s;
 }
 .user-avatar-wrap:hover {
-  background: rgba(200, 159, 133, 0.1);
+  background: var(--hover-overlay);
 }
 
 .user-avatar {
-  background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));
+  background: var(--gradient-primary);
   color: #fff;
   font-weight: 600;
   font-size: 14px;
-  box-shadow: 0 4px 12px rgba(176, 132, 102, 0.3);
+  box-shadow: 0 4px 12px rgba(var(--shadow-rgb), 0.25);
 }
 
 .user-name {
   font-size: 14px;
   font-weight: 500;
-  color: #334155;
+  color: var(--text-primary);
   max-width: 80px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -592,7 +595,7 @@ function handleUserCmd(cmd) {
 }
 
 .user-arrow {
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 12px;
 }
 
@@ -600,7 +603,8 @@ function handleUserCmd(cmd) {
 .page-main {
   padding-top: 64px;
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--warm-white) 0%, var(--cream) 55%, #F0E2D0 100%);
+  background: var(--gradient-page);
+  transition: background 0.4s;
 }
 
 .page-content {
@@ -619,56 +623,56 @@ function handleUserCmd(cmd) {
   height: 60px;
   border-radius: 20px;
   border: none;
-  background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));
+  background: var(--gradient-primary);
   color: #fff;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 12px 30px rgba(176, 132, 102, 0.45);
+  box-shadow: 0 12px 30px rgba(var(--shadow-rgb), 0.35);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
 }
 .fab-btn::after {
   content: ""; position: absolute; inset: 0; border-radius: 20px;
-  box-shadow: 0 0 0 0 rgba(200, 159, 133, 0.5);
+  box-shadow: 0 0 0 0 rgba(var(--shadow-rgb), 0.35);
   animation: fab-ring 2.8s ease-out infinite;
 }
 @keyframes fab-ring {
-  0% { box-shadow: 0 0 0 0 rgba(200, 159, 133, 0.45); }
-  70% { box-shadow: 0 0 0 18px rgba(200, 159, 133, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(200, 159, 133, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(var(--shadow-rgb), 0.35); }
+  70% { box-shadow: 0 0 0 18px rgba(var(--shadow-rgb), 0); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--shadow-rgb), 0); }
 }
 .fab-plus {
   font-size: 28px; line-height: 1;
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .fab-btn.open .fab-plus { transform: rotate(135deg); }
-.fab-btn:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(176, 132, 102, 0.55); }
+.fab-btn:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(var(--shadow-rgb), 0.45); }
 
 /* ========== 快速记账卡片 ========== */
 .qa-card {
   position: fixed; right: 32px; bottom: 104px; z-index: 79;
   width: 380px; max-height: min(72vh, 640px);
-  background: #FFFDFA; border: 1px solid rgba(226, 205, 178, 0.7);
+  background: var(--bg-card); border: 1px solid var(--border);
   border-radius: 24px;
-  box-shadow: 0 24px 60px rgba(150, 104, 74, 0.28);
+  box-shadow: 0 24px 60px rgba(var(--shadow-rgb), 0.22);
   display: flex; flex-direction: column; overflow: hidden;
   transform-origin: bottom right;
   transform: scale(0.6) translateY(30px); opacity: 0; pointer-events: none;
-  transition: transform 0.45s cubic-bezier(0.34, 1.4, 0.5, 1), opacity 0.3s ease;
+  transition: transform 0.45s cubic-bezier(0.34, 1.4, 0.5, 1), opacity 0.3s ease, background 0.3s;
 }
 .qa-card.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: auto; }
 .qa-card::after {
   content: ""; position: absolute; right: 26px; bottom: -7px;
-  width: 14px; height: 14px; background: #FFFDFA;
-  border-right: 1px solid rgba(226, 205, 178, 0.7);
-  border-bottom: 1px solid rgba(226, 205, 178, 0.7);
+  width: 14px; height: 14px; background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   transform: rotate(45deg);
 }
 
 .qa-head {
   display: flex; align-items: center; gap: 10px;
-  padding: 16px 18px 12px; border-bottom: 1px dashed rgba(226, 205, 178, 0.7);
+  padding: 16px 18px 12px; border-bottom: 1px dashed var(--border);
 }
 .qa-title { font-size: 16px; font-weight: 800; color: var(--terra-deep); }
 .mode-toggle {
@@ -682,8 +686,8 @@ function handleUserCmd(cmd) {
   transition: all 0.25s;
 }
 .mode-btn.active {
-  background: #FFFDFA; color: var(--terra-deep);
-  box-shadow: 0 2px 8px rgba(160, 120, 90, 0.16);
+  background: var(--bg-card); color: var(--terra-deep);
+  box-shadow: 0 2px 8px rgba(var(--shadow-rgb), 0.16);
 }
 .qa-close {
   width: 30px; height: 30px; border-radius: 9px; border: none;
@@ -727,7 +731,7 @@ function handleUserCmd(cmd) {
   transition: all 0.25s;
 }
 .mobile-menu-btn:hover {
-  background: rgba(200, 159, 133, 0.1);
+  background: var(--hover-overlay);
   color: var(--terra-deep);
 }
 

@@ -12,9 +12,10 @@ body.el-popup-parent--hidden {
   margin-right: 0 !important;
 }
 
+/* ============ 主题令牌 — 暖居（默认） ============ */
 :root {
   --nav-height: 60px;
-  /* 暖色居家调色板 */
+  /* 调色板 */
   --warm-white: #FBF6EF;
   --cream: #F3EADD;
   --apricot: #EDE0CE;
@@ -31,7 +32,7 @@ body.el-popup-parent--hidden {
   --sky: #9FB8C9;
   --plum: #A98BB0;
   --glow: rgba(230, 190, 150, 0.45);
-
+  /* 语义色 */
   --primary: #C89F85;
   --primary-light: #D9B697;
   --primary-dark: #96684A;
@@ -41,18 +42,214 @@ body.el-popup-parent--hidden {
   --danger: #D99A9A;
   --bg-page: #FBF6EF;
   --bg-card: #FFFDFA;
+  --bg-card-alt: #F3EADD;
   --text-primary: #6B5744;
   --text-secondary: #A08D7A;
   --text-muted: #BCAB97;
   --border: rgba(226, 205, 178, 0.7);
   --border-light: rgba(226, 205, 178, 0.4);
-  --shadow-sm: 0 4px 16px rgba(160, 120, 90, 0.06);
-  --shadow-md: 0 8px 28px rgba(160, 120, 90, 0.1);
-  --shadow-lg: 0 16px 48px rgba(160, 120, 90, 0.14);
+  /* 导航 */
+  --nav-bg: rgba(255, 252, 247, 0.82);
+  --nav-shadow: 0 2px 20px rgba(160, 120, 90, 0.06);
+  /* 阴影 RGB（用于 rgba 组合） */
+  --shadow-rgb: 160, 120, 90;
+  --shadow-sm: 0 4px 16px rgba(var(--shadow-rgb), 0.06);
+  --shadow-md: 0 8px 28px rgba(var(--shadow-rgb), 0.1);
+  --shadow-lg: 0 16px 48px rgba(var(--shadow-rgb), 0.14);
+  /* 圆角 */
   --radius-sm: 12px;
   --radius-md: 16px;
   --radius-lg: 24px;
   --radius-xl: 28px;
+  /* 渐变 */
+  --gradient-primary: linear-gradient(135deg, var(--terracotta), var(--primary-light));
+  --gradient-page: linear-gradient(135deg, var(--warm-white) 0%, var(--cream) 55%, #F0E2D0 100%);
+  /* 交互色 */
+  --hover-overlay: rgba(200, 159, 133, 0.1);
+  --hover-overlay-strong: rgba(200, 159, 133, 0.12);
+  --tag-bg: rgba(200, 159, 133, 0.1);
+  --tag-border: rgba(200, 159, 133, 0.25);
+  --selection-bg: var(--terracotta);
+}
+
+/* ============ 主题 — 海风 ============ */
+[data-theme="ocean"] {
+  --warm-white: #F0F7FA;
+  --cream: #E8F1F5;
+  --apricot: #DDE8EE;
+  --wood-light: #B8DAE8;
+  --terracotta: #4A9BB5;
+  --terracotta-d: #3A8CA8;
+  --terra-deep: #2E7A91;
+  --sage: #6DBF9E;
+  --sage-d: #4A9A7A;
+  --amber: #F0C264;
+  --amber-d: #C89A30;
+  --rose: #E08080;
+  --rose-d: #B85858;
+  --sky: #7AAFCF;
+  --plum: #88A0C8;
+  --glow: rgba(120, 190, 210, 0.4);
+  --primary: #4A9BB5;
+  --primary-light: #72B8CC;
+  --primary-dark: #2E7A91;
+  --accent: #3A8CA8;
+  --success: #6DBF9E;
+  --warning: #F0C264;
+  --danger: #E08080;
+  --bg-page: #F0F7FA;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #E8F1F5;
+  --text-primary: #2C4A55;
+  --text-secondary: #6A8E9B;
+  --text-muted: #9BB8C3;
+  --border: rgba(160, 200, 215, 0.6);
+  --border-light: rgba(160, 200, 215, 0.3);
+  --nav-bg: rgba(240, 247, 250, 0.88);
+  --nav-shadow: 0 2px 20px rgba(80, 140, 170, 0.06);
+  --shadow-rgb: 80, 140, 170;
+  --gradient-primary: linear-gradient(135deg, #4A9BB5, #72B8CC);
+  --gradient-page: linear-gradient(135deg, #F0F7FA 0%, #E3EFF5 55%, #D8EAF0 100%);
+  --hover-overlay: rgba(74, 155, 181, 0.08);
+  --hover-overlay-strong: rgba(74, 155, 181, 0.12);
+  --tag-bg: rgba(74, 155, 181, 0.1);
+  --tag-border: rgba(74, 155, 181, 0.25);
+  --selection-bg: #4A9BB5;
+}
+
+/* ============ 主题 — 森林 ============ */
+[data-theme="forest"] {
+  --warm-white: #F2F5EE;
+  --cream: #E6ECDF;
+  --apricot: #DDE5D4;
+  --wood-light: #C8DDB8;
+  --terracotta: #6E9B5A;
+  --terracotta-d: #5C8A4C;
+  --terra-deep: #4A7340;
+  --sage: #7DAF68;
+  --sage-d: #5A8A48;
+  --amber: #D4B050;
+  --amber-d: #A88830;
+  --rose: #CF7A7A;
+  --rose-d: #A85858;
+  --sky: #7AA8BF;
+  --plum: #90A880;
+  --glow: rgba(140, 180, 120, 0.4);
+  --primary: #6E9B5A;
+  --primary-light: #92B87E;
+  --primary-dark: #4A7340;
+  --accent: #5C8A4C;
+  --success: #7DAF68;
+  --warning: #D4B050;
+  --danger: #CF7A7A;
+  --bg-page: #F2F5EE;
+  --bg-card: #FAFCF7;
+  --bg-card-alt: #E6ECDF;
+  --text-primary: #3A4A34;
+  --text-secondary: #6E8060;
+  --text-muted: #9AAA8C;
+  --border: rgba(160, 190, 140, 0.6);
+  --border-light: rgba(160, 190, 140, 0.3);
+  --nav-bg: rgba(242, 245, 238, 0.88);
+  --nav-shadow: 0 2px 20px rgba(100, 140, 80, 0.06);
+  --shadow-rgb: 100, 140, 80;
+  --gradient-primary: linear-gradient(135deg, #6E9B5A, #92B87E);
+  --gradient-page: linear-gradient(135deg, #F2F5EE 0%, #E6ECDF 55%, #DDE5D4 100%);
+  --hover-overlay: rgba(110, 155, 90, 0.08);
+  --hover-overlay-strong: rgba(110, 155, 90, 0.12);
+  --tag-bg: rgba(110, 155, 90, 0.1);
+  --tag-border: rgba(110, 155, 90, 0.25);
+  --selection-bg: #6E9B5A;
+}
+
+/* ============ 主题 — 暮光 ============ */
+[data-theme="twilight"] {
+  --warm-white: #F4F0F7;
+  --cream: #EBE4F0;
+  --apricot: #E4DAE8;
+  --wood-light: #D8C8E8;
+  --terracotta: #9478B0;
+  --terracotta-d: #8668A2;
+  --terra-deep: #6E5288;
+  --sage: #88B08A;
+  --sage-d: #608A62;
+  --amber: #E0B860;
+  --amber-d: #B89030;
+  --rose: #D08888;
+  --rose-d: #A86060;
+  --sky: #88A8C8;
+  --plum: #A088C0;
+  --glow: rgba(170, 140, 200, 0.4);
+  --primary: #9478B0;
+  --primary-light: #B098C8;
+  --primary-dark: #6E5288;
+  --accent: #8668A2;
+  --success: #88B08A;
+  --warning: #E0B860;
+  --danger: #D08888;
+  --bg-page: #F4F0F7;
+  --bg-card: #FDFBFF;
+  --bg-card-alt: #EBE4F0;
+  --text-primary: #44364E;
+  --text-secondary: #8878A0;
+  --text-muted: #AEA0C0;
+  --border: rgba(180, 160, 200, 0.6);
+  --border-light: rgba(180, 160, 200, 0.3);
+  --nav-bg: rgba(244, 240, 247, 0.88);
+  --nav-shadow: 0 2px 20px rgba(130, 100, 160, 0.06);
+  --shadow-rgb: 130, 100, 160;
+  --gradient-primary: linear-gradient(135deg, #9478B0, #B098C8);
+  --gradient-page: linear-gradient(135deg, #F4F0F7 0%, #EBE4F0 55%, #E4DAE8 100%);
+  --hover-overlay: rgba(148, 120, 176, 0.08);
+  --hover-overlay-strong: rgba(148, 120, 176, 0.12);
+  --tag-bg: rgba(148, 120, 176, 0.1);
+  --tag-border: rgba(148, 120, 176, 0.25);
+  --selection-bg: #9478B0;
+}
+
+/* ============ 主题 — 墨韵（暗色） ============ */
+[data-theme="ink"] {
+  --warm-white: #1A1A2E;
+  --cream: #2E2E4A;
+  --apricot: #363658;
+  --wood-light: #484868;
+  --terracotta: #E0A87C;
+  --terracotta-d: #D89868;
+  --terra-deep: #C08050;
+  --sage: #88C090;
+  --sage-d: #60A068;
+  --amber: #E8C870;
+  --amber-d: #C0A040;
+  --rose: #E08888;
+  --rose-d: #B86060;
+  --sky: #80B0D0;
+  --plum: #B098C8;
+  --glow: rgba(224, 168, 124, 0.25);
+  --primary: #E0A87C;
+  --primary-light: #ECC0A0;
+  --primary-dark: #C08050;
+  --accent: #D89868;
+  --success: #88C090;
+  --warning: #E8C870;
+  --danger: #E08888;
+  --bg-page: #1A1A2E;
+  --bg-card: #242440;
+  --bg-card-alt: #2E2E4A;
+  --text-primary: #E8E0D8;
+  --text-secondary: #A89888;
+  --text-muted: #787068;
+  --border: rgba(80, 70, 100, 0.6);
+  --border-light: rgba(80, 70, 100, 0.35);
+  --nav-bg: rgba(26, 26, 46, 0.92);
+  --nav-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+  --shadow-rgb: 0, 0, 0;
+  --gradient-primary: linear-gradient(135deg, #E0A87C, #ECC0A0);
+  --gradient-page: linear-gradient(135deg, #1A1A2E 0%, #20203A 55%, #1E1E36 100%);
+  --hover-overlay: rgba(224, 168, 124, 0.1);
+  --hover-overlay-strong: rgba(224, 168, 124, 0.15);
+  --tag-bg: rgba(224, 168, 124, 0.15);
+  --tag-border: rgba(224, 168, 124, 0.3);
+  --selection-bg: #E0A87C;
 }
 
 html, body, #app {
@@ -61,6 +258,9 @@ html, body, #app {
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
 }
+
+::selection { background: var(--selection-bg); color: #fff; }
+body { transition: background 0.4s, color 0.3s; }
 
 /* PWA 安全区域 */
 @supports (padding: env(safe-area-inset-top)) {
@@ -79,15 +279,15 @@ html, body, #app {
 
 /* ========== 卡片 ========== */
 .card {
-  background: #FFFDFA;
-  border: 1px solid rgba(226, 205, 178, 0.7);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 24px;
   padding: 20px;
-  box-shadow: 0 8px 28px rgba(160, 120, 90, 0.08);
-  transition: box-shadow 0.35s, transform 0.35s;
+  box-shadow: var(--shadow-md);
+  transition: box-shadow 0.35s, transform 0.35s, background 0.3s;
 }
 .card:hover {
-  box-shadow: 0 16px 40px rgba(160, 120, 90, 0.14);
+  box-shadow: 0 16px 40px rgba(var(--shadow-rgb), 0.14);
 }
 
 /* ========== 滚动渐入 ========== */
@@ -251,7 +451,7 @@ html, body, #app {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(160, 120, 90, 0.18);
+  box-shadow: 0 20px 60px rgba(var(--shadow-rgb), 0.18);
   overflow: hidden;
 }
 .warm-dialog .el-dialog__header {
@@ -294,7 +494,7 @@ html, body, #app {
 .warm-form .el-input__wrapper.is-focus,
 .warm-form .el-textarea__inner:focus {
   border-color: var(--terracotta);
-  box-shadow: 0 0 0 3px rgba(200, 159, 133, 0.12);
+  box-shadow: 0 0 0 3px rgba(var(--shadow-rgb), 0.12);
 }
 .warm-form .el-select__wrapper {
   background: var(--bg-card);
@@ -305,7 +505,7 @@ html, body, #app {
   box-shadow: 0 0 0 1.5px var(--terracotta) inset;
 }
 .warm-form .el-select__wrapper.is-focused {
-  box-shadow: 0 0 0 1.5px var(--terracotta) inset, 0 0 0 3px rgba(200, 159, 133, 0.12);
+  box-shadow: 0 0 0 1.5px var(--terracotta) inset, 0 0 0 3px rgba(var(--shadow-rgb), 0.12);
 }
 .warm-form .el-input-group__prepend {
   background: var(--cream);
@@ -392,19 +592,19 @@ html, body, #app {
 
 /* ========== 按钮增强 ========== */
 .el-button--primary {
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B) !important;
+  background: var(--gradient-primary) !important;
   border: none !important;
   transition: all 0.3s ease !important;
 }
 .el-button--primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(200, 159, 133, 0.35) !important;
+  box-shadow: 0 4px 16px rgba(var(--shadow-rgb), 0.25) !important;
 }
 
 /* ========== 标签增强 ========== */
 .el-tag--primary {
-  --el-tag-bg-color: rgba(200, 159, 133, 0.1);
-  --el-tag-border-color: rgba(200, 159, 133, 0.25);
+  --el-tag-bg-color: var(--tag-bg);
+  --el-tag-border-color: var(--tag-border);
   --el-tag-text-color: var(--terra-deep);
 }
 

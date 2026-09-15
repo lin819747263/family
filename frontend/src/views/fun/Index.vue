@@ -342,7 +342,7 @@ const diffOptions = [
   { value: 'hard', label: '🔥 困难' }
 ]
 const diffLabel = { easy: '简单', medium: '中等', hard: '困难' }
-const recipeBgs = { easy: 'linear-gradient(135deg,#E4E6D3,#C4CBA8)', medium: 'linear-gradient(135deg,#F3E3C2,#E5C68E)', hard: 'linear-gradient(135deg,#EBD2D2,#D5A8A8)' }
+const recipeBgs = { easy: 'linear-gradient(135deg,rgba(var(--sage-rgb), 0.2),rgba(var(--sage-rgb), 0.45))', medium: 'linear-gradient(135deg,rgba(var(--amber-rgb), 0.15),rgba(var(--amber-rgb), 0.4))', hard: 'linear-gradient(135deg,rgba(var(--rose-rgb), 0.15),rgba(var(--rose-rgb), 0.4))' }
 const recipeEmojis = { easy: '🥗', medium: '🍲', hard: '🔥' }
 function getRecipeBg(diff) { return recipeBgs[diff] || recipeBgs.medium }
 function getRecipeEmoji(r) { if (r.name?.includes('蛋')) return '🍅'; if (r.name?.includes('肉')) return '🍖'; if (r.name?.includes('鱼')) return '🐟'; if (r.name?.includes('汤')) return '🌽'; if (r.name?.includes('饭')) return '🍚'; return recipeEmojis[r.difficulty] || '🍳' }
@@ -392,7 +392,7 @@ async function loadDrinks() {
   }
 }
 async function toggleDrinkFav(d) { const res = await drinkApi.toggleFav(d.id); d.isFav = res.data.isFav; d.likes = res.data.likes }
-const drinkBgs = ['rgba(232,179,106,.2)', 'rgba(217,154,154,.2)', 'rgba(169,139,176,.2)', 'rgba(159,184,201,.2)', 'rgba(168,176,138,.2)']
+const drinkBgs = ['rgba(var(--amber-rgb),.2)', 'rgba(var(--rose-rgb),.2)', 'rgba(var(--primary-rgb),.2)', 'rgba(var(--sky-rgb),.2)', 'rgba(var(--sage-rgb),.2)']
 const drinkEmojis = ['🧋', '🍓', '🍇', '🥥', '🍋', '🍑']
 function getDrinkBg(brand) { const i = (brand || '').length % drinkBgs.length; return drinkBgs[i] }
 function getDrinkEmoji(brand) { const i = (brand || '').length % drinkEmojis.length; return drinkEmojis[i] }
@@ -414,9 +414,9 @@ async function loadShops() {
   }
 }
 async function toggleShopCheck(s) { const res = await funShopApi.toggleCheck(s.id); s.checkedIn = res.data.checkedIn; s.checkedAt = res.data.checkedAt }
-const shopBgs = { '烘焙': 'rgba(232,179,106,.2)', '糖水': 'rgba(217,154,154,.2)', '咖啡': 'rgba(168,176,138,.2)', '火锅': 'rgba(200,159,133,.2)', '日料': 'rgba(159,184,201,.2)' }
+const shopBgs = { '烘焙': 'rgba(var(--amber-rgb),.2)', '糖水': 'rgba(var(--rose-rgb),.2)', '咖啡': 'rgba(var(--sage-rgb),.2)', '火锅': 'rgba(var(--primary-rgb),.2)', '日料': 'rgba(var(--sky-rgb),.2)' }
 const shopEmojis = { '烘焙': '🥐', '糖水': '🍧', '咖啡': '☕', '火锅': '🍲', '日料': '🏮', '奶茶': '🧋' }
-function getShopBg(cat) { return shopBgs[cat] || 'rgba(200,159,133,.15)' }
+function getShopBg(cat) { return shopBgs[cat] || 'rgba(var(--primary-rgb),.15)' }
 function getShopEmoji(cat) { return shopEmojis[cat] || '🏪' }
 
 // ===== 景点 =====
@@ -430,7 +430,7 @@ const seasonOptions = [
   { value: 'winter', label: '❄️ 冬' }
 ]
 const seasonLabel = { spring: '🌸 春', summer: '🍃 夏', autumn: '🍁 秋', winter: '❄️ 冬', all: '🌈 全年' }
-const placeBgs = { spring: 'linear-gradient(135deg,#F6DFC8,#EFC9A8)', summer: 'linear-gradient(135deg,#DFE3E6,#B9C6CE)', autumn: 'linear-gradient(135deg,#E4E6D3,#C4CBA8)', winter: 'linear-gradient(135deg,#EBD2D2,#D5A8A8)', all: 'linear-gradient(135deg,#F3E3C2,#E5C68E)' }
+const placeBgs = { spring: 'linear-gradient(135deg,rgba(var(--primary-rgb), 0.15),rgba(var(--primary-rgb), 0.35))', summer: 'linear-gradient(135deg,rgba(var(--sky-rgb), 0.15),rgba(var(--sky-rgb), 0.4))', autumn: 'linear-gradient(135deg,rgba(var(--sage-rgb), 0.2),rgba(var(--sage-rgb), 0.45))', winter: 'linear-gradient(135deg,rgba(var(--rose-rgb), 0.15),rgba(var(--rose-rgb), 0.4))', all: 'linear-gradient(135deg,rgba(var(--amber-rgb), 0.15),rgba(var(--amber-rgb), 0.4))' }
 const placeEmojis = { spring: '🌸', summer: '🎋', autumn: '🍁', winter: '🏰', all: '🏞' }
 function getPlaceBg(s) { return placeBgs[s] || placeBgs.all }
 function getPlaceEmoji(s) { return placeEmojis[s] || '🏞' }
@@ -466,7 +466,7 @@ async function loadFruits() {
     fruitLoading.value = false
   }
 }
-const fruitBgs = ['rgba(217,154,154,.2)', 'rgba(169,139,176,.2)', 'rgba(200,159,133,.2)', 'rgba(232,179,106,.2)', 'rgba(168,176,138,.2)', 'rgba(159,184,201,.2)']
+const fruitBgs = ['rgba(var(--rose-rgb),.2)', 'rgba(var(--primary-rgb),.2)', 'rgba(var(--primary-rgb),.2)', 'rgba(var(--amber-rgb),.2)', 'rgba(var(--sage-rgb),.2)', 'rgba(var(--sky-rgb),.2)']
 function getFruitBg(name) { const i = (name || '').length % fruitBgs.length; return fruitBgs[i] }
 
 // ===== 表单 =====
@@ -591,29 +591,29 @@ onMounted(async () => {
 .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
 .page-sub { margin-top: 6px; font-size: 13.5px; color: var(--text-secondary); }
 .head-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-.btn-primary { display: inline-flex; align-items: center; gap: 7px; padding: 11px 18px; border-radius: 13px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; background: linear-gradient(135deg, var(--terracotta), #D3A98B); color: #FFF9F2; box-shadow: 0 8px 20px rgba(200,159,133,.4); transition: transform .3s, box-shadow .3s; }
-.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(200,159,133,.3); }
-.btn-ghost { display: inline-flex; align-items: center; gap: 7px; padding: 11px 18px; border-radius: 13px; border: 1.5px solid var(--border); cursor: pointer; font-size: 14px; font-weight: 600; background: rgba(255,253,250,.85); color: var(--terra-deep); transition: transform .3s, box-shadow .3s; }
-.btn-ghost:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(200,159,133,.15); }
+.btn-primary { display: inline-flex; align-items: center; gap: 7px; padding: 11px 18px; border-radius: 13px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; background: var(--gradient-primary); color: var(--bg-card); box-shadow: 0 8px 20px rgba(var(--primary-rgb),.4); transition: transform .3s, box-shadow .3s; }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(var(--primary-rgb),.3); }
+.btn-ghost { display: inline-flex; align-items: center; gap: 7px; padding: 11px 18px; border-radius: 13px; border: 1.5px solid var(--border); cursor: pointer; font-size: 14px; font-weight: 600; background: rgba(var(--bg-card-rgb),.85); color: var(--terra-deep); transition: transform .3s, box-shadow .3s; }
+.btn-ghost:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(var(--primary-rgb),.15); }
 
 /* ===== 子标签页 ===== */
-.subtabs { display: flex; gap: 6px; background: rgba(243,234,221,.6); border: 1px solid var(--border); padding: 5px; border-radius: 16px; margin-bottom: 22px; overflow-x: auto; }
+.subtabs { display: flex; gap: 6px; background: rgba(var(--cream-rgb),.6); border: 1px solid var(--border); padding: 5px; border-radius: 16px; margin-bottom: 22px; overflow-x: auto; }
 .subtab { padding: 10px 18px; border-radius: 12px; border: none; background: transparent; color: var(--text-secondary); font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all .3s; }
 .subtab:hover { color: var(--terra-deep); }
-.subtab.active { background: var(--bg-card); color: var(--terra-deep); box-shadow: 0 4px 14px rgba(160,120,90,.14); }
+.subtab.active { background: var(--bg-card); color: var(--terra-deep); box-shadow: 0 4px 14px rgba(var(--shadow-rgb),.14); }
 
 /* ===== 筛选栏 ===== */
 .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; align-items: center; }
-.fchip { padding: 9px 15px; border-radius: 999px; border: 1.5px solid var(--border); background: rgba(255,253,250,.8); color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .25s; }
+.fchip { padding: 9px 15px; border-radius: 999px; border: 1.5px solid var(--border); background: rgba(var(--bg-card-rgb),.8); color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .25s; }
 .fchip:hover { border-color: var(--terracotta); color: var(--terra-deep); }
 .fchip.active { background: var(--terracotta); border-color: var(--terracotta); color: #fff; }
 .filter-count { margin-left: auto; font-size: 12.5px; color: var(--text-secondary); }
 .filter-count b { color: var(--terra-deep); }
 
 /* ===== 卡片删除按钮 ===== */
-.card-del { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border-radius: 8px; border: none; background: rgba(255,253,250,.9); color: var(--terra-deep); cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(160,120,90,.15); opacity: 0; transition: all .25s; z-index: 2; }
+.card-del { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border-radius: 8px; border: none; background: rgba(var(--bg-card-rgb),.9); color: var(--terra-deep); cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(var(--shadow-rgb),.15); opacity: 0; transition: all .25s; z-index: 2; }
 .recipe-card:hover .card-del, .drink-card:hover .card-del, .shop-card:hover .card-del, .place-card:hover .card-del, .fruit-card:hover .card-del { opacity: 1; }
-.card-del:hover { background: #B06A6A; color: #fff; }
+.card-del:hover { background: var(--rose-d); color: #fff; }
 
 /* ===== 空状态 ===== */
 
@@ -623,14 +623,14 @@ onMounted(async () => {
 /* ===== 菜谱卡片 ===== */
 .recipe-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .recipe-card { padding: 0; overflow: hidden; cursor: pointer; position: relative; transition: transform .35s, box-shadow .35s; }
-.recipe-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(160,120,90,.16); }
+.recipe-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(var(--shadow-rgb),.16); }
 .rcov { height: 140px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
 .rcov-emoji { font-size: 46px; transition: transform .6s cubic-bezier(.22,1,.36,1); }
 .recipe-card:hover .rcov-emoji { transform: scale(1.25) rotate(-8deg); }
 .diff-badge { position: absolute; top: 10px; right: 10px; font-size: 11px; font-weight: 700; padding: 3px 11px; border-radius: 999px; backdrop-filter: blur(6px); }
-.diff-badge.easy { background: rgba(168,176,138,.28); color: #7E8862; }
-.diff-badge.medium { background: rgba(232,179,106,.3); color: #C08A3E; }
-.diff-badge.hard { background: rgba(217,154,154,.3); color: #B06A6A; }
+.diff-badge.easy { background: rgba(var(--sage-rgb),.28); color: var(--sage-d); }
+.diff-badge.medium { background: rgba(var(--amber-rgb),.3); color: var(--amber-d); }
+.diff-badge.hard { background: rgba(var(--rose-rgb),.3); color: var(--rose-d); }
 .rbody { padding: 14px 16px 16px; }
 .rname { font-size: 15.5px; font-weight: 700; }
 .rdesc { font-size: 12.5px; color: var(--text-secondary); margin-top: 5px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -642,57 +642,57 @@ onMounted(async () => {
 /* ===== 奶茶卡片 ===== */
 .drink-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .drink-card { padding: 16px; transition: transform .35s, box-shadow .35s; }
-.drink-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(160,120,90,.16); }
+.drink-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(var(--shadow-rgb),.16); }
 .dk-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
 .cup { width: 52px; height: 52px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 25px; transition: transform .4s cubic-bezier(.34,1.56,.64,1); }
 .drink-card:hover .cup { transform: rotate(-8deg) scale(1.1); }
 .heart { border: none; background: transparent; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 700; color: var(--text-secondary); padding: 4px 6px; border-radius: 999px; transition: all .25s; }
-.heart.on { color: #B06A6A; }
+.heart.on { color: var(--rose-d); }
 .dk-name { font-size: 15px; font-weight: 700; }
 .dk-brand { display: inline-block; font-size: 11.5px; font-weight: 600; padding: 2px 9px; border-radius: 999px; background: var(--apricot); color: var(--terra-deep); margin-top: 6px; }
 .dk-tags { display: flex; gap: 6px; margin-top: 9px; flex-wrap: wrap; }
-.dk-tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(159,184,201,.18); color: #6E8CA0; }
-.dk-tag.ice { background: rgba(168,176,138,.18); color: #7E8862; }
+.dk-tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(var(--sky-rgb),.18); color: var(--sky-d); }
+.dk-tag.ice { background: rgba(var(--sage-rgb),.18); color: var(--sage-d); }
 .dk-note { font-size: 12px; color: var(--text-secondary); margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); line-height: 1.5; }
-.drink-add { border: 1.5px dashed var(--wood-light); background: rgba(243,234,221,.4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 150px; color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .3s; }
-.drink-add:hover { border-color: var(--terracotta); color: var(--terra-deep); background: rgba(243,234,221,.8); transform: translateY(-4px); }
-.plus-icon { width: 42px; height: 42px; border-radius: 14px; background: rgba(200,159,133,.16); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--terra-deep); }
+.drink-add { border: 1.5px dashed var(--wood-light); background: rgba(var(--cream-rgb),.4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 150px; color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .3s; }
+.drink-add:hover { border-color: var(--terracotta); color: var(--terra-deep); background: rgba(var(--cream-rgb),.8); transform: translateY(-4px); }
+.plus-icon { width: 42px; height: 42px; border-radius: 14px; background: rgba(var(--primary-rgb),.16); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--terra-deep); }
 
 /* ===== 打卡小店 ===== */
-.ck-summary { display: flex; align-items: center; gap: 16px; padding: 18px; margin-bottom: 18px; background: linear-gradient(120deg, rgba(232,179,106,.16), rgba(217,154,154,.14)); border: 1.5px solid rgba(232,179,106,.4); }
-.ck-ico { width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, var(--amber), #C08A3E); color: #fff; font-size: 21px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ck-summary { display: flex; align-items: center; gap: 16px; padding: 18px; margin-bottom: 18px; background: linear-gradient(120deg, rgba(var(--amber-rgb),.16), rgba(var(--rose-rgb),.14)); border: 1.5px solid rgba(var(--amber-rgb),.4); }
+.ck-ico { width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, var(--amber), var(--amber-d)); color: #fff; font-size: 21px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .ck-info { flex: 1; min-width: 0; }
 .ck-text { font-size: 14px; font-weight: 600; }
-.ck-text b { color: #C08A3E; }
-.ck-bar { height: 8px; border-radius: 999px; background: rgba(255,253,250,.8); margin-top: 9px; overflow: hidden; }
+.ck-text b { color: var(--amber-d); }
+.ck-bar { height: 8px; border-radius: 999px; background: rgba(var(--bg-card-rgb),.8); margin-top: 9px; overflow: hidden; }
 .ck-bar i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--amber), var(--rose)); transition: width 1s cubic-bezier(.22,1,.36,1); }
 .shop-list { display: flex; flex-direction: column; gap: 14px; }
 .shop-card { display: flex; align-items: center; gap: 14px; padding: 16px 18px; position: relative; overflow: hidden; transition: transform .3s, box-shadow .3s; }
-.shop-card:hover { transform: translateY(-3px); box-shadow: 0 14px 32px rgba(160,120,90,.14); }
+.shop-card:hover { transform: translateY(-3px); box-shadow: 0 14px 32px rgba(var(--shadow-rgb),.14); }
 .sp-ico { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
 .sp-body { flex: 1; min-width: 0; }
 .sp-name { font-size: 15px; font-weight: 700; }
 .sp-cat { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: var(--apricot); color: var(--terra-deep); margin-left: 8px; vertical-align: 2px; }
 .sp-addr { font-size: 12px; color: var(--text-secondary); margin-top: 5px; }
 .sp-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
-.stars { font-size: 13px; letter-spacing: 2px; color: #C08A3E; }
-.ck-btn { padding: 7px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: rgba(255,253,250,.8); color: var(--terra-deep); font-size: 12px; font-weight: 700; cursor: pointer; transition: all .25s; }
+.stars { font-size: 13px; letter-spacing: 2px; color: var(--amber-d); }
+.ck-btn { padding: 7px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: rgba(var(--bg-card-rgb),.8); color: var(--terra-deep); font-size: 12px; font-weight: 700; cursor: pointer; transition: all .25s; }
 .ck-btn:hover { border-color: var(--amber); background: var(--amber); color: #fff; }
-.shop-card.done .ck-btn { background: rgba(168,176,138,.2); border-color: transparent; color: #7E8862; cursor: default; }
-.stamp { position: absolute; right: 16px; top: 12px; transform: rotate(-14deg) scale(1.8); opacity: 0; border: 2.5px solid #B06A6A; color: #B06A6A; font-weight: 800; font-size: 13px; letter-spacing: .25em; padding: 4px 12px; border-radius: 8px; pointer-events: none; transition: all .4s cubic-bezier(.34,1.56,.64,1); }
+.shop-card.done .ck-btn { background: rgba(var(--sage-rgb),.2); border-color: transparent; color: var(--sage-d); cursor: default; }
+.stamp { position: absolute; right: 16px; top: 12px; transform: rotate(-14deg) scale(1.8); opacity: 0; border: 2.5px solid var(--rose-d); color: var(--rose-d); font-weight: 800; font-size: 13px; letter-spacing: .25em; padding: 4px 12px; border-radius: 8px; pointer-events: none; transition: all .4s cubic-bezier(.34,1.56,.64,1); }
 .shop-card.done .stamp { opacity: .8; transform: rotate(-14deg) scale(1); }
-.shop-add { border: 1.5px dashed var(--wood-light); background: rgba(243,234,221,.4); padding: 18px; text-align: center; color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .3s; }
+.shop-add { border: 1.5px dashed var(--wood-light); background: rgba(var(--cream-rgb),.4); padding: 18px; text-align: center; color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .3s; }
 .shop-add:hover { border-color: var(--terracotta); color: var(--terra-deep); }
 
 /* ===== 出游景点 ===== */
 .place-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .place-card { padding: 0; overflow: hidden; transition: transform .35s, box-shadow .35s; }
-.place-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(160,120,90,.16); }
+.place-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(var(--shadow-rgb),.16); }
 .scene { height: 120px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
 .scene-emoji { font-size: 42px; transition: transform .6s cubic-bezier(.22,1,.36,1); }
 .place-card:hover .scene-emoji { transform: scale(1.2); }
-.season-tag { position: absolute; top: 10px; left: 10px; font-size: 11px; font-weight: 700; padding: 3px 11px; border-radius: 999px; backdrop-filter: blur(6px); background: rgba(255,253,250,.75); color: var(--terra-deep); }
-.wish-btn { position: absolute; top: 8px; right: 8px; border: none; background: rgba(255,253,250,.8); backdrop-filter: blur(6px); width: 32px; height: 32px; border-radius: 10px; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; transition: all .25s; }
+.season-tag { position: absolute; top: 10px; left: 10px; font-size: 11px; font-weight: 700; padding: 3px 11px; border-radius: 999px; backdrop-filter: blur(6px); background: rgba(var(--bg-card-rgb),.75); color: var(--terra-deep); }
+.wish-btn { position: absolute; top: 8px; right: 8px; border: none; background: rgba(var(--bg-card-rgb),.8); backdrop-filter: blur(6px); width: 32px; height: 32px; border-radius: 10px; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; transition: all .25s; }
 .wish-btn:hover { transform: scale(1.12); }
 .wish-btn.on { background: var(--rose); color: #fff; }
 .pbody { padding: 14px 16px 16px; }
@@ -700,33 +700,33 @@ onMounted(async () => {
 .pwhy { font-size: 12.5px; color: var(--text-secondary); margin-top: 5px; }
 .pmeta { display: flex; flex-direction: column; gap: 5px; margin-top: 11px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 12px; color: var(--text-secondary); }
 .ptag-row { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
-.ptag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(159,184,201,.18); color: #6E8CA0; }
-.ptag.fee { background: rgba(168,176,138,.18); color: #7E8862; }
-.place-add { border: 1.5px dashed var(--wood-light); background: rgba(243,234,221,.4); display: flex; align-items: center; justify-content: center; min-height: 280px; color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .3s; }
+.ptag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(var(--sky-rgb),.18); color: var(--sky-d); }
+.ptag.fee { background: rgba(var(--sage-rgb),.18); color: var(--sage-d); }
+.place-add { border: 1.5px dashed var(--wood-light); background: rgba(var(--cream-rgb),.4); display: flex; align-items: center; justify-content: center; min-height: 280px; color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .3s; }
 .place-add:hover { border-color: var(--terracotta); color: var(--terra-deep); }
 
 /* ===== 时令水果 ===== */
-.fruit-banner { display: flex; align-items: center; gap: 14px; padding: 18px; margin-bottom: 18px; background: linear-gradient(120deg, rgba(168,176,138,.16), rgba(232,179,106,.16)); border: 1.5px solid rgba(168,176,138,.4); }
-.fb-ico { width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, var(--sage), #7E8862); color: #fff; font-size: 21px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.fruit-banner { display: flex; align-items: center; gap: 14px; padding: 18px; margin-bottom: 18px; background: linear-gradient(120deg, rgba(var(--sage-rgb),.16), rgba(var(--amber-rgb),.16)); border: 1.5px solid rgba(var(--sage-rgb),.4); }
+.fb-ico { width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, var(--sage), var(--sage-d)); color: #fff; font-size: 21px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .fb-text { font-size: 14px; line-height: 1.6; }
-.fb-text b { color: #7E8862; }
+.fb-text b { color: var(--sage-d); }
 .fruit-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 .fruit-card { padding: 16px; text-align: center; transition: transform .35s, box-shadow .35s; }
-.fruit-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(160,120,90,.16); }
+.fruit-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(var(--shadow-rgb),.16); }
 .f-tile { width: 64px; height: 64px; margin: 0 auto; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 30px; transition: transform .4s cubic-bezier(.34,1.56,.64,1); }
 .fruit-card:hover .f-tile { transform: scale(1.12) rotate(-6deg); }
 .f-name { font-size: 15px; font-weight: 700; margin-top: 10px; }
 .f-months { display: flex; gap: 3px; justify-content: center; margin-top: 10px; }
 .f-months i { width: 8px; height: 8px; border-radius: 50%; background: var(--cream); border: 1px solid var(--border); }
 .f-months i.on { background: var(--sage); border-color: var(--sage); }
-.f-months i.now { box-shadow: 0 0 0 3px rgba(200,159,133,.3); background: var(--terracotta); border-color: var(--terracotta); }
+.f-months i.now { box-shadow: 0 0 0 3px rgba(var(--primary-rgb),.3); background: var(--terracotta); border-color: var(--terracotta); }
 .f-season { font-size: 11px; color: var(--text-secondary); margin-top: 6px; }
 .f-sweet { display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 9px; font-size: 11px; color: var(--text-secondary); }
 .f-sweet i { width: 7px; height: 7px; border-radius: 50%; background: var(--cream); border: 1px solid var(--border); }
 .f-sweet i.on { background: var(--amber); border-color: var(--amber); }
 .f-price { font-size: 13px; font-weight: 700; color: var(--terra-deep); margin-top: 8px; }
 .f-tip { font-size: 11.5px; color: var(--text-secondary); margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); line-height: 1.5; }
-.fruit-add { border: 1.5px dashed var(--wood-light); background: rgba(243,234,221,.4); display: flex; align-items: center; justify-content: center; min-height: 200px; color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .3s; }
+.fruit-add { border: 1.5px dashed var(--wood-light); background: rgba(var(--cream-rgb),.4); display: flex; align-items: center; justify-content: center; min-height: 200px; color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .3s; }
 .fruit-add:hover { border-color: var(--terracotta); color: var(--terra-deep); }
 
 /* ===== 菜谱详情弹窗 ===== */
@@ -738,9 +738,9 @@ onMounted(async () => {
 .rv-cover { height: 170px; display: flex; align-items: center; justify-content: center; font-size: 56px; }
 .rv-tags { display: flex; gap: 6px; flex-wrap: wrap; padding: 14px 16px 0; }
 .rv-tag { font-size: 11.5px; font-weight: 700; padding: 3px 11px; border-radius: 999px; background: var(--apricot); color: var(--terra-deep); }
-.rv-tag.easy { background: rgba(168,176,138,.22); color: #7E8862; }
-.rv-tag.medium { background: rgba(232,179,106,.26); color: #C08A3E; }
-.rv-tag.hard { background: rgba(217,154,154,.26); color: #B06A6A; }
+.rv-tag.easy { background: rgba(var(--sage-rgb),.22); color: var(--sage-d); }
+.rv-tag.medium { background: rgba(var(--amber-rgb),.26); color: var(--amber-d); }
+.rv-tag.hard { background: rgba(var(--rose-rgb),.26); color: var(--rose-d); }
 .rv-desc { padding: 12px 16px 18px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; }
 .rv-right { flex: 1; min-width: 0; overflow-y: auto; padding: 16px 20px 22px; }
 .vs-title { font-size: 15px; font-weight: 800; color: var(--terra-deep); display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
@@ -754,10 +754,10 @@ onMounted(async () => {
 
 /* ===== 弹窗按钮 ===== */
 .dialog-footer { display: flex; justify-content: flex-end; gap: 10px; }
-.btn-cancel { padding: 10px 20px; border-radius: 12px; border: 1.5px solid var(--border); background: rgba(255,253,250,.85); color: var(--text-secondary); font-size: 14px; font-weight: 600; cursor: pointer; transition: all .25s; font-family: inherit; }
+.btn-cancel { padding: 10px 20px; border-radius: 12px; border: 1.5px solid var(--border); background: rgba(var(--bg-card-rgb),.85); color: var(--text-secondary); font-size: 14px; font-weight: 600; cursor: pointer; transition: all .25s; font-family: inherit; }
 .btn-cancel:hover { border-color: var(--terracotta); color: var(--terra-deep); }
-.btn-confirm { padding: 10px 24px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--terracotta), #D3A98B); color: #FFF9F2; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 6px 18px rgba(200,159,133,.35); transition: all .25s; font-family: inherit; }
-.btn-confirm:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(200,159,133,.4); }
+.btn-confirm { padding: 10px 24px; border-radius: 12px; border: none; background: var(--gradient-primary); color: var(--bg-card); font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 6px 18px rgba(var(--primary-rgb),.35); transition: all .25s; font-family: inherit; }
+.btn-confirm:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(var(--primary-rgb),.4); }
 .btn-confirm:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
 .btn-confirm:disabled:hover { transform: none; box-shadow: none; }
 
@@ -783,15 +783,15 @@ onMounted(async () => {
 
 <!-- 全局弹窗样式 -->
 <style>
-.warm-dialog.el-dialog { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 20px 60px rgba(160,120,90,.18); overflow: visible; }
+.warm-dialog.el-dialog { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 20px 60px rgba(var(--shadow-rgb),.18); overflow: visible; }
 .warm-dialog.el-dialog .el-dialog__header { padding: 20px 24px 0; margin: 0; }
 .warm-dialog.el-dialog .el-dialog__title { font-size: 18px; font-weight: 700; color: var(--terra-deep); }
 .warm-dialog.el-dialog .el-dialog__body { padding: 16px 24px 8px; overflow: visible; }
 .warm-dialog.el-dialog .el-dialog__footer { padding: 8px 24px 20px; }
 .warm-form .el-form-item__label { color: var(--text-primary); font-weight: 600; font-size: 13px; }
-.warm-form .el-input__wrapper, .warm-form .el-textarea__inner { background: #FFFDF9; border: 1.5px solid #E2CDB2; border-radius: 12px; box-shadow: none; }
-.warm-form .el-input__wrapper:hover, .warm-form .el-textarea__inner:hover { border-color: #C89F85; }
-.warm-form .el-input__wrapper.is-focus, .warm-form .el-textarea__inner:focus { border-color: #C89F85; box-shadow: 0 0 0 3px rgba(200,159,133,.12); }
-.warm-form .el-select .el-input__wrapper { background: #FFFDF9; }
+.warm-form .el-input__wrapper, .warm-form .el-textarea__inner { background: var(--bg-card); border: 1.5px solid var(--wood-light); border-radius: 12px; box-shadow: none; }
+.warm-form .el-input__wrapper:hover, .warm-form .el-textarea__inner:hover { border-color: var(--terracotta); }
+.warm-form .el-input__wrapper.is-focus, .warm-form .el-textarea__inner:focus { border-color: var(--terracotta); box-shadow: 0 0 0 3px rgba(var(--primary-rgb),.12); }
+.warm-form .el-select .el-input__wrapper { background: var(--bg-card); }
 .recipe-detail-dialog.el-dialog { max-width: 760px; }
 </style>

@@ -78,15 +78,15 @@ else activeTab.value = 'albums'
   transition: transform 0.3s, box-shadow 0.3s;
 }
 .btn.primary {
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
-  color: #FFF9F2; box-shadow: 0 8px 20px rgba(200, 159, 133, 0.4);
+  background: var(--gradient-primary);
+  color: var(--bg-card); box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.4);
 }
-.btn:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(200, 159, 133, 0.3); }
+.btn:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(var(--primary-rgb), 0.3); }
 
 /* 子页签 */
 .subtabs {
   display: flex; gap: 6px;
-  background: rgba(243, 234, 221, 0.6); border: 1px solid rgba(226, 205, 178, 0.7);
+  background: rgba(var(--cream-rgb), 0.6); border: 1px solid var(--border);
   padding: 5px; border-radius: 16px; margin-bottom: 22px; overflow-x: auto;
 }
 .subtab {
@@ -97,8 +97,8 @@ else activeTab.value = 'albums'
 }
 .subtab:hover { color: var(--terra-deep); }
 .subtab.active {
-  background: #FFFDFA; color: var(--terra-deep);
-  box-shadow: 0 4px 14px rgba(160, 120, 90, 0.14);
+  background: var(--bg-card); color: var(--terra-deep);
+  box-shadow: 0 4px 14px rgba(var(--shadow-rgb), 0.14);
 }
 
 @media (max-width: 600px) {

@@ -91,7 +91,7 @@
             </span>
             {{ borrow.lender?.nickname || '我' }}
             <span class="bw-arrow">→</span>
-            <span class="bw-avatar" style="background:linear-gradient(135deg,var(--sky),#6E8CA0);">
+            <span class="bw-avatar" style="background:linear-gradient(135deg,var(--sky),var(--sky-d));">
               {{ (borrow.borrower?.nickname || '?')[0] }}
             </span>
             {{ borrow.borrower?.nickname || '-' }}
@@ -178,16 +178,16 @@ const form = ref({ itemId: null, borrowedBy: '', expectedReturnDate: '', note: '
 
 // 借物颜色映射
 const borrowColorMap = {
-  '电子产品': 'rgba(159,184,201,.2)',
-  '户外': 'rgba(232,179,106,.2)',
-  '工具': 'rgba(159,184,201,.2)',
+  '电子产品': 'rgba(var(--sky-rgb),.2)',
+  '户外': 'rgba(var(--amber-rgb),.2)',
+  '工具': 'rgba(var(--sky-rgb),.2)',
 }
 const borrowEmojiMap = {
   '电子产品': '📷',
   '户外': '⛺',
   '工具': '🔧',
 }
-function getBorrowColor(cat) { return borrowColorMap[cat] || 'rgba(200,159,133,.15)' }
+function getBorrowColor(cat) { return borrowColorMap[cat] || 'rgba(var(--primary-rgb),.15)' }
 function getBorrowEmoji(cat) { return borrowEmojiMap[cat] || '📦' }
 
 function getStatusClass(status) {
@@ -300,14 +300,14 @@ async function handleRemind(id) {
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
-  color: #FFF9F2;
-  box-shadow: 0 8px 20px rgba(200,159,133,.4);
+  background: var(--gradient-primary);
+  color: var(--bg-card);
+  box-shadow: 0 8px 20px rgba(var(--primary-rgb),.4);
   transition: transform .3s, box-shadow .3s;
 }
 .btn-primary:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 26px rgba(200,159,133,.3);
+  box-shadow: 0 12px 26px rgba(var(--primary-rgb),.3);
 }
 .btn-ghost {
   display: inline-flex;
@@ -319,20 +319,20 @@ async function handleRemind(id) {
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  background: rgba(255,253,250,.85);
+  background: rgba(var(--bg-card-rgb),.85);
   color: var(--terra-deep);
   transition: transform .3s, box-shadow .3s;
 }
 .btn-ghost:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 26px rgba(200,159,133,.15);
+  box-shadow: 0 12px 26px rgba(var(--primary-rgb),.15);
 }
 
 /* ===== 子标签页 ===== */
 .subtabs {
   display: flex;
   gap: 6px;
-  background: rgba(243,234,221,.6);
+  background: rgba(var(--cream-rgb),.6);
   border: 1px solid var(--border);
   padding: 5px;
   border-radius: 16px;
@@ -360,7 +360,7 @@ async function handleRemind(id) {
 .subtab.router-link-exact-active {
   background: var(--bg-card);
   color: var(--terra-deep);
-  box-shadow: 0 4px 14px rgba(160,120,90,.14);
+  box-shadow: 0 4px 14px rgba(var(--shadow-rgb),.14);
 }
 
 /* ===== 筛选栏 ===== */
@@ -375,7 +375,7 @@ async function handleRemind(id) {
   padding: 10px 15px;
   border-radius: 12px;
   border: 1.5px solid var(--border);
-  background: rgba(255,253,250,.8);
+  background: rgba(var(--bg-card-rgb),.8);
   color: var(--text-secondary);
   font-size: 13px;
   font-weight: 600;
@@ -410,7 +410,7 @@ async function handleRemind(id) {
 }
 .borrow-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 32px rgba(160,120,90,.14);
+  box-shadow: 0 14px 32px rgba(var(--shadow-rgb),.14);
 }
 .bw-ico {
   width: 46px;
@@ -472,17 +472,17 @@ async function handleRemind(id) {
   border-radius: 999px;
 }
 .bs-borrowed {
-  background: rgba(232,179,106,.2);
-  color: #C08A3E;
+  background: rgba(var(--amber-rgb),.2);
+  color: var(--amber-d);
 }
 .bs-overdue {
-  background: rgba(217,154,154,.2);
-  color: #B06A6A;
+  background: rgba(var(--rose-rgb),.2);
+  color: var(--rose-d);
   animation: pulse-soft 2s infinite;
 }
 .bs-returned {
-  background: rgba(168,176,138,.2);
-  color: #7E8862;
+  background: rgba(var(--sage-rgb),.2);
+  color: var(--sage-d);
 }
 @keyframes pulse-soft {
   0%, 100% { opacity: 1; }
@@ -496,7 +496,7 @@ async function handleRemind(id) {
   padding: 6px 12px;
   border-radius: 9px;
   border: 1.5px solid var(--border);
-  background: rgba(255,253,250,.8);
+  background: rgba(var(--bg-card-rgb),.8);
   color: var(--terra-deep);
   font-size: 12px;
   font-weight: 600;
@@ -518,7 +518,7 @@ async function handleRemind(id) {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(160,120,90,.18);
+  box-shadow: 0 20px 60px rgba(var(--shadow-rgb),.18);
   overflow: visible;
 }
 :deep(.warm-dialog .el-overlay) {
@@ -549,7 +549,7 @@ async function handleRemind(id) {
   font-size: 13px;
 }
 :deep(.warm-form .el-input__wrapper) {
-  background: #FFFDF9;
+  background: var(--bg-card);
   border: 1.5px solid var(--wood-light);
   border-radius: 12px;
   box-shadow: none;
@@ -560,10 +560,10 @@ async function handleRemind(id) {
 }
 :deep(.warm-form .el-input__wrapper.is-focus) {
   border-color: var(--terracotta);
-  box-shadow: 0 0 0 3px rgba(200,159,133,.12);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb),.12);
 }
 :deep(.warm-form .el-textarea__inner) {
-  background: #FFFDF9;
+  background: var(--bg-card);
   border: 1.5px solid var(--wood-light);
   border-radius: 12px;
   box-shadow: none;
@@ -571,10 +571,10 @@ async function handleRemind(id) {
 }
 :deep(.warm-form .el-textarea__inner:focus) {
   border-color: var(--terracotta);
-  box-shadow: 0 0 0 3px rgba(200,159,133,.12);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb),.12);
 }
 :deep(.warm-form .el-select .el-input__wrapper) {
-  background: #FFFDF9;
+  background: var(--bg-card);
 }
 .dialog-footer {
   display: flex;
@@ -585,7 +585,7 @@ async function handleRemind(id) {
   padding: 10px 20px;
   border-radius: 12px;
   border: 1.5px solid var(--border);
-  background: rgba(255,253,250,.85);
+  background: rgba(var(--bg-card-rgb),.85);
   color: var(--text-secondary);
   font-size: 14px;
   font-weight: 600;
@@ -601,18 +601,18 @@ async function handleRemind(id) {
   padding: 10px 24px;
   border-radius: 12px;
   border: none;
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
-  color: #FFF9F2;
+  background: var(--gradient-primary);
+  color: var(--bg-card);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(200,159,133,.35);
+  box-shadow: 0 6px 18px rgba(var(--primary-rgb),.35);
   transition: all .25s;
   font-family: inherit;
 }
 .btn-confirm:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(200,159,133,.4);
+  box-shadow: 0 10px 24px rgba(var(--primary-rgb),.4);
 }
 .btn-confirm.loading {
   opacity: .7;
@@ -676,19 +676,19 @@ async function handleRemind(id) {
 
 /* ===== 下拉面板基础 ===== */
 .warm-popper {
-  background: #FFFDFA !important;
-  border: 1.5px solid #E2CDB2 !important;
+  background: var(--bg-card) !important;
+  border: 1.5px solid var(--wood-light) !important;
   border-radius: 14px !important;
-  box-shadow: 0 12px 36px rgba(160,120,90,.18) !important;
+  box-shadow: 0 12px 36px rgba(var(--shadow-rgb),.18) !important;
 }
 .warm-popper .el-popper__arrow::before {
-  background: #FFFDFA !important;
-  border-color: #E2CDB2 !important;
+  background: var(--bg-card) !important;
+  border-color: var(--wood-light) !important;
 }
 
 /* ===== 选项样式 ===== */
 .warm-popper .el-select-dropdown__item {
-  color: #6B5744;
+  color: var(--text-primary);
   font-size: 13.5px;
   border-radius: 8px;
   margin: 2px 6px;
@@ -698,16 +698,16 @@ async function handleRemind(id) {
 }
 .warm-popper .el-select-dropdown__item.hover,
 .warm-popper .el-select-dropdown__item:hover {
-  background: #F3EADD !important;
-  color: #96684A !important;
+  background: var(--bg-card-alt) !important;
+  color: var(--terra-deep) !important;
 }
 .warm-popper .el-select-dropdown__item.is-selected {
-  color: #96684A !important;
+  color: var(--terra-deep) !important;
   font-weight: 700;
-  background: rgba(200,159,133,.12) !important;
+  background: rgba(var(--primary-rgb),.12) !important;
 }
 .warm-popper .el-select-dropdown__empty {
-  color: #A08D7A;
+  color: var(--text-secondary);
   padding: 20px;
 }
 .warm-popper .el-select-dropdown__wrap {
@@ -716,46 +716,46 @@ async function handleRemind(id) {
 
 /* ===== 日期选择器 ===== */
 .warm-popper .el-picker-panel__body {
-  background: #FFFDFA;
+  background: var(--bg-card);
 }
 .warm-popper .el-date-table td.today .el-date-table-cell__text {
-  color: #C89F85;
+  color: var(--terracotta);
 }
 .warm-popper .el-date-table td.current .el-date-table-cell__text {
-  background: linear-gradient(135deg, #C89F85, #D3A98B);
+  background: var(--gradient-primary);
   color: #fff;
   border-radius: 8px;
 }
 .warm-popper .el-date-table td.available:hover .el-date-table-cell__text {
-  background: #F3EADD;
+  background: var(--bg-card-alt);
   border-radius: 8px;
 }
 .warm-popper .el-picker-panel__footer {
-  background: #FFFDFA;
-  border-top: 1px solid #E2CDB2;
+  background: var(--bg-card);
+  border-top: 1px solid var(--wood-light);
 }
 .warm-popper .el-picker-panel__sidebar {
-  background: #FFFDFA;
-  border-right: 1px solid #E2CDB2;
+  background: var(--bg-card);
+  border-right: 1px solid var(--wood-light);
 }
 .warm-popper .el-picker-panel__shortcut {
-  color: #A08D7A;
+  color: var(--text-secondary);
   font-size: 12.5px;
 }
 .warm-popper .el-picker-panel__shortcut:hover {
-  color: #96684A;
+  color: var(--terra-deep);
 }
 .warm-popper .el-picker-panel__icon-btn {
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 .warm-popper .el-picker-panel__icon-btn:hover {
-  color: #96684A;
+  color: var(--terra-deep);
 }
 .warm-popper .el-date-picker__header-label {
-  color: #6B5744;
+  color: var(--text-primary);
   font-weight: 600;
 }
 .warm-popper .el-date-picker__header-label:hover {
-  color: #96684A;
+  color: var(--terra-deep);
 }
 </style>

@@ -145,7 +145,7 @@ defineExpose({ openCreate: () => { showCreate.value = true } })
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s;
 }
 .album-card:hover {
-  transform: translateY(-7px); box-shadow: 0 20px 44px rgba(160, 120, 90, 0.2);
+  transform: translateY(-7px); box-shadow: 0 20px 44px rgba(var(--shadow-rgb), 0.2);
 }
 
 /* 封面 */
@@ -162,7 +162,7 @@ defineExpose({ openCreate: () => { showCreate.value = true } })
 .al-empty { font-size: 34px; opacity: 0.5; }
 .al-lock {
   position: absolute; top: 8px; right: 8px; z-index: 2;
-  background: rgba(232, 179, 106, 0.92); color: #fff;
+  background: rgba(var(--amber-rgb), 0.92); color: #fff;
   font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px;
 }
 
@@ -172,7 +172,7 @@ defineExpose({ openCreate: () => { showCreate.value = true } })
 
 /* 新建相册 */
 .album-add {
-  border: 2px dashed var(--wood-light); background: rgba(243, 234, 221, 0.4);
+  border: 2px dashed var(--wood-light); background: rgba(var(--cream-rgb), 0.4);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 10px; min-height: 196px; color: var(--text-secondary);
   font-size: 14px; font-weight: 600; border-radius: 24px; cursor: pointer;
@@ -180,7 +180,7 @@ defineExpose({ openCreate: () => { showCreate.value = true } })
 }
 .album-add:hover {
   border-color: var(--terracotta); color: var(--terra-deep);
-  background: rgba(243, 234, 221, 0.8); transform: translateY(-4px);
+  background: rgba(var(--cream-rgb), 0.8); transform: translateY(-4px);
 }
 .album-add .plus { font-size: 32px; line-height: 1; }
 

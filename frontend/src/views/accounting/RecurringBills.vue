@@ -35,7 +35,7 @@
 
     <!-- 任务列表 -->
     <div v-if="bills.length === 0" class="empty-card card">
-      <el-icon :size="56" color="#E2CDB2"><Timer /></el-icon>
+      <el-icon :size="56" color="var(--wood-light)"><Timer /></el-icon>
       <p class="empty-title">暂无定时任务</p>
       <p class="empty-desc">创建定时记账任务，让物业费、工资、订阅等固定收支自动入账</p>
       <el-button type="primary" @click="openCreate">
@@ -140,7 +140,7 @@
                   :value="child.id"
                 >
                   <span style="display:flex;align-items:center;gap:6px;">
-                    <span style="color:#94a3b8;font-size:12px;">{{ group.name }}</span>
+                    <span style="color:var(--text-muted);font-size:12px;">{{ group.name }}</span>
                     <span>{{ child.name }}</span>
                   </span>
                 </el-option>
@@ -369,7 +369,7 @@ async function handleDelete(id) {
 }
 .page-desc {
   font-size: 14px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 .header-actions {
@@ -397,12 +397,12 @@ async function handleDelete(id) {
 .ms-num {
   font-size: 20px;
   font-weight: 700;
-  color: #6B5744;
+  color: var(--text-primary);
 }
-.ms-num.active { color: #34d399; }
+.ms-num.active { color: var(--success); }
 .ms-lbl {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 
 /* 空状态 */
@@ -448,22 +448,22 @@ async function handleDelete(id) {
   color: #fff;
 }
 .bill-icon.expense {
-  background: linear-gradient(135deg, var(--rose-d), #D99A9A);
+  background: linear-gradient(135deg, var(--rose-d), var(--rose));
 }
 .bill-icon.income {
-  background: linear-gradient(135deg, #34d399, #A8B08A);
+  background: linear-gradient(135deg, var(--success), var(--sage));
 }
 
 .bill-name {
   font-size: 15px;
   font-weight: 600;
-  color: #6B5744;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
 }
 .bill-meta {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 3px;
   display: flex;
   align-items: center;
@@ -474,7 +474,7 @@ async function handleDelete(id) {
 .freq-tag {
   display: inline-block;
   padding: 1px 8px;
-  background: rgba(200, 159, 133, 0.08);
+  background: rgba(var(--primary-rgb), 0.08);
   color: var(--terra-deep);
   border-radius: 6px;
   font-size: 12px;
@@ -490,10 +490,10 @@ async function handleDelete(id) {
   font-weight: 700;
 }
 .bill-amount.expense { color: var(--rose-d); }
-.bill-amount.income { color: #34d399; }
+.bill-amount.income { color: var(--success); }
 .bill-runs {
   font-size: 12px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 2px;
 }
 
@@ -513,23 +513,23 @@ async function handleDelete(id) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #A08D7A;
+  color: var(--text-secondary);
   font-size: 16px;
   transition: all 0.2s;
 }
 .act-btn:hover:not(:disabled) {
-  background: #F3EADD;
-  color: #A08D7A;
+  background: var(--bg-card-alt);
+  color: var(--text-secondary);
 }
 .act-btn.active {
-  color: #34d399;
+  color: var(--success);
 }
 .act-btn.active:hover {
-  background: rgba(52,211,153,0.1);
-  color: #A8B08A;
+  background: rgba(var(--sage-rgb),0.1);
+  color: var(--sage);
 }
 .act-btn.danger:hover {
-  background: #fef2f2;
+  background: rgba(var(--rose-rgb), 0.06);
   color: var(--rose-d);
 }
 .act-btn:disabled {

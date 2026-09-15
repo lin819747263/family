@@ -143,10 +143,10 @@
             <div class="heatmap-legend">
               <span>少</span>
               <div class="hm-legend-cell" style="background:var(--cream)"></div>
-              <div class="hm-legend-cell" style="background:#C5D9B2"></div>
-              <div class="hm-legend-cell" style="background:#A8C48A"></div>
-              <div class="hm-legend-cell" style="background:#8BB066"></div>
-              <div class="hm-legend-cell" style="background:#6B9B4A"></div>
+              <div class="hm-legend-cell" style="background:rgba(var(--sage-rgb), 0.35)"></div>
+              <div class="hm-legend-cell" style="background:rgba(var(--sage-rgb), 0.55)"></div>
+              <div class="hm-legend-cell" style="background:rgba(var(--sage-rgb), 0.75)"></div>
+              <div class="hm-legend-cell" style="background:var(--sage-d)"></div>
               <span>多</span>
             </div>
           </div>
@@ -242,7 +242,7 @@ const COLORS = [
   { key: 'amber', bg: 'linear-gradient(135deg,var(--amber),var(--amber-d))' },
   { key: 'sky', bg: 'linear-gradient(135deg,var(--sky),var(--sky-d))' },
   { key: 'rose', bg: 'linear-gradient(135deg,var(--rose),var(--rose-d))' },
-  { key: 'plum', bg: 'linear-gradient(135deg,var(--plum),#8A6B92)' },
+  { key: 'plum', bg: 'linear-gradient(135deg,var(--plum),var(--plum-d))' },
 ]
 const weekDayNames = ['一', '二', '三', '四', '五', '六', '日']
 
@@ -529,13 +529,13 @@ function observeReveal() {
 .page-title { font-size: 24px; font-weight: 800; color: var(--terra-deep); }
 .page-sub { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
 .btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 17px; border-radius: 13px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; transition: transform 0.3s, box-shadow 0.3s; }
-.btn.primary { background: linear-gradient(135deg, var(--terracotta), #D3A98B); color: #FFF9F2; box-shadow: 0 8px 20px rgba(200, 159, 133, 0.4); }
-.btn.ghost { background: rgba(255, 253, 250, 0.85); color: var(--terra-deep); border: 1.5px solid var(--border); }
+.btn.primary { background: var(--gradient-primary); color: var(--bg-card); box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.4); }
+.btn.ghost { background: rgba(var(--bg-card-rgb), 0.85); color: var(--terra-deep); border: 1.5px solid var(--border); }
 .btn.sm { padding: 7px 13px; font-size: 13px; border-radius: 10px; }
-.btn:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(200, 159, 133, 0.3); }
+.btn:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(var(--primary-rgb), 0.3); }
 
 /* ===== 今日概览 ===== */
-.today-banner { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg, 24px); padding: 20px 24px; margin-bottom: 22px; box-shadow: 0 8px 28px rgba(160, 120, 90, 0.08); display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.today-banner { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg, 24px); padding: 20px 24px; margin-bottom: 22px; box-shadow: 0 8px 28px rgba(var(--shadow-rgb), 0.08); display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
 .today-date { text-align: center; min-width: 70px; }
 .today-date .day { font-size: 36px; font-weight: 800; color: var(--terra-deep); line-height: 1; }
 .today-date .month { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
@@ -548,31 +548,31 @@ function observeReveal() {
 .today-summary h3 { font-size: 16px; font-weight: 700; color: var(--terra-deep); margin-bottom: 6px; }
 .today-summary p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
 .today-streaks { display: flex; gap: 12px; flex-wrap: wrap; }
-.streak-badge { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 12px; background: rgba(243, 234, 221, 0.4); border: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--terra-deep); }
+.streak-badge { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 12px; background: rgba(var(--cream-rgb), 0.4); border: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--terra-deep); }
 .streak-badge .fire { font-size: 18px; }
 
 /* ===== 统计 ===== */
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 22px; }
-.stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md, 16px); padding: 16px; text-align: center; box-shadow: 0 4px 16px rgba(160, 120, 90, 0.06); }
+.stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md, 16px); padding: 16px; text-align: center; box-shadow: 0 4px 16px rgba(var(--shadow-rgb), 0.06); }
 .stat-num { font-size: 28px; font-weight: 800; color: var(--terra-deep); }
-.stat-num.sage { color: var(--sage-d, #7E8862); }
-.stat-num.amber { color: var(--amber-d, #C08A3E); }
-.stat-num.rose { color: var(--rose-d, #B06A6A); }
+.stat-num.sage { color: var(--sage-d); }
+.stat-num.amber { color: var(--amber-d); }
+.stat-num.rose { color: var(--rose-d); }
 .stat-lbl { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
 
 /* ===== 视图切换 ===== */
 .view-tabs { display: flex; gap: 6px; margin-bottom: 18px; }
-.vtab { padding: 8px 16px; border-radius: 10px; border: 1.5px solid var(--border); background: rgba(255, 253, 250, 0.8); color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.25s; }
+.vtab { padding: 8px 16px; border-radius: 10px; border: 1.5px solid var(--border); background: rgba(var(--bg-card-rgb), 0.8); color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.25s; }
 .vtab:hover { border-color: var(--terracotta); color: var(--terra-deep); }
-.vtab.active { background: rgba(200, 159, 133, 0.14); border-color: var(--terracotta); color: var(--terra-deep); }
+.vtab.active { background: rgba(var(--primary-rgb), 0.14); border-color: var(--terracotta); color: var(--terra-deep); }
 
 /* ===== 周视图 ===== */
 .week-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
 .week-label { font-size: 15px; font-weight: 700; color: var(--terra-deep); min-width: 180px; text-align: center; }
 .week-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 18px; }
 .week-dot { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 10px; border-radius: 14px; cursor: pointer; transition: all 0.25s; min-width: 52px; }
-.week-dot:hover { background: rgba(200, 159, 133, 0.08); }
-.week-dot.active { background: rgba(200, 159, 133, 0.14); }
+.week-dot:hover { background: rgba(var(--primary-rgb), 0.08); }
+.week-dot.active { background: rgba(var(--primary-rgb), 0.14); }
 .week-dot.today { position: relative; }
 .week-dot.today::after { content: ""; position: absolute; bottom: 2px; width: 6px; height: 6px; border-radius: 50%; background: var(--terracotta); }
 .wd-name { font-size: 11px; color: var(--text-secondary); font-weight: 600; }
@@ -583,9 +583,9 @@ function observeReveal() {
 
 /* ===== 习惯卡片 ===== */
 .habit-list { display: flex; flex-direction: column; gap: 12px; }
-.habit-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg, 24px); box-shadow: 0 6px 20px rgba(160, 120, 90, 0.06); padding: 16px 18px; display: flex; align-items: center; gap: 14px; transition: all 0.3s; }
-.habit-card:hover { box-shadow: 0 10px 30px rgba(160, 120, 90, 0.12); transform: translateY(-2px); }
-.habit-card.checked { border-color: var(--sage); background: rgba(168, 176, 138, 0.04); }
+.habit-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg, 24px); box-shadow: 0 6px 20px rgba(var(--shadow-rgb), 0.06); padding: 16px 18px; display: flex; align-items: center; gap: 14px; transition: all 0.3s; }
+.habit-card:hover { box-shadow: 0 10px 30px rgba(var(--shadow-rgb), 0.12); transform: translateY(-2px); }
+.habit-card.checked { border-color: var(--sage); background: rgba(var(--sage-rgb), 0.04); }
 .habit-icon { width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; color: #fff; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .habit-card:hover .habit-icon { transform: scale(1.08) rotate(-5deg); }
 .hi-sage { background: linear-gradient(135deg, var(--sage), var(--sage-d)); }
@@ -593,13 +593,13 @@ function observeReveal() {
 .hi-amber { background: linear-gradient(135deg, var(--amber), var(--amber-d)); }
 .hi-sky { background: linear-gradient(135deg, var(--sky), var(--sky-d)); }
 .hi-rose { background: linear-gradient(135deg, var(--rose), var(--rose-d)); }
-.hi-plum { background: linear-gradient(135deg, var(--plum), #8A6B92); }
+.hi-plum { background: linear-gradient(135deg, var(--plum), var(--plum-d)); }
 .habit-info { flex: 1; min-width: 0; }
 .habit-name { font-size: 15px; font-weight: 700; color: var(--terra-deep); }
 .habit-meta { display: flex; align-items: center; gap: 10px; margin-top: 4px; font-size: 12px; color: var(--text-secondary); }
-.habit-streak { display: inline-flex; align-items: center; gap: 3px; color: var(--amber-d, #C08A3E); font-weight: 700; }
+.habit-streak { display: inline-flex; align-items: center; gap: 3px; color: var(--amber-d); font-weight: 700; }
 .habit-week { display: flex; gap: 4px; align-items: center; }
-.hw-dot { width: 24px; height: 24px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; border: 1.5px solid var(--border); color: var(--text-secondary); background: rgba(243, 234, 221, 0.4); cursor: pointer; transition: all 0.2s; }
+.hw-dot { width: 24px; height: 24px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; border: 1.5px solid var(--border); color: var(--text-secondary); background: rgba(var(--cream-rgb), 0.4); cursor: pointer; transition: all 0.2s; }
 .hw-dot:hover { border-color: var(--terracotta); }
 .hw-dot.done { background: var(--sage); border-color: var(--sage); color: #fff; }
 .hw-dot.today-dot { border-color: var(--terracotta); border-width: 2px; }
@@ -614,14 +614,14 @@ function observeReveal() {
 /* ===== 热力图 ===== */
 .heatmap-section { margin-bottom: 22px; }
 .section-title { font-size: 15px; font-weight: 700; color: var(--terra-deep); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-.heatmap-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg, 24px); padding: 18px; box-shadow: 0 6px 20px rgba(160, 120, 90, 0.06); overflow-x: auto; min-height: 100px; }
+.heatmap-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg, 24px); padding: 18px; box-shadow: 0 6px 20px rgba(var(--shadow-rgb), 0.06); overflow-x: auto; min-height: 100px; }
 .heatmap { display: flex; gap: 3px; }
 .heatmap-col { display: flex; flex-direction: column; gap: 3px; }
 .hm-cell { width: 16px; height: 16px; border-radius: 4px; background: var(--cream); transition: all 0.2s; }
-.hm-cell.l1 { background: #C5D9B2; }
-.hm-cell.l2 { background: #A8C48A; }
-.hm-cell.l3 { background: #8BB066; }
-.hm-cell.l4 { background: #6B9B4A; }
+.hm-cell.l1 { background: rgba(var(--sage-rgb), 0.35); }
+.hm-cell.l2 { background: rgba(var(--sage-rgb), 0.55); }
+.hm-cell.l3 { background: rgba(var(--sage-rgb), 0.75); }
+.hm-cell.l4 { background: var(--sage-d); }
 .heatmap-legend { display: flex; align-items: center; gap: 6px; margin-top: 10px; justify-content: flex-end; font-size: 11px; color: var(--text-secondary); }
 .hm-legend-cell { width: 12px; height: 12px; border-radius: 3px; }
 .per-habit-heatmaps { margin-top: 22px; }
@@ -637,19 +637,19 @@ function observeReveal() {
 .form-group { margin-bottom: 16px; }
 .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--terra-deep); margin-bottom: 6px; }
 .icon-picker { display: flex; gap: 8px; flex-wrap: wrap; }
-.icon-opt { width: 42px; height: 42px; border-radius: 12px; border: 1.5px solid var(--border); background: rgba(243, 234, 221, 0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: all 0.2s; }
+.icon-opt { width: 42px; height: 42px; border-radius: 12px; border: 1.5px solid var(--border); background: rgba(var(--cream-rgb), 0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: all 0.2s; }
 .icon-opt:hover { border-color: var(--terracotta); transform: scale(1.08); }
-.icon-opt.active { border-color: var(--terracotta); background: rgba(200, 159, 133, 0.12); box-shadow: 0 2px 8px rgba(200, 159, 133, 0.2); }
+.icon-opt.active { border-color: var(--terracotta); background: rgba(var(--primary-rgb), 0.12); box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.2); }
 .color-picker { display: flex; gap: 8px; }
 .color-opt { width: 32px; height: 32px; border-radius: 10px; cursor: pointer; border: 2.5px solid transparent; transition: all 0.2s; }
 .color-opt:hover { transform: scale(1.1); }
 .color-opt.active { border-color: var(--terra-deep); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); }
 .freq-options { display: flex; gap: 8px; flex-wrap: wrap; }
-.freq-opt { padding: 8px 16px; border-radius: 10px; border: 1.5px solid var(--border); background: rgba(243, 234, 221, 0.4); cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-secondary); transition: all 0.25s; }
+.freq-opt { padding: 8px 16px; border-radius: 10px; border: 1.5px solid var(--border); background: rgba(var(--cream-rgb), 0.4); cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-secondary); transition: all 0.25s; }
 .freq-opt:hover { border-color: var(--terracotta); }
-.freq-opt.active { background: rgba(200, 159, 133, 0.14); border-color: var(--terracotta); color: var(--terra-deep); }
+.freq-opt.active { background: rgba(var(--primary-rgb), 0.14); border-color: var(--terracotta); color: var(--terra-deep); }
 .weekday-picker { display: flex; gap: 6px; margin-top: 8px; }
-.wd-opt { width: 36px; height: 36px; border-radius: 10px; border: 1.5px solid var(--border); background: rgba(243, 234, 221, 0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--text-secondary); transition: all 0.2s; }
+.wd-opt { width: 36px; height: 36px; border-radius: 10px; border: 1.5px solid var(--border); background: rgba(var(--cream-rgb), 0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--text-secondary); transition: all 0.2s; }
 .wd-opt:hover { border-color: var(--terracotta); }
 .wd-opt.active { background: var(--terracotta); border-color: var(--terracotta); color: #fff; }
 

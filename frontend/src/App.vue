@@ -73,8 +73,8 @@ onUnmounted(() => {
 .pwa-install-content { display: flex; align-items: center; gap: 12px; }
 .pwa-install-icon { width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; }
 .pwa-install-info { flex: 1; min-width: 0; }
-.pwa-install-title { font-size: 15px; font-weight: 700; color: #1e293b; }
-.pwa-install-desc { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+.pwa-install-title { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.pwa-install-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 .pwa-install-actions { display: flex; gap: 8px; flex-shrink: 0; }
 .pwa-fade-enter-active, .pwa-fade-leave-active { transition: all 0.3s ease; }
 .pwa-fade-enter-from, .pwa-fade-leave-to { opacity: 0; transform: translateX(-50%) translateY(20px); }

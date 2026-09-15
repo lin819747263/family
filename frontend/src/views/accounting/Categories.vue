@@ -42,7 +42,7 @@
         <!-- 一级分类 -->
         <div class="cat-row cat-parent" :class="{ builtin: cat.builtIn }">
           <div class="cat-left">
-            <div class="cat-icon" :style="{ background: cat.builtIn ? 'rgba(200, 159, 133, 0.1)' : 'rgba(52,211,153,0.1)', color: cat.builtIn ? 'var(--terracotta)' : '#10b981' }">
+            <div class="cat-icon" :style="{ background: cat.builtIn ? 'rgba(var(--primary-rgb), 0.1)' : 'rgba(var(--sage-rgb),0.1)', color: cat.builtIn ? 'var(--terracotta)' : 'var(--success)' }">
               <el-icon :size="18"><component :is="cat.icon || 'MoreFilled'" /></el-icon>
             </div>
             <span class="cat-name">{{ cat.name }}</span>
@@ -74,7 +74,7 @@
         <div v-if="cat.children?.length" class="cat-children">
           <div v-for="child in cat.children" :key="child.id" class="cat-row cat-child">
             <div class="cat-left">
-              <div class="child-dot" :style="{ background: cat.builtIn ? 'var(--terracotta)' : '#10b981' }"></div>
+              <div class="child-dot" :style="{ background: cat.builtIn ? 'var(--terracotta)' : 'var(--success)' }"></div>
               <span class="cat-name">{{ child.name }}</span>
               <el-tag v-if="child.builtIn" size="small" type="info" effect="plain" round>预设</el-tag>
             </div>
@@ -145,7 +145,7 @@
 
         <el-form-item label="排序">
           <el-input-number v-model="form.sort" :min="0" :max="999" />
-          <span style="margin-left:8px;color:#94a3b8;font-size:13px;">越小越靠前</span>
+          <span style="margin-left:8px;color:var(--text-muted);font-size:13px;">越小越靠前</span>
         </el-form-item>
       </el-form>
 
@@ -312,7 +312,7 @@ async function handleDelete(id) {
 }
 .page-desc {
   font-size: 14px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 
@@ -328,7 +328,7 @@ async function handleDelete(id) {
   font-weight: 600;
 }
 .cat-tabs :deep(.el-tabs__active-bar) {
-  background: linear-gradient(90deg, var(--terracotta), #D3A98B);
+  background: linear-gradient(90deg, var(--terracotta), var(--primary-light));
 }
 
 /* 空状态 */
@@ -358,11 +358,11 @@ async function handleDelete(id) {
   transition: background 0.2s;
 }
 .cat-row:hover {
-  background: rgba(200, 159, 133, 0.03);
+  background: rgba(var(--primary-rgb), 0.03);
 }
 
 .cat-parent {
-  border-bottom: 1px solid #F3EADD;
+  border-bottom: 1px solid var(--bg-card-alt);
 }
 .cat-parent.builtin {
   background: rgba(248, 250, 252, 0.5);
@@ -387,12 +387,12 @@ async function handleDelete(id) {
 .cat-name {
   font-size: 15px;
   font-weight: 500;
-  color: #6B5744;
+  color: var(--text-primary);
 }
 
 .cat-child-count {
   font-size: 12px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-left: 4px;
 }
 
@@ -430,15 +430,15 @@ async function handleDelete(id) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #A08D7A;
+  color: var(--text-secondary);
   transition: all 0.2s;
 }
 .act-btn:hover:not(:disabled) {
-  background: #F3EADD;
-  color: #A08D7A;
+  background: var(--bg-card-alt);
+  color: var(--text-secondary);
 }
 .act-btn.danger:hover {
-  background: #fef2f2;
+  background: rgba(var(--rose-rgb), 0.06);
   color: var(--rose-d);
 }
 .act-btn:disabled {
@@ -458,7 +458,7 @@ async function handleDelete(id) {
 .ip-item {
   width: 38px;
   height: 38px;
-  border: 2px solid rgba(226,205,178,.7);
+  border: 2px solid var(--border);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -473,13 +473,13 @@ async function handleDelete(id) {
 }
 .ip-item.active {
   border-color: var(--terracotta);
-  background: rgba(200, 159, 133, 0.08);
+  background: rgba(var(--primary-rgb), 0.08);
   color: var(--terra-deep);
 }
 
 .form-tip {
   font-size: 12px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 

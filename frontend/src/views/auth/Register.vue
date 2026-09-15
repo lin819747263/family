@@ -9,73 +9,73 @@
       <section class="scene" aria-hidden="true">
         <svg viewBox="0 0 400 340" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- 暖光灯光晕 -->
-          <circle class="lamp-glow" cx="200" cy="140" r="80" fill="#F5D3A0" opacity="0.4"/>
-          <circle class="lamp-glow" cx="200" cy="140" r="50" fill="#F8DFB4" opacity="0.5"/>
+          <circle class="lamp-glow" cx="200" cy="140" r="80" fill="var(--primary-light)" opacity="0.4"/>
+          <circle class="lamp-glow" cx="200" cy="140" r="50" fill="var(--amber)" opacity="0.5"/>
 
           <!-- 家庭成员 - 爸爸 -->
-          <circle cx="140" cy="130" r="22" fill="#D9BE9C" opacity="0.8"/>
-          <rect x="124" y="158" width="32" height="48" rx="10" fill="#C89F85" opacity="0.7"/>
+          <circle cx="140" cy="130" r="22" fill="var(--primary-light)" opacity="0.8"/>
+          <rect x="124" y="158" width="32" height="48" rx="10" fill="var(--terracotta)" opacity="0.7"/>
           <!-- 家庭成员 - 妈妈 -->
-          <circle cx="200" cy="120" r="20" fill="#E8D5C4" opacity="0.8"/>
-          <rect x="186" y="146" width="28" height="44" rx="8" fill="#D3A98B" opacity="0.7"/>
+          <circle cx="200" cy="120" r="20" fill="var(--primary-light)" opacity="0.8"/>
+          <rect x="186" y="146" width="28" height="44" rx="8" fill="var(--primary-light)" opacity="0.7"/>
           <!-- 家庭成员 - 孩子 -->
-          <circle cx="260" cy="140" r="16" fill="#F3EADD" opacity="0.8"/>
-          <rect x="248" y="162" width="24" height="36" rx="6" fill="#E2CDB2" opacity="0.7"/>
+          <circle cx="260" cy="140" r="16" fill="var(--bg-card-alt)" opacity="0.8"/>
+          <rect x="248" y="162" width="24" height="36" rx="6" fill="var(--wood-light)" opacity="0.7"/>
 
           <!-- 手牵手连线 -->
-          <line x1="162" y1="180" x2="186" y2="170" stroke="#C89F85" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-          <line x1="214" y1="170" x2="248" y2="180" stroke="#C89F85" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <line x1="162" y1="180" x2="186" y2="170" stroke="var(--terracotta)" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <line x1="214" y1="170" x2="248" y2="180" stroke="var(--terracotta)" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
 
           <!-- 爱心 -->
           <g class="heart-float">
-            <path d="M200 90 C200 85, 208 80, 208 87 C208 92, 200 98, 200 98 C200 98, 192 92, 192 87 C192 80, 200 85, 200 90Z" fill="#C89F85" opacity="0.5"/>
+            <path d="M200 90 C200 85, 208 80, 208 87 C208 92, 200 98, 200 98 C200 98, 192 92, 192 87 C192 80, 200 85, 200 90Z" fill="var(--terracotta)" opacity="0.5"/>
           </g>
 
           <!-- 房子 -->
-          <rect x="100" y="220" width="200" height="100" rx="6" fill="#F6E7D3" opacity="0.5"/>
-          <path d="M80 228 L200 180 L320 228" stroke="#D9BE9C" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.4"/>
+          <rect x="100" y="220" width="200" height="100" rx="6" fill="var(--cream)" opacity="0.5"/>
+          <path d="M80 228 L200 180 L320 228" stroke="var(--primary-light)" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.4"/>
           <!-- 门 -->
-          <rect x="175" y="270" width="50" height="50" rx="4" fill="#C89F85" opacity="0.5"/>
-          <circle cx="215" cy="298" r="3" fill="#B08466" opacity="0.6"/>
+          <rect x="175" y="270" width="50" height="50" rx="4" fill="var(--terracotta)" opacity="0.5"/>
+          <circle cx="215" cy="298" r="3" fill="var(--accent)" opacity="0.6"/>
           <!-- 窗户 -->
-          <rect x="120" y="240" width="35" height="35" rx="3" fill="#FBF3E4" stroke="#D9BE9C" stroke-width="2" opacity="0.6"/>
-          <line x1="137.5" y1="240" x2="137.5" y2="275" stroke="#D9BE9C" stroke-width="1.5" opacity="0.5"/>
-          <line x1="120" y1="257.5" x2="155" y2="257.5" stroke="#D9BE9C" stroke-width="1.5" opacity="0.5"/>
-          <rect x="245" y="240" width="35" height="35" rx="3" fill="#FBF3E4" stroke="#D9BE9C" stroke-width="2" opacity="0.6"/>
-          <line x1="262.5" y1="240" x2="262.5" y2="275" stroke="#D9BE9C" stroke-width="1.5" opacity="0.5"/>
-          <line x1="245" y1="257.5" x2="280" y2="257.5" stroke="#D9BE9C" stroke-width="1.5" opacity="0.5"/>
+          <rect x="120" y="240" width="35" height="35" rx="3" fill="var(--warm-white)" stroke="var(--primary-light)" stroke-width="2" opacity="0.6"/>
+          <line x1="137.5" y1="240" x2="137.5" y2="275" stroke="var(--primary-light)" stroke-width="1.5" opacity="0.5"/>
+          <line x1="120" y1="257.5" x2="155" y2="257.5" stroke="var(--primary-light)" stroke-width="1.5" opacity="0.5"/>
+          <rect x="245" y="240" width="35" height="35" rx="3" fill="var(--warm-white)" stroke="var(--primary-light)" stroke-width="2" opacity="0.6"/>
+          <line x1="262.5" y1="240" x2="262.5" y2="275" stroke="var(--primary-light)" stroke-width="1.5" opacity="0.5"/>
+          <line x1="245" y1="257.5" x2="280" y2="257.5" stroke="var(--primary-light)" stroke-width="1.5" opacity="0.5"/>
 
           <!-- 烟囱 -->
-          <rect x="270" y="190" width="20" height="35" rx="3" fill="#D9BE9C" opacity="0.5"/>
+          <rect x="270" y="190" width="20" height="35" rx="3" fill="var(--primary-light)" opacity="0.5"/>
           <!-- 烟 -->
-          <circle class="smoke smoke-1" cx="280" cy="180" r="6" fill="#E2CDB2" opacity="0.3"/>
-          <circle class="smoke smoke-2" cx="285" cy="168" r="5" fill="#E2CDB2" opacity="0.2"/>
-          <circle class="smoke smoke-3" cx="282" cy="155" r="4" fill="#E2CDB2" opacity="0.15"/>
+          <circle class="smoke smoke-1" cx="280" cy="180" r="6" fill="var(--wood-light)" opacity="0.3"/>
+          <circle class="smoke smoke-2" cx="285" cy="168" r="5" fill="var(--wood-light)" opacity="0.2"/>
+          <circle class="smoke smoke-3" cx="282" cy="155" r="4" fill="var(--wood-light)" opacity="0.15"/>
 
           <!-- 草地 -->
-          <ellipse cx="200" cy="325" rx="180" ry="15" fill="#A8B08A" opacity="0.2"/>
+          <ellipse cx="200" cy="325" rx="180" ry="15" fill="var(--sage)" opacity="0.2"/>
 
           <!-- 花朵 -->
           <g class="flower flower-1">
-            <circle cx="80" cy="310" r="4" fill="#C89F85" opacity="0.6"/>
-            <circle cx="80" cy="305" r="2.5" fill="#C89F85" opacity="0.4"/>
-            <circle cx="84" cy="308" r="2.5" fill="#C89F85" opacity="0.4"/>
-            <circle cx="76" cy="308" r="2.5" fill="#C89F85" opacity="0.4"/>
-            <line x1="80" y1="314" x2="80" y2="325" stroke="#A8B08A" stroke-width="1.5" opacity="0.4"/>
+            <circle cx="80" cy="310" r="4" fill="var(--terracotta)" opacity="0.6"/>
+            <circle cx="80" cy="305" r="2.5" fill="var(--terracotta)" opacity="0.4"/>
+            <circle cx="84" cy="308" r="2.5" fill="var(--terracotta)" opacity="0.4"/>
+            <circle cx="76" cy="308" r="2.5" fill="var(--terracotta)" opacity="0.4"/>
+            <line x1="80" y1="314" x2="80" y2="325" stroke="var(--sage)" stroke-width="1.5" opacity="0.4"/>
           </g>
           <g class="flower flower-2">
-            <circle cx="330" cy="305" r="3.5" fill="#D3A98B" opacity="0.5"/>
-            <circle cx="330" cy="300" r="2" fill="#D3A98B" opacity="0.35"/>
-            <circle cx="333" cy="303" r="2" fill="#D3A98B" opacity="0.35"/>
-            <circle cx="327" cy="303" r="2" fill="#D3A98B" opacity="0.35"/>
-            <line x1="330" y1="308" x2="330" y2="320" stroke="#A8B08A" stroke-width="1.5" opacity="0.35"/>
+            <circle cx="330" cy="305" r="3.5" fill="var(--primary-light)" opacity="0.5"/>
+            <circle cx="330" cy="300" r="2" fill="var(--primary-light)" opacity="0.35"/>
+            <circle cx="333" cy="303" r="2" fill="var(--primary-light)" opacity="0.35"/>
+            <circle cx="327" cy="303" r="2" fill="var(--primary-light)" opacity="0.35"/>
+            <line x1="330" y1="308" x2="330" y2="320" stroke="var(--sage)" stroke-width="1.5" opacity="0.35"/>
           </g>
 
           <!-- 星星装饰 -->
-          <circle class="star star-1" cx="60" cy="80" r="2.5" fill="#F3CE8F" opacity="0.5"/>
-          <circle class="star star-2" cx="350" cy="60" r="2" fill="#F3CE8F" opacity="0.4"/>
-          <circle class="star star-3" cx="40" cy="200" r="1.5" fill="#F3CE8F" opacity="0.4"/>
-          <circle class="star star-4" cx="370" cy="180" r="2.5" fill="#F3CE8F" opacity="0.35"/>
+          <circle class="star star-1" cx="60" cy="80" r="2.5" fill="var(--amber)" opacity="0.5"/>
+          <circle class="star star-2" cx="350" cy="60" r="2" fill="var(--amber)" opacity="0.4"/>
+          <circle class="star star-3" cx="40" cy="200" r="1.5" fill="var(--amber)" opacity="0.4"/>
+          <circle class="star star-4" cx="370" cy="180" r="2.5" fill="var(--amber)" opacity="0.35"/>
         </svg>
 
         <p class="scene-quote">
@@ -218,22 +218,22 @@ async function handleRegister() {
 
 <style scoped>
 .warm-register {
-  --warm-white: #FBF6EF;
-  --cream: #F3EADD;
-  --apricot: #EDE0CE;
-  --wood-light: #E2CDB2;
-  --terracotta: #C89F85;
-  --terracotta-d: #B08466;
-  --text-deep: #6B5744;
-  --text-soft: #A08D7A;
+  --warm-white: var(--bg-page);
+  --cream: var(--bg-card-alt);
+  --apricot: var(--apricot);
+  --wood-light: var(--wood-light);
+  --terracotta: var(--terracotta);
+  --terracotta-d: var(--accent);
+  --text-deep: var(--text-primary);
+  --text-soft: var(--text-secondary);
   --glow: rgba(230, 190, 150, 0.45);
-  --card-shadow: 0 16px 48px rgba(160, 120, 90, 0.14);
+  --card-shadow: 0 16px 48px rgba(var(--shadow-rgb), 0.14);
   --radius-lg: 24px;
   --radius-md: 16px;
   --radius-sm: 12px;
 
   height: 100vh;
-  background: linear-gradient(135deg, var(--warm-white) 0%, var(--cream) 55%, #F0E2D0 100%);
+  background: linear-gradient(135deg, var(--warm-white) 0%, var(--cream) 55%, var(--cream) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -253,8 +253,8 @@ async function handleRegister() {
   pointer-events: none;
   animation: drift 14s ease-in-out infinite alternate;
 }
-.dot-1 { width: 260px; height: 260px; background: #F2D9B8; top: -60px; left: -40px; }
-.dot-2 { width: 200px; height: 200px; background: #E8C9AE; bottom: -40px; right: -30px; animation-delay: -6s; }
+.dot-1 { width: 260px; height: 260px; background: var(--wood-light); top: -60px; left: -40px; }
+.dot-2 { width: 200px; height: 200px; background: var(--terracotta); bottom: -40px; right: -30px; animation-delay: -6s; }
 @keyframes drift {
   from { transform: translate(0,0) scale(1); }
   to   { transform: translate(30px, 24px) scale(1.08); }
@@ -270,7 +270,7 @@ async function handleRegister() {
   border-radius: var(--radius-lg);
   box-shadow: var(--card-shadow);
   overflow: hidden;
-  border: 1px solid rgba(226, 205, 178, 0.6);
+  border: 1px solid var(--border);
   animation: rise .8s ease both;
   position: relative;
   z-index: 1;
@@ -283,7 +283,7 @@ async function handleRegister() {
 /* 左侧插画区 */
 .scene {
   flex: 1;
-  background: linear-gradient(160deg, #F6E7D3 0%, #EEDCC4 100%);
+  background: linear-gradient(160deg, var(--cream) 0%, var(--apricot) 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -360,11 +360,11 @@ async function handleRegister() {
 }
 .brand-badge {
   width: 38px; height: 38px;
-  background: linear-gradient(135deg, var(--terracotta), #D9B697);
+  background: linear-gradient(135deg, var(--terracotta), var(--primary-light));
   border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
   font-size: 18px;
-  box-shadow: 0 4px 12px rgba(200, 159, 133, .3);
+  box-shadow: 0 4px 12px rgba(var(--primary-rgb), .3);
 }
 .brand-name { font-size: 14px; letter-spacing: .12em; color: var(--text-secondary); }
 
@@ -390,7 +390,7 @@ h1 {
   padding: 4px 14px 4px 40px;
   border: 1.5px solid var(--wood-light);
   border-radius: var(--radius-md);
-  background: #FFFDF9;
+  background: var(--bg-card);
   box-shadow: none;
   min-height: 44px;
   transition: border-color .35s, box-shadow .35s, transform .35s;
@@ -402,7 +402,7 @@ h1 {
   border-color: var(--terracotta);
   background: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 6px 22px var(--glow), 0 0 0 4px rgba(200, 159, 133, .12);
+  box-shadow: 0 6px 22px var(--glow), 0 0 0 4px rgba(var(--primary-rgb), .12);
 }
 .field :deep(.el-input__inner) {
   font-size: 15px;
@@ -440,8 +440,8 @@ h1 {
   padding: 10px 14px;
   font-size: 13px;
   color: #dc2626;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: rgba(var(--rose-rgb), 0.06);
+  border: 1px solid rgba(var(--rose-rgb), 0.25);
   border-radius: 8px;
   margin-bottom: 16px;
 }
@@ -452,18 +452,18 @@ h1 {
   padding: 13px;
   border: none;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--terracotta) 0%, #D3A98B 100%);
-  color: #FFF9F2;
+  background: var(--gradient-primary);
+  color: var(--bg-card);
   font-size: 15px;
   font-weight: 600;
   letter-spacing: .2em;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(200, 159, 133, .35);
+  box-shadow: 0 8px 20px rgba(var(--primary-rgb), .35);
   transition: transform .3s ease, box-shadow .3s ease;
 }
 .btn-home:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 30px rgba(200, 159, 133, .5);
+  box-shadow: 0 14px 30px rgba(var(--primary-rgb), .5);
 }
 .btn-home:active { transform: translateY(-1px) scale(.99); }
 .btn-home:disabled {
@@ -494,13 +494,13 @@ h1 {
   padding: 12px 14px;
   border: 1.5px dashed var(--wood-light);
   border-radius: var(--radius-sm);
-  background: rgba(243, 234, 221, .5);
+  background: rgba(var(--cream-rgb), .5);
   transition: all .3s ease;
   cursor: pointer;
 }
 .invite-card:hover {
   border-color: var(--terracotta);
-  background: rgba(243, 234, 221, .9);
+  background: rgba(var(--cream-rgb), .9);
   transform: translateY(-2px);
 }
 .invite-text { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; }
@@ -511,7 +511,7 @@ h1 {
   margin-top: 20px;
   text-align: center;
   font-size: 11px;
-  color: #BCAB97;
+  color: var(--text-muted);
   letter-spacing: .08em;
 }
 

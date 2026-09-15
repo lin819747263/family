@@ -702,7 +702,7 @@ async function handleLogin() {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: #eff6ff;
+  background: rgba(var(--sky-rgb), 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -795,8 +795,8 @@ async function handleLogin() {
   padding: 10px 14px;
   font-size: 13px;
   color: #dc2626;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: rgba(var(--rose-rgb), 0.06);
+  border: 1px solid rgba(var(--rose-rgb), 0.25);
   border-radius: 8px;
   margin-bottom: 16px;
 }
@@ -853,7 +853,7 @@ async function handleLogin() {
 }
 
 .register-btn:hover {
-  background: #eff6ff !important;
+  background: rgba(var(--sky-rgb), 0.08) !important;
   border-color: rgba(30, 64, 175, 0.25) !important;
   color: #1e40af !important;
 }

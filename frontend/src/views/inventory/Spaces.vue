@@ -295,14 +295,14 @@ async function handleDelete(id) {
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
-  color: #FFF9F2;
-  box-shadow: 0 8px 20px rgba(200,159,133,.4);
+  background: var(--gradient-primary);
+  color: var(--bg-card);
+  box-shadow: 0 8px 20px rgba(var(--primary-rgb),.4);
   transition: transform .3s, box-shadow .3s;
 }
 .btn-primary:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 26px rgba(200,159,133,.3);
+  box-shadow: 0 12px 26px rgba(var(--primary-rgb),.3);
 }
 .btn-ghost {
   display: inline-flex;
@@ -314,20 +314,20 @@ async function handleDelete(id) {
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  background: rgba(255,253,250,.85);
+  background: rgba(var(--bg-card-rgb),.85);
   color: var(--terra-deep);
   transition: transform .3s, box-shadow .3s;
 }
 .btn-ghost:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 26px rgba(200,159,133,.15);
+  box-shadow: 0 12px 26px rgba(var(--primary-rgb),.15);
 }
 
 /* ===== 子标签页 ===== */
 .subtabs {
   display: flex;
   gap: 6px;
-  background: rgba(243,234,221,.6);
+  background: rgba(var(--cream-rgb),.6);
   border: 1px solid var(--border);
   padding: 5px;
   border-radius: 16px;
@@ -355,7 +355,7 @@ async function handleDelete(id) {
 .subtab.router-link-exact-active {
   background: var(--bg-card);
   color: var(--terra-deep);
-  box-shadow: 0 4px 14px rgba(160,120,90,.14);
+  box-shadow: 0 4px 14px rgba(var(--shadow-rgb),.14);
 }
 
 /* ===== 提示 ===== */
@@ -388,7 +388,7 @@ async function handleDelete(id) {
   cursor: pointer;
 }
 .node-row:hover {
-  background: rgba(243,234,221,.7);
+  background: rgba(var(--cream-rgb),.7);
 }
 .node-ico {
   width: 34px;
@@ -402,9 +402,9 @@ async function handleDelete(id) {
   flex-shrink: 0;
 }
 .lv-home { background: linear-gradient(135deg, var(--terracotta), var(--terra-deep)); }
-.lv-room { background: linear-gradient(135deg, var(--amber), #C08A3E); }
-.lv-cab { background: linear-gradient(135deg, var(--sage), #7E8862); }
-.lv-draw { background: linear-gradient(135deg, var(--sky), #6E8CA0); }
+.lv-room { background: linear-gradient(135deg, var(--amber), var(--amber-d)); }
+.lv-cab { background: linear-gradient(135deg, var(--sage), var(--sage-d)); }
+.lv-draw { background: linear-gradient(135deg, var(--sky), var(--sky-d)); }
 
 .node-name {
   font-size: 14.5px;
@@ -444,14 +444,14 @@ async function handleDelete(id) {
   height: 28px;
   border-radius: 8px;
   border: none;
-  background: rgba(255,253,250,.9);
+  background: rgba(var(--bg-card-rgb),.9);
   color: var(--terra-deep);
   cursor: pointer;
   font-size: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(160,120,90,.15);
+  box-shadow: 0 2px 8px rgba(var(--shadow-rgb),.15);
   transition: all .2s;
 }
 .act-btn:hover {
@@ -459,7 +459,7 @@ async function handleDelete(id) {
   color: #fff;
 }
 .act-btn.danger:hover {
-  background: #B06A6A;
+  background: var(--rose-d);
 }
 
 /* ===== 响应式 ===== */

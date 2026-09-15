@@ -22,7 +22,7 @@
 
         <div class="card" style="margin-top:16px;">
           <div style="font-weight:600;margin-bottom:12px;">家庭管理</div>
-          <div v-for="f in authStore.families" :key="f.id" style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0;">
+          <div v-for="f in authStore.families" :key="f.id" style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-light);">
             <span>{{ f.name }}</span>
             <el-tag size="small">{{ f.FamilyMember?.role === 'owner' ? '创建者' : '成员' }}</el-tag>
           </div>

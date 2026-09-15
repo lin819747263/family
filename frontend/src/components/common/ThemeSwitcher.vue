@@ -37,7 +37,7 @@ import { useThemeStore } from '@/store/theme'
 const themeStore = useThemeStore()
 
 const themeList = [
-  { key: 'warm', name: '暖居', colors: ['#FBF6EF', '#C89F85', '#96684A', '#A8B08A', '#E8B36A'] },
+  { key: 'warm', name: '暖居', colors: ['var(--bg-page)', 'var(--terracotta)', 'var(--terra-deep)', 'var(--sage)', 'var(--amber)'] },
   { key: 'ocean', name: '海风', colors: ['#F0F7FA', '#4A9BB5', '#2E7A91', '#6DBF9E', '#F0C264'] },
   { key: 'forest', name: '森林', colors: ['#F2F5EE', '#6E9B5A', '#4A7340', '#7DAF68', '#D4B050'] },
   { key: 'twilight', name: '暮光', colors: ['#F4F0F7', '#9478B0', '#6E5288', '#88B08A', '#E0B860'] },

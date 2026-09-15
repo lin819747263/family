@@ -15,15 +15,15 @@
             <polyline points="9 22 9 12 15 12 15 22"/>
           </svg>
         </div>
-        <span style="font-size:16px;font-weight:700;color:var(--terra-deep,#96684A);">家庭管家</span>
+        <span style="font-size:16px;font-weight:700;color:var(--terra-deep);">家庭管家</span>
       </div>
     </template>
     <el-menu
       :default-active="activeMenu"
       router
       background-color="transparent"
-      text-color="#A08D7A"
-      active-text-color="#96684A"
+      text-color="var(--text-secondary)"
+      active-text-color="var(--terra-deep)"
       @select="$emit('close')"
     >
       <el-menu-item index="/">
@@ -89,7 +89,7 @@ defineEmits(['close'])
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #C89F85, #D9B697);
+  background: linear-gradient(135deg, var(--terracotta), var(--primary-light));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,7 +98,7 @@ defineEmits(['close'])
 .mobile-menu-drawer :deep(.el-drawer__header) {
   padding: 16px 20px;
   margin: 0;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--border-light);
   padding-top: calc(16px + env(safe-area-inset-top, 0px));
 }
 .mobile-menu-drawer :deep(.el-drawer__body) {
@@ -120,11 +120,11 @@ defineEmits(['close'])
 }
 .mobile-menu-drawer :deep(.el-menu-item:active),
 .mobile-menu-drawer :deep(.el-sub-menu__title:active) {
-  background: rgba(200, 159, 133, 0.08) !important;
+  background: rgba(var(--primary-rgb), 0.08) !important;
 }
 .mobile-menu-drawer :deep(.el-menu-item.is-active) {
-  background: rgba(200, 159, 133, 0.12) !important;
-  color: #96684A !important;
+  background: rgba(var(--primary-rgb), 0.12) !important;
+  color: var(--terra-deep) !important;
   font-weight: 600;
 }
 .mobile-menu-drawer :deep(.el-sub-menu .el-menu-item) {
@@ -134,6 +134,6 @@ defineEmits(['close'])
   font-size: 14px;
 }
 .mobile-menu-drawer :deep(.el-sub-menu .el-menu) {
-  background: rgba(243, 234, 221, 0.3) !important;
+  background: rgba(var(--cream-rgb), 0.3) !important;
 }
 </style>

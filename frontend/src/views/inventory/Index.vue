@@ -27,18 +27,18 @@
     <!-- 统计卡片 -->
     <div class="stats-grid reveal">
       <div class="card stat-card stat-sky">
-        <div class="stat-icon" style="background:linear-gradient(135deg,var(--sky),#6E8CA0);">🗃</div>
-        <div class="stat-num" style="color:#6E8CA0;">{{ stats.total }}</div>
+        <div class="stat-icon" style="background:linear-gradient(135deg,var(--sky),var(--sky-d));">🗃</div>
+        <div class="stat-num" style="color:var(--sky-d);">{{ stats.total }}</div>
         <div class="stat-lbl">物品总数</div>
       </div>
       <div class="card stat-card stat-amber">
-        <div class="stat-icon" style="background:linear-gradient(135deg,var(--amber),#C08A3E);">⏰</div>
-        <div class="stat-num" style="color:#C08A3E;">{{ stats.expiring }}</div>
+        <div class="stat-icon" style="background:linear-gradient(135deg,var(--amber),var(--amber-d));">⏰</div>
+        <div class="stat-num" style="color:var(--amber-d);">{{ stats.expiring }}</div>
         <div class="stat-lbl">临期物品</div>
       </div>
       <div class="card stat-card stat-rose">
-        <div class="stat-icon" style="background:linear-gradient(135deg,var(--rose),#B06A6A);">🤝</div>
-        <div class="stat-num" style="color:#B06A6A;">{{ stats.borrowed }}</div>
+        <div class="stat-icon" style="background:linear-gradient(135deg,var(--rose),var(--rose-d));">🤝</div>
+        <div class="stat-num" style="color:var(--rose-d);">{{ stats.borrowed }}</div>
         <div class="stat-lbl">借出中</div>
       </div>
     </div>
@@ -225,7 +225,7 @@
       <template #footer>
         <div class="dialog-footer">
           <button class="btn-cancel" @click="showAiDialog = false">取消</button>
-          <button v-if="aiResult" class="btn-confirm" style="background:linear-gradient(135deg,var(--sage),#7E8862);" @click="applyAiResult">✨ 应用并添加</button>
+          <button v-if="aiResult" class="btn-confirm" style="background:linear-gradient(135deg,var(--sage),var(--sage-d));" @click="applyAiResult">✨ 应用并添加</button>
           <button class="btn-confirm" :class="{ loading: aiLoading }" :disabled="aiLoading" @click="aiRecognize">
             {{ aiLoading ? '识别中...' : (aiResult ? '🔄 重新识别' : '🪄 开始识别') }}
           </button>
@@ -327,18 +327,18 @@ watch(() => itemForm.productionDate, () => {
 
 // 物品分类对应颜色和 emoji
 const categoryMap = {
-  '电子产品': { bg: 'rgba(159,184,201,.2)', emoji: '💻' },
-  '食品': { bg: 'rgba(232,179,106,.2)', emoji: '🥛' },
-  '绿植': { bg: 'rgba(168,176,138,.2)', emoji: '🪴' },
-  '玩具': { bg: 'rgba(217,154,154,.2)', emoji: '🧸' },
-  '厨具': { bg: 'rgba(200,159,133,.2)', emoji: '🍳' },
-  '药品': { bg: 'rgba(159,184,201,.2)', emoji: '💊' },
-  '户外': { bg: 'rgba(232,179,106,.2)', emoji: '🧺' },
-  '书籍': { bg: 'rgba(169,139,176,.2)', emoji: '📚' },
-  '衣物': { bg: 'rgba(217,154,154,.2)', emoji: '👕' },
-  '日用品': { bg: 'rgba(200,159,133,.2)', emoji: '🧴' },
+  '电子产品': { bg: 'rgba(var(--sky-rgb),.2)', emoji: '💻' },
+  '食品': { bg: 'rgba(var(--amber-rgb),.2)', emoji: '🥛' },
+  '绿植': { bg: 'rgba(var(--sage-rgb),.2)', emoji: '🪴' },
+  '玩具': { bg: 'rgba(var(--rose-rgb),.2)', emoji: '🧸' },
+  '厨具': { bg: 'rgba(var(--primary-rgb),.2)', emoji: '🍳' },
+  '药品': { bg: 'rgba(var(--sky-rgb),.2)', emoji: '💊' },
+  '户外': { bg: 'rgba(var(--amber-rgb),.2)', emoji: '🧺' },
+  '书籍': { bg: 'rgba(var(--primary-rgb),.2)', emoji: '📚' },
+  '衣物': { bg: 'rgba(var(--rose-rgb),.2)', emoji: '👕' },
+  '日用品': { bg: 'rgba(var(--primary-rgb),.2)', emoji: '🧴' },
 }
-const defaultItemBg = 'rgba(200,159,133,.15)'
+const defaultItemBg = 'rgba(var(--primary-rgb),.15)'
 const defaultItemEmoji = '📦'
 
 function getItemColor(cat) {
@@ -545,14 +545,14 @@ async function handleDelete(id) {
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
-  color: #FFF9F2;
-  box-shadow: 0 8px 20px rgba(200,159,133,.4);
+  background: var(--gradient-primary);
+  color: var(--bg-card);
+  box-shadow: 0 8px 20px rgba(var(--primary-rgb),.4);
   transition: transform .3s, box-shadow .3s;
 }
 .btn-primary:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 26px rgba(200,159,133,.3);
+  box-shadow: 0 12px 26px rgba(var(--primary-rgb),.3);
 }
 .btn-ghost {
   display: inline-flex;
@@ -564,20 +564,20 @@ async function handleDelete(id) {
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  background: rgba(255,253,250,.85);
+  background: rgba(var(--bg-card-rgb),.85);
   color: var(--terra-deep);
   transition: transform .3s, box-shadow .3s;
 }
 .btn-ghost:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 26px rgba(200,159,133,.15);
+  box-shadow: 0 12px 26px rgba(var(--primary-rgb),.15);
 }
 
 /* ===== 子标签页 ===== */
 .subtabs {
   display: flex;
   gap: 6px;
-  background: rgba(243,234,221,.6);
+  background: rgba(var(--cream-rgb),.6);
   border: 1px solid var(--border);
   padding: 5px;
   border-radius: 16px;
@@ -605,7 +605,7 @@ async function handleDelete(id) {
 .subtab.router-link-exact-active {
   background: var(--bg-card);
   color: var(--terra-deep);
-  box-shadow: 0 4px 14px rgba(160,120,90,.14);
+  box-shadow: 0 4px 14px rgba(var(--shadow-rgb),.14);
 }
 
 /* ===== 统计卡片 ===== */
@@ -623,7 +623,7 @@ async function handleDelete(id) {
 }
 .stat-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 16px 36px rgba(160,120,90,.15);
+  box-shadow: 0 16px 36px rgba(var(--shadow-rgb),.15);
 }
 .stat-card::after {
   content: "";
@@ -668,14 +668,14 @@ async function handleDelete(id) {
   gap: 12px;
   padding: 16px 18px;
   margin-bottom: 18px;
-  border: 1.5px solid rgba(232,179,106,.5);
-  background: rgba(232,179,106,.12);
+  border: 1.5px solid rgba(var(--amber-rgb),.5);
+  background: rgba(var(--amber-rgb),.12);
 }
 .alert-ai {
   width: 34px;
   height: 34px;
   border-radius: 11px;
-  background: linear-gradient(135deg, var(--amber), #C08A3E);
+  background: linear-gradient(135deg, var(--amber), var(--amber-d));
   color: #fff;
   display: flex;
   align-items: center;
@@ -693,7 +693,7 @@ async function handleDelete(id) {
 .alert-title {
   font-size: 14.5px;
   font-weight: 700;
-  color: #C08A3E;
+  color: var(--amber-d);
 }
 .alert-list {
   margin-top: 8px;
@@ -714,12 +714,12 @@ async function handleDelete(id) {
   font-weight: 700;
   padding: 2px 10px;
   border-radius: 999px;
-  background: rgba(217,154,154,.2);
-  color: #B06A6A;
+  background: rgba(var(--rose-rgb),.2);
+  color: var(--rose-d);
 }
 .alert-date.warn {
-  background: rgba(232,179,106,.25);
-  color: #C08A3E;
+  background: rgba(var(--amber-rgb),.25);
+  color: var(--amber-d);
 }
 
 /* ===== 筛选栏 ===== */
@@ -749,7 +749,7 @@ async function handleDelete(id) {
   padding: 11px 14px 11px 38px;
   border-radius: 12px;
   border: 1.5px solid var(--wood-light);
-  background: #FFFDF9;
+  background: var(--bg-card);
   font-size: 13.5px;
   outline: none;
   transition: all .3s;
@@ -758,7 +758,7 @@ async function handleDelete(id) {
 }
 .search-input:focus {
   border-color: var(--terracotta);
-  box-shadow: 0 0 0 4px rgba(200,159,133,.14);
+  box-shadow: 0 0 0 4px rgba(var(--primary-rgb),.14);
 }
 .filter-select {
   width: 160px;
@@ -781,7 +781,7 @@ async function handleDelete(id) {
 }
 .item-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 16px 36px rgba(160,120,90,.16);
+  box-shadow: 0 16px 36px rgba(var(--shadow-rgb),.16);
 }
 .item-top {
   display: flex;
@@ -809,12 +809,12 @@ async function handleDelete(id) {
   border-radius: 999px;
 }
 .st-active {
-  background: rgba(168,176,138,.2);
-  color: #7E8862;
+  background: rgba(var(--sage-rgb),.2);
+  color: var(--sage-d);
 }
 .st-exp {
-  background: rgba(217,154,154,.2);
-  color: #B06A6A;
+  background: rgba(var(--rose-rgb),.2);
+  color: var(--rose-d);
   animation: pulse-soft 2s infinite;
 }
 .st-inactive {
@@ -871,14 +871,14 @@ async function handleDelete(id) {
   height: 28px;
   border-radius: 8px;
   border: none;
-  background: rgba(255,253,250,.9);
+  background: rgba(var(--bg-card-rgb),.9);
   color: var(--terra-deep);
   cursor: pointer;
   font-size: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(160,120,90,.15);
+  box-shadow: 0 2px 8px rgba(var(--shadow-rgb),.15);
   transition: all .2s;
 }
 .act-btn:hover {
@@ -886,7 +886,7 @@ async function handleDelete(id) {
   color: #fff;
 }
 .act-btn.danger:hover {
-  background: #B06A6A;
+  background: var(--rose-d);
 }
 
 /* ===== 空状态 ===== */
@@ -902,7 +902,7 @@ async function handleDelete(id) {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(160,120,90,.18);
+  box-shadow: 0 20px 60px rgba(var(--shadow-rgb),.18);
   overflow: visible;
 }
 :deep(.warm-dialog .el-overlay) {
@@ -935,7 +935,7 @@ async function handleDelete(id) {
   font-size: 13px;
 }
 :deep(.warm-form .el-input__wrapper) {
-  background: #FFFDF9;
+  background: var(--bg-card);
   border: 1.5px solid var(--wood-light);
   border-radius: 12px;
   box-shadow: none;
@@ -946,10 +946,10 @@ async function handleDelete(id) {
 }
 :deep(.warm-form .el-input__wrapper.is-focus) {
   border-color: var(--terracotta);
-  box-shadow: 0 0 0 3px rgba(200,159,133,.12);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb),.12);
 }
 :deep(.warm-form .el-textarea__inner) {
-  background: #FFFDF9;
+  background: var(--bg-card);
   border: 1.5px solid var(--wood-light);
   border-radius: 12px;
   box-shadow: none;
@@ -957,16 +957,16 @@ async function handleDelete(id) {
 }
 :deep(.warm-form .el-textarea__inner:focus) {
   border-color: var(--terracotta);
-  box-shadow: 0 0 0 3px rgba(200,159,133,.12);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb),.12);
 }
 :deep(.warm-form .el-select .el-input__wrapper) {
-  background: #FFFDF9;
+  background: var(--bg-card);
 }
 :deep(.warm-form .el-input-number .el-input__wrapper) {
-  background: #FFFDF9;
+  background: var(--bg-card);
 }
 :deep(.warm-form .el-date-editor.el-input__wrapper) {
-  background: #FFFDF9;
+  background: var(--bg-card);
 }
 .form-hint {
   font-size: 12px;
@@ -984,7 +984,7 @@ async function handleDelete(id) {
   padding: 10px 20px;
   border-radius: 12px;
   border: 1.5px solid var(--border);
-  background: rgba(255,253,250,.85);
+  background: rgba(var(--bg-card-rgb),.85);
   color: var(--text-secondary);
   font-size: 14px;
   font-weight: 600;
@@ -1000,18 +1000,18 @@ async function handleDelete(id) {
   padding: 10px 24px;
   border-radius: 12px;
   border: none;
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
-  color: #FFF9F2;
+  background: var(--gradient-primary);
+  color: var(--bg-card);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(200,159,133,.35);
+  box-shadow: 0 6px 18px rgba(var(--primary-rgb),.35);
   transition: all .25s;
   font-family: inherit;
 }
 .btn-confirm:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(200,159,133,.4);
+  box-shadow: 0 10px 24px rgba(var(--primary-rgb),.4);
 }
 .btn-confirm.loading {
   opacity: .7;
@@ -1028,7 +1028,7 @@ async function handleDelete(id) {
   padding: 6px 14px;
   border-radius: 999px;
   border: 1.5px solid var(--border);
-  background: rgba(255,253,250,.8);
+  background: rgba(var(--bg-card-rgb),.8);
   color: var(--text-secondary);
   font-size: 12px;
   font-weight: 600;
@@ -1041,8 +1041,8 @@ async function handleDelete(id) {
   background: var(--apricot);
 }
 .ai-result {
-  background: linear-gradient(120deg, rgba(168,176,138,.12), rgba(232,179,106,.1));
-  border: 1.5px solid rgba(168,176,138,.35);
+  background: linear-gradient(120deg, rgba(var(--sage-rgb),.12), rgba(var(--amber-rgb),.1));
+  border: 1.5px solid rgba(var(--sage-rgb),.35);
   border-radius: 14px;
   padding: 14px 16px;
   margin-bottom: 8px;
@@ -1143,19 +1143,19 @@ async function handleDelete(id) {
 
 /* ===== 下拉面板基础 ===== */
 .warm-popper {
-  background: #FFFDFA !important;
-  border: 1.5px solid #E2CDB2 !important;
+  background: var(--bg-card) !important;
+  border: 1.5px solid var(--wood-light) !important;
   border-radius: 14px !important;
-  box-shadow: 0 12px 36px rgba(160,120,90,.18) !important;
+  box-shadow: 0 12px 36px rgba(var(--shadow-rgb),.18) !important;
 }
 .warm-popper .el-popper__arrow::before {
-  background: #FFFDFA !important;
-  border-color: #E2CDB2 !important;
+  background: var(--bg-card) !important;
+  border-color: var(--wood-light) !important;
 }
 
 /* ===== 选项样式 ===== */
 .warm-popper .el-select-dropdown__item {
-  color: #6B5744;
+  color: var(--text-primary);
   font-size: 13.5px;
   border-radius: 8px;
   margin: 2px 6px;
@@ -1165,16 +1165,16 @@ async function handleDelete(id) {
 }
 .warm-popper .el-select-dropdown__item.hover,
 .warm-popper .el-select-dropdown__item:hover {
-  background: #F3EADD !important;
-  color: #96684A !important;
+  background: var(--bg-card-alt) !important;
+  color: var(--terra-deep) !important;
 }
 .warm-popper .el-select-dropdown__item.is-selected {
-  color: #96684A !important;
+  color: var(--terra-deep) !important;
   font-weight: 700;
-  background: rgba(200,159,133,.12) !important;
+  background: rgba(var(--primary-rgb),.12) !important;
 }
 .warm-popper .el-select-dropdown__empty {
-  color: #A08D7A;
+  color: var(--text-secondary);
   padding: 20px;
 }
 .warm-popper .el-select-dropdown__wrap {
@@ -1202,76 +1202,76 @@ async function handleDelete(id) {
   min-height: 32px;
 }
 .warm-tree-popper .el-tree-node__content:hover {
-  background: #F3EADD !important;
+  background: var(--bg-card-alt) !important;
 }
 .warm-tree-popper .el-tree-node.is-current > .el-tree-node__content {
-  background: rgba(200,159,133,.15) !important;
-  color: #96684A;
+  background: rgba(var(--primary-rgb),.15) !important;
+  color: var(--terra-deep);
   font-weight: 600;
 }
 .warm-tree-popper .el-tree-node__label {
   font-size: 13.5px;
-  color: #6B5744;
+  color: var(--text-primary);
 }
 .warm-tree-popper .el-tree-node__expand-icon {
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 .warm-tree-popper .el-select-dropdown__header {
   padding: 8px 12px;
-  border-bottom: 1px solid #E2CDB2;
+  border-bottom: 1px solid var(--wood-light);
 }
 
 /* ===== 日期选择器 ===== */
 .warm-popper .el-picker-panel__body {
-  background: #FFFDFA;
+  background: var(--bg-card);
 }
 .warm-popper .el-date-table td.today .el-date-table-cell__text {
-  color: #C89F85;
+  color: var(--terracotta);
 }
 .warm-popper .el-date-table td.current .el-date-table-cell__text {
-  background: linear-gradient(135deg, #C89F85, #D3A98B);
+  background: var(--gradient-primary);
   color: #fff;
   border-radius: 8px;
 }
 .warm-popper .el-date-table td.available:hover .el-date-table-cell__text {
-  background: #F3EADD;
+  background: var(--bg-card-alt);
   border-radius: 8px;
 }
 .warm-popper .el-picker-panel__footer {
-  background: #FFFDFA;
-  border-top: 1px solid #E2CDB2;
+  background: var(--bg-card);
+  border-top: 1px solid var(--wood-light);
 }
 .warm-popper .el-picker-panel__sidebar {
-  background: #FFFDFA;
-  border-right: 1px solid #E2CDB2;
+  background: var(--bg-card);
+  border-right: 1px solid var(--wood-light);
 }
 .warm-popper .el-picker-panel__shortcut {
-  color: #A08D7A;
+  color: var(--text-secondary);
   font-size: 12.5px;
 }
 .warm-popper .el-picker-panel__shortcut:hover {
-  color: #96684A;
+  color: var(--terra-deep);
 }
 .warm-popper .el-picker-panel__icon-btn {
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 .warm-popper .el-picker-panel__icon-btn:hover {
-  color: #96684A;
+  color: var(--terra-deep);
 }
 .warm-popper .el-date-picker__header-label {
-  color: #6B5744;
+  color: var(--text-primary);
   font-weight: 600;
 }
 .warm-popper .el-date-picker__header-label:hover {
-  color: #96684A;
+  color: var(--terra-deep);
 }
 .warm-popper .el-month-table td.today .el-date-table-cell__text,
 .warm-popper .el-year-table td.today .el-date-table-cell__text {
-  color: #C89F85;
+  color: var(--terracotta);
 }
 .warm-popper .el-month-table td.current .el-date-table-cell__text,
 .warm-popper .el-year-table td.current .el-date-table-cell__text {
-  background: linear-gradient(135deg, #C89F85, #D3A98B);
+  background: var(--gradient-primary);
   color: #fff;
   border-radius: 8px;
 }

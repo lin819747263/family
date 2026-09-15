@@ -15,7 +15,7 @@
 
     <!-- 加密验证 -->
     <div v-if="needsVerification && !verified" class="card" style="text-align:center;padding:40px;max-width:400px;margin:auto;">
-      <el-icon :size="48" color="#E6A23C"><Lock /></el-icon>
+      <el-icon :size="48" color="var(--warning)"><Lock /></el-icon>
       <p style="margin:12px 0;">此相册已加密，请输入密码</p>
       <el-input v-model="password" type="password" show-password placeholder="请输入相册密码" style="margin-bottom:12px;" @keyup.enter="verifyPassword" />
       <el-button type="primary" @click="verifyPassword" :loading="verifying">验证</el-button>

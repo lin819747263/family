@@ -225,7 +225,7 @@ async function handleLogin() {
 .bg-gradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 25%, #f5f0ff 50%, #eef5ff 75%, #f8f4ff 100%);
+  background: linear-gradient(135deg, rgba(var(--sky-rgb), 0.06) 0%, #e8eeff 25%, #f5f0ff 50%, #eef5ff 75%, #f8f4ff 100%);
   z-index: 0;
 }
 .bg-gradient::before {
@@ -281,7 +281,7 @@ async function handleLogin() {
 }
 .shape-4 {
   width: 80px; height: 80px;
-  background: linear-gradient(135deg, #34d399, #60a5fa);
+  background: linear-gradient(135deg, var(--success), #60a5fa);
   top: 15%; right: 25%;
   animation: floatSlow 22s ease-in-out infinite 4s;
 }
@@ -293,7 +293,7 @@ async function handleLogin() {
 }
 .shape-6 {
   width: 100px; height: 100px;
-  background: linear-gradient(135deg, #60a5fa, #34d399);
+  background: linear-gradient(135deg, #60a5fa, var(--success));
   bottom: 35%; left: 25%;
   animation: floatSlow 20s ease-in-out infinite 3s;
 }
@@ -421,13 +421,13 @@ async function handleLogin() {
 .illust-text h3 {
   font-size: 22px;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin-bottom: 8px;
   letter-spacing: 0.5px;
 }
 .illust-text p {
   font-size: 14px;
-  color: #94a3b8;
+  color: var(--text-muted);
   letter-spacing: 0.3px;
 }
 
@@ -487,13 +487,13 @@ async function handleLogin() {
   text-align: center;
   font-size: 24px;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0 0 6px;
 }
 .card-subtitle {
   text-align: center;
   font-size: 14px;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin: 0 0 32px;
 }
 
@@ -529,14 +529,14 @@ async function handleLogin() {
   background: #fff;
 }
 .login-card :deep(.el-input__inner) {
-  color: #1e293b;
+  color: var(--text-primary);
   font-size: 15px;
 }
 .login-card :deep(.el-input__inner::placeholder) {
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 .login-card :deep(.el-input__prefix) {
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 .login-card :deep(.el-input__prefix .el-icon) {
   font-size: 18px;
@@ -586,7 +586,7 @@ async function handleLogin() {
   text-align: center;
   margin-top: 24px;
   font-size: 14px;
-  color: #94a3b8;
+  color: var(--text-muted);
   animation: fadeInUp 0.5s ease-out 0.7s both;
 }
 .card-footer a {
@@ -602,7 +602,7 @@ async function handleLogin() {
 .copyright {
   margin-top: 24px;
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--text-muted);
   text-align: center;
   animation: fadeInUp 0.5s ease-out 0.9s both;
 }

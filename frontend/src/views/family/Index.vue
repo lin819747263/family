@@ -35,7 +35,7 @@
 
     <!-- 成员列表 -->
     <div class="section-title" style="margin:24px 0 16px;">
-      <span style="font-size:18px;font-weight:700;color:#1e293b;">家庭成员</span>
+      <span style="font-size:18px;font-weight:700;color:var(--text-primary);">家庭成员</span>
       <el-tag type="info" effect="plain" size="small">{{ members.length }} 人</el-tag>
     </div>
 
@@ -219,7 +219,7 @@ async function handleLeave() {
 }
 .page-desc {
   font-size: 14px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 
@@ -237,7 +237,7 @@ async function handleLeave() {
   width: 60px;
   height: 60px;
   border-radius: 16px;
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
+  background: var(--gradient-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -251,11 +251,11 @@ async function handleLeave() {
 .fi-name {
   font-size: 20px;
   font-weight: 700;
-  color: #6B5744;
+  color: var(--text-primary);
 }
 .fi-desc {
   font-size: 14px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 
@@ -264,14 +264,14 @@ async function handleLeave() {
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  background: linear-gradient(135deg, rgba(200, 159, 133, 0.04), rgba(150, 104, 74, 0.04));
-  border: 1px solid rgba(200, 159, 133, 0.15);
+  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.04), rgba(150, 104, 74, 0.04));
+  border: 1px solid rgba(var(--primary-rgb), 0.15);
   border-radius: 12px;
   margin-bottom: 12px;
 }
 .fi-invite-label {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 .fi-invite-code {
@@ -283,7 +283,7 @@ async function handleLeave() {
 }
 .fi-tip {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 
 /* 成员列表 */
@@ -304,7 +304,7 @@ async function handleLeave() {
   gap: 14px;
 }
 .mc-avatar {
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
+  background: var(--gradient-primary);
   color: #fff;
   font-weight: 600;
   font-size: 16px;
@@ -312,14 +312,14 @@ async function handleLeave() {
 .mc-name {
   font-size: 15px;
   font-weight: 600;
-  color: #6B5744;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 .mc-meta {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 4px;
   display: flex;
   gap: 12px;

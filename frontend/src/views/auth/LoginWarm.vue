@@ -9,40 +9,40 @@
       <section class="scene" aria-hidden="true">
         <svg viewBox="0 0 400 340" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- 暖光灯光晕 -->
-          <circle class="lamp-glow" cx="115" cy="185" r="72" fill="#F5D3A0" opacity="0.5"/>
-          <circle class="lamp-glow" cx="115" cy="185" r="46" fill="#F8DFB4" opacity="0.6"/>
+          <circle class="lamp-glow" cx="115" cy="185" r="72" fill="var(--primary-light)" opacity="0.5"/>
+          <circle class="lamp-glow" cx="115" cy="185" r="46" fill="var(--amber)" opacity="0.6"/>
           <!-- 窗户 -->
-          <rect x="230" y="52" width="120" height="150" rx="16" fill="#FBF3E4" stroke="#D9BE9C" stroke-width="4"/>
-          <line x1="290" y1="56" x2="290" y2="198" stroke="#D9BE9C" stroke-width="4"/>
-          <line x1="234" y1="127" x2="346" y2="127" stroke="#D9BE9C" stroke-width="4"/>
+          <rect x="230" y="52" width="120" height="150" rx="16" fill="var(--warm-white)" stroke="var(--primary-light)" stroke-width="4"/>
+          <line x1="290" y1="56" x2="290" y2="198" stroke="var(--primary-light)" stroke-width="4"/>
+          <line x1="234" y1="127" x2="346" y2="127" stroke="var(--primary-light)" stroke-width="4"/>
           <!-- 窗外月亮与云 -->
-          <circle cx="263" cy="95" r="15" fill="#F3CE8F"/>
+          <circle cx="263" cy="95" r="15" fill="var(--amber)"/>
           <path d="M305 100 q10 -10 20 0 q8 -7 15 1" stroke="#E4C8A4" stroke-width="3.5" stroke-linecap="round" fill="none"/>
           <!-- 窗台绿植 -->
           <g class="leaf-sway">
-            <path d="M258 200 q-3 -26 -16 -34 q14 2 19 20 q2 -22 -6 -34 q12 8 12 34 q6 -16 16 -19 q-6 14 -11 33 Z" fill="#A8B08A" opacity="0.9"/>
+            <path d="M258 200 q-3 -26 -16 -34 q14 2 19 20 q2 -22 -6 -34 q12 8 12 34 q6 -16 16 -19 q-6 14 -11 33 Z" fill="var(--sage)" opacity="0.9"/>
           </g>
-          <path d="M247 198 h26 l-4 24 h-18 Z" fill="#C89F85"/>
+          <path d="M247 198 h26 l-4 24 h-18 Z" fill="var(--terracotta)"/>
           <!-- 桌子 -->
-          <rect x="60" y="228" width="200" height="10" rx="5" fill="#D9BE9C"/>
-          <rect x="78" y="238" width="8" height="52" rx="4" fill="#CBA97F"/>
-          <rect x="234" y="238" width="8" height="52" rx="4" fill="#CBA97F"/>
+          <rect x="60" y="228" width="200" height="10" rx="5" fill="var(--primary-light)"/>
+          <rect x="78" y="238" width="8" height="52" rx="4" fill="var(--terracotta)"/>
+          <rect x="234" y="238" width="8" height="52" rx="4" fill="var(--terracotta)"/>
           <!-- 台灯 -->
-          <rect x="112" y="180" width="7" height="48" rx="3.5" fill="#A08D7A"/>
-          <path d="M92 182 q23 -26 47 0 Z" fill="#C89F85"/>
-          <ellipse cx="115.5" cy="228" rx="20" ry="5" fill="#A08D7A"/>
+          <rect x="112" y="180" width="7" height="48" rx="3.5" fill="var(--text-secondary)"/>
+          <path d="M92 182 q23 -26 47 0 Z" fill="var(--terracotta)"/>
+          <ellipse cx="115.5" cy="228" rx="20" ry="5" fill="var(--text-secondary)"/>
           <!-- 热茶 -->
-          <path d="M178 214 h30 v10 q0 8 -15 8 q-15 0 -15 -8 Z" fill="#E8D5C4" stroke="#C9A983" stroke-width="2.5"/>
-          <path d="M186 206 q3 -6 0 -11 M196 206 q3 -6 0 -11" stroke="#D9BE9C" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <path d="M178 214 h30 v10 q0 8 -15 8 q-15 0 -15 -8 Z" fill="var(--primary-light)" stroke="var(--terracotta)" stroke-width="2.5"/>
+          <path d="M186 206 q3 -6 0 -11 M196 206 q3 -6 0 -11" stroke="var(--primary-light)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
           <!-- 书 -->
-          <rect x="64" y="216" width="42" height="11" rx="4" fill="#B08466"/>
-          <rect x="68" y="211" width="34" height="8" rx="4" fill="#D3A98B"/>
+          <rect x="64" y="216" width="42" height="11" rx="4" fill="var(--accent)"/>
+          <rect x="68" y="211" width="34" height="8" rx="4" fill="var(--primary-light)"/>
           <!-- 地毯 -->
-          <ellipse cx="160" cy="298" rx="130" ry="16" fill="#EBD9C0"/>
+          <ellipse cx="160" cy="298" rx="130" ry="16" fill="var(--apricot)"/>
           <!-- 远处小屋 -->
-          <path d="M30 292 v-40 l26 -20 26 20 v40 Z" fill="#DFC7A8"/>
-          <rect x="48" y="268" width="14" height="24" rx="3" fill="#B08466"/>
-          <circle cx="39" cy="266" r="4.5" fill="#F3CE8F"/>
+          <path d="M30 292 v-40 l26 -20 26 20 v40 Z" fill="var(--wood-light)"/>
+          <rect x="48" y="268" width="14" height="24" rx="3" fill="var(--accent)"/>
+          <circle cx="39" cy="266" r="4.5" fill="var(--amber)"/>
         </svg>
 
         <p class="scene-quote">
@@ -184,22 +184,22 @@ async function handleLogin() {
 
 <style scoped>
 .warm-login {
-  --warm-white: #FBF6EF;
-  --cream: #F3EADD;
-  --apricot: #EDE0CE;
-  --wood-light: #E2CDB2;
-  --terracotta: #C89F85;
-  --terracotta-d: #B08466;
-  --text-deep: #6B5744;
-  --text-soft: #A08D7A;
+  --warm-white: var(--bg-page);
+  --cream: var(--bg-card-alt);
+  --apricot: var(--apricot);
+  --wood-light: var(--wood-light);
+  --terracotta: var(--terracotta);
+  --terracotta-d: var(--accent);
+  --text-deep: var(--text-primary);
+  --text-soft: var(--text-secondary);
   --glow: rgba(230, 190, 150, 0.45);
-  --card-shadow: 0 16px 48px rgba(160, 120, 90, 0.14);
+  --card-shadow: 0 16px 48px rgba(var(--shadow-rgb), 0.14);
   --radius-lg: 24px;
   --radius-md: 16px;
   --radius-sm: 12px;
 
   height: 100vh;
-  background: linear-gradient(135deg, var(--warm-white) 0%, var(--cream) 55%, #F0E2D0 100%);
+  background: linear-gradient(135deg, var(--warm-white) 0%, var(--cream) 55%, var(--cream) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -219,8 +219,8 @@ async function handleLogin() {
   pointer-events: none;
   animation: drift 14s ease-in-out infinite alternate;
 }
-.dot-1 { width: 260px; height: 260px; background: #F2D9B8; top: -60px; left: -40px; }
-.dot-2 { width: 200px; height: 200px; background: #E8C9AE; bottom: -40px; right: -30px; animation-delay: -6s; }
+.dot-1 { width: 260px; height: 260px; background: var(--wood-light); top: -60px; left: -40px; }
+.dot-2 { width: 200px; height: 200px; background: var(--terracotta); bottom: -40px; right: -30px; animation-delay: -6s; }
 @keyframes drift {
   from { transform: translate(0,0) scale(1); }
   to   { transform: translate(30px, 24px) scale(1.08); }
@@ -236,7 +236,7 @@ async function handleLogin() {
   border-radius: var(--radius-lg);
   box-shadow: var(--card-shadow);
   overflow: hidden;
-  border: 1px solid rgba(226, 205, 178, 0.6);
+  border: 1px solid var(--border);
   animation: rise .8s ease both;
   position: relative;
   z-index: 1;
@@ -249,7 +249,7 @@ async function handleLogin() {
 /* 左侧插画区 */
 .scene {
   flex: 1;
-  background: linear-gradient(160deg, #F6E7D3 0%, #EEDCC4 100%);
+  background: linear-gradient(160deg, var(--cream) 0%, var(--apricot) 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -296,11 +296,11 @@ async function handleLogin() {
 }
 .brand-badge {
   width: 38px; height: 38px;
-  background: linear-gradient(135deg, var(--terracotta), #D9B697);
+  background: linear-gradient(135deg, var(--terracotta), var(--primary-light));
   border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
   font-size: 18px;
-  box-shadow: 0 4px 12px rgba(200, 159, 133, .3);
+  box-shadow: 0 4px 12px rgba(var(--primary-rgb), .3);
 }
 .brand-name { font-size: 14px; letter-spacing: .12em; color: var(--text-secondary); }
 
@@ -326,7 +326,7 @@ h1 {
   padding: 4px 14px 4px 40px;
   border: 1.5px solid var(--wood-light);
   border-radius: var(--radius-md);
-  background: #FFFDF9;
+  background: var(--bg-card);
   box-shadow: none;
   min-height: 44px;
   transition: border-color .35s, box-shadow .35s, transform .35s;
@@ -338,7 +338,7 @@ h1 {
   border-color: var(--terracotta);
   background: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 6px 22px var(--glow), 0 0 0 4px rgba(200, 159, 133, .12);
+  box-shadow: 0 6px 22px var(--glow), 0 0 0 4px rgba(var(--primary-rgb), .12);
 }
 .field :deep(.el-input__inner) {
   font-size: 15px;
@@ -389,7 +389,7 @@ h1 {
   width: 17px; height: 17px;
   border: 1.5px solid var(--wood-light);
   border-radius: 6px;
-  background: #FFFDF9;
+  background: var(--bg-card);
   display: flex; align-items: center; justify-content: center;
   font-size: 11px; color: transparent;
   transition: all .25s ease;
@@ -407,15 +407,15 @@ h1 {
   padding-bottom: 1px;
   transition: color .25s, border-color .25s;
 }
-.link:hover { color: #96684A; border-color: #96684A; }
+.link:hover { color: var(--terra-deep); border-color: var(--terra-deep); }
 
 /* 错误提示 */
 .error-box {
   padding: 10px 14px;
   font-size: 13px;
   color: #dc2626;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: rgba(var(--rose-rgb), 0.06);
+  border: 1px solid rgba(var(--rose-rgb), 0.25);
   border-radius: 8px;
   margin-bottom: 16px;
 }
@@ -426,18 +426,18 @@ h1 {
   padding: 13px;
   border: none;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--terracotta) 0%, #D3A98B 100%);
-  color: #FFF9F2;
+  background: var(--gradient-primary);
+  color: var(--bg-card);
   font-size: 15px;
   font-weight: 600;
   letter-spacing: .2em;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(200, 159, 133, .35);
+  box-shadow: 0 8px 20px rgba(var(--primary-rgb), .35);
   transition: transform .3s ease, box-shadow .3s ease;
 }
 .btn-home:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 30px rgba(200, 159, 133, .5);
+  box-shadow: 0 14px 30px rgba(var(--primary-rgb), .5);
 }
 .btn-home:active { transform: translateY(-1px) scale(.99); }
 .btn-home:disabled {
@@ -468,13 +468,13 @@ h1 {
   padding: 12px 14px;
   border: 1.5px dashed var(--wood-light);
   border-radius: var(--radius-sm);
-  background: rgba(243, 234, 221, .5);
+  background: rgba(var(--cream-rgb), .5);
   transition: all .3s ease;
   cursor: pointer;
 }
 .invite-card:hover {
   border-color: var(--terracotta);
-  background: rgba(243, 234, 221, .9);
+  background: rgba(var(--cream-rgb), .9);
   transform: translateY(-2px);
 }
 .invite-text { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; }
@@ -485,7 +485,7 @@ h1 {
   margin-top: 20px;
   text-align: center;
   font-size: 11px;
-  color: #BCAB97;
+  color: var(--text-muted);
   letter-spacing: .08em;
 }
 

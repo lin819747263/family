@@ -358,10 +358,10 @@ watch(() => props.visible, (val) => {
   align-items: center;
   gap: 12px;
   padding: 16px 20px;
-  border-bottom: 1px solid #F3EADD;
+  border-bottom: 1px solid var(--bg-card-alt);
 }
 .search-icon {
-  color: #A08D7A;
+  color: var(--text-secondary);
   flex-shrink: 0;
 }
 .search-input {
@@ -369,12 +369,12 @@ watch(() => props.visible, (val) => {
   border: none;
   outline: none;
   font-size: 16px;
-  color: #6B5744;
+  color: var(--text-primary);
   background: transparent;
   line-height: 1.5;
 }
 .search-input::placeholder {
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 .search-shortcut {
   flex-shrink: 0;
@@ -384,9 +384,9 @@ watch(() => props.visible, (val) => {
   padding: 2px 6px;
   font-size: 11px;
   font-family: inherit;
-  color: #A08D7A;
-  background: #F3EADD;
-  border: 1px solid rgba(226,205,178,.7);
+  color: var(--text-secondary);
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border);
   border-radius: 4px;
 }
 
@@ -400,7 +400,7 @@ watch(() => props.visible, (val) => {
 .search-empty {
   text-align: center;
   padding: 32px 20px;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 .search-empty-icon {
   font-size: 36px;
@@ -416,15 +416,15 @@ watch(() => props.visible, (val) => {
   gap: 16px;
   margin-top: 16px;
   font-size: 12px;
-  color: #E2CDB2;
+  color: var(--wood-light);
 }
 .search-tips kbd {
   display: inline-block;
   padding: 1px 5px;
   font-size: 11px;
   font-family: inherit;
-  background: #F3EADD;
-  border: 1px solid rgba(226,205,178,.7);
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border);
   border-radius: 3px;
   margin-right: 4px;
 }
@@ -435,7 +435,7 @@ watch(() => props.visible, (val) => {
   justify-content: center;
   gap: 8px;
   padding: 32px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   font-size: 14px;
 }
 
@@ -450,7 +450,7 @@ watch(() => props.visible, (val) => {
   padding: 8px 12px 4px;
   font-size: 12px;
   font-weight: 600;
-  color: #A08D7A;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -459,10 +459,10 @@ watch(() => props.visible, (val) => {
 }
 .group-count {
   font-size: 11px;
-  background: #F3EADD;
+  background: var(--bg-card-alt);
   padding: 1px 6px;
   border-radius: 10px;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 
 /* 结果项 */
@@ -477,10 +477,10 @@ watch(() => props.visible, (val) => {
 }
 .result-item:hover,
 .result-item.active {
-  background: #F3EADD;
+  background: var(--bg-card-alt);
 }
 .result-item.active {
-  background: rgba(200, 159, 133, 0.08);
+  background: rgba(var(--primary-rgb), 0.08);
 }
 .result-icon {
   width: 36px;
@@ -499,38 +499,38 @@ watch(() => props.visible, (val) => {
 .result-title {
   font-size: 14px;
   font-weight: 500;
-  color: #6B5744;
+  color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .result-title :deep(mark) {
-  background: rgba(200, 159, 133, 0.15);
+  background: rgba(var(--primary-rgb), 0.15);
   color: var(--terra-deep);
   padding: 0 2px;
   border-radius: 2px;
 }
 .result-desc {
   font-size: 12px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 2px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .result-desc :deep(mark) {
-  background: rgba(200, 159, 133, 0.1);
+  background: rgba(var(--primary-rgb), 0.1);
   color: var(--terra-deep);
   padding: 0 2px;
   border-radius: 2px;
 }
 .result-meta {
   font-size: 12px;
-  color: #E2CDB2;
+  color: var(--wood-light);
   flex-shrink: 0;
 }
 .result-arrow {
-  color: #E2CDB2;
+  color: var(--wood-light);
   font-size: 14px;
   flex-shrink: 0;
   opacity: 0;
@@ -546,8 +546,8 @@ watch(() => props.visible, (val) => {
   display: flex;
   justify-content: center;
   padding: 10px;
-  border-top: 1px solid #F3EADD;
+  border-top: 1px solid var(--bg-card-alt);
   font-size: 11px;
-  color: #E2CDB2;
+  color: var(--wood-light);
 }
 </style>

@@ -210,7 +210,7 @@ const matrixData = ref([])
 const matrixLoading = ref(false)
 
 let chartInstances = []
-const rankColors = ['#B08466', '#96684A', '#7E8862', '#B06A6A', '#C08A3E', '#A98BB0', '#C89F85', '#6E8CA0']
+const rankColors = ['var(--accent)', 'var(--terra-deep)', 'var(--sage-d)', 'var(--rose-d)', 'var(--amber-d)', 'var(--plum)', 'var(--terracotta)', 'var(--sky-d)']
 
 const dailyMonthLabel = computed(() => {
   const [y, m] = dailyMonth.value.split('-')
@@ -218,10 +218,10 @@ const dailyMonthLabel = computed(() => {
 })
 
 const summaryCards = computed(() => [
-  { label: '月收入', value: `¥${formatMoney(reportData.income)}`, color: '#67C23A' },
-  { label: '月支出', value: `¥${formatMoney(reportData.expense)}`, color: '#F56C6C' },
-  { label: '月结余', value: `¥${formatMoney(reportData.income - reportData.expense)}`, color: '#409EFF' },
-  { label: '支出占比', value: reportData.income > 0 ? `${Math.round((reportData.expense / reportData.income) * 100)}%` : '0%', color: '#E6A23C' }
+  { label: '月收入', value: `¥${formatMoney(reportData.income)}`, color: 'var(--success)' },
+  { label: '月支出', value: `¥${formatMoney(reportData.expense)}`, color: 'var(--danger)' },
+  { label: '月结余', value: `¥${formatMoney(reportData.income - reportData.expense)}`, color: 'var(--sky)' },
+  { label: '支出占比', value: reportData.income > 0 ? `${Math.round((reportData.expense / reportData.income) * 100)}%` : '0%', color: 'var(--warning)' }
 ])
 
 onMounted(() => {
@@ -305,13 +305,13 @@ function renderDailyChart() {
       data: expenses,
       itemStyle: {
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          { offset: 0, color: '#F56C6C' },
-          { offset: 1, color: '#fab6b6' }
+          { offset: 0, color: 'var(--danger)' },
+          { offset: 1, color: 'var(--rose)' }
         ]),
         borderRadius: [4, 4, 0, 0]
       },
       barMaxWidth: 32,
-      emphasis: { itemStyle: { color: '#E63946' } }
+      emphasis: { itemStyle: { color: 'var(--danger)' } }
     }]
   })
   chartInstances.push(chart)
@@ -405,13 +405,13 @@ function renderYearlyCharts() {
         data: yearlyData.value.map(d => d.expense),
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: '#C89F85' },
-            { offset: 1, color: '#E2CDB2' }
+            { offset: 0, color: 'var(--terracotta)' },
+            { offset: 1, color: 'var(--wood-light)' }
           ]),
           borderRadius: [4, 4, 0, 0]
         },
         barMaxWidth: 36,
-        emphasis: { itemStyle: { color: '#96684A' } }
+        emphasis: { itemStyle: { color: 'var(--terra-deep)' } }
       }]
     })
     chartInstances.push(chart)
@@ -469,7 +469,7 @@ async function exportReport(format) {
 }
 .stat-label {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 
 /* 年度统计 */
@@ -479,7 +479,7 @@ async function exportReport(format) {
 }
 .asc-label {
   font-size: 14px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-bottom: 10px;
 }
 .asc-value {
@@ -501,8 +501,8 @@ async function exportReport(format) {
   align-items: center;
   padding: 10px 12px;
   border-radius: 10px;
-  background: #FBF6EF;
-  border: 1px solid #F3EADD;
+  background: var(--bg-page);
+  border: 1px solid var(--bg-card-alt);
 }
 .rank-left {
   display: flex;
@@ -523,7 +523,7 @@ async function exportReport(format) {
 .rank-name {
   font-size: 14px;
   font-weight: 500;
-  color: #6B5744;
+  color: var(--text-primary);
 }
 .rank-right {
   display: flex;
@@ -533,11 +533,11 @@ async function exportReport(format) {
 .rank-amount {
   font-size: 15px;
   font-weight: 700;
-  color: #6B5744;
+  color: var(--text-primary);
 }
 .rank-pct {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   min-width: 36px;
   text-align: right;
 }
@@ -562,18 +562,18 @@ async function exportReport(format) {
 .matrix-table th,
 .matrix-table td {
   padding: 10px 8px;
-  border-bottom: 1px solid #F3EADD;
+  border-bottom: 1px solid var(--bg-card-alt);
   text-align: right;
   white-space: nowrap;
 }
 .matrix-table th {
   font-weight: 600;
-  color: #A08D7A;
-  background: linear-gradient(135deg, #FBF6EF, #F3EADD);
+  color: var(--text-secondary);
+  background: linear-gradient(135deg, var(--bg-page), var(--bg-card-alt));
   position: sticky;
   top: 0;
   z-index: 1;
-  border-bottom: 2px solid rgba(226,205,178,.7);
+  border-bottom: 2px solid var(--border);
 }
 .matrix-table .col-cat,
 .matrix-table .col-sub {
@@ -582,28 +582,28 @@ async function exportReport(format) {
 .matrix-table .col-cat { width: 110px; }
 .matrix-table .col-sub { width: 120px; }
 .matrix-table .col-month { min-width: 70px; }
-.matrix-table .col-total { min-width: 80px; font-weight: 700; color: #6B5744; }
+.matrix-table .col-total { min-width: 80px; font-weight: 700; color: var(--text-primary); }
 .matrix-table .col-parent-total { min-width: 90px; font-weight: 700; color: var(--terra-deep); }
 
 /* 分组颜色 - 4 种交替色 */
-.group-0 { --group-accent: var(--terracotta); --group-bg: rgba(200, 159, 133, 0.04); --group-bg-hover: rgba(200, 159, 133, 0.08); }
-.group-1 { --group-accent: #A8B08A; --group-bg: rgba(16, 185, 129, 0.04); --group-bg-hover: rgba(16, 185, 129, 0.08); }
-.group-2 { --group-accent: #E8B36A; --group-bg: rgba(245, 158, 11, 0.04); --group-bg-hover: rgba(245, 158, 11, 0.08); }
-.group-3 { --group-accent: #ec4899; --group-bg: rgba(236, 72, 153, 0.04); --group-bg-hover: rgba(236, 72, 153, 0.08); }
+.group-0 { --group-accent: var(--terracotta); --group-bg: rgba(var(--primary-rgb), 0.04); --group-bg-hover: rgba(var(--primary-rgb), 0.08); }
+.group-1 { --group-accent: var(--sage); --group-bg: rgba(16, 185, 129, 0.04); --group-bg-hover: rgba(16, 185, 129, 0.08); }
+.group-2 { --group-accent: var(--amber); --group-bg: rgba(245, 158, 11, 0.04); --group-bg-hover: rgba(245, 158, 11, 0.08); }
+.group-3 { --group-accent: var(--rose-d); --group-bg: rgba(var(--rose-rgb), 0.04); --group-bg-hover: rgba(var(--rose-rgb), 0.08); }
 
 .parent-row {
-  background: var(--group-bg, #fafbff);
+  background: var(--group-bg, var(--bg-card));
 }
 .parent-row:hover {
-  background: var(--group-bg-hover, #f0f4ff);
+  background: var(--group-bg-hover, rgba(var(--sky-rgb), 0.06));
 }
 .cell-parent {
   text-align: left !important;
   font-weight: 700;
-  color: #6B5744;
+  color: var(--text-primary);
   font-size: 14px;
   vertical-align: middle;
-  background: var(--group-bg, #fafbff);
+  background: var(--group-bg, var(--bg-card));
   border-right: 3px solid var(--group-accent, var(--terracotta));
   padding-left: 12px;
 }
@@ -611,13 +611,13 @@ async function exportReport(format) {
   transition: background 0.15s;
 }
 .child-row:hover {
-  background: var(--group-bg-hover, #FBF6EF);
+  background: var(--group-bg-hover, var(--bg-page));
 }
 .cell-sub {
   text-align: left !important;
-  color: #A08D7A;
+  color: var(--text-secondary);
   padding-left: 16px;
-  border-right: 1px solid #F3EADD;
+  border-right: 1px solid var(--bg-card-alt);
   position: relative;
 }
 /* 子分类前的圆点指示器 */
@@ -627,31 +627,31 @@ async function exportReport(format) {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--group-accent, #A08D7A);
+  background: var(--group-accent, var(--text-secondary));
   margin-right: 8px;
   vertical-align: middle;
   opacity: 0.6;
 }
 .cell-amount {
-  color: #A08D7A;
+  color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
 }
 .cell-clickable {
-  color: #6B5744;
+  color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s;
   border-radius: 4px;
 }
 .cell-clickable:hover {
-  background: rgba(200, 159, 133, 0.1);
+  background: rgba(var(--primary-rgb), 0.1);
   color: var(--terra-deep);
   font-weight: 600;
 }
 .cell-total {
   font-weight: 700;
-  color: #6B5744;
+  color: var(--text-primary);
   font-variant-numeric: tabular-nums;
-  border-left: 2px solid rgba(226,205,178,.7);
+  border-left: 2px solid var(--border);
 }
 
 /* 年度总计列 */
@@ -660,13 +660,13 @@ async function exportReport(format) {
   font-weight: 700;
   font-size: 14px;
   color: var(--group-accent, var(--terracotta));
-  background: var(--group-bg, rgba(200, 159, 133, 0.03));
+  background: var(--group-bg, rgba(var(--primary-rgb), 0.03));
   border-left: 2px solid var(--group-accent, var(--terracotta));
   vertical-align: middle;
   padding-right: 12px;
 }
 .grand-total-row {
-  background: linear-gradient(135deg, #f0f4ff, #faf5ff);
+  background: linear-gradient(135deg, rgba(var(--sky-rgb), 0.06), rgba(var(--plum-rgb, 169, 139, 176), 0.04));
 }
 .grand-total-row td {
   font-weight: 700;
@@ -675,24 +675,24 @@ async function exportReport(format) {
 .cell-grand-label {
   text-align: left !important;
   font-size: 14px;
-  color: #6B5744;
+  color: var(--text-primary);
   padding-left: 12px;
 }
 .cell-grand {
-  color: #A08D7A;
+  color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
 }
 .cell-grand-total {
   color: var(--rose-d);
   font-size: 15px;
-  border-left: 2px solid rgba(226,205,178,.7);
+  border-left: 2px solid var(--border);
 }
 .cell-grand-parent-total {
   color: var(--terra-deep);
   font-size: 15px;
   font-weight: 700;
-  border-left: 2px solid rgba(200, 159, 133, 0.15);
-  background: rgba(200, 159, 133, 0.03);
+  border-left: 2px solid rgba(var(--primary-rgb), 0.15);
+  background: rgba(var(--primary-rgb), 0.03);
 }
 
 @media (max-width: 768px) {

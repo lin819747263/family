@@ -8,7 +8,7 @@
   >
     <template #header>
       <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
-        <span style="font-size:17px;font-weight:600;color:#1e293b;">消息通知</span>
+        <span style="font-size:17px;font-weight:600;color:var(--text-primary);">消息通知</span>
         <el-button
           v-if="unreadCount > 0"
           text
@@ -67,7 +67,7 @@ defineEmits(['close', 'mark-read', 'mark-all-read'])
 }
 .empty-notice p {
   margin-top: 12px;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 14px;
 }
 

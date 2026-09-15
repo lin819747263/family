@@ -266,7 +266,7 @@ function priorityType(p) {
 }
 .page-desc {
   font-size: 14px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 .header-actions {
@@ -293,13 +293,13 @@ function priorityType(p) {
 .ms-num {
   font-size: 24px;
   font-weight: 700;
-  color: #6B5744;
+  color: var(--text-primary);
 }
 .ms-num.pending { color: var(--terra-deep); }
-.ms-num.done { color: #34d399; }
+.ms-num.done { color: var(--success); }
 .ms-lbl {
   font-size: 12px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 
@@ -326,7 +326,7 @@ function priorityType(p) {
 }
 .wish-card.fulfilled .wish-title {
   text-decoration: line-through;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 .wish-card.cancelled {
   opacity: 0.5;
@@ -338,7 +338,7 @@ function priorityType(p) {
   border-left: 3px solid var(--terracotta);
 }
 .wish-card.priority-low {
-  border-left: 3px solid #A08D7A;
+  border-left: 3px solid var(--text-secondary);
 }
 
 .wish-header {
@@ -357,12 +357,12 @@ function priorityType(p) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #A08D7A;
+  color: var(--text-secondary);
   transition: all 0.2s;
 }
 .wish-more:hover {
-  background: #F3EADD;
-  color: #A08D7A;
+  background: var(--bg-card-alt);
+  color: var(--text-secondary);
 }
 
 .wish-body {
@@ -375,12 +375,12 @@ function priorityType(p) {
 .wish-title {
   font-size: 16px;
   font-weight: 600;
-  color: #6B5744;
+  color: var(--text-primary);
   line-height: 1.4;
 }
 .wish-desc {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 8px;
   line-height: 1.5;
   display: -webkit-box;
@@ -400,8 +400,8 @@ function priorityType(p) {
   justify-content: space-between;
   align-items: center;
   padding: 10px 16px;
-  border-top: 1px solid #F3EADD;
-  background: #fafbfc;
+  border-top: 1px solid var(--bg-card-alt);
+  background: var(--bg-page);
 }
 .wish-meta {
   display: flex;
@@ -409,18 +409,18 @@ function priorityType(p) {
   gap: 6px;
 }
 .wish-avatar {
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
+  background: var(--gradient-primary);
   color: #fff;
   font-size: 10px;
   font-weight: 600;
 }
 .wish-creator {
   font-size: 12px;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 .wish-fulfilled {
   font-size: 12px;
-  color: #34d399;
+  color: var(--success);
   display: flex;
   align-items: center;
   gap: 4px;

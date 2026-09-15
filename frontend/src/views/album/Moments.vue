@@ -380,18 +380,18 @@ defineExpose({ openPublish: () => { showPublish.value = true } })
 }
 .day-label::after {
   content: ""; flex: 1; height: 1px;
-  background: linear-gradient(to right, rgba(226, 205, 178, 0.7), transparent);
+  background: linear-gradient(to right, var(--border), transparent);
 }
 
 /* 瞬间卡片 - 暖色 */
 .moment-card {
-  background: #FFFDFA; border: 1px solid rgba(226, 205, 178, 0.7);
+  background: var(--bg-card); border: 1px solid var(--border);
   border-radius: 24px; padding: 18px; margin-bottom: 16px;
-  box-shadow: 0 8px 28px rgba(160, 120, 90, 0.08);
+  box-shadow: 0 8px 28px rgba(var(--shadow-rgb), 0.08);
   transition: transform 0.35s, box-shadow 0.35s;
 }
 .moment-card:hover {
-  transform: translateY(-4px); box-shadow: 0 16px 36px rgba(160, 120, 90, 0.15);
+  transform: translateY(-4px); box-shadow: 0 16px 36px rgba(var(--shadow-rgb), 0.15);
 }
 .moment-head {
   display: flex;

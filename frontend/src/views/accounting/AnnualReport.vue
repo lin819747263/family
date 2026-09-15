@@ -87,7 +87,7 @@
             <div class="rank-info">
               <div class="rank-name">{{ cat.name }}</div>
               <div class="rank-bar-wrap">
-                <div class="rank-bar" :style="{ width: (cat.total / maxCategoryIncome * 100) + '%', background: '#10b981' }"></div>
+                <div class="rank-bar" :style="{ width: (cat.total / maxCategoryIncome * 100) + '%', background: 'var(--success)' }"></div>
               </div>
             </div>
             <div class="rank-amount">¥{{ formatMoney(cat.total) }}</div>
@@ -197,8 +197,8 @@ const maxCategoryIncome = computed(() => Math.max(...(report.value.incomeCategor
 const maxMemberExpense = computed(() => Math.max(...(report.value.memberStats || []).map(m => m.expense), 1))
 
 const categoryColors = [
-  '#C89F85', '#E8B36A', '#A8B08A', '#9FB8C9', '#D99A9A',
-  '#A98BB0', '#96684A', '#C08A3E', '#7E8862', '#B06A6A'
+  'var(--terracotta)', 'var(--amber)', 'var(--sage)', 'var(--sky)', 'var(--rose)',
+  'var(--plum)', 'var(--terra-deep)', 'var(--amber-d)', 'var(--sage-d)', 'var(--rose-d)'
 ]
 
 onMounted(async () => {
@@ -294,8 +294,8 @@ function renderChart() {
     xAxis: { type: 'category', data: months },
     yAxis: { type: 'value', axisLabel: { formatter: v => v >= 10000 ? (v / 10000) + 'w' : v } },
     series: [
-      { name: '收入', type: 'bar', data: incomes, itemStyle: { color: '#10b981', borderRadius: [4, 4, 0, 0] } },
-      { name: '支出', type: 'bar', data: expenses, itemStyle: { color: '#ef4444', borderRadius: [4, 4, 0, 0] } }
+      { name: '收入', type: 'bar', data: incomes, itemStyle: { color: 'var(--success)', borderRadius: [4, 4, 0, 0] } },
+      { name: '支出', type: 'bar', data: expenses, itemStyle: { color: 'var(--danger)', borderRadius: [4, 4, 0, 0] } }
     ]
   })
 
@@ -311,8 +311,8 @@ function renderChart() {
 @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
 .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-.page-title { font-size: 24px; font-weight: 800; color: #6B5744; }
-.page-desc { font-size: 14px; color: #A08D7A; margin-top: 4px; }
+.page-title { font-size: 24px; font-weight: 800; color: var(--text-primary); }
+.page-desc { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
 .header-actions { display: flex; gap: 8px; }
 .card { margin-bottom: 16px; }
 
@@ -325,57 +325,57 @@ function renderChart() {
 }
 .ov-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
 .ov-icon { font-size: 32px; }
-.ov-label { font-size: 12px; color: #A08D7A; margin-bottom: 4px; }
-.ov-value { font-size: 22px; font-weight: 800; color: #6B5744; }
-.ov-value.positive { color: #A8B08A; }
-.ov-value.negative { color: #D99A9A; }
+.ov-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.ov-value { font-size: 22px; font-weight: 800; color: var(--text-primary); }
+.ov-value.positive { color: var(--sage); }
+.ov-value.negative { color: var(--rose); }
 
 /* 图表 */
 .chart-card { padding: 20px; }
-.chart-title { font-size: 17px; font-weight: 700; color: #6B5744; margin-bottom: 16px; }
+.chart-title { font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; }
 .chart-box { width: 100%; height: 300px; }
 
 /* 排行 */
 .rank-list { display: flex; flex-direction: column; gap: 12px; }
 .rank-item { display: flex; align-items: center; gap: 12px; }
 .rank-num {
-  width: 24px; height: 24px; border-radius: 6px; background: #F3EADD;
+  width: 24px; height: 24px; border-radius: 6px; background: var(--bg-card-alt);
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 700; color: #A08D7A; flex-shrink: 0;
+  font-size: 12px; font-weight: 700; color: var(--text-secondary); flex-shrink: 0;
 }
-.rank-num.top { background: linear-gradient(135deg, var(--terracotta), #D3A98B); color: #fff; }
+.rank-num.top { background: var(--gradient-primary); color: #fff; }
 .rank-info { flex: 1; min-width: 0; }
-.rank-name { font-size: 14px; color: #6B5744; margin-bottom: 4px; }
-.rank-bar-wrap { height: 8px; background: #F3EADD; border-radius: 4px; overflow: hidden; }
+.rank-name { font-size: 14px; color: var(--text-primary); margin-bottom: 4px; }
+.rank-bar-wrap { height: 8px; background: var(--bg-card-alt); border-radius: 4px; overflow: hidden; }
 .rank-bar { height: 100%; border-radius: 4px; transition: width 0.6s ease; min-width: 4px; }
-.rank-amount { font-size: 14px; font-weight: 700; color: #6B5744; flex-shrink: 0; min-width: 80px; text-align: right; }
-.rank-pct { font-size: 12px; color: #A08D7A; flex-shrink: 0; width: 36px; text-align: right; }
+.rank-amount { font-size: 14px; font-weight: 700; color: var(--text-primary); flex-shrink: 0; min-width: 80px; text-align: right; }
+.rank-pct { font-size: 12px; color: var(--text-secondary); flex-shrink: 0; width: 36px; text-align: right; }
 
 /* 消费习惯 */
 .habits-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
 .habit-item {
   display: flex; flex-direction: column; align-items: center; gap: 6px;
-  padding: 18px; border-radius: 14px; background: #FBF6EF;
+  padding: 18px; border-radius: 14px; background: var(--bg-page);
 }
 .habit-emoji { font-size: 28px; }
-.habit-label { font-size: 12px; color: #A08D7A; }
-.habit-value { font-size: 20px; font-weight: 800; color: #6B5744; }
-.habit-note { font-size: 11px; color: #A08D7A; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.habit-label { font-size: 12px; color: var(--text-secondary); }
+.habit-value { font-size: 20px; font-weight: 800; color: var(--text-primary); }
+.habit-note { font-size: 11px; color: var(--text-secondary); text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
 
 /* 成员对比 */
 .member-compare { display: flex; flex-direction: column; gap: 14px; }
 .member-row { display: flex; align-items: center; gap: 12px; }
-.member-name { font-size: 14px; color: #6B5744; width: 60px; flex-shrink: 0; }
-.member-bar-wrap { flex: 1; height: 28px; background: #F3EADD; border-radius: 8px; overflow: hidden; }
+.member-name { font-size: 14px; color: var(--text-primary); width: 60px; flex-shrink: 0; }
+.member-bar-wrap { flex: 1; height: 28px; background: var(--bg-card-alt); border-radius: 8px; overflow: hidden; }
 .member-bar {
   height: 100%; border-radius: 8px; display: flex; align-items: center;
   padding: 0 10px; font-size: 12px; font-weight: 600; color: #fff;
   transition: width 0.6s ease; white-space: nowrap;
 }
-.expense-bar { background: linear-gradient(135deg, #D99A9A, #f97316); }
+.expense-bar { background: linear-gradient(135deg, var(--rose), var(--amber-d)); }
 
 /* 年度总结 */
-.summary-card { text-align: center; padding: 32px; background: linear-gradient(135deg, var(--terracotta), #D3A98B); border: none; color: #fff; }
+.summary-card { text-align: center; padding: 32px; background: var(--gradient-primary); border: none; color: #fff; }
 .summary-emoji { font-size: 48px; margin-bottom: 12px; }
 .summary-title { font-size: 20px; font-weight: 800; margin-bottom: 12px; }
 .summary-text { font-size: 15px; line-height: 1.8; opacity: 0.9; }

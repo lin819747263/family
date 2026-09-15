@@ -12,7 +12,7 @@
         <span style="font-weight:600;">总预算</span>
         <span>¥{{ formatMoney(totalBudget) }} / ¥{{ formatMoney(totalSpent) }}</span>
       </div>
-      <el-progress :percentage="totalPercent" :color="totalPercent > 90 ? '#F56C6C' : totalPercent > 70 ? '#E6A23C' : '#67C23A'" :stroke-width="16" />
+      <el-progress :percentage="totalPercent" :color="totalPercent > 90 ? 'var(--danger)' : totalPercent > 70 ? 'var(--warning)' : 'var(--success)'" :stroke-width="16" />
     </div>
     <div v-if="loading" class="card" style="text-align:center;padding:40px;">
       <el-icon class="is-loading" :size="24"><Loading /></el-icon>
@@ -33,7 +33,7 @@
             <span style="font-weight:600;">{{ b.Category?.name || '总预算' }}</span>
             <span style="font-size:13px;color:#999;">{{ formatMoney(b.spent) }} / {{ formatMoney(b.amount) }}</span>
           </div>
-          <el-progress :percentage="b.percent" :color="b.percent > 90 ? '#F56C6C' : b.percent > 70 ? '#E6A23C' : '#67C23A'" />
+          <el-progress :percentage="b.percent" :color="b.percent > 90 ? 'var(--danger)' : b.percent > 70 ? 'var(--warning)' : 'var(--success)'" />
         </div>
       </el-col>
       <el-col v-if="budgets.length === 0" :span="24">
@@ -57,7 +57,7 @@
                   :value="child.id"
                 >
                   <span style="display:flex;align-items:center;gap:6px;">
-                    <span style="color:#94a3b8;font-size:12px;">{{ group.name }}</span>
+                    <span style="color:var(--text-muted);font-size:12px;">{{ group.name }}</span>
                     <span>{{ child.name }}</span>
                   </span>
                 </el-option>

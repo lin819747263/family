@@ -285,11 +285,11 @@ async function handleCreate() {
   color: #fff;
 }
 .book-icon.family {
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
-  box-shadow: 0 4px 14px rgba(200, 159, 133, 0.3);
+  background: var(--gradient-primary);
+  box-shadow: 0 4px 14px rgba(var(--primary-rgb), 0.3);
 }
 .book-icon.personal {
-  background: linear-gradient(135deg, #34d399, #A8B08A);
+  background: linear-gradient(135deg, var(--success), var(--sage));
   box-shadow: 0 4px 14px rgba(52, 211, 153, 0.3);
 }
 
@@ -303,23 +303,23 @@ async function handleCreate() {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #A08D7A;
+  color: var(--text-secondary);
   transition: all 0.2s;
 }
 .book-more:hover {
-  background: #F3EADD;
-  color: #A08D7A;
+  background: var(--bg-card-alt);
+  color: var(--text-secondary);
 }
 
 .book-name {
   font-size: 17px;
   font-weight: 600;
-  color: #6B5744;
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 .book-desc {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-bottom: 14px;
   line-height: 1.5;
 }
@@ -339,15 +339,15 @@ async function handleCreate() {
   display: flex;
   gap: 14px;
   padding: 16px;
-  background: #fef2f2;
+  background: rgba(var(--rose-rgb), 0.06);
   border-radius: 12px;
-  border: 1px solid #fecaca;
+  border: 1px solid rgba(var(--rose-rgb), 0.25);
 }
 .warn-icon {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #fee2e2;
+  background: rgba(var(--rose-rgb), 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -356,16 +356,16 @@ async function handleCreate() {
 .warn-title {
   font-size: 15px;
   font-weight: 600;
-  color: #6B5744;
+  color: var(--text-primary);
   margin-bottom: 6px;
 }
 .warn-detail {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 .warn-detail strong {
-  color: #D99A9A;
+  color: var(--rose);
 }
 
 .force-check {
@@ -373,7 +373,7 @@ async function handleCreate() {
 }
 .force-check :deep(.el-checkbox__label) {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 
 @media (max-width: 640px) {

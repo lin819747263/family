@@ -273,7 +273,7 @@ watch(() => props.visible, (val) => {
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
+  background: var(--gradient-primary);
   color: #fff;
   flex-shrink: 0;
 }
@@ -327,7 +327,7 @@ watch(() => props.visible, (val) => {
 .chat-empty {
   text-align: center;
   padding: 40px 20px;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 .chat-empty-icon {
   font-size: 48px;
@@ -339,7 +339,7 @@ watch(() => props.visible, (val) => {
 }
 .chat-empty-hint {
   font-size: 12px !important;
-  color: #E2CDB2;
+  color: var(--wood-light);
 }
 .chat-suggestions {
   display: flex;
@@ -349,10 +349,10 @@ watch(() => props.visible, (val) => {
 }
 .suggestion-btn {
   padding: 10px 16px;
-  border: 1px solid rgba(226,205,178,.7);
+  border: 1px solid var(--border);
   border-radius: 10px;
-  background: #FBF6EF;
-  color: #A08D7A;
+  background: var(--bg-page);
+  color: var(--text-secondary);
   font-size: 13px;
   cursor: pointer;
   transition: all 0.2s;
@@ -361,7 +361,7 @@ watch(() => props.visible, (val) => {
 .suggestion-btn:hover {
   border-color: var(--terracotta);
   color: var(--terra-deep);
-  background: rgba(200, 159, 133, 0.04);
+  background: rgba(var(--primary-rgb), 0.04);
 }
 
 /* 消息 */
@@ -390,13 +390,13 @@ watch(() => props.visible, (val) => {
   line-height: 1.6;
 }
 .chat-msg.user .msg-bubble {
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
+  background: var(--gradient-primary);
   color: #fff;
   border-bottom-right-radius: 4px;
 }
 .chat-msg.assistant .msg-bubble {
-  background: #F3EADD;
-  color: #6B5744;
+  background: var(--bg-card-alt);
+  color: var(--text-primary);
   border-bottom-left-radius: 4px;
 }
 
@@ -418,7 +418,7 @@ watch(() => props.visible, (val) => {
 }
 .txn-card-label {
   font-size: 12px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 .txn-card-amount {
@@ -427,10 +427,10 @@ watch(() => props.visible, (val) => {
   margin-bottom: 8px;
 }
 .txn-card-amount.expense {
-  color: #D99A9A;
+  color: var(--rose);
 }
 .txn-card-amount.income {
-  color: #A8B08A;
+  color: var(--sage);
 }
 .txn-card-detail {
   display: flex;
@@ -441,18 +441,18 @@ watch(() => props.visible, (val) => {
 .txn-card-cat {
   font-size: 13px;
   color: var(--terra-deep);
-  background: rgba(200, 159, 133, 0.08);
+  background: rgba(var(--primary-rgb), 0.08);
   padding: 2px 8px;
   border-radius: 6px;
   font-weight: 500;
 }
 .txn-card-note {
   font-size: 12px;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 .txn-card-date {
   font-size: 12px;
-  color: #E2CDB2;
+  color: var(--wood-light);
   margin-bottom: 8px;
 }
 .txn-card-status {
@@ -463,7 +463,7 @@ watch(() => props.visible, (val) => {
   font-weight: 500;
 }
 .txn-card-status.success {
-  color: #A8B08A;
+  color: var(--sage);
 }
 
 /* 待办卡片 */
@@ -484,13 +484,13 @@ watch(() => props.visible, (val) => {
 }
 .todo-card-label {
   font-size: 12px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 .todo-card-title {
   font-size: 16px;
   font-weight: 600;
-  color: #6B5744;
+  color: var(--text-primary);
   margin-bottom: 10px;
   line-height: 1.4;
 }
@@ -506,8 +506,8 @@ watch(() => props.visible, (val) => {
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  color: #A08D7A;
-  background: #F3EADD;
+  color: var(--text-secondary);
+  background: var(--bg-card-alt);
   padding: 3px 8px;
   border-radius: 6px;
 }
@@ -518,16 +518,16 @@ watch(() => props.visible, (val) => {
   font-weight: 500;
 }
 .todo-card-priority.high {
-  background: #fef2f2;
-  color: #D99A9A;
+  background: rgba(var(--rose-rgb), 0.06);
+  color: var(--rose);
 }
 .todo-card-priority.medium {
-  background: #eff6ff;
-  color: #C89F85;
+  background: rgba(var(--sky-rgb), 0.08);
+  color: var(--terracotta);
 }
 .todo-card-priority.low {
-  background: #F3EADD;
-  color: #A08D7A;
+  background: var(--bg-card-alt);
+  color: var(--text-secondary);
 }
 .todo-card-status {
   display: flex;
@@ -537,7 +537,7 @@ watch(() => props.visible, (val) => {
   font-weight: 500;
 }
 .todo-card-status.success {
-  color: #A8B08A;
+  color: var(--sage);
 }
 
 /* Markdown 样式 */
@@ -558,8 +558,8 @@ watch(() => props.visible, (val) => {
   background: rgba(255,255,255,0.2);
 }
 .msg-content :deep(pre) {
-  background: #6B5744;
-  color: rgba(226,205,178,.7);
+  background: var(--text-primary);
+  color: var(--border);
   padding: 12px;
   border-radius: 8px;
   overflow-x: auto;
@@ -577,7 +577,7 @@ watch(() => props.visible, (val) => {
   border-left: 3px solid var(--terracotta);
   padding-left: 12px;
   margin: 8px 0;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 
 /* 加载动画 */
@@ -589,7 +589,7 @@ watch(() => props.visible, (val) => {
 .msg-loading span {
   width: 6px;
   height: 6px;
-  background: #A08D7A;
+  background: var(--text-secondary);
   border-radius: 50%;
   animation: bounce 1.2s infinite;
 }
@@ -606,18 +606,18 @@ watch(() => props.visible, (val) => {
   align-items: flex-end;
   gap: 8px;
   padding: 12px 16px;
-  border-top: 1px solid #F3EADD;
+  border-top: 1px solid var(--bg-card-alt);
   background: #fff;
   flex-shrink: 0;
 }
 .chat-input {
   flex: 1;
-  border: 1px solid rgba(226,205,178,.7);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 10px 14px;
   font-size: 14px;
   line-height: 1.5;
-  color: #6B5744;
+  color: var(--text-primary);
   resize: none;
   outline: none;
   max-height: 120px;
@@ -628,13 +628,13 @@ watch(() => props.visible, (val) => {
   border-color: var(--terracotta);
 }
 .chat-input::placeholder {
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 .chat-send {
   width: 40px;
   height: 40px;
   border: none;
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
+  background: var(--gradient-primary);
   color: #fff;
   border-radius: 12px;
   cursor: pointer;

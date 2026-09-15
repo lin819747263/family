@@ -52,7 +52,7 @@
       <el-icon class="is-loading" :size="32"><Loading /></el-icon>
     </div>
     <div v-else-if="list.length === 0" class="empty-card card">
-      <el-icon :size="56" color="#E2CDB2"><Finished /></el-icon>
+      <el-icon :size="56" color="var(--wood-light)"><Finished /></el-icon>
       <p class="empty-title">{{ filter === 'archived' ? '暂无归档' : filter ? '没有匹配的待办' : '暂无待办' }}</p>
       <p class="empty-desc">{{ filter === 'archived' ? '完成的待办会自动归档到这里' : filter ? '试试切换筛选条件' : '在上方输入框快速添加，或点击右上角创建' }}</p>
     </div>
@@ -71,7 +71,7 @@
           <el-icon v-if="item.completed"><Check /></el-icon>
         </button>
         <div v-else class="ti-archived-icon">
-          <el-icon :size="16" color="#A08D7A"><FolderChecked /></el-icon>
+          <el-icon :size="16" color="var(--text-secondary)"><FolderChecked /></el-icon>
         </div>
 
         <!-- 内容 -->
@@ -536,7 +536,7 @@ async function handleDelete(id) {
 }
 .page-desc {
   font-size: 14px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 .header-actions {
@@ -559,7 +559,7 @@ async function handleDelete(id) {
   padding: 9px 16px;
   border-radius: 999px;
   border: 1.5px solid var(--border);
-  background: rgba(255, 253, 250, 0.8);
+  background: rgba(var(--bg-card-rgb), 0.8);
   cursor: pointer;
   transition: all 0.25s;
   font-size: 13.5px;
@@ -569,7 +569,7 @@ async function handleDelete(id) {
 .time-tab:hover { border-color: var(--terracotta); color: var(--terra-deep); }
 .time-tab.active {
   background: var(--terracotta); border-color: var(--terracotta);
-  color: #fff; box-shadow: 0 6px 16px rgba(200, 159, 133, 0.35);
+  color: #fff; box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.35);
 }
 .tab-count {
   background: var(--apricot); color: var(--terra-deep);
@@ -614,17 +614,17 @@ async function handleDelete(id) {
 }
 .todo-item:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 32px rgba(160, 120, 90, 0.14);
+  box-shadow: 0 14px 32px rgba(var(--shadow-rgb), 0.14);
 }
 .todo-item.completed {
   opacity: 0.65;
 }
 .todo-item.archived {
   opacity: 0.5;
-  background: #FBF6EF;
+  background: var(--bg-page);
 }
 .todo-item.overdue {
-  border-left: 3px solid #D99A9A;
+  border-left: 3px solid var(--rose);
 }
 .ti-archived-icon {
   width: 24px;
@@ -637,8 +637,8 @@ async function handleDelete(id) {
 }
 .archived-tag {
   font-size: 11px;
-  color: #A08D7A;
-  background: #F3EADD;
+  color: var(--text-secondary);
+  background: var(--bg-card-alt);
   padding: 0 6px;
   border-radius: 4px;
 }
@@ -648,14 +648,14 @@ async function handleDelete(id) {
   position: absolute; left: 0; top: 0; bottom: 0;
   width: 5px; border-radius: 0;
 }
-.ti-priority.high { background: linear-gradient(180deg, var(--rose), #B06A6A); }
-.ti-priority.medium { background: linear-gradient(180deg, var(--amber), #C08A3E); }
-.ti-priority.low { background: linear-gradient(180deg, var(--sage), #7E8862); }
+.ti-priority.high { background: linear-gradient(180deg, var(--rose), var(--rose-d)); }
+.ti-priority.medium { background: linear-gradient(180deg, var(--amber), var(--amber-d)); }
+.ti-priority.low { background: linear-gradient(180deg, var(--sage), var(--sage-d)); }
 
 /* 完成勾选 - 暖色圆角方块 */
 .ti-check {
   width: 24px; height: 24px; border-radius: 9px;
-  border: 2px solid var(--wood-light); background: #FFFDF9;
+  border: 2px solid var(--wood-light); background: var(--bg-card);
   cursor: pointer; display: flex; align-items: center; justify-content: center;
   flex-shrink: 0; margin-top: 2px; transition: all 0.25s; color: transparent;
 }
@@ -671,16 +671,16 @@ async function handleDelete(id) {
 .ti-title {
   font-size: 15px;
   font-weight: 600;
-  color: #6B5744;
+  color: var(--text-primary);
   line-height: 1.4;
 }
 .ti-title.line-through {
   text-decoration: line-through;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 .ti-desc {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 4px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -700,26 +700,26 @@ async function handleDelete(id) {
   background: var(--apricot); color: var(--terra-deep); font-weight: 600;
 }
 .ti-due.is-overdue {
-  background: rgba(217, 154, 154, 0.2); color: #B06A6A;
+  background: rgba(var(--rose-rgb), 0.2); color: var(--rose-d);
   animation: pulse-soft 2s ease-in-out infinite;
 }
 @keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 .overdue-tag {
-  background: rgba(217, 154, 154, 0.2); color: #B06A6A;
+  background: rgba(var(--rose-rgb), 0.2); color: var(--rose-d);
   padding: 0 6px; border-radius: 999px; font-weight: 600;
 }
 .ti-repeat {
   display: inline-flex; align-items: center; gap: 5px;
   font-size: 12px; padding: 3px 10px; border-radius: 999px;
-  background: rgba(159, 184, 201, 0.2); color: #6E8CA0; font-weight: 600;
+  background: rgba(var(--sky-rgb), 0.2); color: var(--sky-d); font-weight: 600;
 }
 .ti-priority-label {
   display: inline-flex; align-items: center; gap: 5px;
   font-size: 12px; padding: 3px 10px; border-radius: 999px; font-weight: 600;
 }
-.ti-priority-label.high { background: rgba(217, 154, 154, 0.2); color: #B06A6A; }
-.ti-priority-label.medium { background: rgba(232, 179, 106, 0.2); color: #C08A3E; }
-.ti-priority-label.low { background: rgba(168, 176, 138, 0.2); color: #7E8862; }
+.ti-priority-label.high { background: rgba(var(--rose-rgb), 0.2); color: var(--rose-d); }
+.ti-priority-label.medium { background: rgba(var(--amber-rgb), 0.2); color: var(--amber-d); }
+.ti-priority-label.low { background: rgba(var(--sage-rgb), 0.2); color: var(--sage-d); }
 
 /* 操作 */
 .ti-actions {
@@ -728,12 +728,12 @@ async function handleDelete(id) {
 .todo-item:hover .ti-actions { opacity: 1; }
 .act-btn {
   width: 30px; height: 30px; border-radius: 9px; border: none;
-  background: rgba(200, 159, 133, 0.12); color: var(--terra-deep);
+  background: rgba(var(--primary-rgb), 0.12); color: var(--terra-deep);
   cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center;
   transition: all 0.2s;
 }
-.act-btn:hover { background: rgba(200, 159, 133, 0.28); }
-.act-btn.danger:hover { background: rgba(217, 154, 154, 0.3); color: #B06A6A; }
+.act-btn:hover { background: rgba(var(--primary-rgb), 0.28); }
+.act-btn.danger:hover { background: rgba(var(--rose-rgb), 0.3); color: var(--rose-d); }
 
 /* 自定义重复选项 */
 .custom-repeat-row {
@@ -744,7 +744,7 @@ async function handleDelete(id) {
 
 .repeat-label {
   font-size: 14px;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 
 .weekday-picker {
@@ -756,14 +756,14 @@ async function handleDelete(id) {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 2px solid rgba(226,205,178,.7);
+  border: 2px solid var(--border);
   background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 13px;
   font-weight: 500;
-  color: #A08D7A;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -777,7 +777,7 @@ async function handleDelete(id) {
 .repeat-hint {
   margin-left: 8px;
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 
 @media (max-width: 768px) {

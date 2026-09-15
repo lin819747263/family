@@ -8,7 +8,7 @@
     <!-- N年前的今天 -->
     <div v-if="memories.yearAgo?.length" class="mem-section">
       <div class="mem-head">
-        <div class="mem-ico" style="background:linear-gradient(135deg,var(--amber),#C08A3E);">⭐</div>
+        <div class="mem-ico" style="background:linear-gradient(135deg,var(--amber),var(--amber-d));">⭐</div>
         <div><div class="mem-title">去年今日</div><div class="mem-sub">{{ getYearAgoLabel() }}</div></div>
       </div>
       <div class="mem-grid">
@@ -22,7 +22,7 @@
     <!-- 本周最佳 -->
     <div v-if="memories.weekBest?.length" class="mem-section">
       <div class="mem-head">
-        <div class="mem-ico" style="background:linear-gradient(135deg,var(--sky),#6E8CA0);">📸</div>
+        <div class="mem-ico" style="background:linear-gradient(135deg,var(--sky),var(--sky-d));">📸</div>
         <div><div class="mem-title">本周最佳</div><div class="mem-sub">家人点赞最多的 {{ memories.weekBest.length }} 张</div></div>
       </div>
       <div class="mem-grid">
@@ -90,7 +90,7 @@ function getPhotoYear(p) {
   position: relative; transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s;
 }
 .photo-item:hover {
-  transform: translateY(-6px) rotate(-1deg); box-shadow: 0 16px 34px rgba(160, 120, 90, 0.22);
+  transform: translateY(-6px) rotate(-1deg); box-shadow: 0 16px 34px rgba(var(--shadow-rgb), 0.22);
 }
 .photo-item img { width: 100%; height: 100%; object-fit: cover; }
 .mem-year {

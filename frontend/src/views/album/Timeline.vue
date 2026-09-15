@@ -139,7 +139,7 @@ function openPreview(photo) {
 }
 .page-desc {
   font-size: 14px;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin-top: 4px;
 }
 .header-actions {
@@ -165,8 +165,8 @@ function openPreview(photo) {
 .date-group::after {
   content: ""; position: absolute; left: 3px; top: 6px;
   width: 12px; height: 12px; border-radius: 50%;
-  background: #FFFDFA; border: 3px solid var(--terracotta);
-  box-shadow: 0 0 0 4px rgba(200, 159, 133, 0.18);
+  background: var(--bg-card); border: 3px solid var(--terracotta);
+  box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.18);
 }
 .date-header {
   display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
@@ -188,7 +188,7 @@ function openPreview(photo) {
   transition: transform 0.35s, box-shadow 0.35s;
 }
 .photo-item:hover {
-  transform: scale(1.04); box-shadow: 0 12px 26px rgba(160, 120, 90, 0.2); z-index: 2;
+  transform: scale(1.04); box-shadow: 0 12px 26px rgba(var(--shadow-rgb), 0.2); z-index: 2;
 }
 .photo-item img {
   width: 100%; height: 100%; object-fit: cover;

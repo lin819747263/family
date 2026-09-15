@@ -60,7 +60,7 @@
               </el-avatar>
               <div>
                 <div style="font-weight:600;font-size:14px;">{{ row.nickname || row.username }}</div>
-                <div style="font-size:12px;color:#94a3b8;">{{ row.username }}</div>
+                <div style="font-size:12px;color:var(--text-muted);">{{ row.username }}</div>
               </div>
             </div>
           </template>
@@ -353,7 +353,7 @@ async function handleSaveSettings() {
 }
 .page-desc {
   font-size: 14px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 
@@ -378,11 +378,11 @@ async function handleSaveSettings() {
 .stat-value {
   font-size: 22px;
   font-weight: 700;
-  color: #6B5744;
+  color: var(--text-primary);
 }
 .stat-label {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 2px;
 }
 
@@ -392,7 +392,7 @@ async function handleSaveSettings() {
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  border-bottom: 1px solid #F3EADD;
+  border-bottom: 1px solid var(--bg-card-alt);
 }
 .toolbar-left {
   display: flex;
@@ -402,7 +402,7 @@ async function handleSaveSettings() {
 .toolbar-title {
   font-size: 16px;
   font-weight: 600;
-  color: #6B5744;
+  color: var(--text-primary);
 }
 .toolbar-right {
   display: flex;
@@ -412,7 +412,7 @@ async function handleSaveSettings() {
 
 /* 用户头像 */
 .user-avatar {
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
+  background: var(--gradient-primary);
   color: #fff;
   font-weight: 600;
 }
@@ -439,14 +439,14 @@ async function handleSaveSettings() {
 .settings-title {
   font-size: 18px;
   font-weight: 700;
-  color: #6B5744;
+  color: var(--text-primary);
 }
 .settings-form {
   max-width: 600px;
 }
 .form-tip {
   font-size: 12px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 </style>

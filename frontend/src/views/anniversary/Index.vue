@@ -239,7 +239,7 @@
 
         <el-form-item label="提前提醒">
           <el-input-number v-model="form.reminderDays" :min="0" :max="90" />
-          <span style="margin-left:8px;color:#94a3b8;font-size:13px;">天</span>
+          <span style="margin-left:8px;color:var(--text-muted);font-size:13px;">天</span>
         </el-form-item>
 
         <el-form-item label="备注">
@@ -307,23 +307,23 @@ const lunarDays = computed(() => Array.from({ length: 30 }, (_, i) => i + 1))
 // ===== 表单 =====
 const defaultForm = {
   title: '', date: '', type: 'other', icon: 'Calendar',
-  color: '#C89F85', calendarType: 'solar', lunarDate: '',
+  color: 'var(--terracotta)', calendarType: 'solar', lunarDate: '',
   repeatYearly: true, reminderDays: 3, note: ''
 }
 const form = ref({ ...defaultForm })
 
 const typeOptions = [
-  { value: 'birthday', label: '生日', icon: 'User', color: '#D99A9A' },
-  { value: 'anniversary', label: '纪念日', icon: 'Star', color: '#C89F85' },
-  { value: 'holiday', label: '节日', icon: 'Flag', color: '#A8B08A' },
-  { value: 'countdown', label: '倒数日', icon: 'Timer', color: '#C08A3E' },
-  { value: 'other', label: '其他', icon: 'MoreFilled', color: '#9FB8C9' }
+  { value: 'birthday', label: '生日', icon: 'User', color: 'var(--rose)' },
+  { value: 'anniversary', label: '纪念日', icon: 'Star', color: 'var(--terracotta)' },
+  { value: 'holiday', label: '节日', icon: 'Flag', color: 'var(--sage)' },
+  { value: 'countdown', label: '倒数日', icon: 'Timer', color: 'var(--amber-d)' },
+  { value: 'other', label: '其他', icon: 'MoreFilled', color: 'var(--sky)' }
 ]
 
 const colorOptions = [
-  '#C89F85', '#B08466', '#96684A', '#E8B36A',
-  '#C08A3E', '#A8B08A', '#7E8862', '#D99A9A',
-  '#B06A6A', '#9FB8C9', '#A98BB0', '#6E8CA0'
+  'var(--terracotta)', 'var(--accent)', 'var(--terra-deep)', 'var(--amber)',
+  'var(--amber-d)', 'var(--sage)', 'var(--sage-d)', 'var(--rose)',
+  'var(--rose-d)', 'var(--sky)', 'var(--plum)', 'var(--sky-d)'
 ]
 
 function typeLabel(t) {
@@ -463,7 +463,7 @@ async function openEdit(item) {
     date: item.date,
     type: item.type,
     icon: item.icon || 'Calendar',
-    color: item.color || '#C89F85',
+    color: item.color || 'var(--terracotta)',
     calendarType: item.calendarType || 'solar',
     lunarDate: item.lunarDate || '',
     repeatYearly: item.repeatYearly !== false,
@@ -565,7 +565,7 @@ async function handleDelete(id) {
 }
 .page-desc {
   font-size: 14px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 .header-actions {
@@ -590,7 +590,7 @@ async function handleDelete(id) {
   transition: transform 0.35s, box-shadow 0.35s;
 }
 .upcoming-card:hover {
-  transform: translateY(-6px); box-shadow: 0 18px 38px rgba(160, 120, 90, 0.22);
+  transform: translateY(-6px); box-shadow: 0 18px 38px rgba(var(--shadow-rgb), 0.22);
 }
 .upcoming-card::after {
   content: ""; position: absolute; right: -40px; bottom: -40px;
@@ -614,7 +614,7 @@ async function handleDelete(id) {
   padding: 0; overflow: hidden; transition: transform 0.35s, box-shadow 0.35s; position: relative;
 }
 .anniv-card:hover {
-  transform: translateY(-5px); box-shadow: 0 16px 36px rgba(160, 120, 90, 0.16);
+  transform: translateY(-5px); box-shadow: 0 16px 36px rgba(var(--shadow-rgb), 0.16);
 }
 
 .ac-stripe {
@@ -650,24 +650,24 @@ async function handleDelete(id) {
 }
 .ac-repeat {
   display: inline-block; padding: 0 6px;
-  background: rgba(200, 159, 133, 0.12); color: var(--terra-deep);
+  background: rgba(var(--primary-rgb), 0.12); color: var(--terra-deep);
   border-radius: 4px; font-size: 11px; font-weight: 500;
 }
 .ac-reminder {
   display: inline-flex; align-items: center; gap: 2px; padding: 0 6px;
-  background: rgba(232, 179, 106, 0.15); color: #C08A3E;
+  background: rgba(var(--amber-rgb), 0.15); color: var(--amber-d);
   border-radius: 4px; font-size: 11px; font-weight: 500; margin-left: 4px;
 }
 .ac-lunar {
   display: inline-flex; align-items: center; gap: 3px; padding: 0 6px;
-  background: rgba(159, 184, 201, 0.15); color: #6E8CA0;
+  background: rgba(var(--sky-rgb), 0.15); color: var(--sky-d);
   border-radius: 4px; font-size: 11px; font-weight: 500;
 }
 
 /* 即将到来卡片的农历显示 */
 .uc-lunar {
   font-size: 11px;
-  color: #8b5cf6;
+  color: var(--plum);
   margin-top: 2px;
 }
 
@@ -686,7 +686,7 @@ async function handleDelete(id) {
 }
 .leap-error {
   font-size: 12px;
-  color: #E8B36A;
+  color: var(--amber);
 }
 
 /* 农历/公历预览 */
@@ -697,13 +697,13 @@ async function handleDelete(id) {
   gap: 4px;
   margin-top: 6px;
   font-size: 13px;
-  color: #8b5cf6;
+  color: var(--plum);
   background: rgba(139, 92, 246, 0.06);
   padding: 4px 10px;
   border-radius: 8px;
 }
 .solar-preview {
-  color: #E8B36A;
+  color: var(--amber);
   background: rgba(245, 158, 11, 0.06);
 }
 
@@ -712,9 +712,9 @@ async function handleDelete(id) {
   padding: 10px 16px; margin: 0 20px 12px;
   background: var(--apricot); border-radius: 10px; font-size: 14px; color: var(--terra-deep);
 }
-.ac-countdown.today { background: rgba(168, 176, 138, 0.2); color: #7E8862; font-weight: 600; }
-.ac-countdown.soon { background: rgba(232, 179, 106, 0.2); color: #C08A3E; }
-.ac-countdown.expired { background: rgba(217, 154, 154, 0.15); color: #B06A6A; }
+.ac-countdown.today { background: rgba(var(--sage-rgb), 0.2); color: var(--sage-d); font-weight: 600; }
+.ac-countdown.soon { background: rgba(var(--amber-rgb), 0.2); color: var(--amber-d); }
+.ac-countdown.expired { background: rgba(var(--rose-rgb), 0.15); color: var(--rose-d); }
 .cd-num {
   font-size: 24px;
   font-weight: 800;
@@ -731,12 +731,12 @@ async function handleDelete(id) {
 
 .ac-meta {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-bottom: 6px;
 }
 .ac-note {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   line-height: 1.5;
   margin-bottom: 8px;
   display: -webkit-box;
@@ -751,12 +751,12 @@ async function handleDelete(id) {
 }
 .act-btn {
   width: 30px; height: 30px; border-radius: 9px; border: none;
-  background: rgba(200, 159, 133, 0.12); color: var(--terra-deep);
+  background: rgba(var(--primary-rgb), 0.12); color: var(--terra-deep);
   cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center;
   transition: all 0.2s;
 }
-.act-btn:hover { background: rgba(200, 159, 133, 0.28); }
-.act-btn.danger:hover { background: rgba(217, 154, 154, 0.3); color: #B06A6A; }
+.act-btn:hover { background: rgba(var(--primary-rgb), 0.28); }
+.act-btn.danger:hover { background: rgba(var(--rose-rgb), 0.3); color: var(--rose-d); }
 
 /* 类型选择器 */
 .type-picker {
@@ -771,16 +771,16 @@ async function handleDelete(id) {
   align-items: center;
   gap: 4px;
   padding: 10px 8px;
-  border: 2px solid rgba(226,205,178,.7);
+  border: 2px solid var(--border);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s;
   font-size: 12px;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 .tp-item:hover { border-color: var(--accent); color: var(--accent); }
 .tp-item.active {
-  border-color: var(--accent); background: rgba(200, 159, 133, 0.1);
+  border-color: var(--accent); background: rgba(var(--primary-rgb), 0.1);
   color: var(--accent); font-weight: 600;
 }
 
@@ -802,7 +802,7 @@ async function handleDelete(id) {
   transform: scale(1.15);
 }
 .cp-dot.active {
-  border-color: #6B5744;
+  border-color: var(--text-primary);
   box-shadow: 0 0 0 2px #fff, 0 0 0 4px currentColor;
   transform: scale(1.15);
 }

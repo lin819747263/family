@@ -71,7 +71,7 @@
 
     <!-- 空状态 -->
     <div v-else-if="items.length === 0" class="card empty-card">
-      <el-icon :size="48" color="#67C23A"><Check /></el-icon>
+      <el-icon :size="48" color="var(--success)"><Check /></el-icon>
       <p>没有发现长期未使用的物品，继续保持！</p>
     </div>
 
@@ -125,18 +125,18 @@ const totalValue = computed(() => {
 
 // 分类颜色和 emoji
 const categoryMap = {
-  '电子产品': { bg: 'rgba(159,184,201,.2)', emoji: '💻' },
-  '食品': { bg: 'rgba(232,179,106,.2)', emoji: '🥛' },
-  '绿植': { bg: 'rgba(168,176,138,.2)', emoji: '🪴' },
-  '玩具': { bg: 'rgba(217,154,154,.2)', emoji: '🧸' },
-  '厨具': { bg: 'rgba(200,159,133,.2)', emoji: '🍳' },
-  '运动': { bg: 'rgba(159,184,201,.2)', emoji: '🏃' },
-  '乐器': { bg: 'rgba(217,154,154,.2)', emoji: '🎸' },
-  '户外': { bg: 'rgba(232,179,106,.2)', emoji: '🧺' },
-  '书籍': { bg: 'rgba(169,139,176,.2)', emoji: '📚' },
-  '衣物': { bg: 'rgba(217,154,154,.2)', emoji: '👕' },
+  '电子产品': { bg: 'rgba(var(--sky-rgb),.2)', emoji: '💻' },
+  '食品': { bg: 'rgba(var(--amber-rgb),.2)', emoji: '🥛' },
+  '绿植': { bg: 'rgba(var(--sage-rgb),.2)', emoji: '🪴' },
+  '玩具': { bg: 'rgba(var(--rose-rgb),.2)', emoji: '🧸' },
+  '厨具': { bg: 'rgba(var(--primary-rgb),.2)', emoji: '🍳' },
+  '运动': { bg: 'rgba(var(--sky-rgb),.2)', emoji: '🏃' },
+  '乐器': { bg: 'rgba(var(--rose-rgb),.2)', emoji: '🎸' },
+  '户外': { bg: 'rgba(var(--amber-rgb),.2)', emoji: '🧺' },
+  '书籍': { bg: 'rgba(var(--primary-rgb),.2)', emoji: '📚' },
+  '衣物': { bg: 'rgba(var(--rose-rgb),.2)', emoji: '👕' },
 }
-const defaultItemBg = 'rgba(200,159,133,.15)'
+const defaultItemBg = 'rgba(var(--primary-rgb),.15)'
 const defaultItemEmoji = '📦'
 
 function getItemColor(cat) { return categoryMap[cat]?.bg || defaultItemBg }
@@ -224,14 +224,14 @@ async function handleAction(row, status) {
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
-  color: #FFF9F2;
-  box-shadow: 0 8px 20px rgba(200,159,133,.4);
+  background: var(--gradient-primary);
+  color: var(--bg-card);
+  box-shadow: 0 8px 20px rgba(var(--primary-rgb),.4);
   transition: transform .3s, box-shadow .3s;
 }
 .btn-primary:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 26px rgba(200,159,133,.3);
+  box-shadow: 0 12px 26px rgba(var(--primary-rgb),.3);
 }
 .btn-ghost {
   display: inline-flex;
@@ -243,20 +243,20 @@ async function handleAction(row, status) {
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  background: rgba(255,253,250,.85);
+  background: rgba(var(--bg-card-rgb),.85);
   color: var(--terra-deep);
   transition: transform .3s, box-shadow .3s;
 }
 .btn-ghost:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 26px rgba(200,159,133,.15);
+  box-shadow: 0 12px 26px rgba(var(--primary-rgb),.15);
 }
 
 /* ===== 子标签页 ===== */
 .subtabs {
   display: flex;
   gap: 6px;
-  background: rgba(243,234,221,.6);
+  background: rgba(var(--cream-rgb),.6);
   border: 1px solid var(--border);
   padding: 5px;
   border-radius: 16px;
@@ -284,7 +284,7 @@ async function handleAction(row, status) {
 .subtab.router-link-exact-active {
   background: var(--bg-card);
   color: var(--terra-deep);
-  box-shadow: 0 4px 14px rgba(160,120,90,.14);
+  box-shadow: 0 4px 14px rgba(var(--shadow-rgb),.14);
 }
 
 /* ===== 筛选栏 ===== */
@@ -303,7 +303,7 @@ async function handleAction(row, status) {
   padding: 8px 15px;
   border-radius: 999px;
   border: 1.5px solid var(--border);
-  background: rgba(255,253,250,.8);
+  background: rgba(var(--bg-card-rgb),.8);
   color: var(--text-secondary);
   font-size: 13px;
   font-weight: 600;
@@ -327,14 +327,14 @@ async function handleAction(row, status) {
   gap: 14px;
   padding: 18px;
   margin-bottom: 18px;
-  background: linear-gradient(120deg, rgba(168,176,138,.16), rgba(232,179,106,.14));
-  border: 1.5px solid rgba(168,176,138,.4);
+  background: linear-gradient(120deg, rgba(var(--sage-rgb),.16), rgba(var(--amber-rgb),.14));
+  border: 1.5px solid rgba(var(--sage-rgb),.4);
 }
 .summary-ico {
   width: 46px;
   height: 46px;
   border-radius: 14px;
-  background: linear-gradient(135deg, var(--sage), #7E8862);
+  background: linear-gradient(135deg, var(--sage), var(--sage-d));
   color: #fff;
   font-size: 21px;
   display: flex;
@@ -348,7 +348,7 @@ async function handleAction(row, status) {
   line-height: 1.6;
 }
 .summary-text b {
-  color: #7E8862;
+  color: var(--sage-d);
 }
 
 /* ===== 空状态 ===== */
@@ -368,13 +368,13 @@ async function handleAction(row, status) {
 }
 .unused-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 16px 36px rgba(160,120,90,.16);
+  box-shadow: 0 16px 36px rgba(var(--shadow-rgb),.16);
 }
 .unused-badge {
   position: absolute;
   top: 0;
   right: 0;
-  background: linear-gradient(135deg, var(--amber), #C08A3E);
+  background: linear-gradient(135deg, var(--amber), var(--amber-d));
   color: #fff;
   font-size: 11px;
   font-weight: 700;
@@ -410,8 +410,8 @@ async function handleAction(row, status) {
   margin-top: 8px;
   font-size: 11.5px;
   font-weight: 700;
-  color: #B06A6A;
-  background: rgba(217,154,154,.16);
+  color: var(--rose-d);
+  background: rgba(var(--rose-rgb),.16);
   padding: 3px 10px;
   border-radius: 999px;
 }
@@ -427,7 +427,7 @@ async function handleAction(row, status) {
   padding: 8px 4px;
   border-radius: 10px;
   border: 1.5px solid var(--border);
-  background: rgba(255,253,250,.8);
+  background: rgba(var(--bg-card-rgb),.8);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;

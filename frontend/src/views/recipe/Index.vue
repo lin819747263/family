@@ -395,7 +395,7 @@ async function handleUpload(e) {
 }
 .page-desc {
   font-size: 14px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 .header-actions {
@@ -432,7 +432,7 @@ async function handleUpload(e) {
 
 .rc-image {
   height: 180px;
-  background: #F3EADD;
+  background: var(--bg-card-alt);
   position: relative;
   overflow: hidden;
 }
@@ -447,7 +447,7 @@ async function handleUpload(e) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #FBF6EF, #F3EADD);
+  background: linear-gradient(135deg, var(--bg-page), var(--bg-card-alt));
 }
 .rc-difficulty {
   position: absolute;
@@ -460,16 +460,16 @@ async function handleUpload(e) {
   backdrop-filter: blur(8px);
 }
 .rc-difficulty.easy {
-  background: rgba(52,211,153,0.2);
-  color: #A8B08A;
+  background: rgba(var(--sage-rgb),0.2);
+  color: var(--sage);
 }
 .rc-difficulty.medium {
-  background: rgba(251,191,36,0.2);
-  color: #d97706;
+  background: rgba(var(--amber-rgb),0.2);
+  color: var(--amber-d);
 }
 .rc-difficulty.hard {
   background: rgba(248,113,113,0.2);
-  color: #D99A9A;
+  color: var(--rose);
 }
 
 .rc-body {
@@ -478,12 +478,12 @@ async function handleUpload(e) {
 .rc-name {
   font-size: 17px;
   font-weight: 600;
-  color: #6B5744;
+  color: var(--text-primary);
   margin-bottom: 6px;
 }
 .rc-desc {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   margin-bottom: 10px;
   line-height: 1.5;
   display: -webkit-box;
@@ -495,7 +495,7 @@ async function handleUpload(e) {
   display: flex;
   gap: 14px;
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 .rc-meta span {
   display: flex;
@@ -525,12 +525,12 @@ async function handleUpload(e) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #A08D7A;
+  color: var(--text-secondary);
   transition: all 0.2s;
 }
 .act-btn:hover {
   background: #fff;
-  color: #A08D7A;
+  color: var(--text-secondary);
 }
 .act-btn.danger:hover {
   color: var(--rose-d);
@@ -546,7 +546,7 @@ async function handleUpload(e) {
 .upload-area {
   width: 160px;
   height: 120px;
-  border: 2px dashed rgba(226,205,178,.7);
+  border: 2px dashed var(--border);
   border-radius: 12px;
   cursor: pointer;
   overflow: hidden;
@@ -557,7 +557,7 @@ async function handleUpload(e) {
 }
 .upload-area:hover {
   border-color: var(--terracotta);
-  background: rgba(200, 159, 133, 0.03);
+  background: rgba(var(--primary-rgb), 0.03);
 }
 .upload-preview {
   width: 100%;
@@ -569,7 +569,7 @@ async function handleUpload(e) {
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   font-size: 13px;
 }
 
@@ -592,7 +592,7 @@ async function handleUpload(e) {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
+  background: var(--gradient-primary);
   color: #fff;
   font-size: 13px;
   font-weight: 600;
@@ -612,12 +612,12 @@ async function handleUpload(e) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #E2CDB2;
+  color: var(--wood-light);
   flex-shrink: 0;
   transition: all 0.2s;
 }
 .dyn-remove:hover {
-  background: #fef2f2;
+  background: rgba(var(--rose-rgb), 0.06);
   color: var(--rose-d);
 }
 
@@ -633,7 +633,7 @@ async function handleUpload(e) {
 .view-title {
   font-size: 20px;
   font-weight: 700;
-  color: #6B5744;
+  color: var(--text-primary);
 }
 
 /* 左右布局 */
@@ -644,7 +644,7 @@ async function handleUpload(e) {
 .view-left {
   width: 320px;
   flex-shrink: 0;
-  border-right: 1px solid #F3EADD;
+  border-right: 1px solid var(--bg-card-alt);
   display: flex;
   flex-direction: column;
 }
@@ -671,7 +671,7 @@ async function handleUpload(e) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #FBF6EF, #F3EADD);
+  background: linear-gradient(135deg, var(--bg-page), var(--bg-card-alt));
 }
 
 .view-info {
@@ -689,25 +689,25 @@ async function handleUpload(e) {
   align-items: center;
   gap: 4px;
   padding: 3px 10px;
-  background: #F3EADD;
+  background: var(--bg-card-alt);
   border-radius: 20px;
   font-size: 12px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   font-weight: 500;
 }
-.vi-tag.difficulty.easy { background: rgba(52,211,153,0.1); color: #A8B08A; }
-.vi-tag.difficulty.medium { background: rgba(251,191,36,0.1); color: #d97706; }
-.vi-tag.difficulty.hard { background: rgba(248,113,113,0.1); color: #D99A9A; }
+.vi-tag.difficulty.easy { background: rgba(var(--sage-rgb),0.1); color: var(--sage); }
+.vi-tag.difficulty.medium { background: rgba(var(--amber-rgb),0.1); color: var(--amber-d); }
+.vi-tag.difficulty.hard { background: rgba(248,113,113,0.1); color: var(--rose); }
 .vi-desc {
   font-size: 13px;
-  color: #A08D7A;
+  color: var(--text-secondary);
   line-height: 1.6;
   margin: 0;
 }
 
 .view-section {
   padding: 16px 20px;
-  border-top: 1px solid #F3EADD;
+  border-top: 1px solid var(--bg-card-alt);
 }
 .view-section:first-child {
   border-top: none;
@@ -715,7 +715,7 @@ async function handleUpload(e) {
 .vs-title {
   font-size: 17px;
   font-weight: 700;
-  color: #6B5744;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -727,8 +727,8 @@ async function handleUpload(e) {
 .vs-count {
   font-size: 12px;
   font-weight: 500;
-  color: #A08D7A;
-  background: #F3EADD;
+  color: var(--text-secondary);
+  background: var(--bg-card-alt);
   padding: 2px 8px;
   border-radius: 10px;
 }
@@ -743,14 +743,14 @@ async function handleUpload(e) {
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid #FBF6EF;
+  border-bottom: 1px solid var(--bg-page);
 }
 .ing-row:last-child {
   border-bottom: none;
 }
 .ing-name {
   font-size: 14px;
-  color: #6B5744;
+  color: var(--text-primary);
   font-weight: 500;
 }
 .ing-amount {
@@ -773,7 +773,7 @@ async function handleUpload(e) {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--terracotta), #D3A98B);
+  background: var(--gradient-primary);
   color: #fff;
   font-size: 12px;
   font-weight: 700;
@@ -786,7 +786,7 @@ async function handleUpload(e) {
 .step-text {
   flex: 1;
   font-size: 13px;
-  color: #6B5744;
+  color: var(--text-primary);
   line-height: 1.6;
   padding-top: 2px;
 }
@@ -815,7 +815,7 @@ async function handleUpload(e) {
   .view-left {
     width: 100%;
     border-right: none;
-    border-bottom: 1px solid #F3EADD;
+    border-bottom: 1px solid var(--bg-card-alt);
   }
   .view-right {
     max-height: none;

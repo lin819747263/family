@@ -80,12 +80,12 @@ const monthEvents = ref([])
 
 // 事件颜色映射
 const colorMap = {
-  rose: { bg: '#D99A9A', gradient: 'linear-gradient(135deg,#D99A9A,#B06A6A)' },
-  amber: { bg: '#E8B36A', gradient: 'linear-gradient(135deg,#E8B36A,#C08A3E)' },
-  sage: { bg: '#A8B08A', gradient: 'linear-gradient(135deg,#A8B08A,#7E8862)' },
-  sky: { bg: '#9FB8C9', gradient: 'linear-gradient(135deg,#9FB8C9,#6E8CA0)' },
-  terracotta: { bg: '#C89F85', gradient: 'linear-gradient(135deg,#C89F85,#96684A)' },
-  plum: { bg: '#A98BB0', gradient: 'linear-gradient(135deg,#A98BB0,#8A6C93)' },
+  rose: { bg: 'var(--rose)', gradient: 'linear-gradient(135deg,var(--rose),var(--rose-d))' },
+  amber: { bg: 'var(--amber)', gradient: 'linear-gradient(135deg,var(--amber),var(--amber-d))' },
+  sage: { bg: 'var(--sage)', gradient: 'linear-gradient(135deg,var(--sage),var(--sage-d))' },
+  sky: { bg: 'var(--sky)', gradient: 'linear-gradient(135deg,var(--sky),var(--sky-d))' },
+  terracotta: { bg: 'var(--terracotta)', gradient: 'linear-gradient(135deg,var(--terracotta),var(--terra-deep))' },
+  plum: { bg: 'var(--plum)', gradient: 'linear-gradient(135deg,var(--plum),var(--plum-d))' },
 }
 
 function getEventColor(evt) {
@@ -228,7 +228,7 @@ function goToday() {
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;
 }
 .view-toggle {
-  display: flex; background: rgba(243, 234, 221, 0.6);
+  display: flex; background: rgba(var(--cream-rgb), 0.6);
   border: 1px solid var(--border); border-radius: 12px; padding: 4px;
 }
 .vt-btn {
@@ -239,7 +239,7 @@ function goToday() {
 .vt-btn:hover { color: var(--terra-deep); }
 .vt-btn.active {
   background: var(--bg-card); color: var(--terra-deep);
-  box-shadow: 0 3px 10px rgba(160, 120, 90, 0.14);
+  box-shadow: 0 3px 10px rgba(var(--shadow-rgb), 0.14);
 }
 .btn {
   display: inline-flex; align-items: center; gap: 7px;
@@ -247,12 +247,12 @@ function goToday() {
   cursor: pointer; font-size: 14px; font-weight: 600;
   transition: transform 0.3s, box-shadow 0.3s;
 }
-.btn.ghost { background: rgba(255, 253, 250, 0.85); color: var(--terra-deep); border: 1.5px solid var(--border); }
+.btn.ghost { background: rgba(var(--bg-card-rgb), 0.85); color: var(--terra-deep); border: 1.5px solid var(--border); }
 .btn:hover { transform: translateY(-2px); }
 .cal-nav { display: flex; align-items: center; gap: 6px; margin-left: auto; }
 .cn-btn {
   width: 34px; height: 34px; border-radius: 10px;
-  border: 1.5px solid var(--border); background: rgba(255, 253, 250, 0.8);
+  border: 1.5px solid var(--border); background: rgba(var(--bg-card-rgb), 0.8);
   color: var(--text-secondary); cursor: pointer; font-size: 15px; transition: all 0.25s;
 }
 .cn-btn:hover { border-color: var(--terracotta); color: var(--terra-deep); }
@@ -267,12 +267,12 @@ function goToday() {
 }
 .mg-day {
   min-height: 86px; border-radius: 12px; padding: 8px;
-  background: rgba(243, 234, 221, 0.35); border: 1px solid transparent;
+  background: rgba(var(--cream-rgb), 0.35); border: 1px solid transparent;
   cursor: pointer; transition: all 0.25s;
   display: flex; flex-direction: column; gap: 5px;
 }
 .mg-day:hover {
-  background: rgba(243, 234, 221, 0.8); border-color: var(--wood-light); transform: translateY(-2px);
+  background: rgba(var(--cream-rgb), 0.8); border-color: var(--wood-light); transform: translateY(-2px);
 }
 .mg-day.other { opacity: 0.4; }
 .mg-num {
@@ -281,12 +281,12 @@ function goToday() {
 }
 .mg-day.today .mg-num {
   background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));
-  color: #fff; box-shadow: 0 0 0 4px rgba(200, 159, 133, 0.2);
+  color: #fff; box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.2);
   animation: ring 2.4s ease-in-out infinite;
 }
 @keyframes ring {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(200, 159, 133, 0.2); }
-  50% { box-shadow: 0 0 0 6px rgba(200, 159, 133, 0.12); }
+  0%, 100% { box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2); }
+  50% { box-shadow: 0 0 0 6px rgba(var(--primary-rgb), 0.12); }
 }
 .mg-evt {
   font-size: 10.5px; font-weight: 600; padding: 2px 6px;
@@ -299,13 +299,13 @@ function goToday() {
   display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; padding: 16px;
 }
 .wg-col {
-  border-radius: 14px; background: rgba(243, 234, 221, 0.35);
+  border-radius: 14px; background: rgba(var(--cream-rgb), 0.35);
   padding: 10px 8px; display: flex; flex-direction: column; gap: 8px;
   min-height: 240px; transition: background 0.25s;
 }
-.wg-col:hover { background: rgba(243, 234, 221, 0.7); }
+.wg-col:hover { background: rgba(var(--cream-rgb), 0.7); }
 .wg-col.today {
-  background: rgba(200, 159, 133, 0.12);
+  background: rgba(var(--primary-rgb), 0.12);
   box-shadow: inset 0 0 0 1.5px var(--terracotta);
 }
 .wg-head {
@@ -321,7 +321,7 @@ function goToday() {
 .wg-evt {
   border-radius: 10px; padding: 8px 9px; color: #fff;
   font-size: 11.5px; line-height: 1.4;
-  box-shadow: 0 4px 10px rgba(160, 120, 90, 0.18);
+  box-shadow: 0 4px 10px rgba(var(--shadow-rgb), 0.18);
   transition: transform 0.25s; cursor: pointer;
 }
 .wg-evt:hover { transform: scale(1.04); }

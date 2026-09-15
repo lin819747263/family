@@ -57,7 +57,7 @@
               :value="child.id"
             >
               <span style="display:flex;align-items:center;gap:6px;">
-                <span style="color:#94a3b8;font-size:12px;">{{ group.name }}</span>
+                <span style="color:var(--text-muted);font-size:12px;">{{ group.name }}</span>
                 <span>{{ child.name }}</span>
               </span>
             </el-option>
@@ -330,7 +330,7 @@ async function handleSubmit() {
 /* ========== 类型切换（滑动指示） ========== */
 .type-bar {
   position: relative; display: grid; grid-template-columns: 1fr 1fr;
-  background: var(--cream, #F3EADD); border-radius: 13px; padding: 4px;
+  background: var(--cream, var(--bg-card-alt)); border-radius: 13px; padding: 4px;
 }
 .type-tab {
   position: relative; z-index: 2; padding: 10px; border-radius: 10px;
@@ -344,13 +344,13 @@ async function handleSubmit() {
 .type-indicator {
   position: absolute; z-index: 1; top: 4px; bottom: 4px; left: 4px;
   width: calc(50% - 4px); border-radius: 10px;
-  background: linear-gradient(135deg, var(--rose, #D99A9A), #B06A6A);
+  background: linear-gradient(135deg, var(--rose), var(--rose-d));
   transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.5, 1), background 0.35s;
   box-shadow: 0 4px 12px rgba(176, 106, 106, 0.3);
 }
 .type-indicator.income {
   transform: translateX(100%);
-  background: linear-gradient(135deg, var(--sage, #A8B08A), #7E8862);
+  background: linear-gradient(135deg, var(--sage), var(--sage-d));
   box-shadow: 0 4px 12px rgba(126, 136, 98, 0.3);
 }
 
@@ -358,19 +358,19 @@ async function handleSubmit() {
 .amount-box {
   display: flex; align-items: center; gap: 8px;
   padding: 6px 4px 12px;
-  border-bottom: 2px solid var(--wood-light, #E2CDB2);
+  border-bottom: 2px solid var(--wood-light);
   transition: border-color 0.3s;
 }
-.amount-box:focus-within { border-color: var(--terracotta, #C89F85); }
+.amount-box:focus-within { border-color: var(--terracotta); }
 .amount-currency {
-  font-size: 24px; font-weight: 800; color: var(--terra-deep, #96684A);
+  font-size: 24px; font-weight: 800; color: var(--terra-deep);
 }
 .amount-field {
   flex: 1; border: none; background: transparent; outline: none;
   font-size: 34px; font-weight: 800; color: var(--text-primary);
   letter-spacing: -0.02em; min-width: 0;
 }
-.amount-field::placeholder { color: var(--wood-light, #E2CDB2); }
+.amount-field::placeholder { color: var(--wood-light); }
 .amount-field::-webkit-outer-spin-button,
 .amount-field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .amount-field { -moz-appearance: textfield; }
@@ -378,31 +378,31 @@ async function handleSubmit() {
 /* 语音按钮 */
 .voice-btn {
   width: 40px; height: 40px; border-radius: 12px; border: none;
-  background: var(--cream, #F3EADD); color: var(--terra-deep, #96684A);
+  background: var(--cream, var(--bg-card-alt)); color: var(--terra-deep);
   cursor: pointer; font-size: 17px;
   display: flex; align-items: center; justify-content: center;
   transition: all 0.25s; flex-shrink: 0;
 }
-.voice-btn:hover { background: var(--apricot, #EDE0CE); }
+.voice-btn:hover { background: var(--apricot); }
 .voice-btn.listening {
-  background: var(--rose, #D99A9A); color: #fff;
+  background: var(--rose); color: #fff;
   animation: pulse 1.2s ease-in-out infinite;
 }
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
 
 .voice-hint {
   display: flex; align-items: center; gap: 8px;
-  font-size: 12px; color: var(--rose-d, #B06A6A); margin: 6px 0 2px;
+  font-size: 12px; color: var(--rose-d); margin: 6px 0 2px;
 }
 .voice-pulse {
-  width: 8px; height: 8px; border-radius: 50%; background: var(--rose, #D99A9A);
+  width: 8px; height: 8px; border-radius: 50%; background: var(--rose);
   animation: blink 1s ease-in-out infinite;
 }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 .voice-result {
   display: flex; align-items: center; gap: 8px;
   padding: 8px 12px; border-radius: 10px;
-  background: rgba(168, 176, 138, 0.16); color: var(--sage-d, #7E8862);
+  background: rgba(var(--sage-rgb), 0.16); color: var(--sage-d);
   font-size: 12.5px;
 }
 .voice-result-close {
@@ -415,7 +415,7 @@ async function handleSubmit() {
   display: flex; align-items: center; gap: 10px;
 }
 .cat-select-row :deep(.el-select) {
-  --el-select-border-color-hover: var(--terracotta, #C89F85);
+  --el-select-border-color-hover: var(--terracotta);
 }
 
 /* ========== 详情区域 ========== */
@@ -427,20 +427,20 @@ async function handleSubmit() {
 }
 .d-chip {
   flex: 1; text-align: left; padding: 9px 13px;
-  border-radius: 11px; background: var(--cream, #F3EADD);
-  font-size: 13px; font-weight: 600; color: var(--terra-deep, #96684A);
+  border-radius: 11px; background: var(--cream, var(--bg-card-alt));
+  font-size: 13px; font-weight: 600; color: var(--terra-deep);
   cursor: pointer; border: none; transition: all 0.25s;
 }
-.d-chip:hover { background: var(--apricot, #EDE0CE); }
+.d-chip:hover { background: var(--apricot); }
 .d-field {
   flex: 1; padding: 9px 12px; border-radius: 11px;
-  border: 1.5px solid var(--wood-light, #E2CDB2); background: #FFFDF9;
+  border: 1.5px solid var(--wood-light); background: var(--bg-card);
   font-size: 13.5px; color: var(--text-primary); outline: none;
   transition: all 0.25s; min-width: 0;
 }
 .d-field:focus {
-  border-color: var(--terracotta, #C89F85);
-  box-shadow: 0 0 0 3px rgba(200, 159, 133, 0.14);
+  border-color: var(--terracotta);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.14);
 }
 
 /* ========== 提交按钮 ========== */
@@ -451,14 +451,14 @@ async function handleSubmit() {
   transition: transform 0.3s, box-shadow 0.3s;
 }
 .submit-btn.expense {
-  background: linear-gradient(135deg, var(--rose, #D99A9A), #B06A6A);
+  background: linear-gradient(135deg, var(--rose), var(--rose-d));
   box-shadow: 0 8px 20px rgba(176, 106, 106, 0.35);
 }
 .submit-btn.income {
-  background: linear-gradient(135deg, var(--sage, #A8B08A), #7E8862);
+  background: linear-gradient(135deg, var(--sage), var(--sage-d));
   box-shadow: 0 8px 20px rgba(126, 136, 98, 0.35);
 }
-.submit-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 28px rgba(160, 120, 90, 0.4); }
+.submit-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 28px rgba(var(--shadow-rgb), 0.4); }
 .submit-btn:active { transform: translateY(-1px) scale(0.99); }
 .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 

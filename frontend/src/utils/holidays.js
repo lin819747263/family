@@ -82,6 +82,17 @@ export function getUpcomingEvents(days = 60) {
     }
   }
 
+  // 农历节日（近似日期）
+  for (const h of lunarHolidaysApprox) {
+    for (let year = today.year(); year <= today.year() + 1; year++) {
+      let date = dayjs(`${year}-${String(h.month).padStart(2, '0')}-${String(h.day).padStart(2, '0')}`)
+      const diff = date.diff(today, 'day')
+      if (diff >= 0 && date.isBefore(limit)) {
+        results.push({ ...h, date: date.format('YYYY-MM-DD'), daysLeft: diff, type: 'lunar', year })
+      }
+    }
+  }
+
   // 二十四节气
   for (const s of solarTerms) {
     for (let year = today.year(); year <= today.year() + 1; year++) {

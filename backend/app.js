@@ -6,8 +6,10 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
 const { sequelize } = require('./src/models');
+const models = require('./src/models');
 const errorHandler = require('./src/middleware/errorHandler');
 const { startScheduler } = require('./src/services/scheduler');
+const { autoMigrate } = require('./src/utils/migrate');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -78,12 +80,18 @@ async function startServer() {
   try {
     await sequelize.authenticate();
     console.log('数据库连接成功');
+
+    // 自动迁移：添加缺失字段（所有环境都执行）
+    await autoMigrate(sequelize, models);
+
+    // 同步表结构（开发环境）
     if (process.env.NODE_ENV !== 'production') {
       await sequelize.sync();
       console.log('数据表同步完成');
     } else {
       console.log('生产环境：跳过自动同步');
     }
+
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`家庭管理系统后端服务运行在 http://0.0.0.0:${PORT}`);
       startScheduler();

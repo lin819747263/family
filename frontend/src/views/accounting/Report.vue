@@ -73,6 +73,11 @@
             </div>
             <div class="cols">
               <div v-for="(b, i) in trendBars" :key="i" :class="['col', { weekend: b.weekend, future: b.future, zero: b.zero }]">
+                <div class="col-tip">
+                  <div class="tip-date">{{ b.label }}</div>
+                  <div v-if="b.showExp" class="tip-row" style="color:var(--rose-d)">支出 ¥{{ Math.round(b.expense) }}</div>
+                  <div v-if="b.showInc" class="tip-row" style="color:var(--sage-d)">收入 ¥{{ Math.round(b.income) }}</div>
+                </div>
                 <div class="pair">
                   <i v-if="b.showInc" class="bar inc" :style="{ height: animReady ? b.incH + '%' : '0%' }"></i>
                   <i v-if="b.showExp" :class="['bar', 'exp', { peak: b.isPeak }]" :style="{ height: animReady ? b.expH + '%' : '0%' }"></i>
@@ -129,60 +134,33 @@
         </div>
       </div>
 
-      <div class="grid-2b">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <div class="card-title">🏆 分类排行</div>
-              <div class="card-sub">点击任意分类可展开二级明细</div>
-            </div>
-            <div class="card-sub">{{ periodLabel }} · TOP {{ rankList.length }}</div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-head">
+          <div>
+            <div class="card-title"> 分类排行</div>
+            <div class="card-sub">点击任意分类可展开二级明细</div>
           </div>
-          <div class="rank">
-            <div v-for="(r, i) in rankList" :key="r.idx" :class="['rank-item', { open: openRanks.has(r.idx) }]">
-              <div class="rank-row" @click="toggleRank(r.idx)">
-                <span class="rank-num" :style="{ background: r.color }">{{ i + 1 }}</span>
-                <span class="rank-name">{{ r.icon }} {{ r.name }}</span>
-                <div class="rank-bar"><i :style="{ width: animReady ? r.barW + '%' : '0%', background: r.color }"></i></div>
-                <span class="rank-val">¥{{ Math.round(r.total) }}</span>
-                <span class="rank-pct">{{ r.pct }}%</span>
-                <span v-if="r.children.length" class="rank-caret" :style="{ transform: openRanks.has(r.idx) ? 'rotate(90deg)' : '' }">▶</span>
-              </div>
-              <div v-if="r.children.length" class="sub-rank">
-                <div v-for="k in r.children" :key="k.name" class="sub-item">
-                  <span class="sub-name">{{ k.name }}</span>
-                  <div class="sub-bar"><i :style="{ width: animReady ? k.barW + '%' : '0%', background: r.color + '88' }"></i></div>
-                  <span class="sub-val">¥{{ Math.round(k.total) }}</span>
-                </div>
-              </div>
-            </div>
-            <div v-if="!rankList.length" class="empty-hint">该周期暂无数据</div>
-          </div>
+          <div class="card-sub">{{ periodLabel }} · TOP {{ rankList.length }}</div>
         </div>
-
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <div class="card-title">🔍 本期洞察</div>
-              <div class="card-sub">自动从当前周期数据中提取</div>
+        <div class="rank">
+          <div v-for="(r, i) in rankList" :key="r.idx" :class="['rank-item', { open: openRanks.has(r.idx) }]">
+            <div class="rank-row" @click="toggleRank(r.idx)">
+              <span class="rank-num" :style="{ background: r.color }">{{ i + 1 }}</span>
+              <span class="rank-name">{{ r.icon }} {{ r.name }}</span>
+              <div class="rank-bar"><i :style="{ width: animReady ? r.barW + '%' : '0%', background: r.color }"></i></div>
+              <span class="rank-val">¥{{ Math.round(r.total) }}</span>
+              <span class="rank-pct">{{ r.pct }}%</span>
+              <span v-if="r.children.length" class="rank-caret" :style="{ transform: openRanks.has(r.idx) ? 'rotate(90deg)' : '' }">▶</span>
             </div>
-          </div>
-          <div class="insights">
-            <div v-for="(ins, i) in insights" :key="i" class="ins-item">
-              <span class="ins-ico">{{ ins.icon }}</span>
-              <div>
-                <div class="ins-text" v-html="ins.text"></div>
-                <div v-if="ins.sub" class="ins-sub">{{ ins.sub }}</div>
+            <div v-if="r.children.length" class="sub-rank">
+              <div v-for="k in r.children" :key="k.name" class="sub-item">
+                <span class="sub-name">{{ k.name }}</span>
+                <div class="sub-bar"><i :style="{ width: animReady ? k.barW + '%' : '0%', background: r.color + '88' }"></i></div>
+                <span class="sub-val">¥{{ Math.round(k.total) }}</span>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="mini-strip">
-        <div v-for="(m, i) in miniMetrics" :key="i" class="mini">
-          <div class="mini-val">{{ m.value }}</div>
-          <div class="mini-lbl">{{ m.label }}</div>
+          <div v-if="!rankList.length" class="empty-hint">该周期暂无数据</div>
         </div>
       </div>
     </section>
@@ -586,6 +564,8 @@ const trendBars = computed(() => {
     const ev = expOf(b)
     return {
       label: b.label,
+      expense: ev,
+      income: b.income,
       expH: showExp ? Math.max(0, ev / nm * 100) : 0,
       incH: showInc ? Math.max(0, b.income / nm * 100) : 0,
       showExp, showInc,
@@ -722,68 +702,6 @@ function toggleRank(idx) {
   openRanks.value = s
 }
 
-const insights = computed(() => {
-  if (!rangeData.value) return []
-  const { cur, prev } = rangeData.value
-  const r = periodRange.value
-  const out = []
-  const list = cur.byCategory || []
-  const w = periodWord.value
-
-  if (list.length) {
-    const top = list[0]
-    const pTop = (prev.byCategory || []).find(c => c.id === top.id)
-    const share = cur.expense > 0 ? (top.total / cur.expense * 100).toFixed(1) : 0
-    let trend = ''
-    if (pTop && pTop.total > 0) {
-      const d = (top.total - pTop.total) / pTop.total * 100
-      trend = d > 1 ? `，比${r.cmp === '同比' ? '去年同期' : '上期'}多 <b style="color:var(--rose-d)">${Math.abs(d).toFixed(0)}%</b>`
-        : d < -1 ? `，比${r.cmp === '同比' ? '去年同期' : '上期'}少 <b style="color:var(--sage-d)">${Math.abs(d).toFixed(0)}%</b>` : '，与上期基本持平'
-    }
-    out.push({ icon: '🥇', text: `最大开销来自 <b>${top.icon} ${top.name}</b>，共 ¥${Math.round(top.total)}，占本期支出 <b>${share}%</b>${trend}`, sub: top.children?.[0] ? `其中「${top.children[0].name}」占 ¥${Math.round(top.children[0].total)}` : '' })
-  }
-
-  if (cur.fixedExpense > 0 && cur.expense > 0) {
-    out.push({ icon: '🏠', text: `固定支出 <b>¥${Math.round(cur.fixedExpense)}</b>，占本期支出 <b>${(cur.fixedExpense / cur.expense * 100).toFixed(1)}%</b>`, sub: '房贷 / 物业费 / 水电燃气 — 趋势图默认剔除' })
-  }
-
-  const ts = cur.timeSeries || []
-  const expOf = b => exFixed.value ? Math.max(0, b.expense - (b.fixed || 0)) : b.expense
-  const valid = ts.filter(b => !b.future && expOf(b) > 0)
-  if (valid.length) {
-    const peak = valid.slice().sort((a, b) => expOf(b) - expOf(a))[0]
-    const low = valid.slice().sort((a, b) => expOf(a) - expOf(b))[0]
-    out.push({ icon: '📌', text: `${exFixed.value ? '日常' : ''}支出高峰在 <b>${peak.label}</b>（¥${Math.round(expOf(peak))}），最低是 ${low.label}（¥${Math.round(expOf(low))}）`, sub: `峰谷相差 ${(expOf(peak) / Math.max(1, expOf(low))).toFixed(1)} 倍` })
-  }
-
-  if (cur.maxTransaction) {
-    const m = cur.maxTransaction
-    out.push({ icon: '🔥', text: `最大单笔 <b>¥${fmtMoney(m.amount)}</b> — ${m.note || '无备注'}`, sub: `${m.date || ''} · ${m.categoryName || ''}` })
-  }
-
-  if (cur.income > 0) {
-    const rate = cur.income > 0 ? ((cur.income - cur.expense) / cur.income * 100).toFixed(1) : 0
-    const msg = rate >= 30 ? '储蓄率很健康，继续保持' : rate >= 10 ? '储蓄率尚可，仍有提升空间' : rate >= 0 ? '结余偏薄，注意控制大额支出' : '本期入不敷出，建议复盘大额开销'
-    out.push({ icon: rate >= 10 ? '🏦' : '⚠️', text: `储蓄率 <b>${rate}%</b> — ${msg}`, sub: `收入 ¥${Math.round(cur.income)} · 结余 ¥${Math.round(cur.income - cur.expense)}` })
-  } else {
-    out.push({ icon: '💡', text: '本期没有收入记录，结余为负属正常', sub: `支出 ¥${Math.round(cur.expense)}` })
-  }
-
-  return out
-})
-
-const miniMetrics = computed(() => {
-  if (!rangeData.value) return []
-  const { cur } = rangeData.value
-  const r = periodRange.value
-  const span = r.span || dayDiff(r.s, r.e) + 1
-  return [
-    { label: '记账笔数', value: `${cur.count || 0} 笔` },
-    { label: '最大单笔', value: cur.maxTransaction ? `¥${Math.round(cur.maxTransaction.amount)}` : '—' },
-    { label: '笔均支出', value: cur.expenseCount ? `¥${Math.round(cur.expense / cur.expenseCount)}` : '—' },
-    { label: '有支出天数', value: `${cur.activeDays || 0} / ${span} 天` },
-  ]
-})
 
 const mxSummaryCards = computed(() => {
   if (!matrixData.value.length) return []
@@ -967,8 +885,12 @@ onMounted(() => { nextTick(() => { animReady.value = true }) })
 .gl:first-child { border-top-style: solid; border-top-color: var(--border); }
 .gl span { position: absolute; left: -54px; top: -8px; width: 46px; text-align: right; font-size: 10.5px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
 .cols { position: absolute; left: 54px; right: 0; top: 0; bottom: 0; display: flex; align-items: stretch; gap: 2px; }
-.col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; border-radius: 7px; cursor: default; transition: background .2s; }
+.col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; border-radius: 7px; cursor: default; transition: background .2s; position: relative; }
 .col:hover { background: var(--hover-overlay); }
+.col-tip { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 7px 10px; font-size: 11.5px; white-space: nowrap; z-index: 10; box-shadow: var(--shadow-sm); pointer-events: none; }
+.col:hover .col-tip { display: block; }
+.tip-date { font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
+.tip-row { line-height: 1.5; }
 .col .pair { width: 100%; height: calc(100% - 24px); display: flex; align-items: flex-end; justify-content: center; gap: 2px; padding: 0 1px; }
 .bar { width: 100%; max-width: 22px; border-radius: 5px 5px 2px 2px; transition: height .85s cubic-bezier(.22, 1, .36, 1); }
 .bar.exp { background: linear-gradient(180deg, var(--rose), var(--rose-d)); }
@@ -1023,17 +945,6 @@ onMounted(() => { nextTick(() => { animReady.value = true }) })
 .sub-bar i { display: block; height: 100%; width: 0; border-radius: 3px; transition: width .8s cubic-bezier(.22, 1, .36, 1); }
 .sub-val { color: var(--text-primary); font-weight: 600; min-width: 70px; text-align: right; font-variant-numeric: tabular-nums; }
 
-.insights { display: flex; flex-direction: column; gap: 11px; }
-.ins-item { display: flex; gap: 11px; align-items: flex-start; padding: 11px 13px; border-radius: 13px; background: var(--bg-page); border: 1px solid var(--border-light); }
-.ins-ico { font-size: 17px; line-height: 1.4; }
-.ins-text { font-size: 13px; line-height: 1.6; color: var(--text-primary); }
-.ins-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
-
-.mini-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; padding: 16px 8px; box-shadow: var(--shadow-sm); margin-bottom: 16px; }
-.mini { text-align: center; padding: 2px 12px; border-right: 1px dashed var(--border-light); }
-.mini:last-child { border-right: none; }
-.mini-val { font-size: 18px; font-weight: 800; color: var(--text-primary); font-variant-numeric: tabular-nums; }
-.mini-lbl { font-size: 11.5px; color: var(--text-muted); margin-top: 3px; }
 
 .mx-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 16px; }
 .mx-stat { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 15px 17px; box-shadow: var(--shadow-sm); }
@@ -1081,8 +992,6 @@ table.mx { border-collapse: separate; border-spacing: 0; width: 100%; min-width:
 }
 @media (max-width: 820px) {
   .time-nav { margin-left: 0; width: 100%; justify-content: center; }
-  .mini-strip { grid-template-columns: repeat(2, 1fr); gap: 12px 0; }
-  .mini:nth-child(2) { border-right: none; }
   .chart { height: 230px; padding-left: 46px; }
   .glines, .cols, .avg-line { left: 46px; }
   .gl span { left: -46px; width: 40px; }

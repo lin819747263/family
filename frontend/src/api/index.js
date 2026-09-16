@@ -52,6 +52,7 @@ export const accountingApi = {
   getYearlyReport: params => request.get('/accounting/report/yearly', { params }),
   getYearlyCategoryReport: params => request.get('/accounting/report/yearly-category', { params }),
   getYearlyCategoryMatrix: params => request.get('/accounting/report/yearly-category-matrix', { params }),
+  getRangeReport: params => request.get('/accounting/report/range', { params }),
   exportReport: params => request.get('/accounting/report/export', { params, responseType: 'blob' }),
   uploadReceipt: formData => request.post('/accounting/upload-receipt', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
 }

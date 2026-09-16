@@ -684,6 +684,131 @@ exports.getYearlyCategoryMatrix = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
+exports.getRangeReport = async (req, res, next) => {
+  try {
+    const { bookId, startDate, endDate, groupBy = 'day' } = req.query;
+    if (!await verifyBookAccess(bookId, req.userId)) {
+      return res.status(403).json({ code: 403, message: '无权访问该账本' });
+    }
+    const start = dayjs(startDate).format('YYYY-MM-DD');
+    const end = dayjs(endDate).format('YYYY-MM-DD');
+    const dateBetween = { [Op.between]: [start, end + ' 23:59:59'] };
+    const dateLikePrefix = { [Op.between]: [start, end] };
+
+    const [sumResults] = await sequelize.query(`
+      SELECT type, SUM(amount) AS total
+      FROM transactions
+      WHERE book_id = ${parseInt(bookId)} AND status = 'normal'
+        AND DATE(transaction_date) BETWEEN '${start}' AND '${end}'
+      GROUP BY type
+    `);
+    let income = 0, expense = 0;
+    sumResults.forEach(r => {
+      if (r.type === 'income') income = parseFloat(r.total) || 0;
+      if (r.type === 'expense') expense = parseFloat(r.total) || 0;
+    });
+
+    const txns = await Transaction.findAll({
+      where: { bookId, type: 'expense', status: 'normal', transactionDate: dateBetween },
+      include: [{
+        model: Category,
+        attributes: ['id', 'name', 'icon', 'parentId'],
+        include: [{ model: Category, as: 'parent', attributes: ['id', 'name', 'icon'] }]
+      }],
+      attributes: ['category_id', 'transactionDate', 'amount'],
+      raw: true,
+      nest: true
+    });
+
+    const parentMap = {};
+    const childTotals = {};
+    txns.forEach(t => {
+      const cat = t.Category;
+      if (!cat) return;
+      const amount = parseFloat(t.amount || 0);
+      const parent = cat.parentId ? cat.parent : cat;
+      const pKey = parent ? parent.id : cat.id;
+      const pName = parent ? parent.name : cat.name;
+      const pIcon = parent ? parent.icon : cat.icon;
+      if (!parentMap[pKey]) parentMap[pKey] = { id: pKey, name: pName, icon: pIcon, total: 0, children: [] };
+      parentMap[pKey].total += amount;
+      if (cat.parentId) {
+        if (!childTotals[cat.id]) childTotals[cat.id] = { id: cat.id, name: cat.name, icon: cat.icon, total: 0, parentId: pKey };
+        childTotals[cat.id].total += amount;
+      }
+    });
+    Object.values(parentMap).forEach(p => {
+      p.children = Object.values(childTotals).filter(c => c.parentId === p.id).sort((a, b) => b.total - a.total);
+    });
+    const byCategory = Object.values(parentMap).sort((a, b) => b.total - a.total);
+
+    let timeSeries = [];
+    if (groupBy === 'month') {
+      const monthMap = {};
+      txns.forEach(t => {
+        const m = dayjs(t.transactionDate).format('YYYY-MM');
+        monthMap[m] = (monthMap[m] || 0) + parseFloat(t.amount || 0);
+      });
+      const incTxns = await Transaction.findAll({
+        where: { bookId, type: 'income', status: 'normal', transactionDate: dateBetween },
+        attributes: ['transactionDate', 'amount'], raw: true
+      });
+      const incMap = {};
+      incTxns.forEach(t => {
+        const m = dayjs(t.transactionDate).format('YYYY-MM');
+        incMap[m] = (incMap[m] || 0) + parseFloat(t.amount || 0);
+      });
+      let cursor = dayjs(start).startOf('month');
+      const endCursor = dayjs(end).startOf('month');
+      while (cursor.isBefore(endCursor) || cursor.isSame(endCursor, 'month')) {
+        const key = cursor.format('YYYY-MM');
+        timeSeries.push({ label: cursor.format('M月'), income: incMap[key] || 0, expense: monthMap[key] || 0 });
+        cursor = cursor.add(1, 'month');
+      }
+    } else {
+      const dayMap = {};
+      txns.forEach(t => {
+        const d = dayjs(t.transactionDate).format('YYYY-MM-DD');
+        dayMap[d] = (dayMap[d] || 0) + parseFloat(t.amount || 0);
+      });
+      const incTxns = await Transaction.findAll({
+        where: { bookId, type: 'income', status: 'normal', transactionDate: dateBetween },
+        attributes: ['transactionDate', 'amount'], raw: true
+      });
+      const incMap = {};
+      incTxns.forEach(t => {
+        const d = dayjs(t.transactionDate).format('YYYY-MM-DD');
+        incMap[d] = (incMap[d] || 0) + parseFloat(t.amount || 0);
+      });
+      let cursor = dayjs(start);
+      const endDay = dayjs(end);
+      while (cursor.isBefore(endDay) || cursor.isSame(endDay, 'day')) {
+        const key = cursor.format('YYYY-MM-DD');
+        timeSeries.push({ label: cursor.format('D日'), date: key, income: incMap[key] || 0, expense: dayMap[key] || 0 });
+        cursor = cursor.add(1, 'day');
+      }
+    }
+
+    const days = dayjs(end).diff(dayjs(start), 'day') + 1;
+    const prevEnd = dayjs(start).subtract(1, 'day').format('YYYY-MM-DD');
+    const prevStart = dayjs(prevEnd).subtract(days - 1, 'day').format('YYYY-MM-DD');
+    const [prevResults] = await sequelize.query(`
+      SELECT type, SUM(amount) AS total
+      FROM transactions
+      WHERE book_id = ${parseInt(bookId)} AND status = 'normal'
+        AND DATE(transaction_date) BETWEEN '${prevStart}' AND '${prevEnd}'
+      GROUP BY type
+    `);
+    let prevIncome = 0, prevExpense = 0;
+    prevResults.forEach(r => {
+      if (r.type === 'income') prevIncome = parseFloat(r.total) || 0;
+      if (r.type === 'expense') prevExpense = parseFloat(r.total) || 0;
+    });
+
+    res.json({ code: 0, data: { income, expense, prevIncome, prevExpense, timeSeries, byCategory } });
+  } catch (err) { next(err); }
+};
+
 exports.exportReport = async (req, res, next) => {
   try {
     const { bookId, startDate, endDate, format } = req.query;

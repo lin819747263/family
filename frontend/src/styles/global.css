@@ -48,8 +48,8 @@ body.el-popup-parent--hidden {
   --text-primary: #6B5744;
   --text-secondary: #A08D7A;
   --text-muted: #BCAB97;
-  --border: var(--border);
-  --border-light: var(--border-light);
+  --border: rgba(226, 205, 178, 0.7);
+  --border-light: rgba(226, 205, 178, 0.4);
   /* 导航 */
   --nav-bg: rgba(255, 252, 247, 0.82);
   --nav-shadow: 0 2px 20px rgba(var(--shadow-rgb), 0.06);

@@ -29,8 +29,9 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
 
-  // 跳过非 GET 请求
+  // 跳过非 GET 请求和非 http(s) 协议（如 chrome-extension://）
   if (request.method !== 'GET') return;
+  if (!request.url.startsWith('http')) return;
 
   // API 请求：网络优先，离线时返回缓存（仅 GET）
   if (request.url.includes('/api/')) {

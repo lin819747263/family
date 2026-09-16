@@ -54,6 +54,7 @@
           <button class="chip-btn" :class="{ active: filterType === 'expense', exp: filterType === 'expense' }" @click="filterType = 'expense'; handleFilter()">📉 支出</button>
           <button class="chip-btn" :class="{ active: filterType === 'income', inc: filterType === 'income' }" @click="filterType = 'income'; handleFilter()">📈 收入</button>
           <button class="chip-btn" @click="$router.push('/accounting/categories')">📂 分类管理</button>
+          <button v-if="filterCategoryId" class="chip-btn active cat-filter" @click="filterCategoryId = null; filterCategoryName = ''; handleFilter()">📌 {{ filterCategoryName }} ✕</button>
         </div>
       </div>
 
@@ -118,54 +119,6 @@
             <el-popconfirm title="确定删除此预算？" @confirm="handleBudgetDelete(b.id)">
               <template #reference><button class="act danger">🗑</button></template>
             </el-popconfirm>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ========== 报表分析 ========== -->
-    <div v-if="activeTab === 'report'">
-      <div class="report-head-actions reveal">
-        <button class="btn ghost" @click="$router.push('/accounting/annual-report')">📊 年度报告</button>
-        <button class="btn ghost" @click="exportReport('xlsx')">📥 导出Excel</button>
-      </div>
-      <div class="rep-grid">
-        <div class="card rep-card reveal">
-          <div class="rep-title">每日支出明细 <span style="font-size:12px;color:var(--text-secondary);font-weight:500;">本月</span></div>
-          <div class="bars">
-            <div v-for="d in dailyData" :key="d.day" class="bcol">
-              <div class="bbar" :class="{ hi: isHighest(d.expense) }" :style="{ height: getBarHeight(d.expense) + '%' }"></div>
-              <span class="blbl">{{ d.day }}日</span>
-            </div>
-            <div v-if="dailyData.length === 0" class="card-empty" style="width:100%"><span>📊</span><span>暂无数据</span></div>
-          </div>
-        </div>
-        <div class="card rep-card reveal">
-          <div class="rep-title">支出分类占比</div>
-          <div v-if="reportByCategory.length === 0" class="card-empty"><span>📊</span><span>暂无数据</span></div>
-          <div v-else class="donut-wrap">
-            <div class="donut">
-              <svg width="170" height="170" viewBox="0 0 170 170">
-                <circle cx="85" cy="85" r="60" stroke="var(--wood-light)" stroke-dasharray="376.99 0"></circle>
-                <circle v-for="(seg, i) in donutSegments" :key="i" cx="85" cy="85" r="60" :stroke="seg.color" fill="none" stroke-width="26" stroke-linecap="butt" :stroke-dasharray="seg.len + ' ' + (376.99 - seg.len)" :stroke-dashoffset="seg.offset" style="transition: all 1.2s cubic-bezier(.22,1,.36,1);"></circle>
-              </svg>
-              <div class="donut-center"><span class="dc-num">¥{{ formatMoney(reportTotalExpense) }}</span><span class="dc-lbl">本月支出</span></div>
-            </div>
-            <div class="legend">
-              <div v-for="(cat, i) in reportByCategory" :key="cat.id" class="lg-item"><span class="lg-dot" :style="{ background: donutColors[i % donutColors.length] }"></span><span class="lg-name">{{ cat.name }}</span><span class="lg-val">{{ reportTotalExpense > 0 ? Math.round(cat.total / reportTotalExpense * 100) : 0 }}%</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card rep-card reveal">
-        <div class="rep-title">一级分类支出排行</div>
-        <div v-if="reportByCategory.length === 0" class="card-empty"><span>📊</span><span>暂无数据</span></div>
-        <div v-else class="rank">
-          <div v-for="(cat, i) in reportByCategory" :key="cat.id" class="rank-item">
-            <span class="rank-num" :class="['g-terra','g-amber','g-sage','g-sky','g-rose'][i % 5]">{{ i + 1 }}</span>
-            <span class="rank-name">{{ cat.icon || '📄' }} {{ cat.name }}</span>
-            <div class="rank-bar"><i :style="{ width: getRankWidth(cat.total) + '%', background: rankBarColors[i % rankBarColors.length] }"></i></div>
-            <span class="rank-val">¥{{ formatMoney(cat.total) }}</span>
           </div>
         </div>
       </div>
@@ -291,7 +244,7 @@
 <script setup>
 import { useFamilyGuard } from "@/composables/useFamilyGuard"
 import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { accountingApi } from '@/api'
 import { useAccountingStore } from '@/store/accounting'
 import { useAuthStore } from '@/store/auth'
@@ -304,6 +257,7 @@ import { buildCategoryTree } from '@/utils/categoryTree'
 import dayjs from 'dayjs'
 
 const route = useRoute()
+const router = useRouter()
 const authStore = useAuthStore()
 const accountingStore = useAccountingStore()
 
@@ -325,9 +279,9 @@ function switchTab(tab) {
   activeTab.value = tab
   if (tab === 'flow') loadTransactions().then(() => observeReveal())
   else if (tab === 'budget') loadBudgets().then(() => observeReveal())
-  else if (tab === 'report') loadReport().then(() => observeReveal())
+  else if (tab === 'report') router.push('/accounting/report')
   else if (tab === 'books') loadBooks().then(() => observeReveal())
-  else if (tab === 'import') nextTick(() => observeReveal())
+  else nextTick(() => observeReveal())
 }
 
 // ===== 流水账单 =====
@@ -403,6 +357,7 @@ async function loadTransactions() {
         endDate: dayjs(currentMonth.value + '-01').endOf('month').format('YYYY-MM-DD'),
         type: filterType.value || undefined,
         search: searchKeyword.value || undefined,
+        categoryId: filterCategoryId.value || undefined,
         page: currentPage.value,
         pageSize: 20
       }),
@@ -492,58 +447,6 @@ async function loadBudgets() {
     }
   } catch (e) { console.error(e) }
   finally { budgetLoading.value = false }
-}
-
-// ===== 报表分析 =====
-const dailyData = ref([])
-const reportByCategory = ref([])
-const reportTotalExpense = ref(0)
-const donutColors = ['var(--terracotta)', 'var(--amber)', 'var(--sage)', 'var(--sky)', 'var(--rose)', 'var(--plum)']
-const rankBarColors = ['linear-gradient(90deg,var(--terracotta),var(--primary-light))', 'linear-gradient(90deg,var(--amber),var(--amber-d))', 'linear-gradient(90deg,var(--sage),var(--sage-d))', 'linear-gradient(90deg,var(--sky),var(--sky-d))', 'linear-gradient(90deg,var(--rose),var(--rose-d))']
-
-const donutSegments = computed(() => {
-  if (reportTotalExpense.value === 0) return []
-  const segments = []
-  let offset = 0
-  reportByCategory.value.forEach((cat, i) => {
-    const pct = cat.total / reportTotalExpense.value
-    const len = pct * 376.99
-    segments.push({ len, offset: -offset, color: donutColors[i % donutColors.length] })
-    offset += len
-  })
-  return segments
-})
-
-const maxDailyExpense = computed(() => Math.max(...dailyData.value.map(d => d.expense), 1))
-
-function isHighest(val) { return val === maxDailyExpense.value && val > 0 }
-function getBarHeight(val) { return maxDailyExpense.value > 0 ? Math.max(2, (val / maxDailyExpense.value) * 90) : 0 }
-function getRankWidth(total) { return reportTotalExpense.value > 0 ? Math.round((total / reportTotalExpense.value) * 100) : 0 }
-
-async function loadReport() {
-  if (!accountingStore.currentBookId) return
-  try {
-    const [year, month] = currentMonth.value.split('-')
-    const [dailyRes, monthlyRes] = await Promise.all([
-      accountingApi.getDailyReport({ bookId: accountingStore.currentBookId, year, month }),
-      accountingApi.getMonthlyReport({ bookId: accountingStore.currentBookId, year, month })
-    ])
-    dailyData.value = dailyRes.data || []
-    reportByCategory.value = (monthlyRes.data.byCategory || []).sort((a, b) => b.total - a.total)
-    reportTotalExpense.value = monthlyRes.data.expense || 0
-  } catch (e) { console.error(e) }
-}
-
-async function exportReport(format) {
-  if (!accountingStore.currentBookId) return
-  const [year, month] = currentMonth.value.split('-')
-  try {
-    const res = await accountingApi.exportReport({ bookId: accountingStore.currentBookId, startDate: `${year}-${month}-01`, endDate: dayjs(`${year}-${month}-01`).endOf('month').format('YYYY-MM-DD'), format })
-    const blob = new Blob([res], { type: format === 'xlsx' ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'application/pdf' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a'); a.href = url; a.download = `家庭账单报表_${currentMonth.value}.${format}`; a.click()
-    URL.revokeObjectURL(url)
-  } catch { ElMessage.error('导出失败') }
 }
 
 // ===== 账本管理 =====
@@ -639,12 +542,19 @@ watch(() => accountingStore.currentBookId, (id) => {
 watch(currentMonth, () => {
   if (activeTab.value === 'flow') loadTransactions()
   else if (activeTab.value === 'budget') loadBudgets()
-  else if (activeTab.value === 'report') loadReport()
 })
+
+const filterCategoryId = ref(null)
+const filterCategoryName = ref('')
 
 onMounted(async () => {
   if (!await useFamilyGuard()) return
   if (route.query.month) currentMonth.value = route.query.month
+  if (route.query.categoryId) {
+    filterCategoryId.value = route.query.categoryId
+    filterCategoryName.value = route.query.categoryName || ''
+    activeTab.value = 'flow'
+  }
   // 并行加载，不互相阻塞
   if (accountingStore.currentBookId) loadTransactions()
   loadBooks()
@@ -760,34 +670,8 @@ onMounted(async () => {
 .b-card-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s; }
 .b-card:hover .b-card-actions { opacity: 1; }
 
-/* ===== 报表 ===== */
-.report-head-actions { display: flex; gap: 10px; margin-bottom: 18px; }
-.rep-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; margin-bottom: 18px; }
-.rep-card { }
-.rep-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
-.bars { display: flex; align-items: flex-end; gap: 8px; height: 200px; padding-top: 10px; }
-.bcol { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; justify-content: flex-end; }
-.bbar { width: 100%; max-width: 34px; border-radius: 8px 8px 4px 4px; background: linear-gradient(180deg, var(--terracotta), var(--primary-light)); transition: height 1s cubic-bezier(0.22, 1, 0.36, 1); }
-.bbar.hi { background: linear-gradient(180deg, var(--rose), var(--rose-d)); }
-.blbl { font-size: 11px; color: var(--text-secondary); }
-.donut-wrap { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
-.donut { position: relative; width: 170px; height: 170px; flex-shrink: 0; }
-.donut svg { transform: rotate(-90deg); }
-.donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.dc-num { font-size: 22px; font-weight: 800; color: var(--terra-deep); }
-.dc-lbl { font-size: 11px; color: var(--text-secondary); }
-.legend { flex: 1; min-width: 150px; display: flex; flex-direction: column; gap: 10px; }
-.lg-item { display: flex; align-items: center; gap: 9px; font-size: 13.5px; }
-.lg-dot { width: 11px; height: 11px; border-radius: 4px; flex-shrink: 0; }
-.lg-name { color: var(--text-primary); }
-.lg-val { margin-left: auto; font-weight: 700; color: var(--terra-deep); }
-.rank { display: flex; flex-direction: column; gap: 12px; }
-.rank-item { display: flex; align-items: center; gap: 12px; }
-.rank-num { width: 26px; height: 26px; border-radius: 9px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 700; flex-shrink: 0; }
-.rank-name { font-size: 14px; font-weight: 600; min-width: 100px; }
-.rank-bar { flex: 1; height: 8px; border-radius: 4px; background: var(--apricot); overflow: hidden; }
-.rank-bar i { display: block; height: 100%; width: 0; border-radius: 4px; transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1); }
-.rank-val { font-size: 13px; font-weight: 700; color: var(--terra-deep); min-width: 76px; text-align: right; }
+/* ===== 分类筛选 ===== */
+.cat-filter { background: rgba(var(--primary-rgb), 0.18) !important; border-color: var(--terracotta) !important; color: var(--terra-deep) !important; }
 
 /* ===== 账本 ===== */
 .books-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
@@ -833,7 +717,6 @@ onMounted(async () => {
 @media (max-width: 960px) {
   .summary { grid-template-columns: 1fr; }
   .budget-grid, .books-grid { grid-template-columns: repeat(2, 1fr); }
-  .rep-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
   .page-head { flex-direction: column; align-items: flex-start; }
@@ -846,12 +729,6 @@ onMounted(async () => {
   .b-card-actions { opacity: 1; }
   .book-more { width: 36px; height: 36px; }
   .mn-btn { width: 40px; height: 40px; }
-  .blbl { font-size: 9px; }
-  .bars { gap: 4px; }
-  .bbar { max-width: 20px; }
-  .donut { width: 130px; height: 130px; }
-  .rank-name { min-width: 70px; font-size: 13px; }
-  .rank-val { min-width: 60px; font-size: 12px; }
   .group { padding: 4px 16px 10px; }
 }
 </style>

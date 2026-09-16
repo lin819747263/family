@@ -369,6 +369,7 @@ import { useAuthStore } from '@/store/auth'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import * as echarts from 'echarts'
 import dayjs from 'dayjs'
+import { getCssVar, resolveCssVars, cssVarAlpha } from '@/utils/color'
 
 const authStore = useAuthStore()
 const familyId = computed(() => authStore.currentFamily?.id)
@@ -474,7 +475,8 @@ function renderChart() {
   if (!chartInstance) chartInstance = echarts.init(chartRef.value)
   const records = chartType.value === 'weight' ? profileRecords.weight : profileRecords.height
   const unit = chartType.value === 'weight' ? 'kg' : 'cm'
-  const color = chartType.value === 'weight' ? 'var(--terracotta)' : 'var(--sky)'
+  const colorVar = chartType.value === 'weight' ? '--terracotta' : '--sky'
+  const color = getCssVar(colorVar)
 
   if (!records.length) {
     chartInstance.clear()
@@ -487,8 +489,8 @@ function renderChart() {
   chartInstance.setOption({
     tooltip: { trigger: 'axis', formatter: p => `${p[0].axisValue}<br/>${p[0].marker} ${p[0].value} ${unit}` },
     grid: { left: 50, right: 20, top: 20, bottom: 30 },
-    xAxis: { type: 'category', data: labels, axisLine: { lineStyle: { color: 'var(--wood-light)' } }, axisLabel: { color: 'var(--text-secondary)', fontSize: 11 } },
-    yAxis: { type: 'value', axisLine: { show: false }, splitLine: { lineStyle: { color: getComputedStyle(document.documentElement).getPropertyValue('--border-light').trim() || 'rgba(226,205,178,.3)' } }, axisLabel: { color: 'var(--text-secondary)', fontSize: 11 } },
+    xAxis: { type: 'category', data: labels, axisLine: { lineStyle: { color: getCssVar('--wood-light') } }, axisLabel: { color: getCssVar('--text-secondary'), fontSize: 11 } },
+    yAxis: { type: 'value', axisLine: { show: false }, splitLine: { lineStyle: { color: getCssVar('--border-light') || 'rgba(226,205,178,.3)' } }, axisLabel: { color: getCssVar('--text-secondary'), fontSize: 11 } },
     series: [{
       type: 'line',
       data: values,
@@ -498,8 +500,8 @@ function renderChart() {
       lineStyle: { color, width: 3 },
       itemStyle: { color, borderColor: '#fff', borderWidth: 2 },
       areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-        { offset: 0, color: color + '40' },
-        { offset: 1, color: color + '08' }
+        { offset: 0, color: cssVarAlpha(colorVar, 25) },
+        { offset: 1, color: cssVarAlpha(colorVar, 3) }
       ]) }
     }]
   })
@@ -519,7 +521,7 @@ const filteredTimeline = computed(() => {
   }
   return list
 })
-const timelineColors = ['var(--terracotta)', 'var(--rose)', 'var(--amber)', 'var(--sage)', 'var(--sky)']
+const timelineColors = resolveCssVars(['--terracotta', '--rose', '--amber', '--sage', '--sky'])
 function getTimelineColor(ev) { return timelineColors[(ev.profileId || 0) % timelineColors.length] }
 async function loadTimeline() {
   loadingTimeline.value = true

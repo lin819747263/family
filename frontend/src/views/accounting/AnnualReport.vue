@@ -169,6 +169,7 @@ import { useAuthStore } from '@/store/auth'
 import { useAccountingStore } from '@/store/accounting'
 import { useFamilyGuard } from '@/composables/useFamilyGuard'
 import { formatMoney } from '@/utils/format'
+import { getCssVar, resolveCssVars } from '@/utils/color'
 import * as echarts from 'echarts'
 import dayjs from 'dayjs'
 
@@ -196,10 +197,8 @@ const maxCategoryExpense = computed(() => Math.max(...(report.value.expenseCateg
 const maxCategoryIncome = computed(() => Math.max(...(report.value.incomeCategories || []).map(c => c.total), 1))
 const maxMemberExpense = computed(() => Math.max(...(report.value.memberStats || []).map(m => m.expense), 1))
 
-const categoryColors = [
-  'var(--terracotta)', 'var(--amber)', 'var(--sage)', 'var(--sky)', 'var(--rose)',
-  'var(--plum)', 'var(--terra-deep)', 'var(--amber-d)', 'var(--sage-d)', 'var(--rose-d)'
-]
+const categoryColorVars = ['--terracotta', '--amber', '--sage', '--sky', '--rose', '--plum', '--terra-deep', '--amber-d', '--sage-d', '--rose-d']
+const categoryColors = resolveCssVars(categoryColorVars)
 
 onMounted(async () => {
   if (!await useFamilyGuard()) return
@@ -294,8 +293,8 @@ function renderChart() {
     xAxis: { type: 'category', data: months },
     yAxis: { type: 'value', axisLabel: { formatter: v => v >= 10000 ? (v / 10000) + 'w' : v } },
     series: [
-      { name: '收入', type: 'bar', data: incomes, itemStyle: { color: 'var(--success)', borderRadius: [4, 4, 0, 0] } },
-      { name: '支出', type: 'bar', data: expenses, itemStyle: { color: 'var(--danger)', borderRadius: [4, 4, 0, 0] } }
+      { name: '收入', type: 'bar', data: incomes, itemStyle: { color: getCssVar('--success'), borderRadius: [4, 4, 0, 0] } },
+      { name: '支出', type: 'bar', data: expenses, itemStyle: { color: getCssVar('--danger'), borderRadius: [4, 4, 0, 0] } }
     ]
   })
 

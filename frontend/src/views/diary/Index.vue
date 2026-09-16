@@ -167,6 +167,7 @@ import { useFamilyGuard } from '@/composables/useFamilyGuard'
 import { diaryApi, momentApi } from '@/api'
 import { useAuthStore } from '@/store/auth'
 import { ElMessage } from 'element-plus'
+import { FullScreen, ScaleToOriginal } from '@element-plus/icons-vue'
 import { renderMarkdownSafe } from '@/utils/format'
 import dayjs from 'dayjs'
 

@@ -50,6 +50,7 @@ router.get('/report/monthly', ctrl.getMonthlyReport);
 router.get('/report/yearly', ctrl.getYearlyReport);
 router.get('/report/yearly-category', ctrl.getYearlyCategoryReport);
 router.get('/report/yearly-category-matrix', ctrl.getYearlyCategoryMatrix);
+router.get('/report/range', ctrl.getRangeReport);
 router.get('/report/export', ctrl.exportReport);
 
 // 语音/图片上传

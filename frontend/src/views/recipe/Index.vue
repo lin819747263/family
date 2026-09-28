@@ -7,10 +7,10 @@
         <p class="page-desc">记录家庭美食，分享烹饪心得</p>
       </div>
       <div class="header-actions">
-        <el-input v-model="keyword" placeholder="搜索菜谱..." clearable style="width:180px;" @clear="loadList" @keyup.enter="loadList">
+        <el-input v-model="keyword" placeholder="搜索菜谱..." clearable class="header-search" @clear="loadList" @keyup.enter="loadList">
           <template #prefix><el-icon><Search /></el-icon></template>
         </el-input>
-        <el-select v-model="filterDifficulty" placeholder="难度" clearable style="width:100px;" @change="loadList">
+        <el-select v-model="filterDifficulty" placeholder="难度" clearable class="header-select" @change="loadList">
           <el-option label="简单" value="easy" />
           <el-option label="中等" value="medium" />
           <el-option label="困难" value="hard" />
@@ -377,6 +377,8 @@ async function handleUpload(e) {
 </script>
 
 <style scoped>
+.header-search { width: 180px; }
+.header-select { width: 100px; }
 .recipe-page {
   animation: pageIn 0.4s ease-out;
 }
@@ -427,7 +429,7 @@ async function handleUpload(e) {
 }
 .recipe-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 28px rgba(var(--shadow-rgb), 0.08);
 }
 
 .rc-image {
@@ -518,7 +520,7 @@ async function handleUpload(e) {
   width: 30px;
   height: 30px;
   border: none;
-  background: rgba(255,255,255,0.9);
+  background: rgba(var(--bg-card-rgb), 0.9);
   backdrop-filter: blur(8px);
   border-radius: 8px;
   cursor: pointer;
@@ -529,7 +531,7 @@ async function handleUpload(e) {
   transition: all 0.2s;
 }
 .act-btn:hover {
-  background: #fff;
+  background: var(--bg-card);
   color: var(--text-secondary);
 }
 .act-btn.danger:hover {
@@ -593,7 +595,7 @@ async function handleUpload(e) {
   height: 28px;
   border-radius: 50%;
   background: var(--gradient-primary);
-  color: #fff;
+  color: var(--warm-white);
   font-size: 13px;
   font-weight: 600;
   display: flex;
@@ -774,7 +776,7 @@ async function handleUpload(e) {
   height: 24px;
   border-radius: 50%;
   background: var(--gradient-primary);
-  color: #fff;
+  color: var(--warm-white);
   font-size: 12px;
   font-weight: 700;
   display: flex;
@@ -805,6 +807,18 @@ async function handleUpload(e) {
   .header-actions :deep(.el-select) {
     flex: 1 1 calc(50% - 8px);
     min-width: 0;
+  }
+  .header-search, .header-select { width: 100%; }
+  .recipe-dialog.el-dialog,
+  .view-dialog.el-dialog {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+  .recipe-dialog :deep(.el-dialog__body),
+  .view-dialog :deep(.el-dialog__body) {
+    max-height: calc(100vh - 120px);
   }
 }
 

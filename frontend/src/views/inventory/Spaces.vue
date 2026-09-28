@@ -398,7 +398,7 @@ async function handleDelete(id) {
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  color: #fff;
+  color: var(--warm-white);
   flex-shrink: 0;
 }
 .lv-home { background: linear-gradient(135deg, var(--terracotta), var(--terra-deep)); }
@@ -411,7 +411,7 @@ async function handleDelete(id) {
   font-weight: 700;
 }
 .node-lvl {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   padding: 2px 9px;
   border-radius: 999px;
@@ -456,7 +456,7 @@ async function handleDelete(id) {
 }
 .act-btn:hover {
   background: var(--terracotta);
-  color: #fff;
+  color: var(--warm-white);
 }
 .act-btn.danger:hover {
   background: var(--rose-d);

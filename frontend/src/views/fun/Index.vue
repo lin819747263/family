@@ -391,7 +391,11 @@ async function loadDrinks() {
     drinkLoading.value = false
   }
 }
-async function toggleDrinkFav(d) { const res = await drinkApi.toggleFav(d.id); d.isFav = res.data.isFav; d.likes = res.data.likes }
+async function toggleDrinkFav(d) {
+  try {
+    const res = await drinkApi.toggleFav(d.id); d.isFav = res.data.isFav; d.likes = res.data.likes
+  } catch (e) { ElMessage.error(e.response?.data?.message || '操作失败') }
+}
 const drinkBgs = ['rgba(var(--amber-rgb),.2)', 'rgba(var(--rose-rgb),.2)', 'rgba(var(--primary-rgb),.2)', 'rgba(var(--sky-rgb),.2)', 'rgba(var(--sage-rgb),.2)']
 const drinkEmojis = ['🧋', '🍓', '🍇', '🥥', '🍋', '🍑']
 function getDrinkBg(brand) { const i = (brand || '').length % drinkBgs.length; return drinkBgs[i] }
@@ -413,7 +417,11 @@ async function loadShops() {
     shopLoading.value = false
   }
 }
-async function toggleShopCheck(s) { const res = await funShopApi.toggleCheck(s.id); s.checkedIn = res.data.checkedIn; s.checkedAt = res.data.checkedAt }
+async function toggleShopCheck(s) {
+  try {
+    const res = await funShopApi.toggleCheck(s.id); s.checkedIn = res.data.checkedIn; s.checkedAt = res.data.checkedAt
+  } catch (e) { ElMessage.error(e.response?.data?.message || '操作失败') }
+}
 const shopBgs = { '烘焙': 'rgba(var(--amber-rgb),.2)', '糖水': 'rgba(var(--rose-rgb),.2)', '咖啡': 'rgba(var(--sage-rgb),.2)', '火锅': 'rgba(var(--primary-rgb),.2)', '日料': 'rgba(var(--sky-rgb),.2)' }
 const shopEmojis = { '烘焙': '🥐', '糖水': '🍧', '咖啡': '☕', '火锅': '🍲', '日料': '🏮', '奶茶': '🧋' }
 function getShopBg(cat) { return shopBgs[cat] || 'rgba(var(--primary-rgb),.15)' }
@@ -449,7 +457,11 @@ async function loadPlaces() {
     placeLoading.value = false
   }
 }
-async function togglePlaceWish(p) { const res = await funPlaceApi.toggleWish(p.id); p.isWish = res.data.isWish }
+async function togglePlaceWish(p) {
+  try {
+    const res = await funPlaceApi.toggleWish(p.id); p.isWish = res.data.isWish
+  } catch (e) { ElMessage.error(e.response?.data?.message || '操作失败') }
+}
 
 // ===== 水果 =====
 const fruits = ref([])
@@ -606,14 +618,14 @@ onMounted(async () => {
 .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; align-items: center; }
 .fchip { padding: 9px 15px; border-radius: 999px; border: 1.5px solid var(--border); background: rgba(var(--bg-card-rgb),.8); color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .25s; }
 .fchip:hover { border-color: var(--terracotta); color: var(--terra-deep); }
-.fchip.active { background: var(--terracotta); border-color: var(--terracotta); color: #fff; }
+.fchip.active { background: var(--terracotta); border-color: var(--terracotta); color: var(--warm-white); }
 .filter-count { margin-left: auto; font-size: 12.5px; color: var(--text-secondary); }
 .filter-count b { color: var(--terra-deep); }
 
 /* ===== 卡片删除按钮 ===== */
 .card-del { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border-radius: 8px; border: none; background: rgba(var(--bg-card-rgb),.9); color: var(--terra-deep); cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(var(--shadow-rgb),.15); opacity: 0; transition: all .25s; z-index: 2; }
 .recipe-card:hover .card-del, .drink-card:hover .card-del, .shop-card:hover .card-del, .place-card:hover .card-del, .fruit-card:hover .card-del { opacity: 1; }
-.card-del:hover { background: var(--rose-d); color: #fff; }
+.card-del:hover { background: var(--rose-d); color: var(--warm-white); }
 
 /* ===== 空状态 ===== */
 
@@ -627,7 +639,7 @@ onMounted(async () => {
 .rcov { height: 140px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
 .rcov-emoji { font-size: 46px; transition: transform .6s cubic-bezier(.22,1,.36,1); }
 .recipe-card:hover .rcov-emoji { transform: scale(1.25) rotate(-8deg); }
-.diff-badge { position: absolute; top: 10px; right: 10px; font-size: 11px; font-weight: 700; padding: 3px 11px; border-radius: 999px; backdrop-filter: blur(6px); }
+.diff-badge { position: absolute; top: 10px; right: 10px; font-size: 12px; font-weight: 700; padding: 3px 11px; border-radius: 999px; backdrop-filter: blur(6px); }
 .diff-badge.easy { background: rgba(var(--sage-rgb),.28); color: var(--sage-d); }
 .diff-badge.medium { background: rgba(var(--amber-rgb),.3); color: var(--amber-d); }
 .diff-badge.hard { background: rgba(var(--rose-rgb),.3); color: var(--rose-d); }
@@ -637,7 +649,7 @@ onMounted(async () => {
 .rmeta { display: flex; gap: 12px; margin-top: 11px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 12px; color: var(--text-secondary); flex-wrap: wrap; }
 .rview { position: absolute; inset: 0; background: rgba(107,87,68,.42); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .3s; }
 .recipe-card:hover .rview { opacity: 1; }
-.rview span { background: var(--bg-card); color: var(--terra-deep); font-size: 13px; font-weight: 700; padding: 9px 18px; border-radius: 999px; box-shadow: 0 6px 18px rgba(0,0,0,.18); }
+.rview span { background: var(--bg-card); color: var(--terra-deep); font-size: 13px; font-weight: 700; padding: 9px 18px; border-radius: 999px; box-shadow: 0 6px 18px rgba(var(--shadow-rgb),.18); }
 
 /* ===== 奶茶卡片 ===== */
 .drink-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
@@ -651,7 +663,7 @@ onMounted(async () => {
 .dk-name { font-size: 15px; font-weight: 700; }
 .dk-brand { display: inline-block; font-size: 11.5px; font-weight: 600; padding: 2px 9px; border-radius: 999px; background: var(--apricot); color: var(--terra-deep); margin-top: 6px; }
 .dk-tags { display: flex; gap: 6px; margin-top: 9px; flex-wrap: wrap; }
-.dk-tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(var(--sky-rgb),.18); color: var(--sky-d); }
+.dk-tag { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(var(--sky-rgb),.18); color: var(--sky-d); }
 .dk-tag.ice { background: rgba(var(--sage-rgb),.18); color: var(--sage-d); }
 .dk-note { font-size: 12px; color: var(--text-secondary); margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); line-height: 1.5; }
 .drink-add { border: 1.5px dashed var(--wood-light); background: rgba(var(--cream-rgb),.4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 150px; color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .3s; }
@@ -660,7 +672,7 @@ onMounted(async () => {
 
 /* ===== 打卡小店 ===== */
 .ck-summary { display: flex; align-items: center; gap: 16px; padding: 18px; margin-bottom: 18px; background: linear-gradient(120deg, rgba(var(--amber-rgb),.16), rgba(var(--rose-rgb),.14)); border: 1.5px solid rgba(var(--amber-rgb),.4); }
-.ck-ico { width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, var(--amber), var(--amber-d)); color: #fff; font-size: 21px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ck-ico { width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, var(--amber), var(--amber-d)); color: var(--warm-white); font-size: 21px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .ck-info { flex: 1; min-width: 0; }
 .ck-text { font-size: 14px; font-weight: 600; }
 .ck-text b { color: var(--amber-d); }
@@ -672,12 +684,12 @@ onMounted(async () => {
 .sp-ico { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
 .sp-body { flex: 1; min-width: 0; }
 .sp-name { font-size: 15px; font-weight: 700; }
-.sp-cat { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: var(--apricot); color: var(--terra-deep); margin-left: 8px; vertical-align: 2px; }
+.sp-cat { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: var(--apricot); color: var(--terra-deep); margin-left: 8px; vertical-align: 2px; }
 .sp-addr { font-size: 12px; color: var(--text-secondary); margin-top: 5px; }
 .sp-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
 .stars { font-size: 13px; letter-spacing: 2px; color: var(--amber-d); }
 .ck-btn { padding: 7px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: rgba(var(--bg-card-rgb),.8); color: var(--terra-deep); font-size: 12px; font-weight: 700; cursor: pointer; transition: all .25s; }
-.ck-btn:hover { border-color: var(--amber); background: var(--amber); color: #fff; }
+.ck-btn:hover { border-color: var(--amber); background: var(--amber); color: var(--warm-white); }
 .shop-card.done .ck-btn { background: rgba(var(--sage-rgb),.2); border-color: transparent; color: var(--sage-d); cursor: default; }
 .stamp { position: absolute; right: 16px; top: 12px; transform: rotate(-14deg) scale(1.8); opacity: 0; border: 2.5px solid var(--rose-d); color: var(--rose-d); font-weight: 800; font-size: 13px; letter-spacing: .25em; padding: 4px 12px; border-radius: 8px; pointer-events: none; transition: all .4s cubic-bezier(.34,1.56,.64,1); }
 .shop-card.done .stamp { opacity: .8; transform: rotate(-14deg) scale(1); }
@@ -691,23 +703,23 @@ onMounted(async () => {
 .scene { height: 120px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
 .scene-emoji { font-size: 42px; transition: transform .6s cubic-bezier(.22,1,.36,1); }
 .place-card:hover .scene-emoji { transform: scale(1.2); }
-.season-tag { position: absolute; top: 10px; left: 10px; font-size: 11px; font-weight: 700; padding: 3px 11px; border-radius: 999px; backdrop-filter: blur(6px); background: rgba(var(--bg-card-rgb),.75); color: var(--terra-deep); }
+.season-tag { position: absolute; top: 10px; left: 10px; font-size: 12px; font-weight: 700; padding: 3px 11px; border-radius: 999px; backdrop-filter: blur(6px); background: rgba(var(--bg-card-rgb),.75); color: var(--terra-deep); }
 .wish-btn { position: absolute; top: 8px; right: 8px; border: none; background: rgba(var(--bg-card-rgb),.8); backdrop-filter: blur(6px); width: 32px; height: 32px; border-radius: 10px; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; transition: all .25s; }
 .wish-btn:hover { transform: scale(1.12); }
-.wish-btn.on { background: var(--rose); color: #fff; }
+.wish-btn.on { background: var(--rose); color: var(--warm-white); }
 .pbody { padding: 14px 16px 16px; }
 .pname { font-size: 15.5px; font-weight: 700; }
 .pwhy { font-size: 12.5px; color: var(--text-secondary); margin-top: 5px; }
 .pmeta { display: flex; flex-direction: column; gap: 5px; margin-top: 11px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 12px; color: var(--text-secondary); }
 .ptag-row { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
-.ptag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(var(--sky-rgb),.18); color: var(--sky-d); }
+.ptag { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(var(--sky-rgb),.18); color: var(--sky-d); }
 .ptag.fee { background: rgba(var(--sage-rgb),.18); color: var(--sage-d); }
 .place-add { border: 1.5px dashed var(--wood-light); background: rgba(var(--cream-rgb),.4); display: flex; align-items: center; justify-content: center; min-height: 280px; color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .3s; }
 .place-add:hover { border-color: var(--terracotta); color: var(--terra-deep); }
 
 /* ===== 时令水果 ===== */
 .fruit-banner { display: flex; align-items: center; gap: 14px; padding: 18px; margin-bottom: 18px; background: linear-gradient(120deg, rgba(var(--sage-rgb),.16), rgba(var(--amber-rgb),.16)); border: 1.5px solid rgba(var(--sage-rgb),.4); }
-.fb-ico { width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, var(--sage), var(--sage-d)); color: #fff; font-size: 21px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.fb-ico { width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, var(--sage), var(--sage-d)); color: var(--warm-white); font-size: 21px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .fb-text { font-size: 14px; line-height: 1.6; }
 .fb-text b { color: var(--sage-d); }
 .fruit-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
@@ -720,8 +732,8 @@ onMounted(async () => {
 .f-months i { width: 8px; height: 8px; border-radius: 50%; background: var(--cream); border: 1px solid var(--border); }
 .f-months i.on { background: var(--sage); border-color: var(--sage); }
 .f-months i.now { box-shadow: 0 0 0 3px rgba(var(--primary-rgb),.3); background: var(--terracotta); border-color: var(--terracotta); }
-.f-season { font-size: 11px; color: var(--text-secondary); margin-top: 6px; }
-.f-sweet { display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 9px; font-size: 11px; color: var(--text-secondary); }
+.f-season { font-size: 12px; color: var(--text-secondary); margin-top: 6px; }
+.f-sweet { display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 9px; font-size: 12px; color: var(--text-secondary); }
 .f-sweet i { width: 7px; height: 7px; border-radius: 50%; background: var(--cream); border: 1px solid var(--border); }
 .f-sweet i.on { background: var(--amber); border-color: var(--amber); }
 .f-price { font-size: 13px; font-weight: 700; color: var(--terra-deep); margin-top: 8px; }
@@ -744,12 +756,12 @@ onMounted(async () => {
 .rv-desc { padding: 12px 16px 18px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; }
 .rv-right { flex: 1; min-width: 0; overflow-y: auto; padding: 16px 20px 22px; }
 .vs-title { font-size: 15px; font-weight: 800; color: var(--terra-deep); display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-.vs-count { font-size: 11px; font-weight: 600; color: var(--text-secondary); background: var(--cream); padding: 2px 9px; border-radius: 999px; }
+.vs-count { font-size: 12px; font-weight: 600; color: var(--text-secondary); background: var(--cream); padding: 2px 9px; border-radius: 999px; }
 .vs-title.mt { margin-top: 20px; }
 .ing-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 2px; border-bottom: 1px dashed var(--border); font-size: 13px; }
 .ing-amt { font-weight: 700; color: var(--terra-deep); }
 .step-item { display: flex; gap: 10px; margin-bottom: 12px; }
-.step-badge { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, var(--terracotta), var(--terra-deep)); color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step-badge { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, var(--terracotta), var(--terra-deep)); color: var(--warm-white); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
 .step-text { flex: 1; font-size: 13px; line-height: 1.65; }
 
 /* ===== 弹窗按钮 ===== */
@@ -768,6 +780,31 @@ onMounted(async () => {
   .rv-body { flex-direction: column; overflow-y: auto; max-height: 66vh; }
   .rv-left { width: 100%; border-right: none; border-bottom: 1px dashed var(--border); }
 }
+@media (max-width: 768px) {
+  .recipe-detail-dialog.el-dialog,
+  .warm-dialog.el-dialog {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+  .recipe-detail-dialog :deep(.el-dialog__body),
+  .warm-dialog :deep(.el-dialog__body) {
+    max-height: calc(100vh - 120px);
+  }
+}
+@media (max-width: 768px) {
+  .fruit-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .fruit-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 600px) {
   .recipe-grid, .drink-grid, .place-grid, .fruit-grid { grid-template-columns: 1fr; }
   .shop-card { flex-direction: column; align-items: flex-start; }

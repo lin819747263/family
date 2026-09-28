@@ -76,7 +76,7 @@ function getPhotoYear(p) {
 .mem-ico {
   width: 38px; height: 38px; border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px; color: #fff;
+  font-size: 18px; color: var(--warm-white);
 }
 .mem-title { font-size: 18px; font-weight: 800; color: var(--terra-deep); }
 .mem-sub { font-size: 12.5px; color: var(--text-secondary); }
@@ -95,11 +95,13 @@ function getPhotoYear(p) {
 .photo-item img { width: 100%; height: 100%; object-fit: cover; }
 .mem-year {
   position: absolute; left: 10px; bottom: 8px; z-index: 2;
-  font-size: 11px; font-weight: 700; color: #fff;
+  font-size: 12px; font-weight: 700; color: var(--warm-white);
   background: rgba(107, 87, 68, 0.5); backdrop-filter: blur(4px);
   padding: 2px 9px; border-radius: 999px;
 }
 
+@media (max-width: 768px) { .mem-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 480px) { .mem-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 960px) { .mem-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 600px) { .mem-grid { grid-template-columns: repeat(2, 1fr); } }
 </style>

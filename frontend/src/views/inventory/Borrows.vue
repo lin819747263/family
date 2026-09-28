@@ -257,14 +257,18 @@ async function handleCreate() {
 }
 
 async function handleReturn(id) {
-  await inventoryApi.returnBorrow(id)
-  ElMessage.success('已确认归还')
-  loadBorrows()
+  try {
+    await inventoryApi.returnBorrow(id)
+    ElMessage.success('已确认归还')
+    loadBorrows()
+  } catch (e) { ElMessage.error(e.response?.data?.message || '操作失败') }
 }
 
 async function handleRemind(id) {
-  await inventoryApi.remindBorrow(id)
-  ElMessage.success('催还通知已发送')
+  try {
+    await inventoryApi.remindBorrow(id)
+    ElMessage.success('催还通知已发送')
+  } catch (e) { ElMessage.error(e.response?.data?.message || '操作失败') }
 }
 </script>
 
@@ -389,7 +393,7 @@ async function handleRemind(id) {
 .fchip.active {
   background: var(--terracotta);
   border-color: var(--terracotta);
-  color: #fff;
+  color: var(--warm-white);
 }
 
 /* ===== 空状态 ===== */
@@ -443,8 +447,8 @@ async function handleRemind(id) {
   width: 22px;
   height: 22px;
   border-radius: 7px;
-  color: #fff;
-  font-size: 11px;
+  color: var(--warm-white);
+  font-size: 12px;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
@@ -506,7 +510,7 @@ async function handleRemind(id) {
 .mini-btn:hover {
   border-color: var(--terracotta);
   background: var(--terracotta);
-  color: #fff;
+  color: var(--warm-white);
 }
 .mini-btn.warn:hover {
   border-color: var(--amber);
@@ -723,7 +727,7 @@ async function handleRemind(id) {
 }
 .warm-popper .el-date-table td.current .el-date-table-cell__text {
   background: var(--gradient-primary);
-  color: #fff;
+  color: var(--warm-white);
   border-radius: 8px;
 }
 .warm-popper .el-date-table td.available:hover .el-date-table-cell__text {

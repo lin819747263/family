@@ -242,13 +242,13 @@ const displayCategories = computed(() => {
   return result
 })
 
+import { formatRelativeDate } from '@/utils/format'
+
 // 日期显示文本
 const dateDisplayText = computed(() => {
   if (!form.transactionDate) return '选择日期'
-  const today = dayjs().format('YYYY-MM-DD')
-  const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
-  if (form.transactionDate === today) return '今天 · ' + dayjs().format('M月D日')
-  if (form.transactionDate === yesterday) return '昨天 · ' + dayjs(form.transactionDate).format('M月D日')
+  const label = formatRelativeDate(form.transactionDate)
+  if (label === '今天' || label === '昨天') return label + ' · ' + dayjs(form.transactionDate).format('M月D日')
   return dayjs(form.transactionDate).format('M月D日')
 })
 
@@ -339,7 +339,7 @@ async function handleSubmit() {
   display: flex; align-items: center; justify-content: center; gap: 7px;
   transition: color 0.3s;
 }
-.type-tab.active { color: #fff; }
+.type-tab.active { color: var(--warm-white); }
 .type-icon { font-size: 16px; }
 .type-indicator {
   position: absolute; z-index: 1; top: 4px; bottom: 4px; left: 4px;
@@ -385,7 +385,7 @@ async function handleSubmit() {
 }
 .voice-btn:hover { background: var(--apricot); }
 .voice-btn.listening {
-  background: var(--rose); color: #fff;
+  background: var(--rose); color: var(--warm-white);
   animation: pulse 1.2s ease-in-out infinite;
 }
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
@@ -447,7 +447,7 @@ async function handleSubmit() {
 .submit-btn {
   width: 100%; margin-top: 4px; padding: 14px;
   border-radius: 14px; border: none; cursor: pointer;
-  font-size: 15px; font-weight: 700; letter-spacing: 0.06em; color: #fff;
+  font-size: 15px; font-weight: 700; letter-spacing: 0.06em; color: var(--warm-white);
   transition: transform 0.3s, box-shadow 0.3s;
 }
 .submit-btn.expense {
@@ -464,8 +464,8 @@ async function handleSubmit() {
 
 .btn-loading {
   display: inline-block; width: 18px; height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff; border-radius: 50%;
+  border: 2px solid rgba(var(--bg-card-rgb), 0.3);
+  border-top-color: var(--warm-white); border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }

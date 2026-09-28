@@ -811,4 +811,49 @@ body { transition: background 0.4s, color 0.3s; }
     width: 90vw;
     max-width: 90vw;
   }
+
+  /* 最小字号保障可读性 */
+  body {
+    font-size: 14px;
+  }
+
+  /* 超宽弹窗移动端全屏 */
+  .el-dialog--wide {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+  .el-dialog--wide .el-dialog__body {
+    max-height: calc(100vh - 120px);
+  }
+
+  /* 内联固定宽度表单元素自适应 */
+  .page-header .el-input,
+  .page-header .el-select {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  /* hover 隐藏操作按钮在触屏设备始终可见 */
+  .row-acts,
+  .b-card-actions,
+  .budget-actions,
+  .card-del {
+    opacity: 1 !important;
+  }
+}
+
+/* 极小屏（< 480px）进一步收紧 */
+@media (max-width: 480px) {
+  .el-dialog__body {
+    padding: 10px 12px 14px !important;
+  }
+  .card:not(.empty-card):not(.loading-card):not(.error-card):not(.empty-state) {
+    padding: 12px;
+    border-radius: 12px;
+  }
 }

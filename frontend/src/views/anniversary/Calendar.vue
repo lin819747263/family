@@ -281,7 +281,7 @@ function goToday() {
 }
 .mg-day.today .mg-num {
   background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));
-  color: #fff; box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.2);
+  color: var(--warm-white); box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.2);
   animation: ring 2.4s ease-in-out infinite;
 }
 @keyframes ring {
@@ -289,7 +289,7 @@ function goToday() {
   50% { box-shadow: 0 0 0 6px rgba(var(--primary-rgb), 0.12); }
 }
 .mg-evt {
-  font-size: 10.5px; font-weight: 600; padding: 2px 6px;
+  font-size: 12px; font-weight: 600; padding: 2px 6px;
   border-radius: 6px; color: #fff;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
@@ -311,10 +311,10 @@ function goToday() {
 .wg-head {
   text-align: center; padding-bottom: 8px; border-bottom: 1px dashed var(--border);
 }
-.wg-wd { font-size: 11px; color: var(--text-secondary); }
+.wg-wd { font-size: 12px; color: var(--text-secondary); }
 .wg-num { font-size: 18px; font-weight: 800; color: var(--terra-deep); margin-top: 2px; }
 .wg-col.today .wg-num {
-  color: #fff; background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));
+  color: var(--warm-white); background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));
   width: 32px; height: 32px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center; margin: 2px auto 0;
 }
@@ -326,7 +326,7 @@ function goToday() {
 }
 .wg-evt:hover { transform: scale(1.04); }
 .wg-evt b { display: block; font-size: 12px; }
-.wg-evt .tm { opacity: 0.85; font-size: 10.5px; }
+.wg-evt .tm { opacity: 0.85; font-size: 12px; }
 
 /* 响应式 */
 @media (max-width: 960px) {

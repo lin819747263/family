@@ -6,10 +6,10 @@
         <p class="page-desc">按时间回顾家庭照片</p>
       </div>
       <div class="header-actions">
-        <el-select v-model="filterYear" placeholder="年份" clearable style="width:100px;" @change="onFilterChange">
+        <el-select v-model="filterYear" placeholder="年份" clearable class="tl-select-sm" @change="onFilterChange">
           <el-option v-for="y in years" :key="y" :label="y + '年'" :value="y" />
         </el-select>
-        <el-select v-model="filterMonth" placeholder="月份" clearable style="width:90px;" @change="onFilterChange">
+        <el-select v-model="filterMonth" placeholder="月份" clearable class="tl-select-xs" @change="onFilterChange">
           <el-option v-for="m in 12" :key="m" :label="m + '月'" :value="m" />
         </el-select>
       </div>
@@ -121,6 +121,8 @@ function openPreview(photo) {
 </script>
 
 <style scoped>
+.tl-select-sm { width: 100px; }
+.tl-select-xs { width: 90px; }
 .timeline-page {
   animation: pageIn 0.4s ease-out;
 }
@@ -234,6 +236,7 @@ function openPreview(photo) {
     flex: 1 1 calc(50% - 8px);
     min-width: 0;
   }
+  .tl-select-sm, .tl-select-xs { width: 100%; }
 }
 
 @media (max-width: 640px) {

@@ -586,7 +586,7 @@ async function handleDelete(id) {
 }
 .upcoming-card {
   position: relative; overflow: hidden; padding: 22px;
-  text-align: center; color: #fff; border-radius: var(--radius-lg);
+  text-align: center; color: var(--warm-white); border-radius: var(--radius-lg);
   transition: transform 0.35s, box-shadow 0.35s;
 }
 .upcoming-card:hover {
@@ -594,7 +594,7 @@ async function handleDelete(id) {
 }
 .upcoming-card::after {
   content: ""; position: absolute; right: -40px; bottom: -40px;
-  width: 130px; height: 130px; border-radius: 50%; background: rgba(255, 255, 255, 0.14);
+  width: 130px; height: 130px; border-radius: 50%; background: rgba(var(--bg-card-rgb), 0.14);
 }
 .uc-num {
   font-size: 44px; font-weight: 800; line-height: 1; letter-spacing: -0.03em;
@@ -651,22 +651,22 @@ async function handleDelete(id) {
 .ac-repeat {
   display: inline-block; padding: 0 6px;
   background: rgba(var(--primary-rgb), 0.12); color: var(--terra-deep);
-  border-radius: 4px; font-size: 11px; font-weight: 500;
+  border-radius: 4px; font-size: 12px; font-weight: 500;
 }
 .ac-reminder {
   display: inline-flex; align-items: center; gap: 2px; padding: 0 6px;
   background: rgba(var(--amber-rgb), 0.15); color: var(--amber-d);
-  border-radius: 4px; font-size: 11px; font-weight: 500; margin-left: 4px;
+  border-radius: 4px; font-size: 12px; font-weight: 500; margin-left: 4px;
 }
 .ac-lunar {
   display: inline-flex; align-items: center; gap: 3px; padding: 0 6px;
   background: rgba(var(--sky-rgb), 0.15); color: var(--sky-d);
-  border-radius: 4px; font-size: 11px; font-weight: 500;
+  border-radius: 4px; font-size: 12px; font-weight: 500;
 }
 
 /* 即将到来卡片的农历显示 */
 .uc-lunar {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--plum);
   margin-top: 2px;
 }
@@ -803,7 +803,7 @@ async function handleDelete(id) {
 }
 .cp-dot.active {
   border-color: var(--text-primary);
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px currentColor;
+  box-shadow: 0 0 0 2px var(--warm-white), 0 0 0 4px currentColor;
   transform: scale(1.15);
 }
 

@@ -265,7 +265,7 @@ async function handleCreate() {
 }
 .book-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
 }
 
 .book-top {
@@ -282,7 +282,7 @@ async function handleCreate() {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--warm-white);
 }
 .book-icon.family {
   background: var(--gradient-primary);

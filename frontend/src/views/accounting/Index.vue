@@ -252,7 +252,7 @@ import TransactionForm from '@/components/accounting/TransactionForm.vue'
 import BatchTransactionForm from '@/components/accounting/BatchTransactionForm.vue'
 import BillImport from '@/components/accounting/BillImport.vue'
 import { ElMessage } from 'element-plus'
-import { formatMoney } from '@/utils/format'
+import { formatMoney, formatRelativeDate } from '@/utils/format'
 import { buildCategoryTree } from '@/utils/categoryTree'
 import dayjs from 'dayjs'
 
@@ -309,10 +309,8 @@ const groupedTxns = computed(() => {
 })
 
 function formatGroupDate(d) {
-  const today = dayjs().format('YYYY-MM-DD')
-  const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
-  if (d === today) return dayjs(d).format('M月D日') + ' · 今天'
-  if (d === yesterday) return dayjs(d).format('M月D日') + ' · 昨天'
+  const label = formatRelativeDate(d)
+  if (label === '今天' || label === '昨天') return dayjs(d).format('M月D日') + ' · ' + label
   return dayjs(d).format('M月D日')
 }
 
@@ -597,7 +595,7 @@ onMounted(async () => {
 .sum-card.expense::after { background: var(--rose); }
 .sum-card.balance::after { background: var(--amber); }
 .sum-label { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 7px; }
-.sum-ico { width: 30px; height: 30px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #fff; }
+.sum-ico { width: 30px; height: 30px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--warm-white); }
 .sum-val { display: block; margin-top: 10px; font-size: 30px; font-weight: 800; letter-spacing: -0.02em; }
 .sum-val.income { color: var(--sage-d); }
 .sum-val.expense { color: var(--rose-d); }
@@ -612,7 +610,7 @@ onMounted(async () => {
 .chips { display: flex; gap: 8px; flex-wrap: wrap; }
 .chip-btn { padding: 10px 16px; border-radius: 999px; border: 1.5px solid var(--border); background: rgba(var(--bg-card-rgb), 0.8); color: var(--text-secondary); font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all 0.25s; }
 .chip-btn:hover { border-color: var(--terracotta); color: var(--terra-deep); }
-.chip-btn.active { background: var(--terracotta); border-color: var(--terracotta); color: #fff; box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.35); }
+.chip-btn.active { background: var(--terracotta); border-color: var(--terracotta); color: var(--warm-white); box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.35); }
 .chip-btn.active.exp { background: var(--rose); border-color: var(--rose); }
 .chip-btn.active.inc { background: var(--sage); border-color: var(--sage); }
 
@@ -622,7 +620,7 @@ onMounted(async () => {
 .group + .group { border-top: 1px dashed var(--border); }
 .group-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 0 8px; }
 .g-date { font-size: 14px; font-weight: 700; color: var(--terra-deep); display: flex; align-items: center; gap: 9px; }
-.g-count { font-size: 11px; font-weight: 600; color: var(--text-secondary); background: var(--apricot); padding: 2px 9px; border-radius: 999px; }
+.g-count { font-size: 12px; font-weight: 600; color: var(--text-secondary); background: var(--apricot); padding: 2px 9px; border-radius: 999px; }
 .g-sum { display: flex; gap: 14px; font-size: 12.5px; font-weight: 600; }
 .g-sum .gi { color: var(--sage-d); }
 .g-sum .ge { color: var(--rose-d); }
@@ -664,7 +662,7 @@ onMounted(async () => {
 .b-card { position: relative; transition: transform 0.35s, box-shadow 0.35s; }
 .b-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(var(--shadow-rgb), 0.15); }
 .b-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.b-ico { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; }
+.b-ico { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--warm-white); }
 .b-name { font-size: 15px; font-weight: 700; }
 .b-pct { margin-left: auto; font-size: 15px; font-weight: 800; }
 .b-card-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s; }
@@ -679,9 +677,9 @@ onMounted(async () => {
 .book:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(var(--shadow-rgb), 0.16); }
 .book.current { border-color: var(--terracotta); box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.18), 0 12px 30px rgba(var(--shadow-rgb), 0.14); }
 .book-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.book-ico { width: 52px; height: 52px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 25px; color: #fff; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.book-ico { width: 52px; height: 52px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 25px; color: var(--warm-white); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .book:hover .book-ico { transform: scale(1.1) rotate(-6deg); }
-.book-cur { font-size: 11px; font-weight: 700; color: #fff; background: var(--terracotta); padding: 3px 10px; border-radius: 999px; }
+.book-cur { font-size: 12px; font-weight: 700; color: var(--warm-white); background: var(--terracotta); padding: 3px 10px; border-radius: 999px; }
 .book-more { width: 28px; height: 28px; border: none; background: transparent; border-radius: 8px; cursor: pointer; font-size: 18px; color: var(--text-secondary); transition: all 0.2s; }
 .book-more:hover { background: rgba(var(--primary-rgb), 0.1); }
 .book-name { font-size: 18px; font-weight: 700; }
@@ -698,7 +696,7 @@ onMounted(async () => {
 .dialog-title { font-size: 17px; font-weight: 600; color: var(--text-primary); }
 .mode-toggle { display: flex; gap: 4px; background: var(--apricot); border-radius: 10px; padding: 3px; }
 .mode-btn { padding: 6px 14px; border: none; border-radius: 8px; background: transparent; font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; }
-.mode-btn.active { background: #fff; color: var(--terra-deep); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); }
+.mode-btn.active { background: var(--bg-card); color: var(--terra-deep); box-shadow: var(--shadow-sm); }
 
 /* 删除警告 */
 .delete-warn { display: flex; gap: 14px; padding: 16px; background: rgba(var(--rose-rgb), 0.1); border-radius: 12px; border: 1px solid rgba(var(--rose-rgb), 0.3); }

@@ -382,7 +382,7 @@ watch(() => props.visible, (val) => {
 .search-shortcut kbd {
   display: inline-block;
   padding: 2px 6px;
-  font-size: 11px;
+  font-size: 12px;
   font-family: inherit;
   color: var(--text-secondary);
   background: var(--bg-card-alt);
@@ -421,7 +421,7 @@ watch(() => props.visible, (val) => {
 .search-tips kbd {
   display: inline-block;
   padding: 1px 5px;
-  font-size: 11px;
+  font-size: 12px;
   font-family: inherit;
   background: var(--bg-card-alt);
   border: 1px solid var(--border);
@@ -458,7 +458,7 @@ watch(() => props.visible, (val) => {
   font-size: 14px;
 }
 .group-count {
-  font-size: 11px;
+  font-size: 12px;
   background: var(--bg-card-alt);
   padding: 1px 6px;
   border-radius: 10px;
@@ -547,7 +547,7 @@ watch(() => props.visible, (val) => {
   justify-content: center;
   padding: 10px;
   border-top: 1px solid var(--bg-card-alt);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--wood-light);
 }
 </style>

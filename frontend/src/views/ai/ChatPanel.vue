@@ -244,7 +244,7 @@ watch(() => props.visible, (val) => {
   position: fixed;
   inset: 0;
   z-index: 998;
-  background: rgba(0,0,0,0.2);
+  background: rgba(var(--shadow-rgb),0.2);
 }
 
 .chat-window {
@@ -254,11 +254,11 @@ watch(() => props.visible, (val) => {
   width: 400px;
   height: 100vh;
   max-height: 100vh;
-  background: #fff;
+  background: var(--bg-card);
   z-index: 999;
   display: flex;
   flex-direction: column;
-  box-shadow: -4px 0 24px rgba(0,0,0,0.1);
+  box-shadow: -4px 0 24px rgba(var(--shadow-rgb),0.1);
   animation: slideIn 0.25s ease-out;
 }
 
@@ -274,7 +274,7 @@ watch(() => props.visible, (val) => {
   align-items: center;
   padding: 16px 20px;
   background: var(--gradient-primary);
-  color: #fff;
+  color: var(--warm-white);
   flex-shrink: 0;
 }
 .chat-header-left {
@@ -290,7 +290,7 @@ watch(() => props.visible, (val) => {
   font-weight: 600;
 }
 .chat-subtitle {
-  font-size: 11px;
+  font-size: 12px;
   opacity: 0.8;
 }
 .chat-header-right {
@@ -301,9 +301,9 @@ watch(() => props.visible, (val) => {
   width: 32px;
   height: 32px;
   border: none;
-  background: rgba(255,255,255,0.15);
+  background: rgba(var(--bg-card-rgb),0.15);
   border-radius: 8px;
-  color: #fff;
+  color: var(--warm-white);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -311,7 +311,7 @@ watch(() => props.visible, (val) => {
   transition: background 0.2s;
 }
 .chat-clear:hover, .chat-close:hover {
-  background: rgba(255,255,255,0.25);
+  background: rgba(var(--bg-card-rgb),0.25);
 }
 
 /* 消息列表 */
@@ -391,7 +391,7 @@ watch(() => props.visible, (val) => {
 }
 .chat-msg.user .msg-bubble {
   background: var(--gradient-primary);
-  color: #fff;
+  color: var(--warm-white);
   border-bottom-right-radius: 4px;
 }
 .chat-msg.assistant .msg-bubble {
@@ -549,13 +549,13 @@ watch(() => props.visible, (val) => {
   margin: 6px 0;
 }
 .msg-content :deep(code) {
-  background: rgba(0,0,0,0.06);
+  background: rgba(var(--shadow-rgb),0.06);
   padding: 1px 5px;
   border-radius: 3px;
   font-size: 13px;
 }
 .chat-msg.user .msg-content :deep(code) {
-  background: rgba(255,255,255,0.2);
+  background: rgba(var(--bg-card-rgb),0.2);
 }
 .msg-content :deep(pre) {
   background: var(--text-primary);
@@ -607,7 +607,7 @@ watch(() => props.visible, (val) => {
   gap: 8px;
   padding: 12px 16px;
   border-top: 1px solid var(--bg-card-alt);
-  background: #fff;
+  background: var(--bg-card);
   flex-shrink: 0;
 }
 .chat-input {
@@ -635,7 +635,7 @@ watch(() => props.visible, (val) => {
   height: 40px;
   border: none;
   background: var(--gradient-primary);
-  color: #fff;
+  color: var(--warm-white);
   border-radius: 12px;
   cursor: pointer;
   display: flex;

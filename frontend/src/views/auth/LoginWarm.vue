@@ -231,7 +231,7 @@ async function handleLogin() {
   display: flex;
   width: min(780px, 100%);
   max-height: calc(100vh - 40px);
-  background: rgba(255, 252, 247, 0.82);
+  background: rgba(var(--bg-card-rgb), 0.82);
   backdrop-filter: blur(12px);
   border-radius: var(--radius-lg);
   box-shadow: var(--card-shadow);
@@ -336,7 +336,7 @@ h1 {
 }
 .field :deep(.el-input__wrapper.is-focus) {
   border-color: var(--terracotta);
-  background: #fff;
+  background: var(--bg-card);
   transform: translateY(-2px);
   box-shadow: 0 6px 22px var(--glow), 0 0 0 4px rgba(var(--primary-rgb), .12);
 }
@@ -391,13 +391,13 @@ h1 {
   border-radius: 6px;
   background: var(--bg-card);
   display: flex; align-items: center; justify-content: center;
-  font-size: 11px; color: transparent;
+  font-size: 12px; color: transparent;
   transition: all .25s ease;
 }
 .remember input:checked + .box {
   background: var(--terracotta);
   border-color: var(--terracotta);
-  color: #fff;
+  color: var(--warm-white);
   transform: scale(1.08);
 }
 .link {
@@ -484,7 +484,7 @@ h1 {
 .footer-note {
   margin-top: 20px;
   text-align: center;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
   letter-spacing: .08em;
 }
@@ -550,7 +550,7 @@ h1 {
   .invite-emoji { font-size: 20px; }
   .footer-note {
     margin-top: 16px;
-    font-size: 10px;
+    font-size: 11px;
   }
 }
 

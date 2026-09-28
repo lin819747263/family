@@ -22,8 +22,8 @@
     </div>
 
     <div v-else-if="photos.length === 0" class="card" style="text-align:center;padding:60px;">
-      <el-icon :size="48" color="#ddd"><PictureFilled /></el-icon>
-      <p style="margin-top:12px;color:#999;">暂无照片，点击上方按钮上传</p>
+      <el-icon :size="48" color="var(--border)"><PictureFilled /></el-icon>
+      <p style="margin-top:12px;color:var(--text-muted);">暂无照片，点击上方按钮上传</p>
     </div>
 
     <div v-else class="photo-grid">
@@ -146,9 +146,9 @@ async function handleDeletePhoto(id) {
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(transparent, rgba(0,0,0,0.5));
+  background: linear-gradient(transparent, rgba(var(--shadow-rgb), 0.5));
   padding: 8px;
-  color: #fff;
+  color: var(--warm-white);
   font-size: 12px;
   opacity: 0;
   transition: opacity 0.3s;
@@ -162,10 +162,10 @@ async function handleDeletePhoto(id) {
   width: 28px;
   height: 28px;
   border: none;
-  background: rgba(0,0,0,0.5);
+  background: rgba(var(--shadow-rgb), 0.5);
   backdrop-filter: blur(4px);
   border-radius: 6px;
-  color: #fff;
+  color: var(--warm-white);
   cursor: pointer;
   display: flex;
   align-items: center;

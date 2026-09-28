@@ -285,7 +285,7 @@ function priorityType(p) {
   flex: 1;
   background: var(--bg-card);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.8);
+  border: 1px solid rgba(var(--bg-card-rgb), 0.8);
   border-radius: 14px;
   padding: 16px;
   text-align: center;
@@ -410,8 +410,8 @@ function priorityType(p) {
 }
 .wish-avatar {
   background: var(--gradient-primary);
-  color: #fff;
-  font-size: 10px;
+  color: var(--warm-white);
+  font-size: 12px;
   font-weight: 600;
 }
 .wish-creator {

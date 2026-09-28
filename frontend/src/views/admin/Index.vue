@@ -34,16 +34,16 @@
             v-model="search"
             placeholder="搜索用户名/昵称"
             :prefix-icon="Search"
-            style="width:200px;"
+            class="admin-search"
             clearable
             @keyup.enter="loadUsers"
             @clear="loadUsers"
           />
-          <el-select v-model="filterRole" placeholder="角色" clearable style="width:100px;" @change="loadUsers">
+          <el-select v-model="filterRole" placeholder="角色" clearable class="admin-select" @change="loadUsers">
             <el-option label="管理员" value="admin" />
             <el-option label="普通用户" value="member" />
           </el-select>
-          <el-select v-model="filterStatus" placeholder="状态" clearable style="width:100px;" @change="loadUsers">
+          <el-select v-model="filterStatus" placeholder="状态" clearable class="admin-select" @change="loadUsers">
             <el-option label="正常" value="active" />
             <el-option label="已禁用" value="disabled" />
           </el-select>
@@ -340,6 +340,8 @@ async function handleSaveSettings() {
 </script>
 
 <style scoped>
+.admin-search { width: 200px; }
+.admin-select { width: 100px; }
 .admin-page {
   animation: pageIn 0.4s ease-out;
 }
@@ -372,7 +374,7 @@ async function handleSaveSettings() {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--warm-white);
   flex-shrink: 0;
 }
 .stat-value {
@@ -413,7 +415,7 @@ async function handleSaveSettings() {
 /* 用户头像 */
 .user-avatar {
   background: var(--gradient-primary);
-  color: #fff;
+  color: var(--warm-white);
   font-weight: 600;
 }
 
@@ -427,6 +429,7 @@ async function handleSaveSettings() {
     width: 100%;
     flex-wrap: wrap;
   }
+  .admin-search, .admin-select { width: 100%; }
 }
 
 /* 系统设置 */

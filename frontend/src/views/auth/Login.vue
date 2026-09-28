@@ -446,15 +446,15 @@ async function handleLogin() {
 .login-card {
   width: 400px;
   padding: 44px 40px 36px;
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(var(--bg-card-rgb), 0.65);
   backdrop-filter: blur(24px) saturate(1.4);
   -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(var(--bg-card-rgb), 0.8);
   border-radius: 24px;
   box-shadow:
     0 8px 32px rgba(102, 126, 234, 0.08),
-    0 2px 8px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 2px 8px rgba(var(--shadow-rgb), 0.04),
+    inset 0 1px 0 rgba(var(--bg-card-rgb), 0.9);
   animation: cardAppear 0.6s ease-out 0.2s both;
 }
 @keyframes cardAppear {
@@ -512,21 +512,21 @@ async function handleLogin() {
 }
 
 .login-card :deep(.el-input__wrapper) {
-  background: rgba(255, 255, 255, 0.7);
-  border: 1.5px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  background: rgba(var(--bg-card-rgb), 0.7);
+  border: 1.5px solid var(--border);
+  box-shadow: 0 1px 3px rgba(var(--shadow-rgb), 0.04);
   border-radius: 12px;
   padding: 4px 12px;
   transition: all 0.3s ease;
 }
 .login-card :deep(.el-input__wrapper:hover) {
   border-color: #a5b4fc;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(var(--bg-card-rgb), 0.85);
 }
 .login-card :deep(.el-input__wrapper.is-focus) {
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.12);
-  background: #fff;
+  background: var(--bg-card);
 }
 .login-card :deep(.el-input__inner) {
   color: var(--text-primary);

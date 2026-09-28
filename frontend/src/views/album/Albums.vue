@@ -162,8 +162,8 @@ defineExpose({ openCreate: () => { showCreate.value = true } })
 .al-empty { font-size: 34px; opacity: 0.5; }
 .al-lock {
   position: absolute; top: 8px; right: 8px; z-index: 2;
-  background: rgba(var(--amber-rgb), 0.92); color: #fff;
-  font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px;
+  background: rgba(var(--amber-rgb), 0.92); color: var(--warm-white);
+  font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px;
 }
 
 .al-body { padding: 13px 15px; }

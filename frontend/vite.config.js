@@ -7,8 +7,11 @@ export default defineConfig({
   resolve: {
     alias: { '@': path.resolve(__dirname, 'src') }
   },
+  esbuild: {
+    drop: ['console', 'debugger']
+  },
   server: {
-    host: '0.0.0.0',
+    host: 'localhost',
     port: 5173,
     proxy: {
       '/api': { target: 'http://localhost:3000', changeOrigin: true },
@@ -16,15 +19,6 @@ export default defineConfig({
     }
   },
   build: {
-    // 生产环境移除 console 和 debugger
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true
-      }
-    },
-    // 分包策略
     rollupOptions: {
       output: {
         manualChunks: {

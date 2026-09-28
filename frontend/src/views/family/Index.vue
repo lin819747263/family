@@ -62,7 +62,7 @@
             <el-select
               :model-value="m.role"
               size="small"
-              style="width:100px;"
+              class="role-select"
               @change="(val) => handleRoleChange(m.id, val)"
             >
               <el-option label="管理员" value="admin" />
@@ -165,9 +165,11 @@ function copyInviteCode() {
 async function handleRegenerateCode() {
   const familyId = authStore.currentFamily?.id
   if (!familyId) return
-  const res = await familyApi.regenerateInviteCode({ familyId })
-  familyInfo.value.inviteCode = res.data.inviteCode
-  ElMessage.success('邀请码已更新')
+  try {
+    const res = await familyApi.regenerateInviteCode({ familyId })
+    familyInfo.value.inviteCode = res.data.inviteCode
+    ElMessage.success('邀请码已更新')
+  } catch (e) { ElMessage.error(e.response?.data?.message || '操作失败') }
 }
 
 async function handleUpdateInfo() {
@@ -183,29 +185,36 @@ async function handleUpdateInfo() {
 }
 
 async function handleRoleChange(memberId, role) {
-  await familyApi.updateMemberRole(memberId, {
-    role,
-    familyId: authStore.currentFamily?.id
-  })
-  ElMessage.success('角色更新成功')
-  loadData()
+  try {
+    await familyApi.updateMemberRole(memberId, {
+      role,
+      familyId: authStore.currentFamily?.id
+    })
+    ElMessage.success('角色更新成功')
+    loadData()
+  } catch (e) { ElMessage.error(e.response?.data?.message || '操作失败') }
 }
 
 async function handleRemove(memberId) {
-  await familyApi.removeMember(memberId, { familyId: authStore.currentFamily?.id })
-  ElMessage.success('成员已移除')
-  loadData()
+  try {
+    await familyApi.removeMember(memberId, { familyId: authStore.currentFamily?.id })
+    ElMessage.success('成员已移除')
+    loadData()
+  } catch (e) { ElMessage.error(e.response?.data?.message || '操作失败') }
 }
 
 async function handleLeave() {
-  await familyApi.leaveFamily({ familyId: authStore.currentFamily?.id })
-  ElMessage.success('已退出家庭')
-  authStore.currentFamily = null
-  await authStore.getProfile()
+  try {
+    await familyApi.leaveFamily({ familyId: authStore.currentFamily?.id })
+    ElMessage.success('已退出家庭')
+    authStore.currentFamily = null
+    await authStore.getProfile()
+  } catch (e) { ElMessage.error(e.response?.data?.message || '操作失败') }
 }
 </script>
 
 <style scoped>
+.role-select { width: 100px; }
 .family-page {
   animation: pageIn 0.4s ease-out;
 }
@@ -241,7 +250,7 @@ async function handleLeave() {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--warm-white);
   flex-shrink: 0;
 }
 .fi-detail {
@@ -305,7 +314,7 @@ async function handleLeave() {
 }
 .mc-avatar {
   background: var(--gradient-primary);
-  color: #fff;
+  color: var(--warm-white);
   font-weight: 600;
   font-size: 16px;
 }
@@ -354,5 +363,6 @@ async function handleLeave() {
     flex-direction: column;
     gap: 2px;
   }
+  .role-select { width: 100%; }
 }
 </style>

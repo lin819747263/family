@@ -22,6 +22,21 @@ export function formatDate(d, fmt = 'YYYY-MM-DD') {
 }
 
 /**
+ * 相对日期格式化（今天/昨天/前天/MM-DD）
+ * @param {string|Date} d - 日期值
+ * @returns {string} 如 "今天"、"昨天"、"前天"、"09-15"
+ */
+export function formatRelativeDate(d) {
+  const date = dayjs(d)
+  const today = dayjs().startOf('day')
+  const diff = today.diff(date.startOf('day'), 'day')
+  if (diff === 0) return '今天'
+  if (diff === 1) return '昨天'
+  if (diff === 2) return '前天'
+  return date.format('MM-DD')
+}
+
+/**
  * 安全渲染 Markdown（带 XSS 消毒）
  * @param {string} text - Markdown 文本
  * @returns {string} 消毒后的 HTML

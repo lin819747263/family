@@ -179,7 +179,7 @@ onMounted(async () => {
 .sb-ico {
   width: 36px; height: 36px; border-radius: 11px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 17px; color: #fff; flex-shrink: 0;
+  font-size: 17px; color: var(--warm-white); flex-shrink: 0;
   transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .sb-item:hover .sb-ico { transform: scale(1.1) rotate(-6deg); }
@@ -190,9 +190,9 @@ onMounted(async () => {
 .g-plum { background: linear-gradient(135deg, var(--plum), var(--plum-d)); }
 .sb-info { flex: 1; min-width: 0; }
 .sb-label { font-size: 14px; font-weight: 600; }
-.sb-desc { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+.sb-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
 .sb-badge {
-  background: var(--terracotta); color: #fff; font-size: 11px; font-weight: 700;
+  background: var(--terracotta); color: var(--warm-white); font-size: 12px; font-weight: 700;
   padding: 2px 8px; border-radius: 10px; min-width: 22px; text-align: center;
 }
 .sb-foot {

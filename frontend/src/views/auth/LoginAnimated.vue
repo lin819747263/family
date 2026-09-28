@@ -426,7 +426,7 @@ async function handleLogin() {
   gap: 10px;
   font-size: 20px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--warm-white);
   letter-spacing: 0.5px;
 }
 
@@ -434,8 +434,8 @@ async function handleLogin() {
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(var(--bg-card-rgb), 0.12);
+  border: 1px solid rgba(var(--bg-card-rgb), 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -444,7 +444,7 @@ async function handleLogin() {
 }
 
 .brand-name {
-  color: #ffffff;
+  color: var(--warm-white);
   font-size: 20px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -625,14 +625,14 @@ async function handleLogin() {
 
 .left-footer a {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--bg-card-rgb), 0.45);
   text-decoration: none;
   transition: color 0.2s;
   cursor: pointer;
 }
 
 .left-footer a:hover {
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--bg-card-rgb), 0.85);
 }
 
 /* ─── 装饰元素 ─── */
@@ -666,8 +666,8 @@ async function handleLogin() {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(var(--bg-card-rgb), 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--bg-card-rgb), 0.03) 1px, transparent 1px);
   background-size: 40px 40px;
   pointer-events: none;
   z-index: 1;
@@ -679,7 +679,7 @@ async function handleLogin() {
   align-items: center;
   justify-content: center;
   padding: 32px;
-  background: #ffffff;
+  background: var(--bg-card);
 }
 
 .form-wrapper {
@@ -694,7 +694,7 @@ async function handleLogin() {
   gap: 8px;
   font-size: 18px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
   margin-bottom: 48px;
 }
 
@@ -717,14 +717,14 @@ async function handleLogin() {
   font-size: 26px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: #0f172a;
+  color: var(--text-primary);
   margin: 0 0 10px 0;
   line-height: 1.3;
 }
 
 .form-subtitle {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-muted);
   margin: 0;
   line-height: 1.6;
 }
@@ -736,7 +736,7 @@ async function handleLogin() {
 .field-label {
   font-size: 13px;
   font-weight: 500;
-  color: #374151;
+  color: var(--text-secondary);
   margin-bottom: 6px;
   letter-spacing: 0.2px;
 }
@@ -747,8 +747,8 @@ async function handleLogin() {
 
 .login-form :deep(.el-input__wrapper) {
   height: 48px;
-  background: #fafafa;
-  border: 1px solid #e5e7eb;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
   border-radius: 10px;
   box-shadow: none;
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -760,26 +760,26 @@ async function handleLogin() {
 
 .login-form :deep(.el-input__wrapper.is-focus) {
   border-color: #1e40af;
-  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.08);
-  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(var(--shadow-rgb), 0.08);
+  background: var(--bg-card);
 }
 
 .login-form :deep(.el-input__inner) {
   font-size: 14px;
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .login-form :deep(.el-input__inner::placeholder) {
-  color: #c0c4cc;
+  color: var(--text-muted);
 }
 
 .login-form :deep(.el-input__prefix) {
-  color: #b0b7c3;
+  color: var(--text-muted);
   font-size: 15px;
 }
 
 .eye-toggle {
-  color: #6b7280;
+  color: var(--text-muted);
   cursor: pointer;
   font-size: 16px;
   display: flex;
@@ -788,7 +788,7 @@ async function handleLogin() {
 }
 
 .eye-toggle:hover {
-  color: #374151;
+  color: var(--text-secondary);
 }
 
 .error-box {
@@ -815,7 +815,7 @@ async function handleLogin() {
 
 .submit-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(30, 64, 175, 0.35) !important;
+  box-shadow: 0 4px 16px rgba(var(--shadow-rgb), 0.35) !important;
 }
 
 .divider {
@@ -823,7 +823,7 @@ async function handleLogin() {
   align-items: center;
   gap: 12px;
   margin: 20px 0 0;
-  color: #d1d5db;
+  color: var(--text-muted);
   font-size: 13px;
 }
 
@@ -832,11 +832,11 @@ async function handleLogin() {
   content: '';
   flex: 1;
   height: 1px;
-  background: #e5e7eb;
+  background: var(--border);
 }
 
 .divider span {
-  color: #9ca3af;
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
@@ -846,34 +846,34 @@ async function handleLogin() {
   font-size: 14px !important;
   border-radius: 10px !important;
   margin-top: 12px !important;
-  background: #ffffff !important;
-  border: 1px solid #e5e7eb !important;
-  color: #374151 !important;
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-secondary) !important;
   transition: all 0.2s !important;
 }
 
 .register-btn:hover {
   background: rgba(var(--sky-rgb), 0.08) !important;
   border-color: rgba(30, 64, 175, 0.25) !important;
-  color: #1e40af !important;
+  color: var(--primary) !important;
 }
 
 .signup-row {
   text-align: center;
   font-size: 13px;
-  color: #6b7280;
+  color: var(--text-muted);
   margin-top: 28px;
 }
 
 .signup-link {
-  color: #1e40af;
+  color: var(--primary);
   font-weight: 500;
   text-decoration: none;
 }
 
 .signup-link:hover {
   text-decoration: underline;
-  color: #1d4ed8;
+  color: var(--primary);
 }
 
 /* ─── 响应式 ─── */

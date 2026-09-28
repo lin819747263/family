@@ -7,7 +7,7 @@
         <div class="page-sub">设定目标，拆解里程碑，一步步走过去</div>
       </div>
       <div class="head-actions">
-        <el-select v-model="currentYear" style="width:110px" @change="loadData">
+        <el-select v-model="currentYear" class="year-select" @change="loadData">
           <el-option v-for="y in yearOptions" :key="y" :label="y + '年'" :value="y" />
         </el-select>
         <button class="btn primary" @click="openCreate">＋ 新建目标</button>
@@ -508,6 +508,7 @@ function observeReveal() {
 </script>
 
 <style scoped>
+.year-select { width: 110px; }
 .annual-goals { position: relative; }
 
 /* ===== 页头 ===== */
@@ -518,8 +519,8 @@ function observeReveal() {
 .btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 17px; border-radius: 13px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; transition: transform 0.3s, box-shadow 0.3s; }
 .btn.primary { background: var(--gradient-primary); color: var(--bg-card); box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.4); }
 .btn.ghost { background: rgba(var(--bg-card-rgb), 0.85); color: var(--terra-deep); border: 1.5px solid var(--border); }
-.btn.sage { background: linear-gradient(135deg, var(--sage), var(--sage-d)); color: #fff; }
-.btn.danger { background: linear-gradient(135deg, var(--rose), var(--rose-d)); color: #fff; }
+.btn.sage { background: linear-gradient(135deg, var(--sage), var(--sage-d)); color: var(--warm-white); }
+.btn.danger { background: linear-gradient(135deg, var(--rose), var(--rose-d)); color: var(--warm-white); }
 .btn.sm { padding: 7px 13px; font-size: 13px; border-radius: 10px; }
 .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(var(--primary-rgb), 0.3); }
 
@@ -552,7 +553,7 @@ function observeReveal() {
 
 .gc-header { padding: 16px 16px 0; display: flex; justify-content: space-between; align-items: flex-start; }
 .gc-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-.tag { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; }
+.tag { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; }
 .tag.cat { background: rgba(var(--primary-rgb), 0.12); color: var(--terra-deep); }
 .tag.status-done { background: rgba(var(--sage-rgb), 0.2); color: var(--sage-d); }
 .tag.status-cancel { background: rgba(var(--rose-rgb), 0.15); color: var(--rose-d); }
@@ -575,7 +576,7 @@ function observeReveal() {
 .gc-milestones { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
 .gc-milestones b { color: var(--terra-deep); font-weight: 700; }
 .gc-creator { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
-.gc-creator-avatar { width: 20px; height: 20px; border-radius: 6px; background: linear-gradient(135deg, var(--terracotta), var(--terra-deep)); color: #fff; font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.gc-creator-avatar { width: 20px; height: 20px; border-radius: 6px; background: linear-gradient(135deg, var(--terracotta), var(--terra-deep)); color: var(--warm-white); font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
 
 /* ===== 空状态 ===== */
 .empty-state { text-align: center; padding: 60px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg, 24px); }
@@ -602,7 +603,7 @@ function observeReveal() {
 .ms-item.completed .ms-name { text-decoration: line-through; }
 .ms-check { width: 22px; height: 22px; border-radius: 7px; border: 2px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.25s; font-size: 12px; color: transparent; background: var(--bg-card); }
 .ms-check:hover { border-color: var(--terracotta); }
-.ms-check.done { background: var(--sage); border-color: var(--sage); color: #fff; }
+.ms-check.done { background: var(--sage); border-color: var(--sage); color: var(--warm-white); }
 .ms-info { flex: 1; min-width: 0; }
 .ms-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
 .ms-date { font-size: 12px; color: var(--text-secondary); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
@@ -619,9 +620,21 @@ function observeReveal() {
 .reveal.in { opacity: 1; transform: none; }
 
 /* ===== 响应式 ===== */
+@media (max-width: 768px) {
+  .warm-dialog.el-dialog {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+  .warm-dialog :deep(.el-dialog__body) {
+    max-height: calc(100vh - 120px);
+  }
+}
 @media (max-width: 600px) {
   .goal-grid { grid-template-columns: 1fr; }
   .stats-row { grid-template-columns: repeat(2, 1fr); }
   .page-title { font-size: 20px; }
+  .year-select { width: 100%; max-width: 110px; }
 }
 </style>

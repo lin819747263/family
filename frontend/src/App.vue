@@ -21,10 +21,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
-import { useAppStore } from '@/store/app'
-
-const appStore = useAppStore()
+import { ref, onMounted, onUnmounted } from 'vue'
 
 // PWA 安装
 const showInstallBanner = ref(false)
@@ -66,8 +63,8 @@ onUnmounted(() => {
 <style scoped>
 .pwa-install-banner {
   position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-  z-index: 99999; background: #fff; border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.15); padding: 16px 20px;
+  z-index: 99999; background: var(--bg-card); border-radius: 16px;
+  box-shadow: var(--shadow-lg); padding: 16px 20px;
   max-width: 420px; width: calc(100% - 40px);
 }
 .pwa-install-content { display: flex; align-items: center; gap: 12px; }

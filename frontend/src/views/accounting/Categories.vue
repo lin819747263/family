@@ -342,12 +342,12 @@ async function handleDelete(id) {
 }
 
 .cat-group {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(var(--bg-card-rgb), 0.75);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(var(--bg-card-rgb), 0.8);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-sm);
 }
 
 .cat-row {

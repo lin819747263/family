@@ -42,7 +42,7 @@
       <!-- 地点和心情 -->
       <div class="publish-extras">
         <el-input v-model="publishForm.location" placeholder="📍 添加地点" style="flex:1;" clearable />
-        <el-select v-model="publishForm.mood" placeholder="😊 心情" clearable style="width:120px;">
+        <el-select v-model="publishForm.mood" placeholder="😊 心情" clearable class="mood-select">
           <el-option label="😊 开心" value="开心" />
           <el-option label="🥰 幸福" value="幸福" />
           <el-option label="😎 自在" value="自在" />
@@ -193,13 +193,12 @@ const grouped = computed(() => {
   return groups
 })
 
+import { formatRelativeDate } from '@/utils/format'
+
 function formatDateLabel(date) {
-  const d = dayjs(date)
-  const today = dayjs().format('YYYY-MM-DD')
-  const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
-  if (date === today) return '今天'
-  if (date === yesterday) return '昨天'
-  return d.format('M月D日 dddd')
+  const label = formatRelativeDate(date)
+  if (label === '今天' || label === '昨天') return label
+  return dayjs(date).format('M月D日 dddd')
 }
 
 function formatTime(t) {
@@ -275,9 +274,11 @@ async function handleDelete(id) {
 // 点赞
 async function handleLike(m) {
   if (m._liked) return
-  const res = await momentApi.toggleLike(m.id)
-  m._liked = res.data.liked
-  m.likeCount = res.data.likeCount
+  try {
+    const res = await momentApi.toggleLike(m.id)
+    m._liked = res.data.liked
+    m.likeCount = res.data.likeCount
+  } catch (e) { ElMessage.error(e.response?.data?.message || '操作失败') }
 }
 
 // 评论
@@ -289,8 +290,10 @@ function toggleComment(m) {
 }
 
 async function loadComments(m) {
-  const res = await momentApi.getComments({ momentId: m.id })
-  m.comments = res.data
+  try {
+    const res = await momentApi.getComments({ momentId: m.id })
+    m.comments = res.data
+  } catch (e) { ElMessage.error(e.response?.data?.message || '操作失败') }
 }
 
 async function submitComment(m) {
@@ -306,6 +309,7 @@ defineExpose({ openPublish: () => { showPublish.value = true } })
 </script>
 
 <style scoped>
+.mood-select { width: 120px; }
 .moments-page {
   animation: pageIn 0.4s ease-out;
   max-width: 640px;
@@ -349,9 +353,9 @@ defineExpose({ openPublish: () => { showPublish.value = true } })
   width: 20px;
   height: 20px;
   border: none;
-  background: rgba(0,0,0,0.5);
+  background: rgba(var(--shadow-rgb), 0.5);
   border-radius: 50%;
-  color: #fff;
+  color: var(--warm-white);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -402,7 +406,7 @@ defineExpose({ openPublish: () => { showPublish.value = true } })
 .moment-avatar {
   width: 42px; height: 42px; border-radius: 13px;
   background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));
-  color: #fff; font-weight: 700; flex-shrink: 0;
+  color: var(--warm-white); font-weight: 700; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
 }
 .moment-user {
@@ -516,5 +520,6 @@ defineExpose({ openPublish: () => { showPublish.value = true } })
   .moment-images.grid-3 {
     grid-template-columns: 1fr 1fr;
   }
+  .mood-select { width: 100%; max-width: 120px; }
 }
 </style>

@@ -31,7 +31,7 @@
           </div>
           <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
             <span style="font-weight:600;">{{ b.Category?.name || '总预算' }}</span>
-            <span style="font-size:13px;color:#999;">{{ formatMoney(b.spent) }} / {{ formatMoney(b.amount) }}</span>
+            <span style="font-size:13px;color:var(--text-muted);">{{ formatMoney(b.spent) }} / {{ formatMoney(b.amount) }}</span>
           </div>
           <el-progress :percentage="b.percent" :color="b.percent > 90 ? 'var(--danger)' : b.percent > 70 ? 'var(--warning)' : 'var(--success)'" />
         </div>
@@ -188,7 +188,7 @@ async function handleDelete(id) {
   width: 28px;
   height: 28px;
   border: none;
-  background: rgba(255,255,255,0.9);
+  background: rgba(var(--bg-card-rgb), 0.9);
   backdrop-filter: blur(8px);
   border-radius: 6px;
   cursor: pointer;
@@ -199,7 +199,7 @@ async function handleDelete(id) {
   transition: all 0.2s;
 }
 .ba-btn:hover {
-  background: #fff;
+  background: var(--bg-card);
   color: var(--text-primary);
 }
 .ba-btn.danger:hover {

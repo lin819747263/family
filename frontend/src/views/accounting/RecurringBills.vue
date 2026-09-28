@@ -389,9 +389,9 @@ async function handleDelete(id) {
   align-items: baseline;
   gap: 6px;
   padding: 10px 16px;
-  background: rgba(255,255,255,0.75);
+  background: rgba(var(--bg-card-rgb), 0.75);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.8);
+  border: 1px solid rgba(var(--bg-card-rgb), 0.8);
   border-radius: 12px;
 }
 .ms-num {
@@ -423,7 +423,7 @@ async function handleDelete(id) {
   transition: all 0.25s;
 }
 .bill-card:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  box-shadow: var(--shadow-sm);
 }
 .bill-card.paused {
   opacity: 0.6;
@@ -445,7 +445,7 @@ async function handleDelete(id) {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: #fff;
+  color: var(--warm-white);
 }
 .bill-icon.expense {
   background: linear-gradient(135deg, var(--rose-d), var(--rose));

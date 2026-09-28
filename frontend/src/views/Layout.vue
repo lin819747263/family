@@ -207,7 +207,6 @@
 import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/store/auth'
-import { useAppStore } from '@/store/app'
 import { useAccountingStore } from '@/store/accounting'
 import { dashboardApi } from '@/api'
 const TransactionForm = defineAsyncComponent(() => import('@/components/accounting/TransactionForm.vue'))
@@ -226,7 +225,6 @@ import {
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
-const appStore = useAppStore()
 const accountingStore = useAccountingStore()
 
 const showBookSelector = computed(() => {
@@ -474,8 +472,8 @@ function handleUserCmd(cmd) {
 .nav-menu :deep(.el-sub-menu .el-menu) {
   border-radius: 12px;
   padding: 6px 0;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(226, 232, 240, 0.5);
+  box-shadow: 0 8px 30px rgba(var(--shadow-rgb), 0.08);
+  border: 1px solid var(--border);
 }
 
 .nav-menu :deep(.el-icon) {
@@ -578,7 +576,7 @@ function handleUserCmd(cmd) {
 
 .user-avatar {
   background: var(--gradient-primary);
-  color: #fff;
+  color: var(--warm-white);
   font-weight: 600;
   font-size: 14px;
   box-shadow: 0 4px 12px rgba(var(--shadow-rgb), 0.25);
@@ -624,7 +622,7 @@ function handleUserCmd(cmd) {
   border-radius: 20px;
   border: none;
   background: var(--gradient-primary);
-  color: #fff;
+  color: var(--warm-white);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -778,27 +776,22 @@ function handleUserCmd(cmd) {
     padding: 12px;
   }
   .fab-btn {
-    bottom: 20px;
-    right: 20px;
+    bottom: 76px;
+    right: 16px;
     width: 56px;
     height: 56px;
   }
 
-  /* 快速记账卡片 - 移动端底部抽屉 */
+  /* 快速记账卡片 - 移动端适配 */
   .qa-card {
-    right: 0; left: 0; bottom: 0; width: 100%;
-    max-height: 88vh; border-radius: 24px 24px 0 0;
-    transform: translateY(100%); opacity: 1;
+    right: 16px; left: 16px; bottom: 140px; width: calc(100vw - 32px);
+    max-height: 72vh; border-radius: 20px;
+    transform: scale(0.6) translateY(30px); opacity: 0; pointer-events: none;
   }
-  .qa-card.open { transform: translateY(0); }
+  .qa-card.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: auto; }
   .qa-card::after { display: none; }
   .qa-head {
-    padding-top: 22px; position: relative;
-  }
-  .qa-head::before {
-    content: ""; position: absolute; top: 8px; left: 50%;
-    transform: translateX(-50%); width: 40px; height: 4px;
-    border-radius: 2px; background: var(--wood-light);
+    padding-top: 16px; position: relative;
   }
 
   /* 通知面板适配移动端 */

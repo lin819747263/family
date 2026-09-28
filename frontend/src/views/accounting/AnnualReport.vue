@@ -7,7 +7,7 @@
       </div>
       <div class="header-actions">
         <el-button @click="$router.push('/accounting/report')"><el-icon><TrendCharts /></el-icon>月度报表</el-button>
-        <el-select v-model="year" style="width:120px;" @change="loadReport">
+        <el-select v-model="year" class="year-select" @change="loadReport">
           <el-option v-for="y in yearOptions" :key="y" :label="y + '年'" :value="y" />
         </el-select>
       </div>
@@ -306,6 +306,7 @@ function renderChart() {
 </script>
 
 <style scoped>
+.year-select { width: 120px; }
 .annual-report { animation: fadeUp 0.5s ease-out; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -342,7 +343,7 @@ function renderChart() {
   display: flex; align-items: center; justify-content: center;
   font-size: 12px; font-weight: 700; color: var(--text-secondary); flex-shrink: 0;
 }
-.rank-num.top { background: var(--gradient-primary); color: #fff; }
+.rank-num.top { background: var(--gradient-primary); color: var(--warm-white); }
 .rank-info { flex: 1; min-width: 0; }
 .rank-name { font-size: 14px; color: var(--text-primary); margin-bottom: 4px; }
 .rank-bar-wrap { height: 8px; background: var(--bg-card-alt); border-radius: 4px; overflow: hidden; }
@@ -359,7 +360,7 @@ function renderChart() {
 .habit-emoji { font-size: 28px; }
 .habit-label { font-size: 12px; color: var(--text-secondary); }
 .habit-value { font-size: 20px; font-weight: 800; color: var(--text-primary); }
-.habit-note { font-size: 11px; color: var(--text-secondary); text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.habit-note { font-size: 12px; color: var(--text-secondary); text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
 
 /* 成员对比 */
 .member-compare { display: flex; flex-direction: column; gap: 14px; }
@@ -368,17 +369,17 @@ function renderChart() {
 .member-bar-wrap { flex: 1; height: 28px; background: var(--bg-card-alt); border-radius: 8px; overflow: hidden; }
 .member-bar {
   height: 100%; border-radius: 8px; display: flex; align-items: center;
-  padding: 0 10px; font-size: 12px; font-weight: 600; color: #fff;
+  padding: 0 10px; font-size: 12px; font-weight: 600; color: var(--warm-white);
   transition: width 0.6s ease; white-space: nowrap;
 }
 .expense-bar { background: linear-gradient(135deg, var(--rose), var(--amber-d)); }
 
 /* 年度总结 */
-.summary-card { text-align: center; padding: 32px; background: var(--gradient-primary); border: none; color: #fff; }
+.summary-card { text-align: center; padding: 32px; background: var(--gradient-primary); border: none; color: var(--warm-white); }
 .summary-emoji { font-size: 48px; margin-bottom: 12px; }
 .summary-title { font-size: 20px; font-weight: 800; margin-bottom: 12px; }
 .summary-text { font-size: 15px; line-height: 1.8; opacity: 0.9; }
-.summary-text strong { color: #fff; font-weight: 800; }
+.summary-text strong { color: var(--warm-white); font-weight: 800; }
 
 .empty-state { padding: 40px; }
 
@@ -386,6 +387,7 @@ function renderChart() {
   .overview-cards { grid-template-columns: repeat(2, 1fr); }
   .habits-grid { grid-template-columns: 1fr; }
   .chart-box { height: 240px; }
+  .year-select { width: 100%; max-width: 120px; }
 }
 @media (max-width: 480px) {
   .overview-cards { grid-template-columns: 1fr; }

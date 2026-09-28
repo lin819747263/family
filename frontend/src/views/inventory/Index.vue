@@ -647,7 +647,7 @@ async function handleDelete(id) {
   align-items: center;
   justify-content: center;
   font-size: 19px;
-  color: #fff;
+  color: var(--warm-white);
   margin-bottom: 12px;
 }
 .stat-num {
@@ -676,7 +676,7 @@ async function handleDelete(id) {
   height: 34px;
   border-radius: 11px;
   background: linear-gradient(135deg, var(--amber), var(--amber-d));
-  color: #fff;
+  color: var(--warm-white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -803,7 +803,7 @@ async function handleDelete(id) {
   transform: scale(1.12) rotate(-6deg);
 }
 .item-status {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   padding: 3px 10px;
   border-radius: 999px;
@@ -883,7 +883,7 @@ async function handleDelete(id) {
 }
 .act-btn:hover {
   background: var(--terracotta);
-  color: #fff;
+  color: var(--warm-white);
 }
 .act-btn.danger:hover {
   background: var(--rose-d);
@@ -1078,6 +1078,18 @@ async function handleDelete(id) {
     width: 36px;
     height: 36px;
   }
+  .items-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .items-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 600px) {
@@ -1230,7 +1242,7 @@ async function handleDelete(id) {
 }
 .warm-popper .el-date-table td.current .el-date-table-cell__text {
   background: var(--gradient-primary);
-  color: #fff;
+  color: var(--warm-white);
   border-radius: 8px;
 }
 .warm-popper .el-date-table td.available:hover .el-date-table-cell__text {
@@ -1272,7 +1284,7 @@ async function handleDelete(id) {
 .warm-popper .el-month-table td.current .el-date-table-cell__text,
 .warm-popper .el-year-table td.current .el-date-table-cell__text {
   background: var(--gradient-primary);
-  color: #fff;
+  color: var(--warm-white);
   border-radius: 8px;
 }
 </style>

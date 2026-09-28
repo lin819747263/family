@@ -741,7 +741,7 @@ async function confirmImport() {
   transition: all 0.25s;
 }
 .chip-btn:hover { border-color: var(--terracotta); color: var(--terra-deep); }
-.chip-btn.active { background: var(--terracotta); border-color: var(--terracotta); color: #fff; }
+.chip-btn.active { background: var(--terracotta); border-color: var(--terracotta); color: var(--warm-white); }
 .filter-right { margin-left: auto; display: flex; gap: 8px; }
 
 /* ===== 表格 ===== */
@@ -803,7 +803,7 @@ async function confirmImport() {
 .row-btn.del:hover { background: rgba(var(--rose-rgb), 0.15); color: var(--rose-d); }
 .row-btn.restore:hover { background: rgba(var(--sage-rgb), 0.15); color: var(--sage-d); }
 
-.badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; }
 .badge.expense { background: rgba(var(--rose-rgb), 0.15); color: var(--rose-d); }
 .badge.income { background: rgba(var(--sage-rgb), 0.15); color: var(--sage-d); }
 .badge.neutral { background: rgba(160, 141, 122, 0.12); color: var(--text-secondary); }
@@ -812,7 +812,7 @@ async function confirmImport() {
 /* 底部操作栏 */
 .bottom-bar {
   position: sticky; bottom: 0; z-index: 10;
-  background: rgba(255, 252, 247, 0.92);
+  background: rgba(var(--bg-card-rgb), 0.92);
   backdrop-filter: blur(18px) saturate(1.4);
   border-top: 1px solid var(--border);
   padding: 14px 0;

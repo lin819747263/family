@@ -832,12 +832,12 @@ onMounted(() => { nextTick(() => { animReady.value = true }) })
 .tn-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary-dark); }
 .tn-btn:disabled { opacity: .35; cursor: not-allowed; }
 .tn-label { min-width: 132px; text-align: center; font-size: 15px; font-weight: 700; color: var(--text-primary); line-height: 1.25; }
-.tn-sub { display: block; font-size: 11px; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
+.tn-sub { display: block; font-size: 12px; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
 
 .quick-row { display: flex; gap: 6px; flex-wrap: wrap; width: 100%; }
 .q-chip { padding: 6px 11px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); font-size: 12px; font-weight: 600; cursor: pointer; transition: all .22s; }
 .q-chip:hover { border-color: var(--primary); color: var(--primary-dark); }
-.q-chip.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+.q-chip.on { background: var(--primary); border-color: var(--primary); color: var(--warm-white); }
 
 .btn.ghost.sm { padding: 8px 13px; font-size: 12.5px; }
 
@@ -847,7 +847,7 @@ onMounted(() => { nextTick(() => { animReady.value = true }) })
 .kpi::after { content: ''; position: absolute; right: -34px; top: -34px; width: 104px; height: 104px; border-radius: 50%; background: var(--kc, var(--primary)); opacity: .1; }
 .kpi:hover::after { opacity: .17; }
 .kpi-top { display: flex; align-items: center; gap: 9px; margin-bottom: 11px; }
-.kpi-ico { width: 31px; height: 31px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #fff; background: var(--kc, var(--primary)); flex-shrink: 0; }
+.kpi-ico { width: 31px; height: 31px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--warm-white); background: var(--kc, var(--primary)); flex-shrink: 0; }
 .kpi-label { font-size: 12.5px; color: var(--text-secondary); font-weight: 600; }
 .kpi-val { font-size: 25px; font-weight: 800; color: var(--kc, var(--text-primary)); font-variant-numeric: tabular-nums; line-height: 1.15; }
 .kpi-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 9px; min-height: 24px; }
@@ -855,7 +855,7 @@ onMounted(() => { nextTick(() => { animReady.value = true }) })
 .delta.good { background: rgba(var(--sage-rgb), .16); color: var(--sage-d); }
 .delta.bad { background: rgba(var(--rose-rgb), .16); color: var(--rose-d); }
 .delta.flat { background: var(--bg-card-alt); color: var(--text-secondary); }
-.kpi-note { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+.kpi-note { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
 .spark { width: 70px; height: 24px; overflow: visible; }
 .spark polyline { fill: none; stroke: var(--kc, var(--primary)); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .spark polygon { fill: var(--kc, var(--primary)); opacity: .14; }
@@ -883,7 +883,7 @@ onMounted(() => { nextTick(() => { animReady.value = true }) })
 .glines { position: absolute; left: 54px; right: 0; top: 0; bottom: 24px; display: flex; flex-direction: column; justify-content: space-between; }
 .gl { border-top: 1px dashed var(--border-light); position: relative; height: 0; }
 .gl:first-child { border-top-style: solid; border-top-color: var(--border); }
-.gl span { position: absolute; left: -54px; top: -8px; width: 46px; text-align: right; font-size: 10.5px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.gl span { position: absolute; left: -54px; top: -8px; width: 46px; text-align: right; font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
 .cols { position: absolute; left: 54px; right: 0; top: 0; bottom: 0; display: flex; align-items: stretch; gap: 2px; }
 .col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; border-radius: 7px; cursor: default; transition: background .2s; position: relative; }
 .col:hover { background: var(--hover-overlay); }
@@ -897,12 +897,12 @@ onMounted(() => { nextTick(() => { animReady.value = true }) })
 .bar.inc { background: linear-gradient(180deg, var(--sage), var(--sage-d)); }
 .bar.peak { background: linear-gradient(180deg, var(--amber), var(--amber-d)); }
 .col:hover .bar { filter: brightness(1.07); }
-.col-lbl { height: 24px; line-height: 24px; font-size: 10px; color: var(--text-muted); white-space: nowrap; overflow: hidden; max-width: 100%; text-align: center; }
+.col-lbl { height: 24px; line-height: 24px; font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; max-width: 100%; text-align: center; }
 .col.weekend .col-lbl { color: var(--primary-dark); font-weight: 700; }
 .col.future { opacity: .4; }
 .col.zero .bar { height: 2px !important; background: var(--border); border-radius: 2px; }
 .avg-line { position: absolute; left: 54px; right: 0; border-top: 1.5px dashed var(--amber-d); opacity: .75; pointer-events: none; }
-.avg-tag { position: absolute; right: 0; top: -9px; background: var(--bg-card); border: 1px solid var(--amber-d); color: var(--amber-d); font-size: 10.5px; font-weight: 700; padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
+.avg-tag { position: absolute; right: 0; top: -9px; background: var(--bg-card); border: 1px solid var(--amber-d); color: var(--amber-d); font-size: 12px; font-weight: 700; padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
 .chart-foot { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; padding-top: 13px; border-top: 1px dashed var(--border-light); font-size: 12px; color: var(--text-secondary); }
 .chart-foot b { color: var(--text-primary); font-weight: 700; }
 .lg-inline { display: flex; align-items: center; gap: 6px; }
@@ -916,7 +916,7 @@ onMounted(() => { nextTick(() => { animReady.value = true }) })
 .donut .seg-c:hover { opacity: 1; stroke-width: 27; }
 .donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
 .dc-num { font-size: 20px; font-weight: 800; color: var(--text-primary); font-variant-numeric: tabular-nums; }
-.dc-lbl { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.dc-lbl { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 .legend { flex: 1; min-width: 158px; display: flex; flex-direction: column; gap: 2px; }
 .lg { display: flex; align-items: center; gap: 9px; font-size: 13px; padding: 5px 7px; border-radius: 9px; cursor: default; transition: background .2s; }
 .lg:hover { background: var(--hover-overlay); }
@@ -930,13 +930,13 @@ onMounted(() => { nextTick(() => { animReady.value = true }) })
 .rank-item { border-radius: 12px; }
 .rank-row { display: flex; align-items: center; gap: 11px; padding: 9px 10px; cursor: pointer; border-radius: 12px; transition: background .22s; }
 .rank-row:hover { background: var(--hover-overlay); }
-.rank-num { width: 24px; height: 24px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 800; flex-shrink: 0; }
+.rank-num { width: 24px; height: 24px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--warm-white); font-size: 12px; font-weight: 800; flex-shrink: 0; }
 .rank-name { font-size: 13.5px; font-weight: 600; color: var(--text-primary); min-width: 88px; display: flex; align-items: center; gap: 6px; }
 .rank-bar { flex: 1; height: 8px; border-radius: 4px; background: var(--bg-card-alt); overflow: hidden; min-width: 40px; }
 .rank-bar i { display: block; height: 100%; width: 0; border-radius: 4px; transition: width 1s cubic-bezier(.22, 1, .36, 1); }
 .rank-val { font-size: 13px; font-weight: 700; color: var(--text-primary); min-width: 74px; text-align: right; font-variant-numeric: tabular-nums; }
 .rank-pct { font-size: 11.5px; color: var(--text-muted); min-width: 34px; text-align: right; font-variant-numeric: tabular-nums; }
-.rank-caret { font-size: 10px; color: var(--text-muted); transition: transform .25s; width: 10px; }
+.rank-caret { font-size: 12px; color: var(--text-muted); transition: transform .25s; width: 10px; }
 .sub-rank { display: none; padding: 2px 10px 10px 45px; flex-direction: column; gap: 6px; }
 .rank-item.open .sub-rank { display: flex; }
 .sub-item { display: flex; align-items: center; gap: 9px; font-size: 12.5px; }
@@ -952,7 +952,7 @@ onMounted(() => { nextTick(() => { animReady.value = true }) })
 .mx-v { font-size: 21px; font-weight: 800; color: var(--primary-dark); font-variant-numeric: tabular-nums; }
 .mx-tools { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin-bottom: 13px; }
 .mx-hint { margin-left: auto; font-size: 12px; color: var(--text-muted); }
-.mx-scroll { overflow: auto; max-height: 660px; border-radius: 15px; border: 1px solid var(--border-light); background: var(--bg-card); }
+.mx-scroll { overflow: auto; -webkit-overflow-scrolling: touch; max-height: 660px; border-radius: 15px; border: 1px solid var(--border-light); background: var(--bg-card); }
 .mx-scroll::-webkit-scrollbar { height: 9px; width: 9px; }
 .mx-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
 
@@ -963,7 +963,7 @@ table.mx { border-collapse: separate; border-spacing: 0; width: 100%; min-width:
 .mx .s2 { position: sticky; left: 130px; z-index: 2; text-align: left; width: 132px; min-width: 132px; background: var(--bg-card); box-shadow: 6px 0 8px -6px rgba(var(--shadow-rgb), .28); }
 .mx thead .s1, .mx thead .s2 { z-index: 5; background: var(--bg-card-alt); }
 .mx .cell-parent { font-weight: 700; color: var(--text-primary); font-size: 13px; cursor: pointer; user-select: none; border-right: 3px solid var(--ga, var(--primary)); }
-.mx .caret { display: inline-block; width: 12px; color: var(--text-muted); font-size: 10px; transition: transform .22s; }
+.mx .caret { display: inline-block; width: 12px; color: var(--text-muted); font-size: 12px; transition: transform .22s; }
 .mx tr.collapsed .caret { transform: rotate(-90deg); }
 .mx tr.prow td { font-weight: 700; color: var(--text-primary); border-bottom: 1px solid var(--border); }
 .mx tr.prow:hover td { background: var(--hover-overlay); }

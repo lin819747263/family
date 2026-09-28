@@ -60,7 +60,7 @@ const activeGradient = computed(() => {
 .theme-trigger:hover { background: var(--hover-overlay); }
 .theme-trigger-dot {
   width: 20px; height: 20px; border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(var(--shadow-rgb), 0.15);
   transition: background 0.3s;
 }
 
@@ -83,7 +83,7 @@ const activeGradient = computed(() => {
 }
 .theme-option-dots span {
   width: 18px; height: 18px; border-radius: 6px;
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid rgba(var(--shadow-rgb), 0.06);
 }
 
 .theme-option-info {

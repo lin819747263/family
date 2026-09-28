@@ -317,7 +317,7 @@ async function handleAction(row, status) {
 .m-chip.active {
   background: var(--terracotta);
   border-color: var(--terracotta);
-  color: #fff;
+  color: var(--warm-white);
 }
 
 /* ===== 汇总卡片 ===== */
@@ -335,7 +335,7 @@ async function handleAction(row, status) {
   height: 46px;
   border-radius: 14px;
   background: linear-gradient(135deg, var(--sage), var(--sage-d));
-  color: #fff;
+  color: var(--warm-white);
   font-size: 21px;
   display: flex;
   align-items: center;
@@ -375,8 +375,8 @@ async function handleAction(row, status) {
   top: 0;
   right: 0;
   background: linear-gradient(135deg, var(--amber), var(--amber-d));
-  color: #fff;
-  font-size: 11px;
+  color: var(--warm-white);
+  font-size: 12px;
   font-weight: 700;
   padding: 5px 14px;
   border-radius: 0 0 0 14px;
@@ -440,17 +440,17 @@ async function handleAction(row, status) {
 .un-btn.drop:hover {
   background: var(--rose);
   border-color: var(--rose);
-  color: #fff;
+  color: var(--warm-white);
 }
 .un-btn.donate:hover {
   background: var(--amber);
   border-color: var(--amber);
-  color: #fff;
+  color: var(--warm-white);
 }
 .un-btn.sell:hover {
   background: var(--sage);
   border-color: var(--sage);
-  color: #fff;
+  color: var(--warm-white);
 }
 
 /* ===== 响应式 ===== */
@@ -489,6 +489,17 @@ async function handleAction(row, status) {
     flex-direction: column;
     gap: 10px;
     text-align: center;
+  }
+}
+@media (max-width: 768px) {
+  .unused-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .unused-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

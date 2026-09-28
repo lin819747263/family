@@ -115,13 +115,13 @@ import { useAccountingStore } from '@/store/accounting'
 import { ElMessage } from 'element-plus'
 import dayjs from 'dayjs'
 
+import { formatRelativeDate } from '@/utils/format'
+
 // 日期显示文本
 const dateDisplayText = computed(() => {
   if (!shared.date) return '选择日期'
-  const today = dayjs().format('YYYY-MM-DD')
-  const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
-  if (shared.date === today) return '今天 · ' + dayjs().format('M月D日')
-  if (shared.date === yesterday) return '昨天 · ' + dayjs(shared.date).format('M月D日')
+  const label = formatRelativeDate(shared.date)
+  if (label === '今天' || label === '昨天') return label + ' · ' + dayjs(shared.date).format('M月D日')
   return dayjs(shared.date).format('M月D日')
 })
 
@@ -294,8 +294,8 @@ async function handleSubmit() {
   background: transparent; font-size: 12px; font-weight: 700;
   color: var(--text-secondary); cursor: pointer; transition: all 0.25s;
 }
-.mini-type-btn.active.expense { background: var(--rose); color: #fff; }
-.mini-type-btn.active.income { background: var(--sage); color: #fff; }
+.mini-type-btn.active.expense { background: var(--rose); color: var(--warm-white); }
+.mini-type-btn.active.income { background: var(--sage); color: var(--warm-white); }
 
 .entry-remove {
   margin-left: 8px; width: 24px; height: 24px; border-radius: 7px;
@@ -365,9 +365,9 @@ async function handleSubmit() {
 .submit-btn {
   width: 100%; margin-top: 14px; padding: 14px;
   border-radius: 14px; border: none; cursor: pointer;
-  font-size: 15px; font-weight: 700; color: #fff;
+  font-size: 15px; font-weight: 700; color: var(--warm-white);
   background: linear-gradient(135deg, var(--sage), var(--sage-d));
-  box-shadow: 0 8px 20px rgba(126, 136, 98, 0.35);
+  box-shadow: var(--shadow-md);
   transition: transform 0.3s, box-shadow 0.3s;
 }
 .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 28px rgba(var(--shadow-rgb), 0.4); }

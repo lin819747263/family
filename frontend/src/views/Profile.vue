@@ -8,13 +8,13 @@
           <div style="position:relative;display:inline-block;margin-bottom:12px;">
             <el-avatar :size="72" :src="authStore.user?.avatar">{{ authStore.nickname[0] }}</el-avatar>
             <el-upload :http-request="uploadAvatar" :show-file-list="false" accept="image/*" style="position:absolute;bottom:0;right:-4px;">
-              <el-button size="small" circle style="box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+              <el-button size="small" circle style="box-shadow:0 2px 8px rgba(var(--shadow-rgb), 0.15);">
                 <el-icon :size="12"><Camera /></el-icon>
               </el-button>
             </el-upload>
           </div>
           <div style="font-size:18px;font-weight:600;">{{ authStore.nickname }}</div>
-          <div style="color:#999;font-size:13px;margin-top:4px;">{{ authStore.user?.email || '未设置邮箱' }}</div>
+          <div style="color:var(--text-muted);font-size:13px;margin-top:4px;">{{ authStore.user?.email || '未设置邮箱' }}</div>
           <div style="margin-top:16px;">
             <el-tag v-for="f in authStore.families" :key="f.id" style="margin:4px;">{{ f.name }}</el-tag>
           </div>
@@ -74,7 +74,7 @@
             <el-progress type="dashboard" :percentage="storageInfo.percent || 0" :width="100" />
             <div>
               <div>已使用 {{ formatBytes(storageInfo.totalUsed) }} / {{ formatBytes(storageInfo.totalLimit) }}</div>
-              <div v-if="storageInfo.members?.length" style="font-size:13px;color:#999;margin-top:4px;">
+              <div v-if="storageInfo.members?.length" style="font-size:13px;color:var(--text-muted);margin-top:4px;">
                 <div v-for="m in storageInfo.members" :key="m.userId" style="display:flex;justify-content:space-between;align-items:center;padding:2px 0;">
                   <span>{{ m.nickname || '成员' }}</span>
                   <span>{{ formatBytes(m.used) }}</span>
@@ -131,33 +131,41 @@ onMounted(async () => {
 })
 
 async function updateProfile() {
-  await authApi.updateProfile(profileForm)
-  ElMessage.success('保存成功')
-  await authStore.getProfile()
+  try {
+    await authApi.updateProfile(profileForm)
+    ElMessage.success('保存成功')
+    await authStore.getProfile()
+  } catch (e) { ElMessage.error(e.response?.data?.message || '操作失败') }
 }
 
 async function changePassword() {
   if (!pwdForm.oldPassword || !pwdForm.newPassword) return ElMessage.warning('请填写完整')
-  await authApi.changePassword(pwdForm)
-  ElMessage.success('密码修改成功')
-  pwdForm.oldPassword = ''
-  pwdForm.newPassword = ''
+  try {
+    await authApi.changePassword(pwdForm)
+    ElMessage.success('密码修改成功')
+    pwdForm.oldPassword = ''
+    pwdForm.newPassword = ''
+  } catch (e) { ElMessage.error(e.response?.data?.message || '操作失败') }
 }
 
 async function joinFamily() {
   if (!inviteCode.value) return ElMessage.warning('请输入邀请码')
-  await authApi.joinFamily({ inviteCode: inviteCode.value })
-  ElMessage.success('加入成功')
-  inviteCode.value = ''
-  await authStore.getProfile()
+  try {
+    await authApi.joinFamily({ inviteCode: inviteCode.value })
+    ElMessage.success('加入成功')
+    inviteCode.value = ''
+    await authStore.getProfile()
+  } catch (e) { ElMessage.error(e.response?.data?.message || '操作失败') }
 }
 
 async function createFamily() {
   if (!newFamilyName.value) return ElMessage.warning('请输入家庭名称')
-  await authApi.createFamily({ name: newFamilyName.value })
-  ElMessage.success('创建成功')
-  newFamilyName.value = ''
-  await authStore.getProfile()
+  try {
+    await authApi.createFamily({ name: newFamilyName.value })
+    ElMessage.success('创建成功')
+    newFamilyName.value = ''
+    await authStore.getProfile()
+  } catch (e) { ElMessage.error(e.response?.data?.message || '操作失败') }
 }
 
 async function uploadAvatar({ file }) {

@@ -6,7 +6,7 @@
         <p class="page-desc">用文字记录家庭生活的美好瞬间</p>
       </div>
       <div class="header-actions">
-        <el-input v-model="searchKeyword" placeholder="搜索日记" clearable size="small" style="width:180px;" @keyup.enter="loadList" @clear="loadList">
+        <el-input v-model="searchKeyword" placeholder="搜索日记" clearable size="small" class="diary-search" @keyup.enter="loadList" @clear="loadList">
           <template #prefix><el-icon><Search /></el-icon></template>
         </el-input>
         <el-button type="primary" @click="openCreate"><el-icon><EditPen /></el-icon>写日记</el-button>
@@ -351,6 +351,7 @@ defineExpose({ openCreate })
 </script>
 
 <style scoped>
+.diary-search { width: 180px; }
 .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
 .page-desc { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
 .header-actions { display: flex; gap: 8px; align-items: center; }
@@ -373,7 +374,7 @@ defineExpose({ openCreate })
 .diary-avatar {
   width: 32px; height: 32px; border-radius: 10px;
   background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));
-  color: #fff; font-size: 14px; font-weight: 700;
+  color: var(--warm-white); font-size: 14px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
 }
 .diary-author { font-size: 13.5px; font-weight: 700; color: var(--text-primary); }
@@ -406,7 +407,7 @@ defineExpose({ openCreate })
 /* ========== 编辑器全屏 ========== */
 .editor-overlay {
   position: fixed; inset: 0; z-index: 2000;
-  background: #fff; display: flex; flex-direction: column;
+  background: var(--bg-card); display: flex; flex-direction: column;
   animation: editorSlideIn 0.25s ease;
 }
 .editor-overlay.fullscreen { inset: 0; }
@@ -420,7 +421,7 @@ defineExpose({ openCreate })
 .editor-topbar {
   display: flex; justify-content: space-between; align-items: center;
   padding: 10px 16px; border-bottom: 1px solid var(--bg-card-alt);
-  background: #fff; flex-shrink: 0;
+  background: var(--bg-card); flex-shrink: 0;
 }
 .editor-topbar-left, .editor-topbar-right { display: flex; align-items: center; gap: 8px; }
 .editor-topbar-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
@@ -472,7 +473,7 @@ defineExpose({ openCreate })
 .editor-pane { flex: 1; display: flex; min-width: 0; }
 .editor-textarea {
   flex: 1; width: 100%; border: none; outline: none; padding: 16px;
-  font-size: 15px; line-height: 1.8; color: var(--text-primary); background: #fff;
+  font-size: 15px; line-height: 1.8; color: var(--text-primary); background: var(--bg-card);
   resize: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
 }
 
@@ -514,9 +515,15 @@ defineExpose({ openCreate })
 @media (max-width: 768px) {
   .page-header { flex-direction: column; gap: 12px; }
   .header-actions { width: 100%; flex-wrap: wrap; }
+  .diary-search { width: 100%; }
   .diary-list { grid-template-columns: 1fr; }
   .diary-card { padding: 16px; }
   .diary-title { font-size: 16px; }
+
+  .diary-view-drawer :deep(.el-drawer) {
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
 
   .editor-meta-fields { flex-wrap: wrap; }
   .editor-meta-input { width: 100%; }

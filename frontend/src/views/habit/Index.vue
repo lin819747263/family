@@ -543,7 +543,7 @@ function observeReveal() {
 .today-ring svg { transform: rotate(-90deg); }
 .today-ring .ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .ring-num { font-size: 20px; font-weight: 800; color: var(--terra-deep); }
-.ring-label { font-size: 10px; color: var(--text-secondary); }
+.ring-label { font-size: 12px; color: var(--text-secondary); }
 .today-summary { flex: 1; min-width: 200px; }
 .today-summary h3 { font-size: 16px; font-weight: 700; color: var(--terra-deep); margin-bottom: 6px; }
 .today-summary p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
@@ -575,7 +575,7 @@ function observeReveal() {
 .week-dot.active { background: rgba(var(--primary-rgb), 0.14); }
 .week-dot.today { position: relative; }
 .week-dot.today::after { content: ""; position: absolute; bottom: 2px; width: 6px; height: 6px; border-radius: 50%; background: var(--terracotta); }
-.wd-name { font-size: 11px; color: var(--text-secondary); font-weight: 600; }
+.wd-name { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
 .wd-num { font-size: 18px; font-weight: 800; color: var(--terra-deep); }
 .wd-status { width: 8px; height: 8px; border-radius: 50%; background: var(--cream); border: 1.5px solid var(--border); }
 .wd-status.done { background: var(--sage); border-color: var(--sage); }
@@ -586,7 +586,7 @@ function observeReveal() {
 .habit-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg, 24px); box-shadow: 0 6px 20px rgba(var(--shadow-rgb), 0.06); padding: 16px 18px; display: flex; align-items: center; gap: 14px; transition: all 0.3s; }
 .habit-card:hover { box-shadow: 0 10px 30px rgba(var(--shadow-rgb), 0.12); transform: translateY(-2px); }
 .habit-card.checked { border-color: var(--sage); background: rgba(var(--sage-rgb), 0.04); }
-.habit-icon { width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; color: #fff; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.habit-icon { width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; color: var(--warm-white); transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .habit-card:hover .habit-icon { transform: scale(1.08) rotate(-5deg); }
 .hi-sage { background: linear-gradient(135deg, var(--sage), var(--sage-d)); }
 .hi-terra { background: linear-gradient(135deg, var(--terracotta), var(--terra-deep)); }
@@ -599,14 +599,14 @@ function observeReveal() {
 .habit-meta { display: flex; align-items: center; gap: 10px; margin-top: 4px; font-size: 12px; color: var(--text-secondary); }
 .habit-streak { display: inline-flex; align-items: center; gap: 3px; color: var(--amber-d); font-weight: 700; }
 .habit-week { display: flex; gap: 4px; align-items: center; }
-.hw-dot { width: 24px; height: 24px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; border: 1.5px solid var(--border); color: var(--text-secondary); background: rgba(var(--cream-rgb), 0.4); cursor: pointer; transition: all 0.2s; }
+.hw-dot { width: 24px; height: 24px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; border: 1.5px solid var(--border); color: var(--text-secondary); background: rgba(var(--cream-rgb), 0.4); cursor: pointer; transition: all 0.2s; }
 .hw-dot:hover { border-color: var(--terracotta); }
-.hw-dot.done { background: var(--sage); border-color: var(--sage); color: #fff; }
+.hw-dot.done { background: var(--sage); border-color: var(--sage); color: var(--warm-white); }
 .hw-dot.today-dot { border-color: var(--terracotta); border-width: 2px; }
 .hw-dot.future { opacity: 0.4; cursor: default; }
 .habit-check { width: 42px; height: 42px; border-radius: 13px; border: 2.5px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; color: transparent; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); flex-shrink: 0; }
 .habit-check:hover { border-color: var(--sage); transform: scale(1.1); }
-.habit-check.checked { background: var(--sage); border-color: var(--sage); color: #fff; transform: scale(1); }
+.habit-check.checked { background: var(--sage); border-color: var(--sage); color: var(--warm-white); transform: scale(1); }
 .habit-actions { display: flex; gap: 2px; flex-shrink: 0; }
 .ha-btn { width: 30px; height: 30px; border: none; background: transparent; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 14px; transition: all 0.2s; }
 .ha-btn:hover { background: var(--cream); color: var(--terra-deep); }
@@ -622,7 +622,7 @@ function observeReveal() {
 .hm-cell.l2 { background: rgba(var(--sage-rgb), 0.55); }
 .hm-cell.l3 { background: rgba(var(--sage-rgb), 0.75); }
 .hm-cell.l4 { background: var(--sage-d); }
-.heatmap-legend { display: flex; align-items: center; gap: 6px; margin-top: 10px; justify-content: flex-end; font-size: 11px; color: var(--text-secondary); }
+.heatmap-legend { display: flex; align-items: center; gap: 6px; margin-top: 10px; justify-content: flex-end; font-size: 12px; color: var(--text-secondary); }
 .hm-legend-cell { width: 12px; height: 12px; border-radius: 3px; }
 .per-habit-heatmaps { margin-top: 22px; }
 .phm-item { margin-bottom: 16px; }
@@ -643,7 +643,7 @@ function observeReveal() {
 .color-picker { display: flex; gap: 8px; }
 .color-opt { width: 32px; height: 32px; border-radius: 10px; cursor: pointer; border: 2.5px solid transparent; transition: all 0.2s; }
 .color-opt:hover { transform: scale(1.1); }
-.color-opt.active { border-color: var(--terra-deep); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); }
+.color-opt.active { border-color: var(--terra-deep); box-shadow: 0 2px 8px rgba(var(--shadow-rgb), 0.15); }
 .freq-options { display: flex; gap: 8px; flex-wrap: wrap; }
 .freq-opt { padding: 8px 16px; border-radius: 10px; border: 1.5px solid var(--border); background: rgba(var(--cream-rgb), 0.4); cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-secondary); transition: all 0.25s; }
 .freq-opt:hover { border-color: var(--terracotta); }
@@ -651,7 +651,7 @@ function observeReveal() {
 .weekday-picker { display: flex; gap: 6px; margin-top: 8px; }
 .wd-opt { width: 36px; height: 36px; border-radius: 10px; border: 1.5px solid var(--border); background: rgba(var(--cream-rgb), 0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--text-secondary); transition: all 0.2s; }
 .wd-opt:hover { border-color: var(--terracotta); }
-.wd-opt.active { background: var(--terracotta); border-color: var(--terracotta); color: #fff; }
+.wd-opt.active { background: var(--terracotta); border-color: var(--terracotta); color: var(--warm-white); }
 
 /* ===== 渐入 ===== */
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }

@@ -569,14 +569,14 @@ async function handleDelete(id) {
 .time-tab:hover { border-color: var(--terracotta); color: var(--terra-deep); }
 .time-tab.active {
   background: var(--terracotta); border-color: var(--terracotta);
-  color: #fff; box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.35);
+  color: var(--warm-white); box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.35);
 }
 .tab-count {
   background: var(--apricot); color: var(--terra-deep);
-  font-size: 11px; font-weight: 700; padding: 1px 8px;
+  font-size: 12px; font-weight: 700; padding: 1px 8px;
   border-radius: 999px; min-width: 20px; text-align: center;
 }
-.time-tab.active .tab-count { background: rgba(255, 255, 255, 0.3); color: #fff; }
+.time-tab.active .tab-count { background: rgba(var(--bg-card-rgb), 0.3); color: var(--warm-white); }
 
 /* 快速添加 */
 .quick-add {
@@ -636,7 +636,7 @@ async function handleDelete(id) {
   margin-top: 2px;
 }
 .archived-tag {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-secondary);
   background: var(--bg-card-alt);
   padding: 0 6px;
@@ -660,7 +660,7 @@ async function handleDelete(id) {
   flex-shrink: 0; margin-top: 2px; transition: all 0.25s; color: transparent;
 }
 .ti-check:hover { border-color: var(--terracotta); transform: scale(1.1); }
-.ti-check.checked { background: var(--sage); border-color: var(--sage); color: #fff; }
+.ti-check.checked { background: var(--sage); border-color: var(--sage); color: var(--warm-white); }
 
 /* 内容 */
 .ti-body {
@@ -757,7 +757,7 @@ async function handleDelete(id) {
   height: 36px;
   border-radius: 50%;
   border: 2px solid var(--border);
-  background: #fff;
+  background: var(--bg-card);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -771,7 +771,7 @@ async function handleDelete(id) {
 .weekday-btn:hover { border-color: var(--terracotta); color: var(--terra-deep); }
 .weekday-btn.active {
   background: linear-gradient(135deg, var(--terracotta), var(--terra-deep));
-  border-color: transparent; color: #fff;
+  border-color: transparent; color: var(--warm-white);
 }
 
 .repeat-hint {
